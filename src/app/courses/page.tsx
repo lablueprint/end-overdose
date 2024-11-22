@@ -6,7 +6,7 @@ export default function Courses() {
         <>
             <h1> Courses </h1>
             <div>
-                <Link href="/Courses/course-1">Course 1</Link>
+                <Link href="/courses/opiod">Course 1</Link>
             </div>
             <div>
                 <button>Course 2</button>
