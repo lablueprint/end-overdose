@@ -9,6 +9,12 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@elissaioskon/scrollable-list": "^1.5.1",
+        "@emotion/cache": "^11.13.5",
+        "@emotion/react": "^11.13.5",
+        "@emotion/styled": "^11.13.5",
+        "@mui/material": "^6.1.8",
+        "@mui/material-nextjs": "^6.1.8",
         "firebase": "^11.0.2",
         "next": "^14.0.0",
         "react": "^18.2.0",
