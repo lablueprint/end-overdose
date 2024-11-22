@@ -17,10 +17,4 @@
         "node": true,
         "es6": true
     },
-    "prettier/prettier": [
-    "error",
-    {
-        "endOfLine": "auto"
-    }
-    ]
 }
