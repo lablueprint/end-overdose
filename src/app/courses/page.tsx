@@ -1,15 +1,29 @@
-import React from 'react';
 import Link from 'next/link';
+import CourseModule from './components/CourseModule';
 
 export default function Courses() {
+    let opioidProgress = 0;
+    let careerProgres = 0;
     return (
         <>
             <h1> Courses </h1>
             <div>
-                <Link href="/courses/opiod">Course 1</Link>
+                <Link href="/courses/opioid">
+                    <CourseModule
+                        courseTitle={'Opioid Overdose'}
+                        coursePath={'opioid'}
+                        courseProgress={opioidProgress}
+                    />
+                </Link>
             </div>
             <div>
-                <button>Course 2</button>
+                <Link href="/courses/career">
+                    <CourseModule
+                        courseTitle={'Career Training'}
+                        coursePath={'career'}
+                        courseProgress={careerProgres}
+                    />
+                </Link>
             </div>
             <Link href="/">HOME</Link>
         </>
