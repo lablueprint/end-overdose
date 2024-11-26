@@ -1,4 +1,3 @@
-import Form from 'next/form';
 import Link from 'next/link';
 
 export const metadata = {
@@ -31,7 +30,7 @@ export default function SignUpPage() {
     return (
         <div>
             <h1>Sign Up</h1>
-            <Form action={handleSignup}>
+            <form action={handleSignup}>
                 <label htmlFor="studentEmail">Student Email:</label>
                 <input
                     type="email"
@@ -69,7 +68,7 @@ export default function SignUpPage() {
                 />
                 <br />
                 <button type="submit">Sign Up</button>
-            </Form>
+            </form>
             <p>
                 Already have an account?{' '}
                 <Link href="/login">

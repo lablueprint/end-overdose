@@ -1,4 +1,3 @@
-import Form from 'next/form';
 import Link from 'next/link';
 
 // interface metadata {
@@ -31,7 +30,7 @@ export default function LoginPage() {
     return (
         <div>
             <h1>Log In</h1>
-            <Form action={handleLogin}>
+            <form action={handleLogin}>
                 <label htmlFor="studentEmail">Student Email:</label>
                 <input
                     type="email"
@@ -60,9 +59,9 @@ export default function LoginPage() {
                 />
                 <br />
                 <button type="submit">Log In</button>
-            </Form>
+            </form>
             <p>
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <Link href="/signup">
                     <button>Sign Up</button>
                 </Link>
