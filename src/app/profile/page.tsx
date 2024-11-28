@@ -8,16 +8,19 @@ import { useEffect, useState } from 'react';
 import ConfirmButton from './Components/ConfirmButton';
 
 export default function Home() {
+    const num1 = Math.floor(Math.random() * 99);
+    const num2 = Math.floor(Math.random() * 99);
+
     const [selectedIndex1, setSelectedIndex1] = useState(
         0
-        //Math.floor(Math.random() * 99)
+        //num1
     );
-    const [selectedIndex2, setSelectedIndex2] = useState(
-        0
-        //Math.floor(Math.random() * 99)
-    );
+    const [selectedIndex2, setSelectedIndex2] = useState(0); //num2);
+    //0
 
-    const [name, setName] = useState(adjectives[0].concat(' ', nouns[0]));
+    const [name, setName] = useState(
+        adjectives[selectedIndex1].concat(' ', nouns[selectedIndex2])
+    );
     const [changesMade, setChangeMade] = useState(false);
 
     const incrementIndex1 = () => {
@@ -47,6 +50,22 @@ export default function Home() {
     useEffect(() => {
         setChangeMade(true);
         setName(adjectives[selectedIndex1].concat(' ', nouns[selectedIndex2]));
+        const element1 = document
+            .getElementsByClassName('selectedNamePlate')
+            .item(0);
+        const element2 = document
+            .getElementsByClassName('selectedNamePlate')
+            .item(1);
+
+        element1?.scrollIntoView({
+            behavior: 'instant',
+            block: 'center',
+        });
+
+        element2?.scrollIntoView({
+            behavior: 'instant',
+            block: 'center',
+        });
     }, [selectedIndex1, selectedIndex2]);
 
     return (
