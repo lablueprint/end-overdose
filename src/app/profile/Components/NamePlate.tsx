@@ -1,8 +1,11 @@
 import React from 'react';
+import './profileStyles.css';
 
 interface NamePlateProps {
     // interface
     name: string;
+    selectedIndex: number;
+    index: number;
 }
 
 /* Notes:
@@ -11,13 +14,21 @@ interface NamePlateProps {
           {Component Name}Props
   */
 
-const NamePlate = ({ name }: NamePlateProps) => {
+const NamePlate = ({ name, index, selectedIndex }: NamePlateProps) => {
     // child
-    return (
-        <div>
-            <p>{name}</p>
-        </div>
-    );
+    if (index == selectedIndex) {
+        return (
+            <div>
+                <p className="selectedNamePlate">{name}</p>
+            </div>
+        );
+    } else {
+        return (
+            <div>
+                <p>{name}</p>
+            </div>
+        );
+    }
 };
 
 export default NamePlate;
