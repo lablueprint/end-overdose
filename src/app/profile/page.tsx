@@ -1,11 +1,54 @@
-import Image from 'next/image';
-import { BadgeMark, Button } from '@mui/material';
-import NamePlate from './Components/NamePlate';
+'use client';
+
 import Badge from './Components/Badge';
 import NameTable from './Components/NameTable';
 import { adjectives, nouns } from './data';
+import RolePlate from './Components/RolePlate';
+import { useEffect, useState } from 'react';
+import ConfirmButton from './Components/ConfirmButton';
 
 export default function Home() {
+    const [selectedIndex1, setSelectedIndex1] = useState(
+        0
+        //Math.floor(Math.random() * 99)
+    );
+    const [selectedIndex2, setSelectedIndex2] = useState(
+        0
+        //Math.floor(Math.random() * 99)
+    );
+
+    const [name, setName] = useState(adjectives[0].concat(' ', nouns[0]));
+    const [changesMade, setChangeMade] = useState(false);
+
+    const incrementIndex1 = () => {
+        if (selectedIndex1 < adjectives.length - 1) {
+            setSelectedIndex1(selectedIndex1 + 1);
+        }
+    };
+
+    const incrementIndex2 = () => {
+        if (selectedIndex2 < adjectives.length - 1) {
+            setSelectedIndex2(selectedIndex2 + 1);
+        }
+    };
+
+    const decrementIndex1 = () => {
+        if (selectedIndex1 > 0) {
+            setSelectedIndex1(selectedIndex1 - 1);
+        }
+    };
+
+    const decrementIndex2 = () => {
+        if (selectedIndex2 > 0) {
+            setSelectedIndex2(selectedIndex2 - 1);
+        }
+    };
+
+    useEffect(() => {
+        setChangeMade(true);
+        setName(adjectives[selectedIndex1].concat(' ', nouns[selectedIndex2]));
+    }, [selectedIndex1, selectedIndex2]);
+
     return (
         <div>
             <title> End Overdose </title>
@@ -21,9 +64,14 @@ export default function Home() {
                     <div>
                         <NameTable
                             table1Vals={adjectives}
+                            table1Index={selectedIndex1}
                             table2Vals={nouns}
-                            table3Vals={adjectives}
+                            table2Index={selectedIndex2}
                         />
+                        <button onClick={decrementIndex1}>Up1</button>
+                        <button onClick={incrementIndex1}>Down1</button>
+                        <button onClick={decrementIndex2}>Up2</button>
+                        <button onClick={incrementIndex2}>Down2</button>
                     </div>
                     <div className="badge-table">
                         <Badge badgeImage="/badge.png" badgeTitle="Badge 1" />
@@ -36,6 +84,18 @@ export default function Home() {
                         <Badge badgeImage="/badge.png" badgeTitle="Badge 8" />
                         <Badge badgeImage="/badge.png" badgeTitle="Badge 9" />
                         <Badge badgeImage="/badge.png" badgeTitle="Badge 10" />
+                    </div>
+                    <div>
+                        <h1>{name}</h1>
+                        <RolePlate />
+                    </div>
+                    <div>
+                        <ConfirmButton
+                            changesMade={changesMade}
+                            onPress={() => {
+                                setChangeMade(false);
+                            }}
+                        />
                     </div>
                 </div>
             </main>

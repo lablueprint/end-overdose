@@ -1,0 +1,11 @@
+    .selectedNamePlate {
+        color:aquamarine;
+    }
+
+    .activeConfirm {
+        color: greenyellow;
+    }
+
+    .inactiveConfirm {
+        color: red;
+    }
