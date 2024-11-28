@@ -1,11 +1,15 @@
 import Link from 'next/link';
 import Course from './components/Course';
+import SimplePage from './components/SimplePage';
 
 export default function Courses() {
     let opioidProgress = 0;
     let careerProgres = 40;
+    //useState for progress tracking
+
     return (
         <>
+            <SimplePage pageTitle="Title" />
             <h1> Courses </h1>
             <div>
                 <Link href="/courses/opioid">
