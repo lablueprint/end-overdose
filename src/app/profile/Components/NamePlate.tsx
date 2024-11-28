@@ -18,13 +18,13 @@ const NamePlate = ({ name, index, selectedIndex }: NamePlateProps) => {
     // child
     if (index == selectedIndex) {
         return (
-            <div>
+            <div style={{ height: '25px' }}>
                 <p className="selectedNamePlate">{name}</p>
             </div>
         );
     } else {
         return (
-            <div>
+            <div style={{ height: '25px' }}>
                 <p>{name}</p>
             </div>
         );

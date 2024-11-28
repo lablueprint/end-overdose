@@ -22,7 +22,7 @@ function ScrollableList({ values, selectedIndex }: ScrollableListProps) {
     ));
 
     return (
-        <div style={{ height: '200px', overflow: 'scroll' }}>{listValues}</div>
+        <div style={{ height: '175px', overflow: 'scroll' }}>{listValues}</div>
     );
 }
 
