@@ -104,3 +104,5 @@ const SchoolAdminSignup = () => {
 };
 
 export default SchoolAdminSignup;
+
+export default SchoolAdminSignup;
