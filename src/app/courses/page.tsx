@@ -1,15 +1,15 @@
 import Link from 'next/link';
-import CourseModule from './components/CourseModule';
+import Course from './components/Course';
 
 export default function Courses() {
     let opioidProgress = 0;
-    let careerProgres = 0;
+    let careerProgres = 40;
     return (
         <>
             <h1> Courses </h1>
             <div>
                 <Link href="/courses/opioid">
-                    <CourseModule
+                    <Course
                         courseTitle={'Opioid Overdose'}
                         coursePath={'opioid'}
                         courseProgress={opioidProgress}
@@ -18,7 +18,7 @@ export default function Courses() {
             </div>
             <div>
                 <Link href="/courses/career">
-                    <CourseModule
+                    <Course
                         courseTitle={'Career Training'}
                         coursePath={'career'}
                         courseProgress={careerProgres}
