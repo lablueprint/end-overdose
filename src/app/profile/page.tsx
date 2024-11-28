@@ -8,8 +8,8 @@ import ConfirmButton from './Components/ConfirmButton';
 import ScrollableList from './Components/ScrollableList';
 
 export default function Home() {
-    const num1 = Math.floor(Math.random() * 99);
-    const num2 = Math.floor(Math.random() * 99);
+    //const num1 = Math.floor(Math.random() * 99);
+    //const num2 = Math.floor(Math.random() * 99);
 
     const [selectedIndex1, setSelectedIndex1] = useState(
         0
@@ -72,46 +72,93 @@ export default function Home() {
         <div>
             <title> End Overdose </title>
             <main>
+                <div>
+                    <h1 style={{ fontSize: 24, padding: '10px' }}> Profile </h1>
+                </div>
                 <div
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         alignItems: 'center',
                     }}
                 >
-                    <div>
-                        <div style={{ display: 'flex' }}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <h1 style={{ fontSize: 35 }}>{name}</h1>
+                        <RolePlate />
+                    </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'space-between',
+                            padding: '20px',
+                        }}
+                    >
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                alignItems: 'space-between',
+                            }}
+                        >
                             <ScrollableList
                                 values={adjectives}
                                 selectedIndex={selectedIndex1}
                             />
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <div style={{ padding: '5px', margin: '5px' }}>
+                                    <button onClick={decrementIndex1}>+</button>
+                                </div>
+                                <div style={{ padding: '5px', margin: '5px' }}>
+                                    <button onClick={incrementIndex1}>-</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                alignItems: 'space-between',
+                            }}
+                        >
                             <ScrollableList
                                 values={nouns}
                                 selectedIndex={selectedIndex2}
                             />
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <div style={{ padding: '5px', margin: '5px' }}>
+                                    <button onClick={decrementIndex2}>+</button>
+                                </div>
+                                <div style={{ padding: '5px', margin: '5px' }}>
+                                    <button onClick={incrementIndex2}>-</button>
+                                </div>
+                            </div>
                         </div>
-                        <button onClick={decrementIndex1}>Up1</button>
-                        <button onClick={incrementIndex1}>Down1</button>
-                        <button onClick={decrementIndex2}>Up2</button>
-                        <button onClick={incrementIndex2}>Down2</button>
                     </div>
-                    <div className="badge-table">
-                        <Badge badgeImage="/badge.png" badgeTitle="Badge 1" />
-                        <Badge badgeImage="/badge.png" badgeTitle="Badge 2" />
-                        <Badge badgeImage="/badge.png" badgeTitle="Badge 3" />
-                        <Badge badgeImage="/badge.png" badgeTitle="Badge 4" />
-                        <Badge badgeImage="/badge.png" badgeTitle="Badge 5" />
-                        <Badge badgeImage="/badge.png" badgeTitle="Badge 6" />
-                        <Badge badgeImage="/badge.png" badgeTitle="Badge 7" />
-                        <Badge badgeImage="/badge.png" badgeTitle="Badge 8" />
-                        <Badge badgeImage="/badge.png" badgeTitle="Badge 9" />
-                        <Badge badgeImage="/badge.png" badgeTitle="Badge 10" />
-                    </div>
-                    <div>
-                        <h1>{name}</h1>
-                        <RolePlate />
-                    </div>
+
                     <div>
                         <ConfirmButton
                             changesMade={changesMade}
@@ -119,6 +166,61 @@ export default function Home() {
                                 setChangeMade(false);
                             }}
                         />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            margin: '20px',
+                        }}
+                    >
+                        <h1 style={{ fontSize: 24, marginBottom: '10px' }}>
+                            {' '}
+                            Badges{' '}
+                        </h1>
+                        <div className="badge-table">
+                            <Badge
+                                badgeImage="/badge.png"
+                                badgeTitle="Badge 1"
+                            />
+                            <Badge
+                                badgeImage="/badge.png"
+                                badgeTitle="Badge 2"
+                            />
+                            <Badge
+                                badgeImage="/badge.png"
+                                badgeTitle="Badge 3"
+                            />
+                            <Badge
+                                badgeImage="/badge.png"
+                                badgeTitle="Badge 4"
+                            />
+                            <Badge
+                                badgeImage="/badge.png"
+                                badgeTitle="Badge 5"
+                            />
+                            <Badge
+                                badgeImage="/badge.png"
+                                badgeTitle="Badge 6"
+                            />
+                            <Badge
+                                badgeImage="/badge.png"
+                                badgeTitle="Badge 7"
+                            />
+                            <Badge
+                                badgeImage="/badge.png"
+                                badgeTitle="Badge 8"
+                            />
+                            <Badge
+                                badgeImage="/badge.png"
+                                badgeTitle="Badge 9"
+                            />
+                            <Badge
+                                badgeImage="/badge.png"
+                                badgeTitle="Badge 10"
+                            />
+                        </div>
                     </div>
                 </div>
             </main>

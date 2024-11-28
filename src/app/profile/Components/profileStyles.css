@@ -3,9 +3,9 @@
     }
 
     .activeConfirm {
-        color: greenyellow;
+        color: aquamarine;
     }
 
     .inactiveConfirm {
-        color: red;
+        color: black;
     }
