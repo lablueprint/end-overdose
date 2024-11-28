@@ -1,11 +1,11 @@
 'use client';
 
 import Badge from './Components/Badge';
-import NameTable from './Components/NameTable';
 import { adjectives, nouns } from './data';
 import RolePlate from './Components/RolePlate';
 import { useEffect, useState } from 'react';
 import ConfirmButton from './Components/ConfirmButton';
+import ScrollableList from './Components/ScrollableList';
 
 export default function Home() {
     const num1 = Math.floor(Math.random() * 99);
@@ -81,12 +81,16 @@ export default function Home() {
                     }}
                 >
                     <div>
-                        <NameTable
-                            table1Vals={adjectives}
-                            table1Index={selectedIndex1}
-                            table2Vals={nouns}
-                            table2Index={selectedIndex2}
-                        />
+                        <div style={{ display: 'flex' }}>
+                            <ScrollableList
+                                values={adjectives}
+                                selectedIndex={selectedIndex1}
+                            />
+                            <ScrollableList
+                                values={nouns}
+                                selectedIndex={selectedIndex2}
+                            />
+                        </div>
                         <button onClick={decrementIndex1}>Up1</button>
                         <button onClick={incrementIndex1}>Down1</button>
                         <button onClick={decrementIndex2}>Up2</button>
