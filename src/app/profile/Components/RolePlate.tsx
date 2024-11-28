@@ -14,7 +14,7 @@ const RolePlate = () => {
     // child
     return (
         <div>
-            <p> Role: {userRole} </p>
+            <p> {userRole} </p>
         </div>
     );
 };
