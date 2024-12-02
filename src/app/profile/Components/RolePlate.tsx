@@ -7,13 +7,15 @@ import './profileStyles.css';
     Component for maintaining look of the "role" subtitle under the main name
   */
 
-const RolePlate = () => {
-    const [userRole, setUserRole] = useState('administrator');
+interface rolePlateProps {
+    role: string;
+}
 
+const RolePlate = ({ role }: rolePlateProps) => {
     // child
     return (
         <div>
-            <p> {userRole} </p>
+            <p> {role} </p>
         </div>
     );
 };
