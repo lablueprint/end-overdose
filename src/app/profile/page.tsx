@@ -8,16 +8,8 @@ import ConfirmButton from './Components/ConfirmButton';
 import ScrollableList from './Components/ScrollableList';
 
 export default function Home() {
-    //For generating random starting spot on table, currently disabled
-
-    //const num1 = Math.floor(Math.random() * 99);
-    //const num2 = Math.floor(Math.random() * 99);
-
-    const [selectedIndex1, setSelectedIndex1] = useState(
-        0
-        //num1
-    );
-    const [selectedIndex2, setSelectedIndex2] = useState(0); //num2);
+    const [selectedIndex1, setSelectedIndex1] = useState(0);
+    const [selectedIndex2, setSelectedIndex2] = useState(0);
 
     const [name, setName] = useState(
         adjectives[selectedIndex1].concat(' ', nouns[selectedIndex2])
@@ -54,7 +46,7 @@ export default function Home() {
         const element1 = document //Selected element for List1
             .getElementsByClassName('selectedNamePlate')
             .item(0);
-        const element2 = document //Selected element for list
+        const element2 = document //Selected element for List2
             .getElementsByClassName('selectedNamePlate')
             .item(1);
 
