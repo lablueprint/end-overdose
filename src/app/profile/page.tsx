@@ -10,6 +10,7 @@ import ScrollableList from './Components/ScrollableList';
 export default function Home() {
     const [selectedIndex1, setSelectedIndex1] = useState(0);
     const [selectedIndex2, setSelectedIndex2] = useState(0);
+    const [userRole, setUserRole] = useState('administrator');
 
     const [name, setName] = useState(
         adjectives[selectedIndex1].concat(' ', nouns[selectedIndex2])
@@ -85,7 +86,7 @@ export default function Home() {
                         }}
                     >
                         <h1 style={{ fontSize: 35 }}>{name}</h1>
-                        <RolePlate />
+                        <RolePlate role={userRole} />
                     </div>
                     <div
                         style={{
