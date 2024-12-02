@@ -1,4 +1,9 @@
 import Image from 'next/image';
+import './profileStyles.css';
+
+/**
+ * Badge element that table is constructed with
+ */
 
 interface BadgeProps {
     badgeTitle: string;

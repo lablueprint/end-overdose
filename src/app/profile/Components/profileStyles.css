@@ -9,3 +9,14 @@
     .inactiveConfirm {
         color: black;
     }
+
+    .scrollableList {
+        height: 175px;
+        overflow: scroll;
+        padding: 20px;
+    }
+
+    .namePlateContainer {
+        height: 25px;
+    }
+
