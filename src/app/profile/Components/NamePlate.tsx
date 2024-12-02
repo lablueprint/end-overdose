@@ -9,22 +9,20 @@ interface NamePlateProps {
 }
 
 /* Notes:
-      - We want to properly define the types for the props
-      - Typical naming conventions for interfaces are:
-          {Component Name}Props
+     Component for singular name field that scrollable list is constructed with
   */
 
 const NamePlate = ({ name, index, selectedIndex }: NamePlateProps) => {
     // child
     if (index == selectedIndex) {
         return (
-            <div style={{ height: '25px' }}>
+            <div className="namePlateContainer">
                 <p className="selectedNamePlate">{name}</p>
             </div>
         );
     } else {
         return (
-            <div style={{ height: '25px' }}>
+            <div className="namePlateContainer">
                 <p>{name}</p>
             </div>
         );

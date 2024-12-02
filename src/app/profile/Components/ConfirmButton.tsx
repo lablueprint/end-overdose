@@ -1,5 +1,9 @@
 import './profileStyles.css';
 
+/**
+ * Component for confirmation button that appears under scrollable list associated with confirming name selection in backend
+ */
+
 interface ConfirmButtonProps {
     changesMade: boolean;
     onPress: () => void;

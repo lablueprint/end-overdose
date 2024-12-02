@@ -1,31 +1,26 @@
 import NamePlate from './NamePlate';
+import './profileStyles.css';
 
 interface ScrollableListProps {
-    values: string[];
+    names: string[];
     selectedIndex: number;
 }
 
-/**const handleButtonClick = (word: string) => {
-    if (word !== selectedWord) {
-        
-    }
-}; **/
+/**
+ * Component containing each of the 2 (or eventually 3) lists for name generation
+ **/
 
-function ScrollableList({ values, selectedIndex }: ScrollableListProps) {
-    const listValues = values.map((value: string, index: number) => (
+function ScrollableList({ names, selectedIndex }: ScrollableListProps) {
+    const listValues = names.map((name: string, index: number) => (
         <NamePlate
-            key={value}
-            name={value}
+            key={name}
+            name={name}
             index={index}
             selectedIndex={selectedIndex}
         />
     ));
 
-    return (
-        <div style={{ height: '175px', overflow: 'scroll', padding: '20px' }}>
-            {listValues}
-        </div>
-    );
+    return <div className="scrollableList">{listValues}</div>;
 }
 
 export default ScrollableList;

@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+import './profileStyles.css';
 
 /* Notes:
-      - We want to properly define the types for the props
-      - Typical naming conventions for interfaces are:
-          {Component Name}Props
+    Component for maintaining look of the "role" subtitle under the main name
   */
 
 const RolePlate = () => {

@@ -8,6 +8,8 @@ import ConfirmButton from './Components/ConfirmButton';
 import ScrollableList from './Components/ScrollableList';
 
 export default function Home() {
+    //For generating random starting spot on table, currently disabled
+
     //const num1 = Math.floor(Math.random() * 99);
     //const num2 = Math.floor(Math.random() * 99);
 
@@ -16,7 +18,6 @@ export default function Home() {
         //num1
     );
     const [selectedIndex2, setSelectedIndex2] = useState(0); //num2);
-    //0
 
     const [name, setName] = useState(
         adjectives[selectedIndex1].concat(' ', nouns[selectedIndex2])
@@ -50,10 +51,10 @@ export default function Home() {
     useEffect(() => {
         setChangeMade(true);
         setName(adjectives[selectedIndex1].concat(' ', nouns[selectedIndex2]));
-        const element1 = document
+        const element1 = document //Selected element for List1
             .getElementsByClassName('selectedNamePlate')
             .item(0);
-        const element2 = document
+        const element2 = document //Selected element for list
             .getElementsByClassName('selectedNamePlate')
             .item(1);
 
@@ -112,7 +113,7 @@ export default function Home() {
                             }}
                         >
                             <ScrollableList
-                                values={adjectives}
+                                names={adjectives}
                                 selectedIndex={selectedIndex1}
                             />
                             <div
@@ -139,7 +140,7 @@ export default function Home() {
                             }}
                         >
                             <ScrollableList
-                                values={nouns}
+                                names={nouns}
                                 selectedIndex={selectedIndex2}
                             />
                             <div
