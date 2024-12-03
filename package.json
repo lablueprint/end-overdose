@@ -6,7 +6,8 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "populate-students": "ts-node src/helper/script.ts"
     },
     "dependencies": {
         "firebase": "^11.0.2",
