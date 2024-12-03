@@ -1,12 +1,30 @@
 'use client';
 import { useRouter } from 'next/navigation';
+import ReactPlayer from 'react-player';
+function CustomPlayer({ videoPath }) {
+    return (
+        <ReactPlayer
+            url={videoPath}
+            controls={false}
+            config={{
+                file: {
+                    attributes: { controlsList: 'nodownload noplaybackrate' },
+                },
+            }}
+            onSeek={() => console.log('Seeking is disabled!')}
+            onProgress={(progress) => {
+                console.log(progress.played);
+            }}
+        />
+    );
+}
 interface videoPageProps {
     pageTitle: string;
     pageContent: string;
-    pageModule: string;
-    pageCourse: string;
-    pagePath: string;
-    videoPath: string;
+    pageModule: string; // module name/number
+    pageCourse: string; // course name
+    pagePath: string; // page number within module
+    videoPath: string; // URL path for video
 }
 
 export default function VideoPage({
@@ -28,9 +46,19 @@ export default function VideoPage({
     };
     return (
         <div>
-            <h1>{pageTitle}</h1>
+            <h1>Page {pageTitle}</h1>
             <p>{pageContent}</p>
-            <video src={videoPath} width="1000" height="800" />
+            <div
+                className="video-container"
+                style={{
+                    maxWidth: '800px',
+                    maxHeight: '1000px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <CustomPlayer videoPath={videoPath} />
+            </div>
             <div style={{ cursor: 'pointer' }} onClick={handleNext}>
                 Next Page
             </div>
