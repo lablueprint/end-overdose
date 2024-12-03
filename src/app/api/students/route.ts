@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
         const requestData = await request.json();
         console.log('Request Data:', requestData); // Log request data for debugging
 
-        const newStudentRef = await addDoc(collection(db, 'admins'), {
+        const newStudentRef = await addDoc(collection(db, 'students'), {
             student_id: requestData.student_id,
             name: {
                 first: requestData.name.first,
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
         // Return success response
         return NextResponse.json({
-            message: 'Admin user created successfully',
+            message: 'Student user created successfully',
             userId: newStudentRef.id,
         });
     } catch (error) {
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
         // Ensure a proper response is returned in case of an error
         return NextResponse.json(
             {
-                message: 'Failed to create admin user',
+                message: 'Failed to create student user',
                 error: error.message || 'Unknown error',
             },
             { status: 500 }
