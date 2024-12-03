@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
         const requestData = await request.json();
         console.log('Request Data:', requestData); // Log request data for debugging
 
-        const newStudentRef = await addDoc(collection(db, 'students'), {
+        const studentJSON = {
             student_id: requestData.student_id,
             name: {
                 first: requestData.name.first,
@@ -19,7 +19,19 @@ export async function POST(request: NextRequest) {
             school_name: requestData.school_name,
             badges: [],
             course_completion: {},
-        });
+        };
+
+        if ('badges' in requestData) {
+            studentJSON.badges = requestData.badges;
+        }
+        if ('course_completion' in requestData) {
+            studentJSON.course_completion = requestData.course_completion;
+        }
+
+        const newStudentRef = await addDoc(
+            collection(db, 'students'),
+            studentJSON
+        );
 
         console.log('Document written with ID:', newStudentRef.id);
 
