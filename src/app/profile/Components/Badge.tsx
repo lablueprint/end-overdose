@@ -6,17 +6,36 @@ import Image from 'next/image';
 
 interface BadgeProps {
     badgeTitle: string;
-    badgeImage: string;
+    isActive: boolean;
 }
 
-const Badge = ({ badgeTitle, badgeImage }: BadgeProps) => {
+const Badge = ({ badgeTitle, isActive }: BadgeProps) => {
     // child
-    return (
-        <div>
-            <Image src={badgeImage} width={50} height={50} alt="Badge Image" />
-            <p>{badgeTitle}</p>
-        </div>
-    );
+    if (isActive) {
+        return (
+            <div>
+                <Image
+                    src={'/badge.png'}
+                    width={50}
+                    height={50}
+                    alt="Badge Image"
+                />
+                <p className="active-text">{badgeTitle}</p>
+            </div>
+        );
+    } else {
+        return (
+            <div>
+                <Image
+                    src={'/badge-grey.jpeg'}
+                    width={50}
+                    height={50}
+                    alt="Badge Image"
+                />
+                <p className="inactive-text">{badgeTitle}</p>
+            </div>
+        );
+    }
 };
 
 export default Badge;

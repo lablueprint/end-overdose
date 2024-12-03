@@ -25,9 +25,4 @@ body {
     overflow-y: auto;
   }
 
-.badge-table {
-    display: grid;
-    gap: 50px;
-    grid-template-columns: auto auto auto auto auto;
-    justify-content: center;
-}
+

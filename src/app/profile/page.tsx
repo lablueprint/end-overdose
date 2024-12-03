@@ -6,6 +6,7 @@ import RolePlate from './Components/RolePlate';
 import { useEffect, useState } from 'react';
 import ConfirmButton from './Components/ConfirmButton';
 import ScrollableList from './Components/ScrollableList';
+import BadgeTable from './Components/BadgeTable';
 
 export default function Home() {
     const [selectedIndex1, setSelectedIndex1] = useState(0);
@@ -161,61 +162,7 @@ export default function Home() {
                             }}
                         />
                     </div>
-
-                    <div
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            margin: '20px',
-                        }}
-                    >
-                        <h1 style={{ fontSize: 24, marginBottom: '10px' }}>
-                            {' '}
-                            Badges{' '}
-                        </h1>
-                        <div className="badge-table">
-                            <Badge
-                                badgeImage="/badge.png"
-                                badgeTitle="Badge 1"
-                            />
-                            <Badge
-                                badgeImage="/badge.png"
-                                badgeTitle="Badge 2"
-                            />
-                            <Badge
-                                badgeImage="/badge.png"
-                                badgeTitle="Badge 3"
-                            />
-                            <Badge
-                                badgeImage="/badge.png"
-                                badgeTitle="Badge 4"
-                            />
-                            <Badge
-                                badgeImage="/badge.png"
-                                badgeTitle="Badge 5"
-                            />
-                            <Badge
-                                badgeImage="/badge.png"
-                                badgeTitle="Badge 6"
-                            />
-                            <Badge
-                                badgeImage="/badge.png"
-                                badgeTitle="Badge 7"
-                            />
-                            <Badge
-                                badgeImage="/badge.png"
-                                badgeTitle="Badge 8"
-                            />
-                            <Badge
-                                badgeImage="/badge.png"
-                                badgeTitle="Badge 9"
-                            />
-                            <Badge
-                                badgeImage="/badge.png"
-                                badgeTitle="Badge 10"
-                            />
-                        </div>
-                    </div>
+                    <BadgeTable />
                 </div>
             </main>
         </div>
