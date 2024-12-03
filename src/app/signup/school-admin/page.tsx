@@ -1,6 +1,8 @@
 'use client';
-import {useState} from 'react';
+import { useState } from 'react';
 import signUp from '@/firebase/auth/signUp';
+import { doc, setDoc } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 
 const SchoolAdminSignup = () => {
     const [name, setName] = useState('');
@@ -23,11 +25,25 @@ const SchoolAdminSignup = () => {
         if (error) {
             setError(error.message);
         } else {
-            setSuccess(true);
-            console.log(
-                'School Admin signed up successfully:',
-                result?.user
-            );
+            try {
+                const db = getFirestore();
+                //save user role in Firestore
+                if (result?.user?.uid) {
+                    await setDoc(doc(db, 'users', result.user.uid), {
+                        name,
+                        email,
+                        role: 'school-admin', // Assign the role
+                    });
+                } else {
+                    setError('Failed to retrieve user ID. Please try again.');
+                    console.error('No user ID found in the result.');
+                }
+                setSuccess(true);
+                console.log('School Admin signed up successfully:', result?.user);
+            } catch (e) {
+                setError('Failed to save user role. Please try again.');
+                console.error(e);
+            }
         }
     };
 
@@ -36,7 +52,9 @@ const SchoolAdminSignup = () => {
             <h1>School Admin Signup</h1>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && (
-                <p style={{ color: 'green' }}>School Admin Signup successful!</p>
+                <p style={{ color: 'green' }}>
+                    School Admin Signup successful!
+                </p>
             )}
             <form onSubmit={handleSubmit}>
                 <label htmlFor="name">Name:</label>
@@ -79,6 +97,6 @@ const SchoolAdminSignup = () => {
             </form>
         </div>
     );
-}
+};
 
 export default SchoolAdminSignup;

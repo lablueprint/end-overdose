@@ -1,19 +1,52 @@
 'use client';
 import {useState} from 'react';
+import signIn from '@/firebase/auth/signIn';
+import { doc, getDoc } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const EOAdminLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState<boolean>(false);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('Logging in as End Overdose Admin:', {email, password});
-        //call the firebase sign-in function here
+        const { result, error } = await signIn(email, password);
+        if (error) {
+            setError(error.message);
+        } else {
+            const auth = getAuth();
+            const db = getFirestore();
+            const user = auth.currentUser;
+
+            if (user) {
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                if (userDoc.exists()) {
+                    const role = userDoc.data().role;
+                    console.log('Role:', role);
+
+                    if (role === 'eo-admin') {
+                        setSuccess(true);
+                        console.log('EO Admin signed in successfully:', result?.user);
+                    } else {
+                        setError('Unauthorized access: Not an EO admin.');
+                    }
+                } else {
+                    setError('User data not found in Firestore.');
+                }
+            }
+        }
     };
 
     return (
         <div>
             <h1>End Overdose Admin Login</h1>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {success && (
+                <p style={{ color: 'green' }}>EO Admin Signup successful!</p>
+            )}
             <form onSubmit={handleSubmit}>
                 <label htmlFor="email">Email:</label>
                 <input

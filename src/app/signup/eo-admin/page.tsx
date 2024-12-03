@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import signUp from '@/firebase/auth/signUp';
+import { doc, setDoc } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 
 const EOAdminSignup = () => {
     const [name, setName] = useState('');
@@ -23,11 +25,25 @@ const EOAdminSignup = () => {
         if (error) {
             setError(error.message);
         } else {
-            setSuccess(true);
-            console.log(
-                'End Overdose Admin signed up successfully:',
-                result?.user
-            );
+            try {
+                const db = getFirestore();
+                //save user role in Firestore
+                if (result?.user?.uid) {
+                    await setDoc(doc(db, 'users', result.user.uid), {
+                        name,
+                        email,
+                        role: 'eo-admin', // Assign the role
+                    });
+                } else {
+                    setError('Failed to retrieve user ID. Please try again.');
+                    console.error('No user ID found in the result.');
+                }
+                setSuccess(true);
+                console.log('EO Admin signed up successfully:', result?.user);
+            } catch (e) {
+                setError('Failed to save user role. Please try again.');
+                console.error(e);
+            }
         }
     };
 
