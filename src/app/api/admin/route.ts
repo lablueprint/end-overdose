@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
             },
             email: requestData.email,
             role: requestData.role,
-            school_district: requestData.school_district,
+            school_name: requestData.school_name,
         });
 
         console.log('Document written with ID:', newAdminRef.id);
