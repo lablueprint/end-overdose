@@ -21,17 +21,42 @@ export default function Home() {
         },
     ];
 
-    const [currentQuestion, setCurrentQuestion] = useState(questions[0])
-    const [selectedAnswer, setSelectedAnswer] = useState(0)
+    const [currentScore, setCurrentScore] = useState(0)
 
-    const [correctAnswer, setCorrectAnswer] = useState(currentQuestion.correctAnswer)
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+
+    const currentQuestion = questions[currentQuestionIndex];
+
+    // const [correctAnswer, setCorrectAnswer] = useState(currentQuestion.correctAnswer)
+
+    const handleAnswerSelected = (answerIndex: number) => {
+        setSelectedAnswer(answerIndex);
+        if (answerIndex === currentQuestion.correctAnswer) {
+            alert('Correct!');
+            setCurrentScore(currentScore + 1)
+        } else {
+            alert('Wrong!');
+        }
+
+        // Move to the next question
+        setTimeout(() => {
+            if (currentQuestionIndex < questions.length - 1) {
+                setSelectedAnswer(null);
+            } else {
+                alert('Quiz complete!');
+            }
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+        }, 1000);
+    };
 
     return (
         <>
-            <Question 
+        { (currentQuestionIndex < questions.length) ? <Question 
                 question={currentQuestion.question}
                 answers={currentQuestion.answers}
-             />
+                onAnswerSelected={handleAnswerSelected}
+             />: <>{(currentScore/questions.length * 100).toFixed(2)}%</>}
         </>
 
     )
