@@ -7,7 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "populate-students": "ts-node src/helper/script.ts"
+        "populate-students": "ts-node src/helper/script"
     },
     "dependencies": {
         "@types/axios": "^0.9.36",
