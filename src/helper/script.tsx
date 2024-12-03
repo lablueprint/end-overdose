@@ -28,7 +28,7 @@ const createStudent1 = (n: number): StudentData => {
 // Main script to populate students
 async function populateStudents() {
     console.log(`Generating 20 students for School1`);
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 1; i++) {
         const studentData = createStudent1(i);
         try {
             const response = await axios.post(
