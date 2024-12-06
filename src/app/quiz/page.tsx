@@ -21,10 +21,10 @@ export default function Quiz() {
         },
     ];
 
-    const [currentScore, setCurrentScore] = useState(0)
+    const [currentScore, setCurrentScore] = useState(0);
 
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -34,7 +34,7 @@ export default function Quiz() {
         setSelectedAnswer(answerIndex);
         if (answerIndex === currentQuestion.correctAnswer) {
             alert('Correct!');
-            setCurrentScore(currentScore + 1)
+            setCurrentScore(currentScore + 1);
         } else {
             alert('Wrong!');
         }
@@ -52,13 +52,15 @@ export default function Quiz() {
 
     return (
         <>
-        { (currentQuestionIndex < questions.length) ? <Question 
-                question={currentQuestion.question}
-                answers={currentQuestion.answers}
-                onAnswerSelected={handleAnswerSelected}
-             />: <>{(currentScore/questions.length * 100).toFixed(2)}%</>}
+            {currentQuestionIndex < questions.length ? (
+                <Question
+                    question={currentQuestion.question}
+                    answers={currentQuestion.answers}
+                    onAnswerSelected={handleAnswerSelected}
+                />
+            ) : (
+                <>{((currentScore / questions.length) * 100).toFixed(2)}%</>
+            )}
         </>
-
-    )
+    );
 }
-
