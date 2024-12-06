@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Question from './components/Question';
 
-export default function Home() {
+export default function Quiz() {
     const questions = [
         {
             question: 'How are you?',
