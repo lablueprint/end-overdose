@@ -7,16 +7,20 @@ import { useEffect, useState } from 'react';
 import ConfirmButton from './Components/ConfirmButton';
 import ScrollableList from './Components/ScrollableList';
 import BadgeTable from './Components/BadgeTable';
+import ProfilePicture from './Components/ProfilePicture';
+import ProfileSelectButton from './Components/ProfileSelectButton';
 
 export default function Home() {
     const [selectedIndex1, setSelectedIndex1] = useState(0);
     const [selectedIndex2, setSelectedIndex2] = useState(0);
     const [userRole, setUserRole] = useState('administrator');
+    const [selectedProfilePicture, setSelectedProfilePicture] = useState(0);
 
     const [name, setName] = useState(
         adjectives[selectedIndex1].concat(' ', nouns[selectedIndex2])
     );
     const [changesMade, setChangeMade] = useState(false);
+    const [profileChanged, setProfileChanged] = useState(false);
 
     const incrementIndex1 = () => {
         if (selectedIndex1 < adjectives.length - 1) {
@@ -39,7 +43,13 @@ export default function Home() {
     const decrementIndex2 = () => {
         if (selectedIndex2 > 0) {
             setSelectedIndex2(selectedIndex2 - 1);
+            setProfileChanged(true);
         }
+    };
+
+    const changeProfilePicture = (newProfileIndex: number) => {
+        setSelectedProfilePicture(newProfileIndex);
+        setProfileChanged(true);
     };
 
     useEffect(() => {
@@ -78,6 +88,7 @@ export default function Home() {
                         alignItems: 'center',
                     }}
                 >
+                    <ProfilePicture picIndex={selectedProfilePicture} />
                     <div
                         style={{
                             display: 'flex',
@@ -163,6 +174,70 @@ export default function Home() {
                         />
                     </div>
                     <BadgeTable />
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        <div
+                            style={{
+                                height: '50px',
+                                width: '50px',
+                                margin: '50px',
+                            }}
+                        >
+                            <ProfileSelectButton
+                                picIndex={1}
+                                onClick={changeProfilePicture}
+                            />
+                        </div>
+                        <div
+                            style={{
+                                height: '50px',
+                                width: '50px',
+                                margin: '50px',
+                            }}
+                        >
+                            <ProfileSelectButton
+                                picIndex={2}
+                                onClick={changeProfilePicture}
+                            />
+                        </div>
+                        <div
+                            style={{
+                                height: '50px',
+                                width: '50px',
+                                margin: '50px',
+                            }}
+                        >
+                            <ProfileSelectButton
+                                picIndex={3}
+                                onClick={changeProfilePicture}
+                            />
+                        </div>
+                        <div
+                            style={{
+                                height: '50px',
+                                width: '50px',
+                                margin: '50px',
+                            }}
+                        >
+                            <ProfileSelectButton
+                                picIndex={4}
+                                onClick={changeProfilePicture}
+                            />
+                        </div>
+                        <div
+                            style={{
+                                height: '50px',
+                                width: '50px',
+                                margin: '50px',
+                            }}
+                        >
+                            <ConfirmButton
+                                changesMade={profileChanged}
+                                onPress={() => {
+                                    setProfileChanged(false);
+                                }}
+                            />
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
