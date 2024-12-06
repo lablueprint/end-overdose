@@ -7,9 +7,10 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "populate-students": "ts-node src/helper/script"
+        "populate-students": "tsx src/helper/script"
     },
     "dependencies": {
+        "@faker-js/faker": "^9.3.0",
         "@types/axios": "^0.9.36",
         "axios": "^1.7.8",
         "firebase": "^11.0.2",
