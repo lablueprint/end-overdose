@@ -24,9 +24,9 @@ export default function OpioidPage() {
                 pageTitle={params.page}
                 pageContent={'Hello'}
                 pageModule={'module1'}
-                pageCourse={'opiod'}
+                pageCourse={'opioid'}
                 pagePath={'1'}
-                videoPath={'/test.mp4'}
+                videoPath={'https://www.youtube.com/watch?v=LXb3EKWsInQ'}
             />
 
             <div onClick={handleNext}>Next</div>
