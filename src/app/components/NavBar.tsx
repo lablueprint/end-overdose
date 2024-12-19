@@ -23,6 +23,10 @@ const NavBar: React.FC = () => {
                 </li>
 
                 <li className="relative text-white hover:text-gray-200">
+                    <Link href={'/quiz'}>Quiz</Link>
+                </li>
+
+                <li className="relative text-white hover:text-gray-200">
                     <Link href={'/profile'}>Profile</Link>
                 </li>
 
