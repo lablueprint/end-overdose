@@ -1,11 +1,11 @@
 'use client';
 
-import Badge from './Components/Badge';
+import Badge from './components/Badge';
 import { adjectives, nouns } from './data';
-import RolePlate from './Components/RolePlate';
+import RolePlate from './components/RolePlate';
 import { useEffect, useState } from 'react';
-import ConfirmButton from './Components/ConfirmButton';
-import ScrollableList from './Components/ScrollableList';
+import ConfirmButton from './components/ConfirmButton';
+import ScrollableList from './components/ScrollableList';
 
 export default function Home() {
     const [selectedIndex1, setSelectedIndex1] = useState(0);
