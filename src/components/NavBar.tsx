@@ -3,7 +3,8 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const NavBar: React.FC = () => {
+// navigation bar
+export default function NavBar() {
     return (
         <nav className="bg-black p-4 shadow-md">
             <ul className="flex justify-start space-x-6">
@@ -41,9 +42,11 @@ const NavBar: React.FC = () => {
                 <li className="relative text-white hover:text-gray-200">
                     <Link href={'/signup'}>Signup</Link>
                 </li>
+
+                <li className="relative text-white hover:text-gray-200">
+                    <Link href={'/testing'}>Testing</Link>
+                </li>
             </ul>
         </nav>
     );
-};
-
-export default NavBar;
+}
