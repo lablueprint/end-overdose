@@ -37,9 +37,13 @@ export function AddAdminForm() {
                 placeholder="Email"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
-                 className="border-black border-2"
+                className="border-black border-2"
             />
-            <button type="submit" disabled={isPending} className="bg-blue-500 text-white rounded-lg p-1">
+            <button
+                type="submit"
+                disabled={isPending}
+                className="bg-blue-500 text-white rounded-lg p-1"
+            >
                 {isPending ? 'Adding...' : 'Add Admin'}
             </button>
         </form>
