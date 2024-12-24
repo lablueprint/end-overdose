@@ -10,3 +10,15 @@ export type Admin = {
     school_name: string;
     approved: boolean;
 };
+
+// example:
+// const admin: Admin = {
+//     name: {
+//         first: 'John',
+//         last: 'Doe',
+//     },
+//     email: 'johndoe@fusdk.net',
+//     role: 'school_admin',
+//     school_name: 'Fremont Unified School District',
+//     approved: true,
+// };
