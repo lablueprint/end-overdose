@@ -27,6 +27,8 @@ export default function OpioidPage() {
                 pageCourse={'opioid'}
                 pagePath={'1'}
                 videoPath={'https://www.youtube.com/watch?v=LXb3EKWsInQ'}
+                startTime={'0:00'}
+                endTime={'1:00'}
             />
 
             <div onClick={handleNext}>Next</div>
