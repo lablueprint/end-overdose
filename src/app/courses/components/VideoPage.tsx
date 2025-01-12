@@ -41,26 +41,33 @@ import { useState, useRef, useEffect } from 'react';
 //     );
 // }
 
-const CustomPlayer = ({ videoPath, startTime, endTime }) => {
+declare global {
+    interface Window {
+        YT: any;
+        onYouTubeIframeAPIReady: () => void;
+    }
+}
+
+const CustomPlayer = ({ videoPath, startTime, endTime }: { videoPath: string; startTime: string; endTime: string }) => {
     const playerRef = useRef(null);
-    const [player, setPlayer] = useState(null);
+    const [player, setPlayer] = useState<YT.Player | null>(null);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
 
-    const minutesToSeconds = (time) => {
+    const minutesToSeconds = (time : string) => {
         const [minutes, seconds] = time.split(':').map(Number);
         return minutes * 60 + seconds;
     };
 
-    const formatTime = (time) => {
+    const formatTime = (time : number) => {
         time = Math.round(time);
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
 
-    const extractVideoId = (url) => {
+    const extractVideoId = (url : string) => {
         const match = url.match(
             /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
         );
@@ -95,7 +102,7 @@ const CustomPlayer = ({ videoPath, startTime, endTime }) => {
                     setDuration(totalSeconds);
                     setTotalTime(totalSeconds);
                 },
-                onStateChange: (event) => {
+                onStateChange: (event: YT.OnStateChangeEvent) => {
                     if (event.data === window.YT.PlayerState.ENDED) {
                         newPlayer.seekTo(startSeconds);
                     }
