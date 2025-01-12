@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
+import SimplePage from '@/app/courses/components/SimplePage';
 
 export default function CareerPage() {
     const params = useParams<{ page: string }>();
@@ -19,8 +20,13 @@ export default function CareerPage() {
     return (
         <div>
             <h1> Career Pages {params.page}</h1>
-            <div onClick={handleNext}>Next</div>
-            <div onClick={handlePrevious}>Previous</div>
+            <div>
+                <SimplePage
+                    pageTitle="Title"
+                    handleNext={handleNext}
+                    handlePrevious={handlePrevious}
+                />
+            </div>
         </div>
     );
 }
