@@ -4,21 +4,33 @@ export type Student = {
     school_name: string;
     nameplate: string;
     course_completion: {
-        opioidCourse: number;
-        careerCourse: number;
+        opioidCourse: {
+            courseProgress: number; // % of lessons completed
+            lessonProgress: number; // % of modules completed in the current lesson
+        };
+        careerCourse: {
+            courseProgress: number; // % of lessons completed
+            lessonProgress: number; // % of modules completed in the current lesson
+        };
     };
     badges: string[];
 };
 
 // example:
-// const student: Student = {
-//     student_id: '12345',
-//     email: 'student@fusdk.net',
-//     school_name: 'Fremont Unified School District',
-//     nameplate: 'Student Name',
-//     course_completion: {
-//         opioidCourse: 100,
-//         careerCourse: 50,
-//     },
-//     badges: ['badge1', 'badge2'],
-// };
+export const StudentJosh: Student = {
+    student_id: '12345',
+    email: 'josh@fusd.net',
+    school_name: 'Fremont Unified School District',
+    nameplate: 'Josh Doe',
+    course_completion: {
+        opioidCourse: {
+            courseProgress: 50, // half of lessons completed
+            lessonProgress: 25, // half of modules completed in the current lesson
+        },
+        careerCourse: {
+            courseProgress: 75,
+            lessonProgress: 50,
+        },
+    },
+    badges: ['coolbadge', 'wonderfulbadge'],
+};

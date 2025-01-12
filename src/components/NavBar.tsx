@@ -2,50 +2,53 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
-// navigation bar
 export default function NavBar() {
+    const path = usePathname();
+    // add a new navigation tab here
+    const tabs = [
+        { href: '/courses', tab: 'Courses' },
+        { href: '/quiz', tab: 'Quiz' },
+        { href: '/profile', tab: 'Profile' },
+        { href: '/admin', tab: 'Admin' },
+        { href: '/login', tab: 'Login' },
+        { href: '/signup', tab: 'Signup' },
+        { href: '/testing', tab: 'Testing' },
+    ];
+
     return (
-        <nav className="bg-black p-4 shadow-md">
-            <ul className="flex justify-start space-x-6">
-                <li className="relative">
+        <nav className="bg-black p-4 shadow-md h-full">
+            <ul className="flex flex-col justify-start space-y-3">
+                <li className="relative mb-3">
                     <Link href="/">
                         <Image
                             src="/logo.png"
                             alt="logo"
                             width={100}
-                            height={50}
+                            height={100}
+                            style={{
+                                width: 'auto',
+                                height: '100%',
+                            }}
                         />
                     </Link>
                 </li>
 
-                <li className="relative text-white hover:text-gray-200">
-                    <Link href={'/courses'}>Courses</Link>
-                </li>
-
-                <li className="relative text-white hover:text-gray-200">
-                    <Link href={'/quiz'}>Quiz</Link>
-                </li>
-
-                <li className="relative text-white hover:text-gray-200">
-                    <Link href={'/profile'}>Profile</Link>
-                </li>
-
-                <li className="relative text-white hover:text-gray-200">
-                    <Link href={'/admin'}>Admin</Link>
-                </li>
-
-                <li className="relative text-white hover:text-gray-200">
-                    <Link href={'/login'}>Login</Link>
-                </li>
-
-                <li className="relative text-white hover:text-gray-200">
-                    <Link href={'/signup'}>Signup</Link>
-                </li>
-
-                <li className="relative text-white hover:text-gray-200">
-                    <Link href={'/testing'}>Testing</Link>
-                </li>
+                {tabs.map(({ href, tab }) => (
+                    <li
+                        key={href}
+                        className={`relative text-lg w-full ${
+                            path.includes(href)
+                                ? 'bg-white text-black rounded-md'
+                                : 'text-white'
+                        }`}
+                    >
+                        <Link href={href} className="block w-full px-4 py-2">
+                            {tab}
+                        </Link>
+                    </li>
+                ))}
             </ul>
         </nav>
     );
