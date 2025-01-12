@@ -12,13 +12,13 @@ export type Admin = {
 };
 
 // example:
-// const admin: Admin = {
-//     name: {
-//         first: 'John',
-//         last: 'Doe',
-//     },
-//     email: 'johndoe@fusdk.net',
-//     role: 'school_admin',
-//     school_name: 'Fremont Unified School District',
-//     approved: true,
-// };
+export const SchoolAdminJohn: Admin = {
+    name: {
+        first: 'John',
+        last: 'Doe',
+    },
+    email: 'johndoe@fusdk.net',
+    role: 'school_admin',
+    school_name: 'Fremont Unified School District',
+    approved: true,
+};
