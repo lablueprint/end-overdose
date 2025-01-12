@@ -1,4 +1,5 @@
 'use client';
+import VideoPage from '@/app/courses/components/VideoPage';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 
@@ -19,6 +20,17 @@ export default function OpioidPage() {
     return (
         <div>
             <h1> Opioid Pages {params.page}</h1>
+            <VideoPage
+                pageTitle={params.page}
+                pageContent={'Hello'}
+                pageModule={'module1'}
+                pageCourse={'opioid'}
+                pagePath={'1'}
+                videoPath={'https://www.youtube.com/watch?v=LXb3EKWsInQ'}
+                startTime={'0:00'}
+                endTime={'1:00'}
+            />
+
             <div onClick={handleNext}>Next</div>
             <div onClick={handlePrevious}>Previous</div>
         </div>
