@@ -18,7 +18,7 @@ export default function Course({
     };
     return (
         <>
-            <div className="relative cursor-pointer border-2 w-80 min-h-64 m-5 p-5 rounded-xl">
+            <div className="relative cursor-pointer border-2 w-80 h-64 m-5 p-5 rounded-xl">
                 <div onClick={handleClick}>
                     <h2 className="leading-8 font-bold">{courseTitle}</h2>
                 </div>
