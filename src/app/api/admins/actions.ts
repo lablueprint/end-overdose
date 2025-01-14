@@ -64,3 +64,23 @@ export async function deleteAdmin(adminEmail: string) {
         throw new Error('Failed to delete admin.');
     }
 }
+
+// get all of the school admins
+export const getSchoolAdmins = cache(async () => {
+    try {
+        // query admin by email field
+        const adminQuery = query(
+            adminsCollection,
+            where('role', '==', 'school_admin')
+        );
+        const querySnapshot = await getDocs(adminQuery);
+        const SchoolAdmins = querySnapshot.docs.map(
+            (doc) => doc.data() as Admin
+        );
+
+        return SchoolAdmins;
+    } catch (error) {
+        console.error('Error deleting admin:', error);
+        throw new Error('Failed to delete admin.');
+    }
+});
