@@ -18,12 +18,10 @@ const SchoolAdminLogin = () => {
         if (error) {
             setError(error);
         } else {
-            const auth = getAuth();
             const db = getFirestore(firebase_app);
-            const user = auth.currentUser;
 
-            if (user) {
-                const userDoc = await getDoc(doc(db, 'users', user.uid));
+            if (result?.userId) {
+                const userDoc = await getDoc(doc(db, 'users', result.userId));
                 if (userDoc.exists()) {
                     const role = userDoc.data().role;
                     console.log('Role:', role);
