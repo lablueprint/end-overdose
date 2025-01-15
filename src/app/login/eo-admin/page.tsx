@@ -4,6 +4,7 @@ import signIn from '@/firebase/auth/signIn';
 import { doc, getDoc } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import firebase_app from '@/firebase/config';
 
 const EOAdminLogin = () => {
     const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ const EOAdminLogin = () => {
             setError(error);
         } else {
             const auth = getAuth();
-            const db = getFirestore();
+            const db = getFirestore(firebase_app);
             const user = auth.currentUser;
 
             if (user) {
