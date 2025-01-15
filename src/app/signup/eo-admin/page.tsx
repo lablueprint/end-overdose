@@ -3,6 +3,7 @@ import { useState } from 'react';
 import signUp from '@/firebase/auth/signUp';
 import { doc, setDoc } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
+import firebase_app from '@/firebase/config';
 
 const EOAdminSignup = () => {
     const [name, setName] = useState('');
@@ -26,7 +27,7 @@ const EOAdminSignup = () => {
             setError(error);
         } else {
             try {
-                const db = getFirestore();
+                const db = getFirestore(firebase_app);
                 //save user role in Firestore
                 if (result?.userId) {
                     await setDoc(doc(db, 'users', result.userId), {
