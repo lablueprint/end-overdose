@@ -3,7 +3,6 @@ import { useState } from 'react';
 import signIn from '@/firebase/auth/signIn';
 import { doc, getDoc } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
 import firebase_app from '@/firebase/config';
 
 const SchoolAdminLogin = () => {
