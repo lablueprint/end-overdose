@@ -17,8 +17,8 @@ const ProfileSelectButton = ({
 }: profileSelectButtonProps) => {
     const profilePictures = [
         '/sadcat.png',
-        '/antonio.png',
-        '/drake.jpg',
+        '/happycat.png',
+        '/normalcat.png',
         '/normal.jpg',
         '/discordgrey.png',
     ];
