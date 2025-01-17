@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import Question from './Question';
+import Score from './Score';
+
 import '../styles.css';
 
 export default function MCQ() {
@@ -31,6 +33,16 @@ export default function MCQ() {
         },
     ];
 
+    interface MissedQuestion {
+        question: string;
+        correctAnswer: number;
+        selectedAnswer: number | null;
+    }
+
+    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>(
+        []
+    );
+
     const [currentScore, setCurrentScore] = useState(0);
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -48,6 +60,16 @@ export default function MCQ() {
             setCurrentScore(currentScore + 1);
         } else {
             setFeedback('Wrong!');
+            setMissedQuestions((prevMissed) => [
+                ...prevMissed,
+                {
+                    question: questions[currentQuestionIndex].question,
+                    correctAnswer:
+                        questions[currentQuestionIndex].correctAnswer,
+                    selectedAnswer: answerIndex,
+                },
+            ]);
+            console.log(missedQuestions);
         }
 
         // Move to the next question after short delay
@@ -81,7 +103,18 @@ export default function MCQ() {
                     )}
                 </div>
             ) : (
-                <>{((currentScore / questions.length) * 100).toFixed(2)}%</>
+                <div>
+                    <Score
+                        numQuestions={questions.length}
+                        currentScore={currentScore}
+                        setCurrentScore={setCurrentScore}
+                        setCurrentQuestionIndex={setCurrentQuestionIndex}
+                        setSelectedAnswer={setSelectedAnswer}
+                        setFeedback={setFeedback}
+                        missedQuestions={missedQuestions}
+                        setMissedQuestions={setMissedQuestions}
+                    />
+                </div>
             )}
         </>
     );
