@@ -3,8 +3,8 @@ import Course from './components/Course';
 import SimplePage from './components/SimplePage';
 
 export default function Courses() {
-    let opioidProgress = 0;
-    let careerProgres = 40;
+    const opioidProgress = 0;
+    const careerProgres = 40;
     //useState for progress tracking
 
     return (
