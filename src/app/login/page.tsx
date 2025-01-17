@@ -6,18 +6,13 @@ const LoginPage = () => {
         <div>
             <h1>Login</h1>
             <li>
-                <Link href="/login/school-admin">
-                    <button>School Admin Login</button>
+                <Link href="/login/admin">
+                    <button>Admin Login</button>
                 </Link>
             </li>
             <li>
                 <Link href="/login/students">
                     <button>Student Login</button>
-                </Link>
-            </li>
-            <li>
-                <Link href="/login/eo-admin">
-                    <button>EO Admin Login</button>
                 </Link>
             </li>
         </div>

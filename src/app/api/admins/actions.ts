@@ -74,15 +74,11 @@ export async function deleteAdmin(adminEmail: string) {
 // log in an admin
 // getting the authenticated user from firebase auth
 // switch to getting the user from zustand store later
-export async function loginAdmin(
-    email: string,
-    password: string,
-    adminRole: string
-) {
+export async function loginAdmin(email: string, password: string) {
     try {
         const { result, error } = await signIn(email, password);
         if (error) {
-            return { error: error.message };
+            return { error };
         }
         const user = auth.currentUser;
         if (!user) {
@@ -91,10 +87,6 @@ export async function loginAdmin(
         const userDoc = await getDoc(doc(db, 'admins', user.uid));
         if (!userDoc.exists()) {
             return { error: 'User data not found.' };
-        }
-        const role = userDoc.data().role;
-        if (role !== adminRole) {
-            return { error: 'Unauthorized access: Not a school admin.' };
         }
         return { success: true };
     } catch (error) {
@@ -106,14 +98,14 @@ export async function loginAdmin(
 export async function signupAdmin(admin: Admin, password: string) {
     const { result, error } = await signUp(admin.email, password);
     if (error) {
-        return { error: error.message };
+        return { error };
     }
     try {
-        if (!result?.user?.uid) {
+        if (!result?.userId) {
             return { error: 'Failed to retrieve user ID. Please try again.' };
         }
         //save user role in Firestore
-        await setDoc(doc(db, 'admins', result.user.uid), admin);
+        await setDoc(doc(db, 'admins', result.userId), admin);
         return { success: true };
     } catch (error) {
         console.error('Error signing up admin:', error);
