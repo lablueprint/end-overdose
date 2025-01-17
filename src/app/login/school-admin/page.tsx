@@ -46,9 +46,7 @@ const SchoolAdminLogin = () => {
             <h1>School Admin Login</h1>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && (
-                <p style={{ color: 'green' }}>
-                    School Admin Signup successful!
-                </p>
+                <p style={{ color: 'green' }}>School Admin Login successful!</p>
             )}
             <form onSubmit={handleSubmit}>
                 <label htmlFor="email">School Email:</label>

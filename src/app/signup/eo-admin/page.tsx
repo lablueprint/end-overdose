@@ -1,4 +1,6 @@
 'use client';
+import { signupAdmin } from '@/app/api/admins/actions';
+import { SchoolAdminJohn } from '@/types/Admin';
 import { useState } from 'react';
 import signUp from '@/firebase/auth/signUp';
 import { doc, setDoc } from 'firebase/firestore';
