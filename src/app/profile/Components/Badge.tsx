@@ -85,12 +85,60 @@ const Badge = ({ badgeTitle, isActive }: BadgeProps) => {
     } else {
         return (
             <div>
-                <Image
+                <img
                     src={'/badge-grey.jpeg'}
                     width={50}
                     height={50}
                     alt="Badge Image"
+                    onClick={() => setIsOpen(true)}
                 />
+                <Dialog
+                    open={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    style={{ position: 'relative', zIndex: '50' }}
+                >
+                    <div
+                        style={{
+                            position: 'fixed',
+                            inset: '0px',
+                            display: 'flex',
+                            width: '100vw',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '4px',
+                        }}
+                    >
+                        <DialogPanel
+                            style={{
+                                maxWidth: '1024px',
+                                marginTop: '16px',
+                                borderWidth: '1px',
+                                padding: '12px',
+                                backgroundColor: 'black',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'start',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <DialogTitle style={{ fontWeight: '700' }}>
+                                {badgeTitle}
+                            </DialogTitle>
+                            <Description>{badgeDescription}</Description>
+                            <button
+                                onClick={() => setIsOpen(false)}
+                                style={{
+                                    borderWidth: '1px',
+                                    borderColor: 'white',
+                                    padding: '4px',
+                                    alignSelf: 'center',
+                                }}
+                            >
+                                Close
+                            </button>
+                        </DialogPanel>
+                    </div>
+                </Dialog>
                 <p className="inactive-text">{badgeTitle}</p>
             </div>
         );
