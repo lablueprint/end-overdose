@@ -39,7 +39,7 @@ export default function NavBar() {
                     <li
                         key={href}
                         className={`relative text-lg w-full ${
-                            path.includes(href)
+                            path.startsWith(href)
                                 ? 'bg-white text-black rounded-md'
                                 : 'text-white'
                         }`}

@@ -1,13 +1,9 @@
 'use client';
-import { signupAdmin } from '@/app/api/admins/actions';
-import { SchoolAdminJohn } from '@/types/Admin';
 import { useState } from 'react';
-import signUp from '@/firebase/auth/signUp';
-import { doc, setDoc } from 'firebase/firestore';
-import { getFirestore } from 'firebase/firestore';
-import firebase_app from '@/firebase/config';
+import { signupAdmin } from '@/app/api/admins/actions';
+import { Admin } from '@/types/Admin';
 
-const EOAdminSignup = () => {
+const SchoolAdminSignup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -24,38 +20,33 @@ const EOAdminSignup = () => {
             return;
         }
 
-        const { result, error } = await signUp(email, password);
-        if (error) {
-            setError(error);
+        const newAdmin: Admin = {
+            name: {
+                first: 'Test',
+                last: 'Test',
+            },
+            email,
+            role: 'school_admin',
+            school_name: 'Test School',
+            approved: true,
+        };
+
+        const response = await signupAdmin(newAdmin, password);
+        if (response.error) {
+            setError(response.error);
+            setSuccess(false);
         } else {
-            try {
-                const db = getFirestore(firebase_app);
-                //save user role in Firestore
-                if (result?.userId) {
-                    await setDoc(doc(db, 'users', result.userId), {
-                        name,
-                        email,
-                        role: 'eo-admin', // Assign the role
-                    });
-                } else {
-                    setError('Failed to retrieve user ID. Please try again.');
-                    console.error('No user ID found in the result.');
-                }
-                setSuccess(true);
-                console.log('EO Admin signed up successfully:', result?.userId);
-            } catch (e) {
-                setError('Failed to save user role. Please try again.');
-                console.error(e);
-            }
+            setSuccess(true);
+            setError('');
         }
     };
 
     return (
         <div>
-            <h1>End Overdose Admin Signup</h1>
+            <h1>Admin Signup</h1>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && (
-                <p style={{ color: 'green' }}>EO Admin Signup successful!</p>
+                <p style={{ color: 'green' }}>Admin Signup successful!</p>
             )}
             <form onSubmit={handleSubmit}>
                 <label htmlFor="name">Name:</label>
@@ -100,4 +91,4 @@ const EOAdminSignup = () => {
     );
 };
 
-export default EOAdminSignup;
+export default SchoolAdminSignup;
