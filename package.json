@@ -12,6 +12,7 @@
         "@emotion/cache": "^11.13.5",
         "@emotion/react": "^11.13.5",
         "@emotion/styled": "^11.13.5",
+        "@headlessui/react": "^2.2.0",
         "@mui/material": "^6.1.8",
         "@mui/material-nextjs": "^6.1.8",
         "firebase": "^11.0.2",
