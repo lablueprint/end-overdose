@@ -10,6 +10,7 @@ export default function NavBar() {
     const tabs = [
         { href: '/courses', tab: 'Courses' },
         { href: '/quiz', tab: 'Quiz' },
+        { href: '/jobs', tab: 'Jobs' },
         { href: '/profile', tab: 'Profile' },
         { href: '/admin', tab: 'Admin' },
         { href: '/login', tab: 'Login' },
