@@ -1,41 +1,42 @@
-import Link from 'next/link';
+'use client';
+import { useState } from 'react';
 
-export const metadata = {
-    title: 'Log In',
-};
+const StudentLogin = () => {
+    const [schoolId, setSchoolId] = useState('');
+    const [schoolName, setSchoolName] = useState('');
 
-async function handleLogin(formData: FormData) {
-    'use server'; //needed to mark this as server bc we used Next.js Form component
-    const schoolId = formData.get('schoolId');
-    console.log(
-        JSON.stringify({
-            schoolId,
-        })
-    );
-}
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        console.log('Logging in as Student:', { schoolId, schoolName });
+        //call the firebase sign-in function here
+    };
 
-export default function LoginPage() {
     return (
         <div>
-            <h1>Log In</h1>
-            <form action={handleLogin}>
-                <label htmlFor="schoolId">School ID:</label>
+            <h1>Student Login</h1>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="schoolId">School Id:</label>
                 <input
                     type="text"
-                    name="schoolId"
                     id="schoolId"
-                    placeholder="Enter school ID"
+                    value={schoolId}
+                    onChange={(e) => setSchoolId(e.target.value)}
+                    required
+                />
+                <br />
+                <label htmlFor="schoolName">School Name:</label>
+                <input
+                    type="text"
+                    id="schoolName"
+                    value={schoolName}
+                    onChange={(e) => setSchoolName(e.target.value)}
                     required
                 />
                 <br />
                 <button type="submit">Log In</button>
             </form>
-            <p>
-                Don&apos;t have an account?{' '}
-                <Link href="/signup">
-                    <button>Sign Up</button>
-                </Link>
-            </p>
         </div>
     );
-}
+};
+
+export default StudentLogin;
