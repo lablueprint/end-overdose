@@ -4,6 +4,7 @@ import { getFirestore, addDoc, collection } from 'firebase/firestore';
 
 const db = getFirestore(firebase_app);
 
+// an API route to create a new admin user
 export async function POST(request: NextRequest) {
     console.log('HERE');
     try {
