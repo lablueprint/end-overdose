@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import './profileStyles.css';
+import styles from '../profile.module.css';
 import Badge from './Badge';
 
 /* Notes:
@@ -45,12 +45,6 @@ const BadgeTable = () => {
         'Badge 10',
     ]);
 
-    /**   useEffect(() => {
-        for (let i = 0; i < badgesEarned.length; i++) {
-            setBadgeList(new Map(badgeList).set(badgesEarned[i], true));
-        }
-    }, [badgesEarned]); */
-
     const listValues = badgeList.map((badge: string) =>
         badgesEarned.includes(badge) ? (
             <Badge key={badge} badgeTitle={badge} isActive={true} />
@@ -60,15 +54,9 @@ const BadgeTable = () => {
     );
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                margin: '20px',
-            }}
-        >
-            <h1 style={{ fontSize: 24, marginBottom: '10px' }}> Badges </h1>
-            <div className="badge-table">{listValues}</div>
+        <div className={styles.badgeTableContainer}>
+            <h1 className={styles.badgeHeader}> Badges </h1>
+            <div className={styles.badgeTable}>{listValues}</div>
         </div>
     );
 };

@@ -1,0 +1,131 @@
+/*----------------------------------- Page Styles --------------------------------------------- */
+.profileSelectButtonContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.profileSelectButton {
+    height: 50px;
+    width: 50px;
+    margin: 50px;   
+}
+
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.profileText {
+    font-size: 24px;
+    padding: 10px;
+}
+
+.nameText {
+    font-size :35px;
+}
+
+/*<------------------------------------------- Profile Select Button ------------------------------> */
+.profileSelectButton {
+    position: relative;
+    height: 50px;
+    width: 50px;
+    margin: 50px;
+}
+
+/*<------------------------------------------ Name Plate ---------------------------> */
+
+.namePlateContainer {
+    height: 25px;
+}
+
+.selectedNamePlate {
+    color:aquamarine;
+}
+
+/*<---------------------------------------- Confirm Button ------------------------> */
+
+.activeConfirm {
+    color: aquamarine;
+}
+
+.inactiveConfirm {
+    color: black;
+}
+
+/*<----------------------------------------- Badge Table ------------------------> */
+
+.badgeTable {
+    display: grid;
+    gap: 50px;
+    grid-template-columns: auto auto auto auto auto;
+    justify-content: center;
+}
+
+.badgeHeader {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.badgeTableContainer {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    align-items: center;
+}
+
+/* ------------------------------------------------------Badge Styles----------------------------------------------------------------------------- */
+.badgeDialog {
+    position: relative;
+    z-index: 50;
+}
+
+.badgeDialogPanelContainer {
+    position: fixed;
+    inset: 0px;
+    display: flex;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+}
+
+.badgeDialogPanel {
+    max-width: 1024px;
+    margin-top: 16px;
+    border-width: 1px;
+    padding: 12px;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+}
+
+.badgeDialogTitle {
+    font-weight: 700;
+}
+
+.badgeDialogDescription {
+    margin-bottom: 12px;
+}
+
+.badgeDialogCloseButton {
+    border-width: 1px;
+    border-color: white;
+    padding: 4px;
+    align-self: center;
+    background: none;
+    color: white;
+    cursor: pointer;
+}
+
+.activeText {
+    color: gold;
+}
+
+.inactiveText {
+    color: gray;
+}
+

@@ -6,6 +6,7 @@ import {
     DialogTitle,
 } from '@headlessui/react';
 import { useState } from 'react';
+import styles from '../profile.module.css';
 
 /**
  * Badge element that table is constructed with
@@ -35,51 +36,24 @@ const Badge = ({ badgeTitle, isActive }: BadgeProps) => {
                 <Dialog
                     open={isOpen}
                     onClose={() => setIsOpen(false)}
-                    style={{ position: 'relative', zIndex: '50' }}
+                    className={styles.badgeDialog}
                 >
-                    <div
-                        style={{
-                            position: 'fixed',
-                            inset: '0px',
-                            display: 'flex',
-                            width: '100vw',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: '4px',
-                        }}
-                    >
-                        <DialogPanel
-                            style={{
-                                maxWidth: '1024px',
-                                marginTop: '16px',
-                                borderWidth: '1px',
-                                padding: '12px',
-                                backgroundColor: 'black',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'start',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <DialogTitle style={{ fontWeight: '700' }}>
+                    <div className={styles.badgeDialogPanelContainer}>
+                        <DialogPanel className={styles.badgeDialogPanel}>
+                            <DialogTitle className={styles.badgeDialogTitle}>
                                 {badgeTitle}
                             </DialogTitle>
                             <Description>{badgeDescription}</Description>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                style={{
-                                    borderWidth: '1px',
-                                    borderColor: 'white',
-                                    padding: '4px',
-                                    alignSelf: 'center',
-                                }}
+                                className={styles.badgeDialogCloseButton}
                             >
                                 Close
                             </button>
                         </DialogPanel>
                     </div>
                 </Dialog>
-                <p className="active-text">{badgeTitle}</p>
+                <p className={styles.inactiveText}>{badgeTitle}</p>
             </div>
         );
     } else {
@@ -95,51 +69,24 @@ const Badge = ({ badgeTitle, isActive }: BadgeProps) => {
                 <Dialog
                     open={isOpen}
                     onClose={() => setIsOpen(false)}
-                    style={{ position: 'relative', zIndex: '50' }}
+                    className={styles.badgeDialog}
                 >
-                    <div
-                        style={{
-                            position: 'fixed',
-                            inset: '0px',
-                            display: 'flex',
-                            width: '100vw',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: '4px',
-                        }}
-                    >
-                        <DialogPanel
-                            style={{
-                                maxWidth: '1024px',
-                                marginTop: '16px',
-                                borderWidth: '1px',
-                                padding: '12px',
-                                backgroundColor: 'black',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'start',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <DialogTitle style={{ fontWeight: '700' }}>
+                    <div className={styles.badgeDialogPanelContainer}>
+                        <DialogPanel className={styles.badgeDialogPanel}>
+                            <DialogTitle className={styles.badgeDialogTitle}>
                                 {badgeTitle}
                             </DialogTitle>
                             <Description>{badgeDescription}</Description>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                style={{
-                                    borderWidth: '1px',
-                                    borderColor: 'white',
-                                    padding: '4px',
-                                    alignSelf: 'center',
-                                }}
+                                className={styles.badgeDialogCloseButton}
                             >
                                 Close
                             </button>
                         </DialogPanel>
                     </div>
                 </Dialog>
-                <p className="inactive-text">{badgeTitle}</p>
+                <p className={styles.inactiveText}>{badgeTitle}</p>
             </div>
         );
     }

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import './profileStyles.css';
 
 /* Notes:
     Component for maintaining look of the "role" subtitle under the main name

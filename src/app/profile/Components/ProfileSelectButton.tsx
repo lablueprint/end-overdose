@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import './profileStyles.css';
-import Image from 'next/image';
+import styles from '../profile.module.css';
 
 /* Notes:
     Component for maintaining look of the "role" subtitle under the main name
@@ -29,7 +28,7 @@ const ProfileSelectButton = ({
 
     // child
     return (
-        <div style={{ position: 'relative' }}>
+        <div className={styles.profileSelectButton}>
             <img
                 src={profilePictures[picIndex]}
                 width={50}

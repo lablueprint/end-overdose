@@ -1,9 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import './profileStyles.css';
 import Image from 'next/image';
-import { profile } from 'console';
 
 /* Notes:
     Component for maintaining look of the "role" subtitle under the main name
