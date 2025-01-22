@@ -35,13 +35,14 @@ export async function addQuiz(name: string, score: number) {
     console.log('addQuiz called with:', { name, score });
     try {
         console.log('work');
-        const user = auth.currentUser;
-        if (!user) {
-            return { error: 'User data not found' };
-        }
+        // const user = auth.currentUser;
+        // if (!user) {
+        //     return { error: 'User data not found' };
+        // }
+        console.log('User doc data 1');
         const userRef = doc(db, 'students', '0MPsmi7hK2Yh8966AaQ8'); // DocumentReference
         const userDoc = await getDoc(userRef); // DocumentSnapshot
-        console.log('User doc data', userDoc.data());
+        console.log('User doc data 2');
         if (!userDoc.exists()) {
             return { error: 'Student document not found' };
         }

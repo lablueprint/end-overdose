@@ -44,8 +44,8 @@ export default function Score({
     useEffect(() => {
         const updateQuiz = async () => {
             try {
-                // addQuiz('quiz1', (currentScore / numQuestions) * 100);
-                addQuiz('quiz1', 90);
+                addQuiz('quiz1', (currentScore / numQuestions) * 100);
+                addQuiz('quiz2', 100);
 
                 console.log('pls work');
             } catch (error) {
@@ -53,7 +53,7 @@ export default function Score({
             }
         };
         updateQuiz();
-    }, []);
+    }, [currentScore, numQuestions]);
 
     return (
         <div>
