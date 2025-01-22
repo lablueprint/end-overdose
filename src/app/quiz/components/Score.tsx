@@ -1,5 +1,6 @@
 'use client';
-
+import { addQuiz } from '@/app/api/students/actions';
+import { useState, useEffect } from 'react';
 interface MissedQuestion {
     question: string;
     correctAnswer: number;
@@ -40,6 +41,19 @@ export default function Score({
     const nextLesson = () => {
         console.log('Next lesson!!', percentage);
     };
+    useEffect(() => {
+        const updateQuiz = async () => {
+            try {
+                // addQuiz('quiz1', (currentScore / numQuestions) * 100);
+                addQuiz('quiz1', 90);
+
+                console.log('pls work');
+            } catch (error) {
+                console.error('Error adding quiz', error);
+            }
+        };
+        updateQuiz();
+    }, []);
 
     return (
         <div>
