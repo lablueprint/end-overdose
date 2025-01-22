@@ -126,7 +126,18 @@ export const getSchoolAdmins = cache(async () => {
             (doc) => doc.data() as Admin
         );
 
-        return SchoolAdmins;
+        const adminsBySchool = SchoolAdmins.reduce(
+            (acc: Record<string, Admin[]>, admin: Admin) => {
+                if (!acc[admin.school_name]) {
+                    acc[admin.school_name] = [];
+                }
+                acc[admin.school_name].push(admin);
+                return acc;
+            },
+            {}
+        );
+
+        return adminsBySchool;
     } catch (error) {
         console.error('Error deleting admin:', error);
         throw new Error('Failed to delete admin.');
