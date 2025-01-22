@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 /* Notes:
     Component for maintaining look of the "role" subtitle under the main name
+    Takes in role prop (string) from page
   */
 
 interface rolePlateProps {

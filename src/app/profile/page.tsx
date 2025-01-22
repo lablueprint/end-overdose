@@ -8,6 +8,14 @@ import ProfilePicture from './Components/ProfilePicture';
 import ProfileSelectButton from './Components/ProfileSelectButton';
 import styles from './profile.module.css';
 
+/*
+ * Notes:
+ * userRole (string): role of account (student or administrator currently)
+ * selectedProfilePicture (int): presetProfilePicture currently in use (int 0 < selectedProfilePicture < profilePictures.length())
+ * name (string): Name of profile
+ * profileChange (bool): marks whether profile picture has been chosen
+ */
+
 export default function Home() {
     const [userRole, setUserRole] = useState('administrator');
     const [selectedProfilePicture, setSelectedProfilePicture] = useState(0);

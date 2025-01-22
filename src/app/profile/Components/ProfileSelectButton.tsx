@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import styles from '../profile.module.css';
 
 /* Notes:
-    Component for maintaining look of the "role" subtitle under the main name
-  */
+ * Component for maintaining look of the "role" subtitle under the main name
+ * Internally holds list of preset profile pictures called profilePictures (str list)
+ *Input picIndex argument determines which picture out of the list is displayed.
+ * onClick reflected in frontend changed picIndex held in page state
+ * picIndex passed from page component
+ * onClick passed from page component
+ */
 
 interface profileSelectButtonProps {
     picIndex: number;

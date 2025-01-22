@@ -4,27 +4,18 @@ import React, { useState, useEffect } from 'react';
 import styles from '../profile.module.css';
 import Badge from './Badge';
 
-/* Notes:
-    Component for holding badges and handling earned/unearned appearance
-  */
+/* NO ARGUMENTS
+ *
+ * Notes
+ *
+ * Component for holding badges and handling earned/unearned appearance
+ * Internally, badgeTable internally holds (and in the future fetches) a list of all available badges called badgeList (str list)
+ *  and a list of the earned badges, badgesEarned (str list).
+ */
 
 const BadgeTable = () => {
-    /**const [badgeList, setBadgeList] = useState(
-        new Map([
-            ['Badge 1', false],
-            ['Badge 2', false],
-            ['Badge 3', false],
-            ['Badge 4', false],
-            ['Badge 5', false],
-            ['Badge 6', false],
-            ['Badge 7', false],
-            ['Badge 8', false],
-            ['Badge 9', false],
-            ['Badge 10', false],
-        ])
-    ); **/
-
     const [badgeList, setBadgeList] = useState([
+        //TODO: FETCH FORM DATABASE
         'Badge 1',
         'Badge 2',
         'Badge 3',

@@ -3,9 +3,21 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 
-/* Notes:
-    Component for maintaining look of the "role" subtitle under the main name
-  */
+/*
+ * one argument: picIndex (int)
+ *
+ * Notes:
+ *
+ * Component for maintaining look of the "role" subtitle under the main name
+ *
+ * Internally holds list of preset profile pictures called profilePictures (str list)
+ *
+ * Input picIndex argument determines which picture out of the list is displayed.
+ *
+ * picIndex passed from page Component
+ *
+ *
+ */
 
 interface profilePictureProps {
     picIndex: number;

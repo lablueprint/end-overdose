@@ -7,6 +7,8 @@ interface ScrollableListProps {
 
 /**
  * Component containing each of the 2 (or eventually 3) lists for name generation
+ * Note: Scrollable list is undecided by end overdose currently. The component is still available, but all relevant implementation code is commented under the component.
+ * Documentation may be limited, so if we are reusing this, talk to Dalton Silverman
  **/
 
 function ScrollableList({ names, selectedIndex }: ScrollableListProps) {

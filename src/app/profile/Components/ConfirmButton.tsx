@@ -10,24 +10,18 @@ interface ConfirmButtonProps {
 }
 
 const ConfirmButton = ({ changesMade, onPress }: ConfirmButtonProps) => {
-    // child
-    if (changesMade) {
-        return (
-            <div>
-                <button className={styles.activeConfirm} onClick={onPress}>
-                    Confirm
-                </button>
-            </div>
-        );
-    } else {
-        return (
-            <div>
-                <button className={styles.inactiveConfirm} onClick={onPress}>
-                    Confirm
-                </button>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <button
+                className={
+                    changesMade ? styles.activeConfirm : styles.inactiveConfirm
+                }
+                onClick={onPress}
+            >
+                Confirm
+            </button>
+        </div>
+    );
 };
 
 export default ConfirmButton;
