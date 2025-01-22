@@ -9,12 +9,12 @@ export default function CareerPage() {
     const totalCoursePages = 2;
     const handleNext = () => {
         if (parseInt(params.page) !== totalCoursePages) {
-            router.push(`/courses/career/module2/${parseInt(params.page) + 1}`);
+            router.push(`/courses/career/lesson3/${parseInt(params.page) + 1}`);
         }
     };
     const handlePrevious = () => {
         if (parseInt(params.page) !== 1) {
-            router.push(`/courses/career/module2/${parseInt(params.page) - 1}`);
+            router.push(`/courses/career/lesson3/${parseInt(params.page) - 1}`);
         }
     };
     return (
