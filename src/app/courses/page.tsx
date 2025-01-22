@@ -1,15 +1,23 @@
 import Link from 'next/link';
 import Course from './components/Course';
-import SimplePage from './components/SimplePage';
+import DailyQuest from './components/DailyQuest';
 
 export default function Courses() {
     const opioidProgress = 0;
-    const careerProgres = 40;
-    //useState for progress tracking
+    const careerProgress = 40;
+
+    // Example data for DailyQuest
+    const dailyQuestData = {
+        questPath: 'daily-quest-1',
+        questTitle: 'Complete Your Profile',
+        questDescription:
+            'Fill in your profile information to help us tailor recommendations for you.',
+        totalTasks: 3,
+        completedTasks: 1,
+    };
 
     return (
         <>
-            <h1> Courses </h1>
             <div>
                 <Link href="/courses/opioid">
                     <Course
@@ -24,11 +32,19 @@ export default function Courses() {
                     <Course
                         courseTitle={'Career Training'}
                         coursePath={'career'}
-                        courseProgress={careerProgres}
+                        courseProgress={careerProgress}
                     />
                 </Link>
             </div>
-            <Link href="/">HOME</Link>
+            <div>
+                <DailyQuest
+                    questPath={dailyQuestData.questPath}
+                    questTitle={dailyQuestData.questTitle}
+                    questDescription={dailyQuestData.questDescription}
+                    totalTasks={dailyQuestData.totalTasks}
+                    completedTasks={dailyQuestData.completedTasks}
+                />
+            </div>
         </>
     );
 }

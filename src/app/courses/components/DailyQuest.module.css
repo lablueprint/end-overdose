@@ -1,0 +1,67 @@
+.container {
+    position: relative;
+    cursor: pointer;
+
+    border: 2px solid; /* Adds the border */
+    border-radius: 0.75rem; /* Curved edges */
+
+    padding: 1.25rem; /* Space inside the box */
+    width: 100%; /* Full width */
+    max-width: 28rem; /* Maximum width */
+    min-height: 8rem; /* Minimum height */
+    
+    margin: 1.25rem; /* Space around the box */
+}
+
+
+.container:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* equivalent to hover:shadow-lg */
+}
+
+.header {
+    display: flex;
+    align-items: flex-start; /* equivalent to items-start */
+    gap: 1rem; /* equivalent to space-x-4 */
+}
+
+.icon {
+    width: 3rem; /* equivalent to w-12 */
+    height: 3rem; /* equivalent to h-12 */
+    border-radius: 50%; /* equivalent to rounded-full */
+    border: 2px solid var(--primary-color); /* equivalent to border-primary */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.content {
+    flex-grow: 1; /* equivalent to flex-grow */
+}
+
+.title {
+    font-size: 1.25rem; /* equivalent to text-xl */
+    font-weight: bold; /* equivalent to font-bold */
+    margin-bottom: 0.5rem; /* equivalent to mb-2 */
+}
+
+.description {
+    font-size: 0.875rem; /* equivalent to text-sm */
+    color: #718096; /* equivalent to text-gray-600 */
+    margin-bottom: 0.5rem; /* equivalent to mb-2 */
+}
+
+.progressWrapper {
+    display: flex;
+    align-items: center; /* equivalent to items-center */
+    gap: 0.5rem; /* equivalent to space-x-2 */
+}
+
+.progress {
+    flex-grow: 1; /* equivalent to flex-grow */
+}
+
+.taskInfo {
+    font-size: 0.875rem; /* equivalent to text-sm */
+    font-weight: 500; /* equivalent to font-medium */
+}
