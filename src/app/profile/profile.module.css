@@ -96,7 +96,7 @@
     margin-top: 16px;
     border-width: 1px;
     padding: 12px;
-    background-color: black;
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -113,11 +113,11 @@
 
 .badgeDialogCloseButton {
     border-width: 1px;
-    border-color: white;
+    border-color: black;
     padding: 4px;
     align-self: center;
     background: none;
-    color: white;
+    color: black;
     cursor: pointer;
 }
 
