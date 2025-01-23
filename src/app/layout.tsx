@@ -34,7 +34,7 @@ export default function RootLayout({
                     <div className="w-1/8 bg-black text-white">
                         <NavBar />
                     </div>
-                    <div className="flex-1 p-4">
+                    <div className="flex-1">
                         <InitAuthState>{children}</InitAuthState>
                     </div>
                 </div>
