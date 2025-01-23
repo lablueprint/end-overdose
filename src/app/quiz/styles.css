@@ -1,0 +1,65 @@
+/* Center the question text in the upper middle of the screen */
+.question-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 15vh; /* Position question closer to the top */
+    padding: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Style the answer buttons for MC questions */
+.answers-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two answers per row */
+    gap: 15px; /* Spacing between answers */
+    margin-top: 20px;
+    width: 50%; /* Adjust width as needed */
+}
+
+.answers-container button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.answers-container button:hover {
+    background-color: #007bff;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.answers-container button:active {
+    transform: scale(0.95);
+}
+
+/* For True/False or two-answer questions, maintain vertical layout */
+.answers-container.two-answers {
+    grid-template-columns: 1fr; /* Single column for two-answer questions */
+    width: auto;
+}
+
+/* Make sure the quiz container takes the full height */
+
+
+.feedback {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;  /* Full width */
+}
+
+.feedback.correct {
+    color: green;  /* Correct answer color */
+}
+
+.feedback.wrong {
+    color: red;  /* Wrong answer color */
+}

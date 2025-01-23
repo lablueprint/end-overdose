@@ -9,7 +9,6 @@ export default function Courses() {
 
     return (
         <>
-            <SimplePage pageTitle="Title" />
             <h1> Courses </h1>
             <div>
                 <Link href="/courses/opioid">
