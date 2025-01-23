@@ -2,13 +2,20 @@
 import Link from 'next/link';
 import styles from '../login.module.css';
 import { useState } from 'react';
-import { loginAdmin } from '@/app/api/admins/actions';
+import { loginAdmin, getAdminFromEmail } from '@/app/api/admins/actions';
+import { useUserStore } from '@/store/userStore';
 
 const AdminLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState<boolean>(false);
+    const setUser = useUserStore((state) => state.setUser);
+    const setUID = useUserStore((state) => state.setUID);
+    const setRole = useUserStore((state) => state.setRole);
+    const user = useUserStore((state) => state.user);
+    const uid = useUserStore((state) => state.uid);
+    const role = useUserStore((state) => state.role);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -20,6 +27,21 @@ const AdminLogin = () => {
         } else {
             setSuccess(true);
             setError('');
+
+            const admin = await getAdminFromEmail(email);
+
+            if (admin) {
+                setUID(admin.id);
+                setRole(admin.role);
+                setUser(admin);
+
+                console.log(user);
+                console.log(uid);
+                console.log(role);
+            } else {
+                setError('Unable to find admin with that email');
+                setSuccess(false);
+            }
         }
     };
 
@@ -32,7 +54,8 @@ const AdminLogin = () => {
                         <div className={styles.titleTextContainer}>
                             <h1 className={styles.h1}>Admin Login</h1>
                             <h2 className={styles.h2}>
-                                Login to your account using your email and password
+                                Login to your account using your email and
+                                password
                             </h2>
                         </div>
                         <div className={styles.formContainer}>

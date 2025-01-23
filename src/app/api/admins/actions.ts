@@ -112,3 +112,21 @@ export async function signupAdmin(admin: Admin, password: string) {
         throw new Error('Failed to log in admin.');
     }
 }
+
+export const getAdminFromEmail = async (email: string) => {
+    try {
+        const q = query(adminsCollection, where('email', '==', email));
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+            const doc = snapshot.docs[0];
+
+            return { id: doc.id, ...(doc.data() as Admin) };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching admins:', error);
+        throw new Error('Failed to fetch admins.');
+    }
+};
