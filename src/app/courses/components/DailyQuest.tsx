@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import styles from './dailyquest.module.css';
+import Quest from './Quest';
 
 interface DailyQuestProps {
     questPath: string;
@@ -18,27 +19,26 @@ export default function DailyQuest({
     totalTasks,
     completedTasks,
 }: DailyQuestProps) {
-    const router = useRouter(); //router will be used later so that we can get to specific quests
+    const router = useRouter();
 
     return (
         <div className={styles.container}>
             Daily Quests
-            <div className={styles.header}>
-                <div className={styles.icon}>{/* Empty circle icon */}</div>
-                <div className={styles.content}>
-                    <h2 className={styles.title}>{questTitle}</h2>
-                    <p className={styles.description}>{questDescription}</p>
-                    <div className={styles.progressWrapper}>
-                        <progress
-                            value={(completedTasks / totalTasks) * 100}
-                            className={styles.progress}
-                        />
-                        <span className={styles.taskInfo}>
-                            {completedTasks}/{totalTasks}
-                        </span>
-                    </div>
-                </div>
-            </div>
+            <Quest
+                questTitle={'Collect 10 Gems'}
+                questShape={'triangle'}
+                completionPercentage={60}
+            />
+            <Quest
+                questTitle={'Defeat 5 Enemies'}
+                questShape={'triangle'}
+                completionPercentage={30}
+            />
+            <Quest
+                questTitle={'Explore New Area'}
+                questShape={'triangle'}
+                completionPercentage={90}
+            />
         </div>
     );
 }

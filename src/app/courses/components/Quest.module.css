@@ -1,0 +1,52 @@
+.quest {
+    width: 16rem;
+    height: 4rem;
+    background-color: #f7fafc;
+    border: 2px solid #4a5568;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #525253;
+    gap: 0.25rem;
+    padding: 0.75rem;
+}
+
+.shape {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.triangleShape {
+    width: 100%;
+    height: 100%;
+}
+
+.questDetails {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.questName {
+    margin-bottom: 0.5rem;
+}
+
+.completionBar {
+    width: 100%;
+    height: 0.5rem;
+    background-color: #e2e8f0;
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.completionProgress {
+    height: 100%;
+    background-color: #48bb78;
+    transition: width 0.5s ease-in-out;
+}

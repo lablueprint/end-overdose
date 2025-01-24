@@ -17,8 +17,8 @@ export default function Courses() {
     };
 
     return (
-        <>
-            <div>
+        <div className="flex flex-row">
+            <div className="flex">
                 <Link href="/courses/opioid">
                     <Course
                         courseTitle={'Opioid Overdose'}
@@ -26,8 +26,6 @@ export default function Courses() {
                         courseProgress={opioidProgress}
                     />
                 </Link>
-            </div>
-            <div>
                 <Link href="/courses/career">
                     <Course
                         courseTitle={'Career Training'}
@@ -36,7 +34,7 @@ export default function Courses() {
                     />
                 </Link>
             </div>
-            <div>
+            <div className="flex">
                 <DailyQuest
                     questPath={dailyQuestData.questPath}
                     questTitle={dailyQuestData.questTitle}
@@ -45,6 +43,6 @@ export default function Courses() {
                     completedTasks={dailyQuestData.completedTasks}
                 />
             </div>
-        </>
+        </div>
     );
 }
