@@ -28,3 +28,25 @@ export async function POST(request: NextRequest) {
         //error checking to do
     }
 }
+
+/* 
+*
+* selectedSchoolName = fromClickAction();
+* query = (find school where schoolname == schoolname)
+* school = query()
+* school.map contains(pairing)
+* 
+* selectedSchoolName = fromClickAgain();
+* query = (find school where schhoolname == schoolname AND school has pairing (username), (password) in map)
+* result = query()
+* if(!result)
+*   return(you failed)
+* else
+*   return (login successful)
+*
+* 
+* 
+* 
+* 
+
+*/

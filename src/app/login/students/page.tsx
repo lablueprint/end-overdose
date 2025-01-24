@@ -2,15 +2,33 @@
 import Link from 'next/link';
 import styles from '../login.module.css';
 import { useState } from 'react';
+import { WolfPackAlphaUniversity, UCLA, School } from '@/types/School';
 
 const StudentLogin = () => {
     const [schoolId, setSchoolId] = useState('');
-    const [schoolName, setSchoolName] = useState('');
+    const [school, setSchool] = useState(WolfPackAlphaUniversity);
     const [password, setPassword] = useState('');
+    const schools = [WolfPackAlphaUniversity, UCLA];
+
+    const schoolValues = schools.map((school: School) => (
+        <option key={school.name} value={school.name}>
+            {school.name}
+        </option>
+    ));
+
+    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedSchoolName = e.target.value;
+        const selectedSchool = schools.find(
+            (s) => s.name === selectedSchoolName
+        );
+        if (selectedSchool) {
+            setSchool(selectedSchool);
+        }
+    };
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('Logging in as Student:', { schoolId, schoolName });
+        console.log('Logging in as Student:', { schoolId, school });
         //call the firebase sign-in function here
     };
 
@@ -42,7 +60,7 @@ const StudentLogin = () => {
                                     <input
                                         className={styles.input}
                                         type="text"
-                                        id="studentId"
+                                        id="schoolId"
                                         value={schoolId}
                                         onChange={(e) =>
                                             setSchoolId(e.target.value)
@@ -52,20 +70,20 @@ const StudentLogin = () => {
                                 </div>
                                 <div className={styles.subForm}>
                                     <label
-                                    className={styles.h2}
-                                    htmlFor='schoolName'
+                                        className={styles.h2}
+                                        htmlFor="school"
                                     >
                                         School Name
                                     </label>
-                                    <input 
-                                     className={styles.input}
-                                     type="text"
-                                     id="schoolName"
-                                     onChange={(e) =>
-                                        setSchoolName(e.target.value)
-                                     }
-                                     required
-                                    />
+                                    <select
+                                        className={styles.input}
+                                        id="school"
+                                        name="school"
+                                        onChange={(e) => handleSelectChange(e)}
+                                        required
+                                    >
+                                        {schoolValues}
+                                    </select>
                                 </div>
                                 <div className={styles.subForm}>
                                     <label
@@ -120,4 +138,3 @@ const StudentLogin = () => {
 };
 
 export default StudentLogin;
-
