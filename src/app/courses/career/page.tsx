@@ -1,14 +1,34 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import LessonTile from '../components/LessonTile';
 import SimplePage from '../components/SimplePage';
 import { useRouter, useParams } from 'next/navigation';
 
 export default function CareerHome() {
+    const [toggle, setToggle] = useState(false);
+    const handleClick = () => {
+        setToggle((prevState) => !prevState);
+    };
     return (
         <div style={{ display: 'flex', width: '100%' }}>
-            <div style={{ flex: 3, overflowY: 'auto' }}>
-                <h1> Career Training </h1>
+            <div
+                style={{
+                    flex: toggle ? 0 : 2.8,
+                    overflowY: 'auto',
+                    maxHeight: '98vh',
+                }}
+            >
+                <h1
+                    onClick={handleClick}
+                    style={{
+                        fontWeight: '700',
+                        fontSize: '20px',
+                        cursor: 'pointer',
+                    }}
+                >
+                    Course Name
+                </h1>
                 <div>
                     <Link href="/courses/career/lesson1">
                         <LessonTile
@@ -72,11 +92,23 @@ export default function CareerHome() {
             </div>
             <div
                 style={{
-                    flex: 7,
-                    maxHeight: '100vh',
+                    flex: toggle ? 10 : 6,
+                    maxHeight: '98vh',
                     overflowY: 'auto',
+                    padding: '0 10px',
                 }}
             >
+                <h1
+                    style={{
+                        display: toggle ? 'default' : 'none',
+                        position: 'absolute',
+                        top: '10px',
+                        cursor: 'pointer',
+                    }}
+                    onClick={handleClick}
+                >
+                    →
+                </h1>
                 <SimplePage pageTitle="Career Training"></SimplePage>
             </div>
         </div>

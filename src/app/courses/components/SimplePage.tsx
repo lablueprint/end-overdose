@@ -32,6 +32,7 @@ export default function SimplePage({
     }, []);
     return (
         <div>
+            <br />
             <h1 className={styles.title}>{pageTitle}</h1>
             {/*<button disabled={!allowNextPage} onClick={handleNext}>
                 Next

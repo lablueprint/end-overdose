@@ -22,8 +22,8 @@ export default function CareerPage() {
             <h1> Career Pages {params.page}</h1>
             <SimplePage
                 pageTitle="Title"
-                handleNext={handleNext}
-                handlePrevious={handlePrevious}
+                //handleNext={handleNext}
+                //handlePrevious={handlePrevious}
             />
         </div>
     );
