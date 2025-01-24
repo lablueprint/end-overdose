@@ -47,6 +47,7 @@ export default function MCQ() {
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+    const [isQuestionSelected, setIsQuestionSelected] = useState(false);
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -55,33 +56,37 @@ export default function MCQ() {
 
     const handleAnswerSelected = (answerIndex: number) => {
         setSelectedAnswer(answerIndex);
-        if (answerIndex === currentQuestion.correctAnswer) {
-            setFeedback('Correct!');
-            setCurrentScore(currentScore + 1);
-        } else {
-            setFeedback('Wrong!');
-            setMissedQuestions((prevMissed) => [
-                ...prevMissed,
-                {
-                    question: questions[currentQuestionIndex].question,
-                    correctAnswer:
-                        questions[currentQuestionIndex].correctAnswer,
-                    selectedAnswer: answerIndex,
-                },
-            ]);
-            console.log(missedQuestions);
-        }
-
-        // Move to the next question after short delay
-        setTimeout(() => {
-            if (currentQuestionIndex < questions.length - 1) {
-                setSelectedAnswer(null);
-                setFeedback(
-                    ''
-                ); /* sets feedback back to empty before displaying next question, changing after short period of time to display green or red styling for that period of time */
+        setIsQuestionSelected(true);
+        if (!isQuestionSelected) {
+            if (answerIndex === currentQuestion.correctAnswer) {
+                setFeedback('Correct!');
+                setCurrentScore(currentScore + 1);
+            } else {
+                setFeedback('Wrong!');
+                setMissedQuestions((prevMissed) => [
+                    ...prevMissed,
+                    {
+                        question: questions[currentQuestionIndex].question,
+                        correctAnswer:
+                            questions[currentQuestionIndex].correctAnswer,
+                        selectedAnswer: answerIndex,
+                    },
+                ]);
+                console.log(missedQuestions);
             }
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-        }, 1000);
+
+            // Move to the next question after short delay
+            setTimeout(() => {
+                if (currentQuestionIndex < questions.length - 1) {
+                    setSelectedAnswer(null);
+                    setIsQuestionSelected(false);
+                    setFeedback(
+                        ''
+                    ); /* sets feedback back to empty before displaying next question, changing after short period of time to display green or red styling for that period of time */
+                }
+                setCurrentQuestionIndex(currentQuestionIndex + 1);
+            }, 1000);
+        }
     };
 
     return (
@@ -113,6 +118,7 @@ export default function MCQ() {
                         setFeedback={setFeedback}
                         missedQuestions={missedQuestions}
                         setMissedQuestions={setMissedQuestions}
+                        setIsQuestionSelected={setIsQuestionSelected}
                     />
                 </div>
             )}

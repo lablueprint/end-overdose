@@ -1,6 +1,7 @@
 'use client';
 import { addQuiz } from '@/app/api/students/actions';
 import { useState, useEffect } from 'react';
+import { useUserStore } from '@/store/userStore';
 interface MissedQuestion {
     question: string;
     correctAnswer: number;
@@ -16,6 +17,7 @@ interface ScoreProps {
     setFeedback: (newFeedback: string) => void;
     missedQuestions: MissedQuestion[];
     setMissedQuestions: (newMissedQuestion: []) => void;
+    setIsQuestionSelected: (newIsQuestionSelected: boolean) => void;
 }
 
 export default function Score({
@@ -27,6 +29,7 @@ export default function Score({
     setFeedback,
     missedQuestions,
     setMissedQuestions,
+    setIsQuestionSelected,
 }: ScoreProps) {
     const percentage = ((currentScore / numQuestions) * 100).toFixed(2);
 
@@ -36,18 +39,32 @@ export default function Score({
         setSelectedAnswer(null);
         setFeedback('');
         setMissedQuestions([]);
+        setIsQuestionSelected(false);
     };
 
     const nextLesson = () => {
         console.log('Next lesson!!', percentage);
     };
+    const user = useUserStore.getState().user;
+    const name = 'quiz3';
     useEffect(() => {
         const updateQuiz = async () => {
             try {
-                addQuiz('quiz1', (currentScore / numQuestions) * 100);
-                addQuiz('quiz2', 100);
-
-                console.log('pls work');
+                console.log('test');
+                const newScore = (currentScore / numQuestions) * 100;
+                const quizzes = user?.quizzes;
+                console.log('quizzes: ', quizzes);
+                const updateQuizzes = quizzes.some((quiz) => quiz.name === name)
+                    ? quizzes.map((quiz) =>
+                          quiz.name === name
+                              ? { ...quiz, score: newScore }
+                              : quiz
+                      )
+                    : [...quizzes, { name: name, score: newScore }];
+                addQuiz(updateQuizzes);
+                useUserStore
+                    .getState()
+                    .setUser({ ...user, quizzes: updateQuizzes });
             } catch (error) {
                 console.error('Error adding quiz', error);
             }
@@ -62,7 +79,7 @@ export default function Score({
             {currentScore / numQuestions >= 0.8 && (
                 <button onClick={nextLesson}>Next Lesson</button>
             )}
-            <ul>
+            <ul className="question-container">
                 {missedQuestions.map((item, index) => (
                     <li key={index}>
                         <p>Question: {item.question}</p>

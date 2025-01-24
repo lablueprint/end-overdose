@@ -13,6 +13,10 @@ import {
     arrayUnion,
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+interface Quiz {
+    name: string;
+    score: number;
+}
 
 const db = getFirestore(firebase_app);
 const studentsCollection = collection(db, 'students');
@@ -31,26 +35,28 @@ export const getStudents = cache(async () => {
     }
 });
 
-export async function addQuiz(name: string, score: number) {
-    console.log('addQuiz called with:', { name, score });
+export async function addQuiz(updateQuizzes: Quiz[]) {
     try {
         console.log('work');
         // const user = auth.currentUser;
         // if (!user) {
         //     return { error: 'User data not found' };
         // }
-        console.log('User doc data 1');
-        const userRef = doc(db, 'students', '0MPsmi7hK2Yh8966AaQ8'); // DocumentReference
+        const userRef = doc(db, 'students', '12n2OCj3WNa0cM4e2rUh'); // DocumentReference
         const userDoc = await getDoc(userRef); // DocumentSnapshot
-        console.log('User doc data 2');
         if (!userDoc.exists()) {
             return { error: 'Student document not found' };
         }
+        // const quizzes = userDoc.data().quizzes;
+        // console.log('quizzes: ', quizzes);
+        // const updateQuizzes = quizzes.some((quiz) => quiz.name === name)
+        //     ? quizzes.map((quiz) =>
+        //           quiz.name === name ? { ...quiz, score: newScore } : quiz
+        //       )
+        //     : [...quizzes, { name: name, score: newScore }];
+        console.log('update quizzes: ', updateQuizzes);
         await updateDoc(userRef, {
-            quizzes: arrayUnion({
-                name,
-                score,
-            }),
+            quizzes: updateQuizzes,
         });
         return { success: true };
     } catch (error) {
