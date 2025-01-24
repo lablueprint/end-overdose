@@ -1,5 +1,5 @@
 import React from 'react';
-import './profileStyles.css';
+import styles from '../profile.module.css';
 
 interface NamePlateProps {
     // interface
@@ -16,13 +16,13 @@ const NamePlate = ({ name, index, selectedIndex }: NamePlateProps) => {
     // child
     if (index == selectedIndex) {
         return (
-            <div className="namePlateContainer">
-                <p className="selectedNamePlate">{name}</p>
+            <div className={styles.namePlateContainer}>
+                <p className={styles.selectedNamePlate}>{name}</p>
             </div>
         );
     } else {
         return (
-            <div className="namePlateContainer">
+            <div className={styles.namePlateContainer}>
                 <p>{name}</p>
             </div>
         );
