@@ -18,6 +18,7 @@ import {
     query,
     where,
     setDoc,
+    updateDoc,
 } from 'firebase/firestore';
 
 const db = getFirestore(firebase_app);
@@ -126,12 +127,17 @@ export const getSchoolAdmins = cache(async () => {
             (doc) => doc.data() as Admin
         );
 
+        // The below structure is a hash map with the outer key being school (first string) and
+        // the value being another hash map with the key being email (second string) and the value
+        // being the Admin object with that email.
+
         const adminsBySchool = SchoolAdmins.reduce(
-            (acc: Record<string, Admin[]>, admin: Admin) => {
+            (acc: Record<string, Record<string, Admin>>, admin: Admin) => {
                 if (!acc[admin.school_name]) {
-                    acc[admin.school_name] = [];
+                    acc[admin.school_name] = {};
                 }
-                acc[admin.school_name].push(admin);
+                acc[admin.school_name][admin.email] = admin;
+                console.log(acc);
                 return acc;
             },
             {}
@@ -139,7 +145,39 @@ export const getSchoolAdmins = cache(async () => {
 
         return adminsBySchool;
     } catch (error) {
-        console.error('Error deleting admin:', error);
-        throw new Error('Failed to delete admin.');
+        console.error('Error fetching admin:', error);
+        throw new Error('Failed to fetching admin.');
     }
 });
+
+// Updates the approval status of the admin user with the given email to the new given approval status
+// Input: email of the admin user, new approval status
+// Output: success status and new approval status
+export async function updateAdminApproval(
+    adminEmail: string,
+    newApprovalStatus: boolean
+) {
+    try {
+        // Query admin by email field and get the document reference to it
+        const adminQuery = query(
+            adminsCollection,
+            where('email', '==', adminEmail)
+        );
+        const querySnapshot = await getDocs(adminQuery);
+        const docId = querySnapshot.docs[0].id;
+        const adminDocRef = doc(adminsCollection, docId);
+
+        // Update the 'approved' field
+        await updateDoc(adminDocRef, {
+            approved: newApprovalStatus,
+        });
+
+        return { success: true, newStatus: newApprovalStatus };
+    } catch (error) {
+        console.error('Error updating user approval status:', error);
+        return {
+            success: false,
+            error: 'Failed to update user approval status',
+        };
+    }
+}
