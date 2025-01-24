@@ -114,7 +114,9 @@ export async function signupAdmin(admin: Admin, password: string) {
     }
 }
 
-// get all of the school admins
+// Get all of the school admins, grouped by school
+// Returns a hash map with the outer key being school (first string) and the value being another hash map
+// with the key being email (second string) and the value being the Admin object with that email.
 export const getSchoolAdmins = cache(async () => {
     try {
         // query admin by email field
@@ -137,7 +139,6 @@ export const getSchoolAdmins = cache(async () => {
                     acc[admin.school_name] = {};
                 }
                 acc[admin.school_name][admin.email] = admin;
-                console.log(acc);
                 return acc;
             },
             {}

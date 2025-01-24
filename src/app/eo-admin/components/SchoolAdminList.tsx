@@ -5,8 +5,40 @@ import { Admin } from '@/types/Admin';
 import Switch from '@mui/material/Switch';
 import { updateAdminApproval } from '@/app/api/admins/actions';
 
-export default function SchoolAdminsList({ admins }) {
+// Component that displays the list of school admins with a toggle next to each to change their approval status
+// admins is a dictionary where the key is school names, and the value is a dictionary of admin emails to admin objects
+
+export default function SchoolAdminsList({
+    admins,
+}: {
+    admins: Record<string, Record<string, Admin>>;
+}) {
     const [adminsBySchool, setAdminsBySchool] = useState(admins);
+
+    // Changes the approval status in Firebase and local state, triggered by the Switch component
+    const handleToggleApproval = async (
+        adminEmail: string,
+        newApproval: boolean,
+        school: string
+    ) => {
+        // Update the approval status in Firebase
+        const result = await updateAdminApproval(adminEmail, newApproval);
+
+        // Update the local state
+        setAdminsBySchool(
+            (prevAdminsBySchool: Record<string, Record<string, Admin>>) => {
+                const updatedAdmins = { ...prevAdminsBySchool };
+                updatedAdmins[school] = {
+                    ...updatedAdmins[school],
+                    [adminEmail]: {
+                        ...updatedAdmins[school][adminEmail],
+                        approved: newApproval,
+                    },
+                };
+                return updatedAdmins;
+            }
+        );
+    };
 
     return (
         <div>
@@ -29,26 +61,13 @@ export default function SchoolAdminsList({ admins }) {
                                     {admin.approved ? 'Yes' : 'No'}{' '}
                                     <Switch
                                         checked={admin.approved}
-                                        onChange={() => {
-                                            // Update the approval status in Firebase
-                                            updateAdminApproval(
+                                        onChange={() =>
+                                            handleToggleApproval(
                                                 admin.email,
-                                                !admin.approved
-                                            );
-                                            // Update the local state
-                                            setAdminsBySchool({
-                                                ...adminsBySchool,
-                                                [school]: {
-                                                    ...admins,
-                                                    [email]: {
-                                                        ...admin,
-                                                        approved:
-                                                            !admin.approved,
-                                                    },
-                                                },
-                                            });
-                                            console.log('Switched');
-                                        }}
+                                                !admin.approved,
+                                                school
+                                            )
+                                        }
                                     />
                                 </div>
                             )
