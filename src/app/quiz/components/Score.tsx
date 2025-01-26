@@ -2,6 +2,8 @@
 import { addQuiz } from '@/app/api/students/actions';
 import { useState, useEffect } from 'react';
 import { useUserStore } from '@/store/userStore';
+import { Student } from '@/types/Student';
+import { Admin } from '@/types/Admin';
 interface MissedQuestion {
     question: string;
     correctAnswer: number;
@@ -47,24 +49,32 @@ export default function Score({
     };
     const user = useUserStore.getState().user;
     const name = 'quiz3';
+    function isStudent(user: Student | Admin | null): user is Student {
+        return user !== null && 'quizzes' in user;
+    }
     useEffect(() => {
         const updateQuiz = async () => {
             try {
                 console.log('test');
                 const newScore = (currentScore / numQuestions) * 100;
-                const quizzes = user?.quizzes;
-                console.log('quizzes: ', quizzes);
-                const updateQuizzes = quizzes.some((quiz) => quiz.name === name)
-                    ? quizzes.map((quiz) =>
-                          quiz.name === name
-                              ? { ...quiz, score: newScore }
-                              : quiz
-                      )
-                    : [...quizzes, { name: name, score: newScore }];
-                addQuiz(updateQuizzes);
-                useUserStore
-                    .getState()
-                    .setUser({ ...user, quizzes: updateQuizzes });
+                if (isStudent(user)) {
+                    const quizzes = user?.quizzes;
+
+                    console.log('quizzes: ', quizzes);
+                    const updateQuizzes = quizzes.some(
+                        (quiz) => quiz.name === name
+                    )
+                        ? quizzes.map((quiz) =>
+                              quiz.name === name
+                                  ? { ...quiz, score: newScore }
+                                  : quiz
+                          )
+                        : [...quizzes, { name: name, score: newScore }];
+                    addQuiz(updateQuizzes);
+                    useUserStore
+                        .getState()
+                        .setUser({ ...user, quizzes: updateQuizzes });
+                }
             } catch (error) {
                 console.error('Error adding quiz', error);
             }
