@@ -5,7 +5,16 @@ import Score from './Score';
 
 import '../styles.css';
 
-export default function MCQ() {
+interface McqProps {
+    title: string;
+    description: string;
+}
+
+export default function Mcq({ title, description }: McqProps) {
+    const [hasStarted, setHasStarted] = useState(false);
+    const handleStart = () => {
+        setHasStarted(true);
+    };
     const questions = [
         {
             question: 'How are you?',
@@ -88,6 +97,17 @@ export default function MCQ() {
             }, 1000);
         }
     };
+
+    // if student has not started the quiz, display the begin quiz button, title, description
+    if (!hasStarted) {
+        return (
+            <div className="answers-container">
+                <h1>Title: {title}</h1>
+                <p>Description: {description}</p>
+                <button onClick={handleStart}>Begin Quiz</button>
+            </div>
+        );
+    }
 
     return (
         <>
