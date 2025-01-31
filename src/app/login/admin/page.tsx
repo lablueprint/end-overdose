@@ -117,17 +117,6 @@ const AdminLogin = () => {
                                 Sign-up
                             </Link>
                         </h2>
-                        <div className={styles.navButtons}>
-                            <Link className={styles.link} href="/login/admin">
-                                <button>Admin Login </button>
-                            </Link>
-                            <Link
-                                className={styles.link}
-                                href="/login/students"
-                            >
-                                <button>Student Login</button>
-                            </Link>
-                        </div>
                     </div>
                 </div>
             </div>
