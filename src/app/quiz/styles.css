@@ -46,8 +46,6 @@
 }
 
 /* Make sure the quiz container takes the full height */
-
-
 .feedback {
     margin-top: 20px;
     font-size: 1.2rem;
@@ -62,4 +60,64 @@
 
 .feedback.wrong {
     color: red;  /* Wrong answer color */
+}
+
+.true-false-container {
+    position: absolute;
+    z-index: 15;
+    top: 25%;
+    left: 35%;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.question-container {
+    background-color: #161C2E;
+    border-radius: 10px;
+    color: white;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: auto;
+    padding: 50px 100px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.center-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-green {
+    background-color: #3E7829;
+    padding: 5px 30px;
+}
+
+.bg-red {
+    background-color: #B51515;
+    padding: 5px 30px;
+}
+
+.bg-light {
+    background-color: #F0EEF7;
+    color: black;
+    padding: 5px 30px;
 }
