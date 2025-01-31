@@ -1,4 +1,6 @@
 .container {
+    position: absolute;
+    right: 0;
     border: 2px solid;
     border-radius: 0.75rem;
     padding: 1.25rem;
