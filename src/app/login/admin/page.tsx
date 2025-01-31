@@ -27,17 +27,12 @@ const AdminLogin = () => {
         } else {
             setSuccess(true);
             setError('');
-
+            // fetch admin from firestore
             const admin = await getAdminFromEmail(email);
-
             if (admin) {
                 setUID(admin.id);
                 setRole(admin.role);
                 setUser(admin);
-
-                console.log(user);
-                console.log(uid);
-                console.log(role);
             } else {
                 setError('Unable to find admin with that email');
                 setSuccess(false);
@@ -45,6 +40,7 @@ const AdminLogin = () => {
         }
     };
 
+    console.log(user);
     return (
         <div className={styles.splitContainer}>
             <div className={styles.placeHolderHalf}></div>

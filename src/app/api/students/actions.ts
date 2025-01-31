@@ -44,10 +44,10 @@ export const validateUserCredentials = cache(
             const querySnapshot = await getDocs(q);
 
             if (!querySnapshot.empty) {
-                console.log('Valid username and password found!');
+                // console.log('Valid username and password found!');
                 return true; // Credentials are valid
             } else {
-                console.log('Invalid credentials or school not found.');
+                // console.log('Invalid credentials or school not found.');
                 return false; // No match found
             }
         } catch (error) {
@@ -70,7 +70,7 @@ export const getStudentFromID = cache(async (id: string) => {
 
         return null;
     } catch (error) {
-        console.error('Error fetching admins:', error);
-        throw new Error('Failed to fetch admins.');
+        console.error('Error fetching student:', error);
+        throw new Error('Failed to fetch student.');
     }
 });

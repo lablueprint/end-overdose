@@ -42,7 +42,7 @@ const StudentLogin = () => {
     //Check authentication on form submit
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('Logging in as Student:', { schoolId, schoolName });
+        // console.log('Logging in as Student:', { schoolId, schoolName });
         //call the firebase sign-in function here
         const authentication = await validateUserCredentials(
             //Check if ID and password are inside map of selected school
@@ -51,26 +51,17 @@ const StudentLogin = () => {
             password
         );
 
-        console.log('authentication', authentication);
-
         if (authentication) {
             const student = await getStudentFromID(schoolId);
-            console.log('student ; ', student);
+            // console.log('student ; ', student);
             if (student) {
-                console.log('SUCCESS');
-
                 setUID(student.student_id); //Set zustand state to hold user if authentication is successful
                 setRole('student');
                 setUser(student);
-
-                console.log(user);
-                console.log(uid);
-                console.log(role);
-
                 setSuccess(true);
             } else {
                 setError(
-                    'authentication successful, but unable to find student with that id in the database.'
+                    'Authentication successful, but unable to find student with that id in the database.'
                 );
             }
         } else {
@@ -172,17 +163,6 @@ const StudentLogin = () => {
                                 Sign-up
                             </Link>
                         </h2>
-                        <div className={styles.navButtons}>
-                            <Link className={styles.link} href="/login/admin">
-                                <button>Admin Login </button>
-                            </Link>
-                            <Link
-                                className={styles.link}
-                                href="/login/students"
-                            >
-                                <button>Student Login</button>
-                            </Link>
-                        </div>
                     </div>
                 </div>
             </div>
