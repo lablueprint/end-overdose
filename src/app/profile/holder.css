@@ -1,0 +1,295 @@
+/* ------------------------------------------------------Badge Styles----------------------------------------------------------------------------- */
+.badgeDialog {
+    position: relative;
+    z-index: 50;
+}
+
+.badgeDialogPanelContainer {
+    position: fixed;
+    inset: 0px;
+    display: flex;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+}
+
+.badgeDialogPanel {
+    max-width: 1024px;
+    margin-top: 16px;
+    border-width: 1px;
+    padding: 12px;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+}
+
+.badgeDialogTitle {
+    font-weight: 700;
+}
+
+.badgeDialogDescription {
+    margin-bottom: 12px;
+}
+
+.badgeDialogCloseButton {
+    border-width: 1px;
+    border-color: white;
+    padding: 4px;
+    align-self: center;
+    background: none;
+    color: white;
+    cursor: pointer;
+}
+
+.activeText {
+    color: gold;
+}
+
+.inactiveText {
+    color: gray;
+}
+
+
+/*------------------------------------------- Badge Table Container Styles ----------------------------------------------*/
+
+/* Badge Table Container */
+.badgeTableContainer {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    align-items: center;
+}
+
+/* Title Styles */
+.badgeTableTitle {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Badge Table Layout */
+.badgeTable {
+    display: grid;
+    gap: 50px;
+    grid-template-columns: auto auto auto auto auto;
+    justify-content: center;
+}
+
+
+/* ------------------------------------------- Confirm Button Styles ----------------------------------------*/
+
+.activeConfirm {
+    color: aquamarine;
+}
+
+.inactiveConfirm {
+    color: black;
+}
+
+/* ------------------------------------------- NamePlate Styles ---------------------------------------------------*/
+
+.selectedNamePlate {
+    color:aquamarine;
+}
+
+.namePlateContainer {
+    height: 25px;
+}
+
+/* -------------------------------------------- Profile Picture Styles ----------------------------------------- */
+
+/* Profile Picture Container */
+.profilePictureContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Profile Picture Styling */
+.profilePicture {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+
+/* Profile Select Button Styles */
+
+/* Role Plate Styles */
+
+/* Scrollable List Styles */
+.scrollableList {
+    height: 175px;
+    overflow: scroll;
+    padding: 20px;
+}
+/* -------------------------------------------------------------------Page Styles-----------------------------------------------*/
+.pageMain {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.pageTitle {
+    font-size: 24px;
+    padding: 10px;
+}
+
+/* Profile Container Styles */
+.pageProfileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Text Container */
+.pageTextContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.pageName {
+    font-size: 35px;
+}
+
+/* Name Selection */
+.pageNameSelection {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.pageNameColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pageButtonRow {
+    display: flex;
+    justify-content: center;
+}
+
+.button {
+    padding: 5px;
+    margin: 5px;
+} 
+
+/* Profile Select Button Container */
+.pageProfileSelectContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+/* Badge Table */
+.pageBadgeTableContainer {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    align-items: center;
+}
+
+.pageBadgeTableTitle {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.pageBadgeTable {
+    display: grid;
+    gap: 50px;
+    grid-template-columns: auto auto auto auto auto;
+    justify-content: center;
+}
+
+/* Badge Dialog */
+.pageBadgeDialog {
+    position: relative;
+    z-index: 50;
+}
+
+.pageBadgeDialogPanelContainer {
+    position: fixed;
+    inset: 0px;
+    display: flex;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+}
+
+.pageBadgeDialogPanel {
+    max-width: 1024px;
+    margin-top: 16px;
+    border-width: 1px;
+    padding: 12px;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+}
+
+.pageBadgeDialogTitle {
+    font-weight: 700;
+}
+
+.pageBadgeDialogDescription {
+    margin-bottom: 12px;
+}
+
+.pageBadgeDialogCloseButton {
+    border-width: 1px;
+    border-color: white;
+    padding: 4px;
+    align-self: center;
+    background: none;
+    color: white;
+    cursor: pointer;
+}
+
+.pageActiveText {
+    color: green;
+}
+
+.pageInactiveText {
+    color: gray;
+}
+
+/* Badge Table Styles */
+.pageSelectedNamePlate {
+    color: aquamarine;
+}
+
+.pageNamePlateContainer {
+    height: 25px;
+}
+
+/* Profile Picture Styles */
+.pageProfilePictureContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pageProfilePicture {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+/* Scrollable List Styles */
+.pageScrollableList {
+    height: 175px;
+    overflow: scroll;
+    padding: 20px;
+}
