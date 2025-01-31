@@ -27,6 +27,7 @@ export const getStudents = cache(async () => {
     }
 });
 
+//takes in school, username, password and checks that username and password are in school's student id map
 export const validateUserCredentials = cache(
     async (schoolName: string, username: string, password: string = '') => {
         try {
@@ -56,9 +57,10 @@ export const validateUserCredentials = cache(
     }
 );
 
+//returns student object from firebase based off studentid parameter
 export const getStudentFromID = cache(async (id: string) => {
     try {
-        const q = query(studentsCollection, where('student_id', '==', id));
+        const q = query(studentsCollection, where('student_id', '==', id)); //Find student from ID
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {

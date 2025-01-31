@@ -31,6 +31,7 @@ const StudentLogin = () => {
         </option>
     ));
 
+    //Change selected school from dropdown selection
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedSchoolName = e.target.value;
         if (selectedSchoolName) {
@@ -38,11 +39,13 @@ const StudentLogin = () => {
         }
     };
 
+    //Check authentication on form submit
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         console.log('Logging in as Student:', { schoolId, schoolName });
         //call the firebase sign-in function here
         const authentication = await validateUserCredentials(
+            //Check if ID and password are inside map of selected school
             schoolName,
             schoolId,
             password
@@ -56,7 +59,7 @@ const StudentLogin = () => {
             if (student) {
                 console.log('SUCCESS');
 
-                setUID(student.student_id);
+                setUID(student.student_id); //Set zustand state to hold user if authentication is successful
                 setRole('student');
                 setUser(student);
 
