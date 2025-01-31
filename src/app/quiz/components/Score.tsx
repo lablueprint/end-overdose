@@ -36,7 +36,7 @@ export default function Score({
     setMissedQuestions,
     setIsQuestionSelected,
 }: ScoreProps) {
-    const percentage = ((currentScore / numQuestions) * 100).toFixed(2);
+    const percentage = ((currentScore / numQuestions) * 100).toFixed(0);
 
     const retakeQuiz = () => {
         setCurrentScore(0);
@@ -86,7 +86,7 @@ export default function Score({
         <div className="score-container">
             <div className="score-panel">
                 <p>You Scored</p>
-                <p className="score-number">{percentage}</p>
+                <p className="score-number">{percentage}%</p>
                 <button className="score-button" onClick={retakeQuiz}>
                     Retry
                 </button>
