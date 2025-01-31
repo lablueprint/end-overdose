@@ -43,7 +43,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
     if (started && !completed) {
         return (
             <div className="true-false-container">
-                <div className="question-container">
+                <div className="tf-question-container">
                     <h1 style={{ fontSize: '2rem' }}>
                         {questions[questionIndex].question}
                     </h1>
@@ -69,7 +69,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
     } else if (completed) {
         return (
             <div className="true-false-container">
-                <div className="question-container">
+                <div className="tf-question-container">
                     <h1 style={{ fontSize: '2rem' }}>Quiz Completed!</h1>
                     <div>
                         You got {numCorrect} out of {questions.length} correct!
@@ -90,7 +90,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
     } else {
         return (
             <div className="true-false-container">
-                <div className="question-container">
+                <div className="tf-question-container">
                     <h1 style={{ fontSize: '2rem' }}>{title}</h1>
                     <div>{description}</div>
                     <div> You must select either: </div>
