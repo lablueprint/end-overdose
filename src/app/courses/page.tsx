@@ -3,10 +3,17 @@ import Course from './components/Course';
 import DailyQuest from './components/DailyQuest';
 
 export default function Courses() {
-    const opioidProgress = 0;
-    const careerProgress = 40;
+    // Course progress data
+    const coursesData = [
+        { title: 'Opioid Overdose', path: 'opioid', progress: 0 },
+        { title: 'Career Training', path: 'career', progress: 40 },
+        { title: 'Mental Health', path: 'mental-health', progress: 25 },
+        { title: 'First Aid', path: 'first-aid', progress: 60 },
+        { title: 'Life Skills', path: 'life-skills', progress: 15 },
+        { title: 'Stress Management', path: 'stress', progress: 30 },
+    ];
 
-    // Example data for DailyQuest
+    // Daily quest data
     const dailyQuestData = {
         questPath: 'daily-quest-1',
         questTitle: 'Complete Your Profile',
@@ -17,24 +24,19 @@ export default function Courses() {
     };
 
     return (
-        <div className="flex flex-row">
-            <div className="flex">
-                <Link href="/courses/opioid">
-                    <Course
-                        courseTitle={'Opioid Overdose'}
-                        coursePath={'opioid'}
-                        courseProgress={opioidProgress}
-                    />
-                </Link>
-                <Link href="/courses/career">
-                    <Course
-                        courseTitle={'Career Training'}
-                        coursePath={'career'}
-                        courseProgress={careerProgress}
-                    />
-                </Link>
+        <div className="flex gap-8">
+            <div className="grid grid-cols-2 gap-4">
+                {coursesData.map((course) => (
+                    <Link key={course.path} href={`/courses/${course.path}`}>
+                        <Course
+                            courseTitle={course.title}
+                            coursePath={course.path}
+                            courseProgress={course.progress}
+                        />
+                    </Link>
+                ))}
             </div>
-            <div className="flex">
+            <div className="flex-shrink-0">
                 <DailyQuest
                     questPath={dailyQuestData.questPath}
                     questTitle={dailyQuestData.questTitle}

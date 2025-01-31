@@ -26,12 +26,12 @@ export default function DailyQuest({
             Daily Quests
             <Quest
                 questTitle={'Collect 10 Gems'}
-                questShape={'triangle'}
+                questShape={'EMPTY'}
                 completionPercentage={60}
             />
             <Quest
                 questTitle={'Defeat 5 Enemies'}
-                questShape={'triangle'}
+                questShape={'EMPTY'}
                 completionPercentage={30}
             />
             <Quest

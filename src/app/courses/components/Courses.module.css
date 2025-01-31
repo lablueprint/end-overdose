@@ -1,28 +1,39 @@
 .container {
     position: relative;
-    cursor: pointer;
     border: 2px solid;
-    width: 20rem; /* equivalent to w-80 */
-    height: 16rem; /* equivalent to h-64 */
-    margin: 1.25rem; /* equivalent to m-5 */
-    padding: 1.25rem; /* equivalent to p-5 */
-    border-radius: 0.75rem; /* equivalent to rounded-xl */
+    width: 20rem;
+    height: 16rem;
+    margin: 1.25rem;
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+}
+
+/* Add a pseudo-element to handle the hover state */
+.container::after {
+    content: '';
+    position: absolute;
+    top: 2px; /* border width */
+    left: 2px; /* border width */
+    right: 2px; /* border width */
+    bottom: 2px; /* border width */
+    cursor: pointer;
+    border-radius: 0.5rem; /* slightly smaller to fit inside border */
 }
 
 .title {
-    line-height: 2rem; /* equivalent to leading-8 */
-    font-weight: bold; /* equivalent to font-bold */
+    line-height: 2rem;
+    font-weight: bold;
 }
 
 .progressWrapper {
-    margin-top: 0.5rem; /* optional to give some spacing */
+    margin-top: 0.5rem;
 }
 
 .absoluteBox {
     position: absolute;
-    width: 8rem; /* equivalent to w-32 */
-    height: 7rem; /* equivalent to h-28 */
+    width: 8rem;
+    height: 7rem;
     border: 2px solid;
-    bottom: 1.25rem; /* equivalent to bottom-5 */
-    right: 1.25rem; /* equivalent to right-5 */
+    bottom: 1.25rem;
+    right: 1.25rem;
 }

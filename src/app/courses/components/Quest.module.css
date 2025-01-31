@@ -1,5 +1,5 @@
 .quest {
-    width: 16rem;
+    width: 20rem;
     height: 4rem;
     background-color: #f7fafc;
     border: 2px solid #4a5568;
@@ -19,11 +19,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.triangleShape {
-    width: 100%;
-    height: 100%;
 }
 
 .questDetails {
