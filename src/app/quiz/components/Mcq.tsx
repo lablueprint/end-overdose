@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Question from './Question';
 import Score from './Score';
+import questions from '../questions.json' assert { type: 'json' };
 
 import '../styles.css';
 
@@ -15,32 +16,6 @@ export default function Mcq({ title, description }: McqProps) {
     const handleStart = () => {
         setHasStarted(true);
     };
-    const questions = [
-        {
-            question: 'How are you?',
-            answers: ['1', '2', '3', '4'],
-            question_type: 1,
-            correctAnswer: 1,
-        },
-        {
-            question: 'What is your favorite food?',
-            answers: ['1', '2', '3', '4'],
-            question_type: 1,
-            correctAnswer: 2,
-        },
-        {
-            question: 'Name a breed of cat?',
-            answers: ['1', '2', '3', '4'],
-            question_type: 1,
-            correctAnswer: 3,
-        },
-        {
-            question: 'Are you having a good time?',
-            answers: ['1', '2'],
-            question_type: 0,
-            correctAnswer: 0,
-        },
-    ];
 
     interface MissedQuestion {
         question: string;
@@ -116,7 +91,6 @@ export default function Mcq({ title, description }: McqProps) {
                     <Question
                         question={currentQuestion.question}
                         answers={currentQuestion.answers}
-                        question_type={currentQuestion.question_type}
                         onAnswerSelected={handleAnswerSelected}
                     />
                     {feedback && (
