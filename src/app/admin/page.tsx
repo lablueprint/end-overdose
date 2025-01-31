@@ -1,10 +1,9 @@
 'use client';
 import { useUserStore } from '@/store/userStore';
 import Switch from '@mui/material/Switch';
-import IncludeCourses from './components/IncludedCourses';
 import { getSchool } from '../api/schools/actions';
 import { useState, useEffect } from 'react';
-import { School, SchoolDocument } from '@/types/School';
+import { SchoolDocument } from '@/types/School';
 
 export default function Dashboard() {
     const { user } = useUserStore(); // Can use this to get the school of the user
