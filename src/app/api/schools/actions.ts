@@ -22,6 +22,7 @@ const db = getFirestore(firebase_app);
 const schoolsCollection = collection(db, 'schools');
 
 // Get the document for a particular school from the database
+// This assumes that school name is unique in the database
 export const getSchool = cache(async (schoolName: string) => {
     try {
         // Query for specific school by the school name
@@ -38,7 +39,7 @@ export const getSchool = cache(async (schoolName: string) => {
                 school: schoolData, // The school data from Firestore
             } as SchoolDocument;
         });
-        return schools[0];
+        return schools[0]; // Returns the first school in the array -> There should only be one school with a particular name
     } catch (error) {
         console.error('Error fetching schools:', error);
         throw new Error('Failed to fetch schools.');
