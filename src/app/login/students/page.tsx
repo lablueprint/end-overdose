@@ -3,12 +3,25 @@ import Link from 'next/link';
 import styles from '../login.module.css';
 import { useState } from 'react';
 import { WolfPackAlphaUniversity, UCLA, School } from '@/types/School';
+import {
+    validateUserCredentials,
+    getStudentFromID,
+} from '@/app/api/students/actions';
+import { useUserStore } from '@/store/userStore';
 
 const StudentLogin = () => {
-    const [schoolId, setSchoolId] = useState('');
-    const [school, setSchool] = useState(WolfPackAlphaUniversity);
-    const [password, setPassword] = useState('');
+    const setUser = useUserStore((state) => state.setUser);
+    const setUID = useUserStore((state) => state.setUID);
+    const setRole = useUserStore((state) => state.setRole);
+    const user = useUserStore((state) => state.user);
+    const uid = useUserStore((state) => state.uid);
+    const role = useUserStore((state) => state.role);
+
     const schools = [WolfPackAlphaUniversity, UCLA];
+
+    const [schoolId, setSchoolId] = useState('');
+    const [schoolName, setSchoolName] = useState(schools[0].name);
+    const [password, setPassword] = useState('');
 
     const schoolValues = schools.map((school: School) => (
         <option key={school.name} value={school.name}>
@@ -18,18 +31,45 @@ const StudentLogin = () => {
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedSchoolName = e.target.value;
-        const selectedSchool = schools.find(
-            (s) => s.name === selectedSchoolName
-        );
-        if (selectedSchool) {
-            setSchool(selectedSchool);
+        if (selectedSchoolName) {
+            setSchoolName(selectedSchoolName);
         }
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('Logging in as Student:', { schoolId, school });
+        console.log('Logging in as Student:', { schoolId, schoolName });
         //call the firebase sign-in function here
+        const authentication = await validateUserCredentials(
+            schoolName,
+            schoolId,
+            password
+        );
+
+        console.log('authentication', authentication);
+
+        if (authentication) {
+            const student = await getStudentFromID(schoolId);
+            console.log('student ; ', student);
+            if (student) {
+                console.log('SUCCESS');
+
+                setUID(student.student_id);
+                setRole('student');
+                setUser(student);
+
+                console.log(user);
+                console.log(uid);
+                console.log(role);
+            } else {
+                console.log(
+                    'authentication successful, but unable to find student with that id in the database.'
+                );
+            }
+        } else {
+            console.log('User was unable to be authenticated');
+            return;
+        }
     };
 
     return (
@@ -71,14 +111,14 @@ const StudentLogin = () => {
                                 <div className={styles.subForm}>
                                     <label
                                         className={styles.h2}
-                                        htmlFor="school"
+                                        htmlFor="schoolName"
                                     >
                                         School Name
                                     </label>
                                     <select
                                         className={styles.input}
-                                        id="school"
-                                        name="school"
+                                        id="schoolName"
+                                        name="schoolName"
                                         onChange={(e) => handleSelectChange(e)}
                                         required
                                     >

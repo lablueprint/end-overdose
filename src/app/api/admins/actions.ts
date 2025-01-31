@@ -113,7 +113,7 @@ export async function signupAdmin(admin: Admin, password: string) {
     }
 }
 
-export const getAdminFromEmail = async (email: string) => {
+export const getAdminFromEmail = cache(async (email: string) => {
     try {
         const q = query(adminsCollection, where('email', '==', email));
         const snapshot = await getDocs(q);
@@ -129,4 +129,4 @@ export const getAdminFromEmail = async (email: string) => {
         console.error('Error fetching admins:', error);
         throw new Error('Failed to fetch admins.');
     }
-};
+});

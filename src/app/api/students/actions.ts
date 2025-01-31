@@ -3,7 +3,13 @@
 import { cache } from 'react';
 import { Student } from '@/types/Student';
 import firebase_app from '@/firebase/config';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    query,
+    where,
+} from 'firebase/firestore';
 
 const db = getFirestore(firebase_app);
 const studentsCollection = collection(db, 'students');
@@ -18,5 +24,51 @@ export const getStudents = cache(async () => {
     } catch (error) {
         console.error('Error fetching students:', error);
         throw new Error('Failed to fetch students.');
+    }
+});
+
+export const validateUserCredentials = cache(
+    async (schoolName: string, username: string, password: string = '') => {
+        try {
+            const schoolRef = collection(db, 'schools');
+
+            // Query to find the document where school name matches and user credentials exist
+
+            const q = query(
+                schoolRef,
+                where('name', '==', schoolName),
+                where(`school_ids.${username}`, '==', password) // Accessing nested map
+            );
+
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                console.log('Valid username and password found!');
+                return true; // Credentials are valid
+            } else {
+                console.log('Invalid credentials or school not found.');
+                return false; // No match found
+            }
+        } catch (error) {
+            console.error('Error fetching school:', error);
+            return false;
+        }
+    }
+);
+
+export const getStudentFromID = cache(async (id: string) => {
+    try {
+        const q = query(studentsCollection, where('student_id', '==', id));
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+            const doc = snapshot.docs[0];
+            return { ...(doc.data() as Student) };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching admins:', error);
+        throw new Error('Failed to fetch admins.');
     }
 });
