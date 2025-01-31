@@ -4,7 +4,7 @@ import Question from './Question';
 import Score from './Score';
 import questions from '../questions.json' assert { type: 'json' };
 
-import '../styles.css';
+import './startpage.css';
 
 interface McqProps {
     title: string;
@@ -76,10 +76,10 @@ export default function Mcq({ title, description }: McqProps) {
     // if student has not started the quiz, display the begin quiz button, title, description
     if (!hasStarted) {
         return (
-            <div className="answers-container">
-                <h1>Title: {title}</h1>
-                <p>Description: {description}</p>
-                <button onClick={handleStart}>Begin Quiz</button>
+            <div className="start-container">
+                <h1>{title}</h1>
+                <p>{description}</p>
+                <button onClick={handleStart}>Begin</button>
             </div>
         );
     }
