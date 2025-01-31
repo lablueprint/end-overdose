@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Module from '../components/Module';
+import Module from '../components/Lesson';
 
 export default function OpioidHome() {
     return (

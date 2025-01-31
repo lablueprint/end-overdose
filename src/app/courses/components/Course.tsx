@@ -1,5 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
+import styles from './courses.module.css';
 
 interface CourseProps {
     coursePath: string;
@@ -17,13 +18,15 @@ export default function Course({
         router.push(`/courses/${coursePath}`);
     };
     return (
-        <>
-            <div style={{ cursor: 'pointer' }} onClick={handleClick}>
-                Title: {courseTitle}, Progress:{courseProgress}
+        <div className={styles.container}>
+            <div onClick={handleClick}>
+                <h2 className={styles.title}>{courseTitle}</h2>
             </div>
-            <div>
-                <progress value={courseProgress} max={100}></progress>
+            <div className={styles.progressWrapper}>
+                <progress value={courseProgress} max={100}></progress>{' '}
+                {courseProgress}
             </div>
-        </>
+            <div className={styles.absoluteBox}></div>
+        </div>
     );
 }

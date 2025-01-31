@@ -7,12 +7,27 @@ import {
     getFirestore,
     collection,
     getDocs,
+    getDoc,
+    doc,
+    updateDoc,
+    arrayUnion,
+} from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+interface Quiz {
+    name: string;
+    score: number;
+}
+import {
+    getFirestore,
+    collection,
+    getDocs,
     query,
     where,
 } from 'firebase/firestore';
 
 const db = getFirestore(firebase_app);
 const studentsCollection = collection(db, 'students');
+const auth = getAuth();
 
 // get all students from the database
 export const getStudents = cache(async () => {
@@ -26,6 +41,29 @@ export const getStudents = cache(async () => {
         throw new Error('Failed to fetch students.');
     }
 });
+
+export async function addQuiz(updateQuizzes: Quiz[]) {
+    try {
+        console.log('work');
+        // const user = auth.currentUser;
+        // if (!user) {
+        //     return { error: 'User data not found' };
+        // }
+        const userRef = doc(db, 'students', '12n2OCj3WNa0cM4e2rUh'); // hard coded student id for now
+        const userDoc = await getDoc(userRef); // DocumentSnapshot
+        if (!userDoc.exists()) {
+            return { error: 'Student document not found' };
+        }
+        console.log('update quizzes: ', updateQuizzes);
+        await updateDoc(userRef, {
+            quizzes: updateQuizzes,
+        });
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to log in admin.');
+    }
+}
 
 //takes in school, username, password and checks that username and password are in school's student id map
 export const validateUserCredentials = cache(
