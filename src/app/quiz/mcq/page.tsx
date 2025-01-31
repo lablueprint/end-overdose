@@ -2,7 +2,7 @@
 import Mcq from '../components/Mcq';
 import '../styles.css';
 
-export default function multiplechoice() {
+export default function MultipleChoice() {
     return (
         <Mcq
             title="Multiple Choice Quiz"

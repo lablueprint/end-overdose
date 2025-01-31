@@ -2,4 +2,4 @@
 import { useState } from 'react';
 import '../styles.css';
 
-export default function truefalse() {}
+export default function ScenarioGame() {}

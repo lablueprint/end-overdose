@@ -48,7 +48,7 @@ export default function Mcq({ title, description }: McqProps) {
         selectedAnswer: number | null;
     }
 
-    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>(
+    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>( //  array storing missed questions
         []
     );
 
@@ -61,18 +61,19 @@ export default function Mcq({ title, description }: McqProps) {
     const currentQuestion = questions[currentQuestionIndex];
 
     const [feedback, setFeedback] = useState<string>('');
-    // const [correctAnswer, setCorrectAnswer] = useState(currentQuestion.correctAnswer)
 
     const handleAnswerSelected = (answerIndex: number) => {
         setSelectedAnswer(answerIndex);
         setIsQuestionSelected(true);
         if (!isQuestionSelected) {
+            // check for correct answer
             if (answerIndex === currentQuestion.correctAnswer) {
                 setFeedback('Correct!');
                 setCurrentScore(currentScore + 1);
             } else {
                 setFeedback('Wrong!');
                 setMissedQuestions((prevMissed) => [
+                    // add missed question to missedQuestions array
                     ...prevMissed,
                     {
                         question: questions[currentQuestionIndex].question,
@@ -81,7 +82,6 @@ export default function Mcq({ title, description }: McqProps) {
                         selectedAnswer: answerIndex,
                     },
                 ]);
-                console.log(missedQuestions);
             }
 
             // Move to the next question after short delay
@@ -111,7 +111,7 @@ export default function Mcq({ title, description }: McqProps) {
 
     return (
         <>
-            {currentQuestionIndex < questions.length ? (
+            {currentQuestionIndex < questions.length ? ( // if there are still questions to be answered, display the question
                 <div>
                     <Question
                         question={currentQuestion.question}
@@ -128,6 +128,7 @@ export default function Mcq({ title, description }: McqProps) {
                     )}
                 </div>
             ) : (
+                // if all questions have been answered, display the score
                 <div>
                     <Score
                         numQuestions={questions.length}
