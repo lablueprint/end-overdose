@@ -22,6 +22,8 @@ const StudentLogin = () => {
     const [schoolId, setSchoolId] = useState('');
     const [schoolName, setSchoolName] = useState(schools[0].name);
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
 
     const schoolValues = schools.map((school: School) => (
         <option key={school.name} value={school.name}>
@@ -61,8 +63,10 @@ const StudentLogin = () => {
                 console.log(user);
                 console.log(uid);
                 console.log(role);
+
+                setSuccess(true);
             } else {
-                console.log(
+                setError(
                     'authentication successful, but unable to find student with that id in the database.'
                 );
             }
@@ -86,6 +90,12 @@ const StudentLogin = () => {
                             </h2>
                         </div>
                         <div className={styles.formContainer}>
+                            {error && <p style={{ color: 'red' }}>{error}</p>}
+                            {success && (
+                                <p style={{ color: 'green' }}>
+                                    Admin Login successful!
+                                </p>
+                            )}
                             <form
                                 className={styles.form}
                                 onSubmit={handleSubmit}
