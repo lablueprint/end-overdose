@@ -1,4 +1,4 @@
-import './profileStyles.css';
+import styles from '../profile.module.css';
 
 /**
  * Component for confirmation button that appears under scrollable list associated with confirming name selection in backend
@@ -10,24 +10,18 @@ interface ConfirmButtonProps {
 }
 
 const ConfirmButton = ({ changesMade, onPress }: ConfirmButtonProps) => {
-    // child
-    if (changesMade) {
-        return (
-            <div>
-                <button className="activeConfirm" onClick={onPress}>
-                    Confirm
-                </button>
-            </div>
-        );
-    } else {
-        return (
-            <div>
-                <button className="inactiveConfirm" onClick={onPress}>
-                    Confirm
-                </button>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <button
+                className={
+                    changesMade ? styles.activeConfirm : styles.inactiveConfirm
+                }
+                onClick={onPress}
+            >
+                Confirm
+            </button>
+        </div>
+    );
 };
 
 export default ConfirmButton;
