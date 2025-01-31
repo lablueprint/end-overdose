@@ -10,20 +10,14 @@ import {
     getDoc,
     doc,
     updateDoc,
-    arrayUnion,
+    query,
+    where,
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 interface Quiz {
     name: string;
     score: number;
 }
-import {
-    getFirestore,
-    collection,
-    getDocs,
-    query,
-    where,
-} from 'firebase/firestore';
 
 const db = getFirestore(firebase_app);
 const studentsCollection = collection(db, 'students');
