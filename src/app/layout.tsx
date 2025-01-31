@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import NavBar from '../components/NavBar';
 import InitAuthState from '@/components/InitAuthState';
+import { getAuthenticatedAppForUser } from '@/firebase/serverApp';
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -20,11 +21,13 @@ export const metadata: Metadata = {
     description: 'Web app created by LA Blueprint',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const { currentUser } = await getAuthenticatedAppForUser();
+    console.log('CURRENT USER: ', currentUser);
     return (
         <html lang="en">
             <body

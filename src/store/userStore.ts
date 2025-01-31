@@ -9,7 +9,7 @@ interface UserState {
     loading: boolean;
     role: role;
     token: string | null;
-    setUser: (user: Student | null) => void;
+    setUser: (user: Student | Admin | null) => void;
     setLoading: (loading: boolean) => void;
     setRole: (role: role) => void;
     setToken: (token: string | null) => void;

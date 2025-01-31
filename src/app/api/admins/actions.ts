@@ -3,8 +3,6 @@
 import { cache } from 'react';
 import { revalidatePath } from 'next/cache';
 import { Admin } from '@/types/Admin';
-import firebase_app from '@/firebase/config';
-import { getAuth } from 'firebase/auth';
 import signIn from '@/firebase/auth/signIn';
 import signUp from '@/firebase/auth/signUp';
 import {
@@ -19,9 +17,10 @@ import {
     where,
     setDoc,
 } from 'firebase/firestore';
+import { getAuthenticatedAppForUser } from '@/firebase/serverApp';
 
-const db = getFirestore(firebase_app);
-const auth = getAuth();
+const { firebaseServerApp } = await getAuthenticatedAppForUser();
+const db = getFirestore(firebaseServerApp);
 const adminsCollection = collection(db, 'admins');
 
 // get all admins from the database
@@ -80,10 +79,7 @@ export async function loginAdmin(email: string, password: string) {
         if (error) {
             return { error };
         }
-        const user = auth.currentUser;
-        if (!user) {
-            return { error: 'User not authorized in app.' };
-        }
+        console.log(result);
         const userDoc = await getDoc(doc(db, 'admins', user.uid));
         if (!userDoc.exists()) {
             return { error: 'User data not found.' };
