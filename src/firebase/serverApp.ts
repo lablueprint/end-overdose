@@ -1,25 +1,35 @@
 import 'server-only';
 
-import { headers } from 'next/headers';
 import { initializeServerApp } from 'firebase/app';
-
+import { getCookie } from './cookies';
 import { firebaseConfig } from './config';
 import { getAuth } from 'firebase/auth';
 
 export async function getAuthenticatedAppForUser() {
-    const idToken = headers().get('Authorization')?.split('Bearer ')[1];
+    // get the user token from the cookie
+    const token = await getCookie('user-token');
 
+    if (!token) {
+        throw new Error('No user token found');
+    }
+
+    // initialize the firebase app with the user token
     const firebaseServerApp = initializeServerApp(
         firebaseConfig,
-        idToken
+        token
             ? {
-                  authIdToken: idToken,
+                  authIdToken: token.value,
               }
             : {}
     );
 
+    // get the auth object
     const auth = getAuth(firebaseServerApp);
     await auth.authStateReady();
+
+    if (!auth.currentUser) {
+        throw new Error('No user found');
+    }
 
     return { firebaseServerApp, currentUser: auth.currentUser };
 }

@@ -22,7 +22,7 @@ export function AddAdminForm() {
                 school_name: 'Rawr School',
                 approved: true,
             };
-            await addAdmin(admin);
+            await addAdmin(admin, '');
             setNewEmail('');
         } catch (error) {
             console.error(error);

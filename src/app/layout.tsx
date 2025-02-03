@@ -26,8 +26,6 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const { currentUser } = await getAuthenticatedAppForUser();
-    console.log('CURRENT USER: ', currentUser);
     return (
         <html lang="en">
             <body

@@ -3,24 +3,20 @@
 import { cache } from 'react';
 import { revalidatePath } from 'next/cache';
 import { Admin } from '@/types/Admin';
-import signIn from '@/firebase/auth/signIn';
-import signUp from '@/firebase/auth/signUp';
 import {
     getFirestore,
     collection,
-    getDoc,
     getDocs,
     doc,
-    addDoc,
+    setDoc,
     deleteDoc,
     query,
     where,
-    setDoc,
 } from 'firebase/firestore';
 import { getAuthenticatedAppForUser } from '@/firebase/serverApp';
+import firebase_app from '@/firebase/config';
 
-const { firebaseServerApp } = await getAuthenticatedAppForUser();
-const db = getFirestore(firebaseServerApp);
+const db = getFirestore(firebase_app);
 const adminsCollection = collection(db, 'admins');
 
 // get all admins from the database
@@ -37,10 +33,15 @@ export const getAdmins = cache(async () => {
 });
 
 // add a new admin to the database
-export async function addAdmin(admin: Admin) {
+export async function addAdmin(admin: Admin, userId: string) {
     try {
+        // authenticate the user calling this endpoint
+        const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        const auth_db = getFirestore(firebaseServerApp);
+        const adminsCollection = collection(auth_db, 'admins');
+
         // add to database
-        await addDoc(adminsCollection, admin);
+        await setDoc(doc(adminsCollection, userId), admin);
 
         // revalidate data
         revalidatePath('');
@@ -53,11 +54,18 @@ export async function addAdmin(admin: Admin) {
 // delete an admin from the database, indexed by email
 export async function deleteAdmin(adminEmail: string) {
     try {
+        // authenticate the user calling this endpoint
+        const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        const auth_db = getFirestore(firebaseServerApp);
+        const adminsCollection = collection(auth_db, 'admins');
+
         // query admin by email field
         const adminQuery = query(
             adminsCollection,
             where('email', '==', adminEmail)
         );
+
+        // delete from the firebase
         const querySnapshot = await getDocs(adminQuery);
         const docId = querySnapshot.docs[0].id;
         await deleteDoc(doc(adminsCollection, docId));
@@ -67,40 +75,6 @@ export async function deleteAdmin(adminEmail: string) {
     } catch (error) {
         console.error('Error deleting admin:', error);
         throw new Error('Failed to delete admin.');
-    }
-}
-
-// log in an admin
-// getting the authenticated user from firebase auth
-// switch to getting the user from zustand store later
-export async function loginAdmin(email: string, password: string) {
-    try {
-        const { error } = await signIn(email, password);
-        if (error) {
-            return { error: 'Wrong email or password. Try again.', user: null };
-        }
-        return { success: true };
-    } catch (error) {
-        console.error('Error logging in admin:', error);
-        throw new Error('Failed to log in admin.');
-    }
-}
-
-export async function signupAdmin(admin: Admin, password: string) {
-    const { result, error } = await signUp(admin.email, password);
-    if (error) {
-        return { error };
-    }
-    try {
-        if (!result?.userId) {
-            return { error: 'Failed to retrieve user ID. Please try again.' };
-        }
-        //save user role in Firestore
-        await setDoc(doc(db, 'admins', result.userId), admin);
-        return { success: true };
-    } catch (error) {
-        console.error('Error signing up admin:', error);
-        throw new Error('Failed to log in admin.');
     }
 }
 

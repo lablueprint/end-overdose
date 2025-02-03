@@ -8,14 +8,13 @@ import {
     getStudentFromID,
 } from '@/app/api/students/actions';
 import { useUserStore } from '@/store/userStore';
+import { useRouter } from 'next/navigation';
 
 const StudentLogin = () => {
+    const router = useRouter();
     const setUser = useUserStore((state) => state.setUser);
     const setUID = useUserStore((state) => state.setUID);
     const setRole = useUserStore((state) => state.setRole);
-    const user = useUserStore((state) => state.user);
-    const uid = useUserStore((state) => state.uid);
-    const role = useUserStore((state) => state.role);
 
     const schools = [WolfPackAlphaUniversity, UCLA];
 
@@ -59,12 +58,17 @@ const StudentLogin = () => {
                 setRole('student');
                 setUser(student);
                 setSuccess(true);
+                setError('');
+                setTimeout(() => {
+                    router.push('/');
+                }, 1000);
             } else {
                 setError(
                     'Authentication successful, but unable to find student with that id in the database.'
                 );
             }
         } else {
+            setError('Wrong student ID or password.');
             console.log('User was unable to be authenticated');
             return;
         }
@@ -87,7 +91,7 @@ const StudentLogin = () => {
                             {error && <p style={{ color: 'red' }}>{error}</p>}
                             {success && (
                                 <p style={{ color: 'green' }}>
-                                    Admin Login successful!
+                                    Student Login successful!
                                 </p>
                             )}
                             <form
