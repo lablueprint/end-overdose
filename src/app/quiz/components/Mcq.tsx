@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Question from './Question';
 import Score from './Score';
 import questions from '../questions.json' assert { type: 'json' };
+import Feedback from './Feedback';
 
 import './startpage.css';
 
@@ -58,18 +59,6 @@ export default function Mcq({ title, description }: McqProps) {
                     },
                 ]);
             }
-
-            // Move to the next question after short delay
-            setTimeout(() => {
-                if (currentQuestionIndex < questions.length - 1) {
-                    setSelectedAnswer(null);
-                    setIsQuestionSelected(false);
-                    setFeedback(
-                        ''
-                    ); /* sets feedback back to empty before displaying next question, changing after short period of time to display green or red styling for that period of time */
-                }
-                setCurrentQuestionIndex(currentQuestionIndex + 1);
-            }, 1000);
         }
     };
 
@@ -87,18 +76,23 @@ export default function Mcq({ title, description }: McqProps) {
     return (
         <>
             {currentQuestionIndex < questions.length ? ( // if there are still questions to be answered, display the question
-                <div>
+                <div className="question-container">
                     <Question
                         question={currentQuestion.question}
                         answers={currentQuestion.answers}
                         onAnswerSelected={handleAnswerSelected}
                     />
                     {feedback && (
-                        <div
-                            className={`feedback ${feedback === 'Wrong!' ? 'wrong' : 'correct'}`}
-                        >
-                            {feedback}
-                        </div>
+                        <Feedback
+                            feedback={feedback}
+                            question={currentQuestion.question}
+                            currentQuestionIndex={currentQuestionIndex}
+                            numQuestions={questions.length}
+                            setSelectedAnswer={setSelectedAnswer}
+                            setIsQuestionSelected={setIsQuestionSelected}
+                            setFeedback={setFeedback}
+                            setCurrentQuestionIndex={setCurrentQuestionIndex}
+                        />
                     )}
                 </div>
             ) : (

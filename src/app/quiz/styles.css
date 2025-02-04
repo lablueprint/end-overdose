@@ -17,20 +17,19 @@
     grid-template-columns: repeat(2, 1fr); /* Two answers per row */
     gap: 15px; /* Spacing between answers */
     margin-top: 20px;
-    width: 50%; /* Adjust width as needed */
+    width: 98%; /* Adjust width as needed */
 }
 
 .answers-container button {
-    padding: 10px 15px;
+    padding: 20px 15px;
     font-size: 1rem;
-    border: 2px solid #007bff;
+    background-color: lightgray;
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .answers-container button:hover {
-    background-color: #007bff;
     color: #fff;
     transform: scale(1.05);
 }
@@ -62,4 +61,41 @@
 
 .feedback.wrong {
     color: red;  /* Wrong answer color */
+}
+
+.dialog-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;  
+    
+}
+
+.dialog-panel {
+    max-width: 32rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: #ffffff; 
+    padding: 3rem; 
+    border-radius: 5px;
+}
+
+.continue-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.continue-container button {
+    margin: 10px;
+    padding: 8px 20px;
+    font-size: 1rem;
+    background-color: lightgray;
+    border-radius: 5px;
 }

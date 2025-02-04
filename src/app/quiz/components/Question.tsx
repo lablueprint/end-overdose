@@ -14,7 +14,7 @@ export default function Question({
     onAnswerSelected,
 }: QuestionProps) {
     return (
-        <div className="question-container">
+        <>
             <div>{question}</div>
 
             <div className={`answers-container`}>
@@ -28,6 +28,6 @@ export default function Question({
                     </button>
                 ))}
             </div>
-        </div>
+        </>
     );
 }
