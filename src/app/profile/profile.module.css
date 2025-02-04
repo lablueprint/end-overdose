@@ -129,3 +129,54 @@
     color: gray;
 }
 
+.profileContainer {
+    display: flex;
+    flex-direction: column;
+    width:100%;
+    height: 100%;
+}
+
+.informationContainer {
+    background-color: #666666;
+    height:35%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.achievementsContainer {
+    background-color: #333333;
+    height: 45%;
+    width: 100%;
+}
+
+.shopContainer {
+    background-color: grey;
+    height: 20%;
+    width: 100%;
+}
+
+.lhsInfoContainer {
+    background-color: lightblue;
+    height: 100%;
+    width: 60%;
+}
+
+.rhsInfoContainer {
+    background-color: lightgoldenrodyellow;
+    height: 100%;
+    width: 40%;
+}
+
+.profilePictureHolder {
+    background-color: lightpink;
+    width: 100%;
+    height: 20vw;
+    border-radius: 52px;    
+}
+
+.nameContainer {
+    background-color: lightgreen;
+    width: 272px;
+    height: 104px;
+}

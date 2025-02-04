@@ -28,7 +28,7 @@ export default function Home() {
         setProfileChanged(true);
     };
 
-    return (
+    /* return (
         <div>
             <title> End Overdose </title>
             <main>
@@ -70,6 +70,23 @@ export default function Home() {
                     </div>
                 </div>
             </main>
+        </div>
+    ); */
+
+    return (
+        <div className={styles.profileContainer}>
+            <div className={styles.informationContainer}>
+                <div className={styles.lhsInfoContainer}>
+                    <div className={styles.profilePictureHolder}></div>
+                    <div className={styles.nameContainer}></div>
+                </div>
+                <div className={styles.rhsInfoContainer}>
+                    <div className={styles.progressBar}></div>
+                    <div className={styles.assignmentList}></div>
+                </div>
+            </div>
+            <div className={styles.achievementsContainer}></div>
+            <div className={styles.shopContainer}></div>
         </div>
     );
 }

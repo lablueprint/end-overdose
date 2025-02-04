@@ -4,8 +4,8 @@ export type SchoolDocument = {
 };
 
 export type School = {
-    name: string;
-    school_ids: Map<string, string>;
+    name: string; //Name of School
+    school_ids: Map<string, string>; //key: username, value; passwords
 };
 
 export const WolfPackAlphaUniversity: School = {
