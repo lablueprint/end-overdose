@@ -5,8 +5,6 @@ import SchoolAdminsList from './components/SchoolAdminList';
 export default async function SchoolAdmins() {
     const adminsBySchool = await getSchoolAdmins();
 
-    console.log(adminsBySchool);
-
     // Client Component that displays the list of school admins
     return <SchoolAdminsList admins={adminsBySchool} />;
 }
