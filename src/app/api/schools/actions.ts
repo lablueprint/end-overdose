@@ -10,11 +10,8 @@ import {
     getDoc,
     getDocs,
     doc,
-    addDoc,
-    deleteDoc,
     query,
     where,
-    setDoc,
     updateDoc,
 } from 'firebase/firestore';
 
@@ -45,3 +42,33 @@ export const getSchool = cache(async (schoolName: string) => {
         throw new Error('Failed to fetch schools.');
     }
 });
+
+// Update the inclusion of a course for a school in the database
+// If the course is already included, it will be removed
+// If the course is not included, it will be added
+export const toggleCourseInclusion = async (
+    schoolId: string,
+    courseId: string
+) => {
+    try {
+        // Get the school document
+        const schoolDoc = doc(db, 'schools', schoolId);
+        const schoolData = (await getDoc(schoolDoc)).data() as School;
+
+        // Toggle the course inclusion
+        const includedCourses = schoolData.course_ids;
+        const updatedCourses = includedCourses.includes(courseId)
+            ? includedCourses.filter((id) => id !== courseId) // If courseID already in includedCourses, toggle removes that id from includedCourses.
+            : [...includedCourses, courseId]; // Othewise, courseId is added to includedCourses.
+
+        // Update the school document with the new course list
+        await updateDoc(schoolDoc, {
+            course_ids: updatedCourses, // Sets course_ids to our new updatedCourses array
+        });
+
+        // Revalidate the school data in the cache
+        revalidatePath(`/api/schools/${schoolId}`);
+    } catch (error) {
+        console.error('Error toggling course inclusion:', error);
+    }
+};
