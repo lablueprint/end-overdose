@@ -77,17 +77,9 @@ export async function deleteAdmin(adminEmail: string) {
 // switch to getting the user from zustand store later
 export async function loginAdmin(email: string, password: string) {
     try {
-        const { result, error } = await signIn(email, password);
+        const { error } = await signIn(email, password);
         if (error) {
-            return { error };
-        }
-        const user = auth.currentUser;
-        if (!user) {
-            return { error: 'User not authorized in app.' };
-        }
-        const userDoc = await getDoc(doc(db, 'admins', user.uid));
-        if (!userDoc.exists()) {
-            return { error: 'User data not found.' };
+            return { error: 'Wrong email or password. Try again.', user: null };
         }
         return { success: true };
     } catch (error) {
@@ -182,3 +174,21 @@ export async function updateAdminApproval(
         };
     }
 }
+
+export const getAdminFromEmail = cache(async (email: string) => {
+    try {
+        const q = query(adminsCollection, where('email', '==', email));
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+            const doc = snapshot.docs[0];
+
+            return { id: doc.id, ...(doc.data() as Admin) };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching admins:', error);
+        throw new Error('Failed to fetch admins.');
+    }
+});

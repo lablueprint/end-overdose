@@ -1,3 +1,8 @@
+interface Quiz {
+    name: string;
+    score: number;
+}
+
 export type Student = {
     student_id: string;
     email?: string;
@@ -13,6 +18,7 @@ export type Student = {
             lessonProgress: number; // % of modules completed in the current lesson
         };
     };
+    quizzes: Quiz[];
     badges: string[];
 };
 
@@ -32,5 +38,9 @@ export const StudentJosh: Student = {
             lessonProgress: 50,
         },
     },
+    quizzes: [
+        { name: 'quiz1', score: 50 },
+        { name: 'quiz2', score: 80 },
+    ],
     badges: ['coolbadge', 'wonderfulbadge'],
 };

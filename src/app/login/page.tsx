@@ -1,20 +1,24 @@
 'use client';
 import Link from 'next/link';
+import styles from './login.module.css';
 
 const LoginPage = () => {
     return (
-        <div>
-            <h1>Login</h1>
-            <li>
-                <Link href="/login/admin">
-                    <button>Admin Login</button>
+        <div className={styles.container}>
+            <div className={styles.card}>
+                <h2>
+                    Don&apos;t have an account?{' '}
+                    <Link className={styles.link} href="/signup">
+                        Sign up
+                    </Link>
+                </h2>
+                <Link className={styles.link} href="/login/admin">
+                    <button className={styles.button}>Admin Login</button>
                 </Link>
-            </li>
-            <li>
-                <Link href="/login/students">
-                    <button>Student Login</button>
+                <Link className={styles.link} href="/login/students">
+                    <button className={styles.button}>Student Login</button>
                 </Link>
-            </li>
+            </div>
         </div>
     );
 };
