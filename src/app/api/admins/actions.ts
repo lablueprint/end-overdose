@@ -165,6 +165,9 @@ export async function updateAdminApproval(
             approved: newApprovalStatus,
         });
 
+        // Revalidate the path to ensure the data is up-to-date
+        revalidatePath(`/api/admins/${docId}`);
+
         return { success: true, newStatus: newApprovalStatus };
     } catch (error) {
         console.error('Error updating user approval status:', error);
