@@ -3,11 +3,16 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import LessonTile from '../components/LessonTile';
 import SimplePage from '../components/SimplePage';
-import Lesson from './content';
+import VideoPage from '../components/VideoPage';
+import lessons from './lessons';
 import { useRouter, useParams } from 'next/navigation';
 
 export default function OpioidHome() {
     const [toggle, setToggle] = useState(true);
+    const [currentLesson, setLesson] = useState(0);
+    const handleChangeLesson = (lessonNumber) => {
+        setLesson(lessonNumber);
+    };
     const handleClick = () => {
         setToggle((prevState) => !prevState);
     };
@@ -46,64 +51,22 @@ export default function OpioidHome() {
                     Opioid Lesson
                 </h1>
                 <div>
-                    <Link href="/courses/career/lesson1">
-                        <LessonTile
-                            lessonNumber={1}
-                            lessonTitle={[0]}
-                            lessonPath={'lesson1'}
-                            lessonCourse={'career'}
-                        ></LessonTile>
-                    </Link>
+                    <LessonTile
+                        lessonNumber={0}
+                        lessonTitle={lessons[0].title}
+                        lessonPath={'lesson1'}
+                        lessonCourse={'opioid'}
+                        onHandleChangeLesson={handleChangeLesson}
+                    ></LessonTile>
                 </div>
                 <div>
-                    <Link href="/courses/career/lesson2">
-                        <LessonTile
-                            lessonNumber={2}
-                            lessonTitle={'Lesson 2 Title'}
-                            lessonPath={'lesson2'}
-                            lessonCourse={'career'}
-                        ></LessonTile>
-                    </Link>
-                </div>
-                <div>
-                    <Link href="/courses/career/lesson3">
-                        <LessonTile
-                            lessonNumber={3}
-                            lessonTitle={'Lesson 3 Title'}
-                            lessonPath={'lesson3'}
-                            lessonCourse={'career'}
-                        ></LessonTile>
-                    </Link>
-                </div>
-                <div>
-                    <Link href="/courses/career/lesson1">
-                        <LessonTile
-                            lessonNumber={1}
-                            lessonTitle={'Lesson 1 Title'}
-                            lessonPath={'lesson1'}
-                            lessonCourse={'career'}
-                        ></LessonTile>
-                    </Link>
-                </div>
-                <div>
-                    <Link href="/courses/career/lesson2">
-                        <LessonTile
-                            lessonNumber={2}
-                            lessonTitle={'Lesson 2 Title'}
-                            lessonPath={'lesson2'}
-                            lessonCourse={'career'}
-                        ></LessonTile>
-                    </Link>
-                </div>
-                <div>
-                    <Link href="/courses/career/lesson3">
-                        <LessonTile
-                            lessonNumber={3}
-                            lessonTitle={'Lesson 3 Title'}
-                            lessonPath={'lesson3'}
-                            lessonCourse={'career'}
-                        ></LessonTile>
-                    </Link>
+                    <LessonTile
+                        lessonNumber={1}
+                        lessonTitle={lessons[1].title}
+                        lessonPath={'lesson2'}
+                        lessonCourse={'opioid'}
+                        onHandleChangeLesson={handleChangeLesson}
+                    ></LessonTile>
                 </div>
             </div>
             <div
@@ -114,7 +77,19 @@ export default function OpioidHome() {
                     padding: '0 10px',
                 }}
             >
-                <SimplePage pageTitle="Opioid Awareness"></SimplePage>
+                {lessons[currentLesson].isVideo ? (
+                    <VideoPage
+                        videoPath="https://www.youtube.com/watch?v=o2Tpws5C2Eg"
+                        startTime="00:00"
+                        endTime="05:00"
+                        pageTitle={lessons[currentLesson].title}
+                        pageContent={lessons[currentLesson].content}
+                        pageModule="lesson1" // module name/number
+                        pageCourse="opioid" // course name
+                    />
+                ) : (
+                    <SimplePage pageTitle="Opioid Awareness" />
+                )}
             </div>
         </div>
     );

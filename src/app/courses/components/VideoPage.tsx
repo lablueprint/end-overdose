@@ -48,26 +48,34 @@ declare global {
     }
 }
 
-const CustomPlayer = ({ videoPath, startTime, endTime }: { videoPath: string; startTime: string; endTime: string }) => {
+const CustomPlayer = ({
+    videoPath,
+    startTime,
+    endTime,
+}: {
+    videoPath: string;
+    startTime: string;
+    endTime: string;
+}) => {
     const playerRef = useRef(null);
     const [player, setPlayer] = useState<YT.Player | null>(null);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
 
-    const minutesToSeconds = (time : string) => {
+    const minutesToSeconds = (time: string) => {
         const [minutes, seconds] = time.split(':').map(Number);
         return minutes * 60 + seconds;
     };
 
-    const formatTime = (time : number) => {
+    const formatTime = (time: number) => {
         time = Math.round(time);
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
 
-    const extractVideoId = (url : string) => {
+    const extractVideoId = (url: string) => {
         const match = url.match(
             /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
         );
@@ -166,7 +174,6 @@ interface videoPageProps {
     pageContent: string;
     pageModule: string; // module name/number
     pageCourse: string; // course name
-    pagePath: string; // page number within module
     videoPath: string; // URL path for video
     startTime: string;
     endTime: string;
@@ -177,7 +184,6 @@ export default function VideoPage({
     pageContent,
     pageModule,
     pageCourse,
-    pagePath,
     videoPath,
     startTime,
     endTime,
@@ -186,12 +192,12 @@ export default function VideoPage({
     // not sure if this is necessary and/or is good code, lowkey just hardcoding a totalCoursePages for now for a next page link
     const totalCoursePages = 3;
     const [isCompleted, setIsCompleted] = useState(false);
-    const handleNext = () => {
-        if (parseInt(pagePath) + 1 !== totalCoursePages)
-            router.push(
-                `/courses/${pageCourse}/${pageModule}/${parseInt(pagePath) + 1}`
-            );
-    };
+    //const handleNext = () => {
+    //if (parseInt(pagePath) + 1 !== totalCoursePages)
+    //router.push(
+    //`/courses/${pageCourse}/${pageModule}/`
+    //);
+    //};
     return (
         <div>
             <h1>Page {pageTitle}</h1>
@@ -211,11 +217,7 @@ export default function VideoPage({
                     //setIsCompleted={setIsCompleted}
                 />
             </div>
-            {isCompleted && (
-                <div style={{ cursor: 'pointer' }} onClick={handleNext}>
-                    Next Page
-                </div>
-            )}
+            {isCompleted && <div style={{ cursor: 'pointer' }}>Next Page</div>}
         </div>
     );
 }
