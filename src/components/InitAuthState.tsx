@@ -12,7 +12,7 @@ export default function InitAuthState({
 }: {
     children: React.ReactNode;
 }) {
-    const { setUser, setLoading } = useUserStore();
+    const { setUser, setLoading, setRole, setUID } = useUserStore();
 
     useEffect(() => {
         setLoading(true);
@@ -29,9 +29,14 @@ export default function InitAuthState({
                 // update the global user state
                 if (authUser.email) {
                     const admin = await getAdminFromEmail(authUser.email);
-                    setUser(admin?.approved ? admin : null);
+                    if (admin) {
+                        setUser(admin.approved ? admin : null);
+                        setRole(admin.role);
+                    }
                 } else {
                     setUser(null);
+                    setRole('');
+                    setUID('');
                 }
             }
             // user is logged out
