@@ -15,7 +15,7 @@
 .answers-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Two answers per row */
-    gap: 15px; /* Spacing between answers */
+    gap: 0px; /* Spacing between answers */
     margin-top: 20px;
     width: 98%; /* Adjust width as needed */
 }
