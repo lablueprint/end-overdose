@@ -1,30 +1,47 @@
 import { useState, useEffect } from 'react';
+import { useGameStore } from '@/store/gameStore';
 
 function Character() {
-    const [position, setPosition] = useState({ x: 0, y: 0 });
     const maxX = 450; // Define the game frame limit
     const speed = 10;
 
+    const sceneIndex = useGameStore((state) => state.sceneIndex);
+    const prevScene = useGameStore((state) => state.prevScene);
+    const nextScene = useGameStore((state) => state.nextScene);
+    const position = useGameStore((state) => state.position);
+    const moveCharacter = useGameStore((state) => state.moveCharacter);
+    const sceneNum = useGameStore((state) => state.sceneNum);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            setPosition((prev) => {
-                let newX = prev.x;
-
-                if (e.key === 'ArrowLeft') {
-                    newX = prev.x - speed;
-                    if (newX < 0) newX = maxX; // Wrap around when going left
-                } else if (e.key === 'ArrowRight') {
-                    newX = prev.x + speed;
-                    if (newX > maxX) newX = 0; // Wrap around when going right
+            if (e.key === 'ArrowLeft') {
+                if (position.x == 0) {
+                    if (sceneIndex == 0) {
+                        return;
+                    } else {
+                        moveCharacter(450, 0);
+                        prevScene();
+                    }
+                } else {
+                    moveCharacter(-10, 0);
                 }
-
-                return { ...prev, x: newX };
-            });
+            } else if (e.key === 'ArrowRight') {
+                if (position.x == 450) {
+                    if (sceneIndex == sceneNum - 1) {
+                        return;
+                    } else {
+                        moveCharacter(-450, 0);
+                        nextScene();
+                    }
+                } else {
+                    moveCharacter(10, 0);
+                }
+            }
         };
 
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, []); // No dependencies needed since we use the functional updater
+    }, [position, moveCharacter, nextScene, prevScene, sceneIndex, sceneNum]); // No dependencies needed since we use the functional updater
 
     useEffect(() => {
         console.log(position); // Always logs the updated position

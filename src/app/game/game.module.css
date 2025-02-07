@@ -6,7 +6,7 @@
     width: 100%;
 }
 
-.gameCanvas {
+.water {
     height:500px;
     width: 500px;
     background-color: lightblue;
@@ -20,3 +20,26 @@
     position: absolute;
     bottom: 0;
 }
+
+.fire {
+    height:500px;
+    width: 500px;
+    background-color: orangered;
+    position: relative;
+}
+
+.candy {
+    height:500px;
+    width: 500px;
+    background-color: lightpink;
+    position: relative;
+}
+
+.forest {
+    height:500px;
+    width: 500px;
+    background-color: lightseagreen;
+    position: relative;
+}
+
+
