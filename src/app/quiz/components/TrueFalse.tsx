@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import '../styles.css';
 import trueFalseQuestions from '../true-false/questions';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 interface TrueFalseProps {
     title: string;
@@ -17,7 +17,11 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
     const [questionIndex, setQuestionIndex] = useState(0);
     const [numCorrect, setNumCorrect] = useState(0);
     const [resultMessage, setResultMessage] = useState<string | null>(null);
-    const [animationProps, setAnimationProps] = useState<any>(null);
+    const [animationProps, setAnimationProps] = useState<Record<
+        string,
+        number
+    > | null>(null);
+    const [hideCard, setHideCard] = useState(false);
 
     const checkAnswer = (answer: boolean) => {
         setSelectedAnswer(answer);
@@ -35,47 +39,82 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         setTimeout(() => {
             setResultMessage(null);
             setAnimationProps(null);
-            if (questionIndex < questions.length - 1) {
-                setQuestionIndex(questionIndex + 1);
-                setSelectedAnswer(null);
-            } else {
-                setCompleted(true);
-                setQuestionIndex(0);
-            }
+            setHideCard(true);
+            setTimeout(() => {
+                setHideCard(false);
+                if (questionIndex < questions.length - 1) {
+                    setQuestionIndex(questionIndex + 1);
+                    setSelectedAnswer(null);
+                } else {
+                    setCompleted(true);
+                    setQuestionIndex(0);
+                }
+            }, 100);
         }, 500);
     };
 
     if (started && !completed) {
         return (
             <div className="true-false-container">
-                <motion.div
-                    className="tf-question-container"
-                    initial={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
-                    animate={
-                        animationProps || { x: 0, y: 0, rotate: 0, opacity: 1 }
-                    }
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
-                >
-                    <h1 style={{ fontSize: '2rem' }}>
-                        {questions[questionIndex].question}
-                    </h1>
-                    <div className="center-content">
-                        <button
-                            className={`bg-green ${selectedAnswer === false ? 'selected' : ''}`}
-                            onClick={() => checkAnswer(true)}
+                <div>
+                    {questionIndex + 1 < questions.length && (
+                        <div className="tf-question-container under">
+                            <h1 style={{ fontSize: '2rem' }}>
+                                {questions[questionIndex + 1].question}
+                            </h1>
+                            <div className="center-content">
+                                <button
+                                    className={`bg-green ${selectedAnswer === false ? 'selected' : ''}`}
+                                    onClick={() => checkAnswer(true)}
+                                >
+                                    True
+                                </button>
+                                or
+                                <button
+                                    className={`bg-red ${selectedAnswer === false ? 'selected' : ''}`}
+                                    onClick={() => checkAnswer(false)}
+                                >
+                                    False
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                    {!hideCard && (
+                        <motion.div
+                            className="tf-question-container under"
+                            initial={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
+                            animate={
+                                animationProps || {
+                                    x: 0,
+                                    y: 0,
+                                    rotate: 0,
+                                    opacity: 1,
+                                }
+                            }
+                            transition={{ duration: 0.5, ease: 'easeOut' }}
                         >
-                            True
-                        </button>
-                        or
-                        <button
-                            className={`bg-red ${selectedAnswer === false ? 'selected' : ''}`}
-                            onClick={() => checkAnswer(false)}
-                        >
-                            False
-                        </button>
-                    </div>
-                    {resultMessage && <div>{resultMessage}</div>}
-                </motion.div>
+                            <h1 style={{ fontSize: '2rem' }}>
+                                {questions[questionIndex].question}
+                            </h1>
+                            <div className="center-content">
+                                <button
+                                    className={`bg-green ${selectedAnswer === false ? 'selected' : ''}`}
+                                    onClick={() => checkAnswer(true)}
+                                >
+                                    True
+                                </button>
+                                or
+                                <button
+                                    className={`bg-red ${selectedAnswer === false ? 'selected' : ''}`}
+                                    onClick={() => checkAnswer(false)}
+                                >
+                                    False
+                                </button>
+                            </div>
+                            {resultMessage && <div>{resultMessage}</div>}
+                        </motion.div>
+                    )}
+                </div>
             </div>
         );
     } else if (completed) {
