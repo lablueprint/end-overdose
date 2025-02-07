@@ -105,6 +105,31 @@
     border-radius: 5px;
     text-align: center;
 }
+.image-container {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-content: center;
+    z-index: 1;
+    top: -75px;
+    left: 25%;
+    margin-top: 20px;
+}
+.feedback-image {
+    animation: fadeIn 0.3s ease-in-out forwards, fadeOut 0.3s ease-in-out forwards 0.3s;
+}
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+@keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
+
+.cat-image-container {
+    top: -50px;
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-content: center;
+    z-index: 1;
+    margin-top: 20px;
+}
 
 .tf-question-container {
     background-color: #161C2E;

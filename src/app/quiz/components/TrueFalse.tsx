@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import '../styles.css';
 import trueFalseQuestions from '../true-false/questions';
+import Image from 'next/image';
 import { motion } from 'motion/react';
 
 interface TrueFalseProps {
@@ -22,6 +23,8 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         number
     > | null>(null);
     const [hideCard, setHideCard] = useState(false);
+    const [image, setImage] = useState<string | null>(null);
+    const [catImage, setCatImage] = useState<string | null>(null);
 
     const checkAnswer = (answer: boolean) => {
         setSelectedAnswer(answer);
@@ -31,15 +34,21 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
             setNumCorrect(numCorrect + 1);
             setResultMessage('Correct!');
             setAnimationProps({ x: 150, y: 50, rotate: 15, opacity: 0 });
+            setImage('/CheckLogo.png');
+            setCatImage('/happyNarcat.png');
         } else {
             setResultMessage('Incorrect!');
             setAnimationProps({ x: -150, y: 50, rotate: -15, opacity: 0 });
+            setImage('/XLogo.png');
+            setCatImage('/sadNarcat.png');
         }
 
         setTimeout(() => {
             setResultMessage(null);
             setAnimationProps(null);
             setHideCard(true);
+            setImage(null);
+            setCatImage(null);
             setTimeout(() => {
                 setHideCard(false);
                 if (questionIndex < questions.length - 1) {
@@ -50,7 +59,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                     setQuestionIndex(0);
                 }
             }, 100);
-        }, 500);
+        }, 400);
     };
 
     if (started && !completed) {
@@ -115,6 +124,28 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                         </motion.div>
                     )}
                 </div>
+                <div className="image-container">
+                    {image && (
+                        <img
+                            class="feedback-image"
+                            src={image}
+                            alt="feedback"
+                            width={300}
+                            height={300}
+                        />
+                    )}
+                </div>
+                <div className="cat-image-container">
+                    {catImage && (
+                        <img
+                            class="feedback-image"
+                            src={catImage}
+                            alt="feedback"
+                            width={100}
+                            height={100}
+                        />
+                    )}
+                </div>
             </div>
         );
     } else if (completed) {
@@ -131,6 +162,8 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                             setStarted(true);
                             setCompleted(false);
                             setNumCorrect(0);
+                            setImage(null);
+                            setCatImage(null);
                         }}
                     >
                         Restart
