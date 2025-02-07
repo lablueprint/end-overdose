@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import '../styles.css';
 import trueFalseQuestions from '../true-false/questions';
+import { motion } from 'framer-motion';
 
 interface TrueFalseProps {
     title: string;
@@ -16,6 +17,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
     const [questionIndex, setQuestionIndex] = useState(0);
     const [numCorrect, setNumCorrect] = useState(0);
     const [resultMessage, setResultMessage] = useState<string | null>(null);
+    const [animationProps, setAnimationProps] = useState<any>(null);
 
     const checkAnswer = (answer: boolean) => {
         setSelectedAnswer(answer);
@@ -24,12 +26,15 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         if (isCorrect) {
             setNumCorrect(numCorrect + 1);
             setResultMessage('Correct!');
+            setAnimationProps({ x: 150, y: 50, rotate: 15, opacity: 0 });
         } else {
             setResultMessage('Incorrect!');
+            setAnimationProps({ x: -150, y: 50, rotate: -15, opacity: 0 });
         }
 
         setTimeout(() => {
             setResultMessage(null);
+            setAnimationProps(null);
             if (questionIndex < questions.length - 1) {
                 setQuestionIndex(questionIndex + 1);
                 setSelectedAnswer(null);
@@ -43,7 +48,14 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
     if (started && !completed) {
         return (
             <div className="true-false-container">
-                <div className="tf-question-container">
+                <motion.div
+                    className="tf-question-container"
+                    initial={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
+                    animate={
+                        animationProps || { x: 0, y: 0, rotate: 0, opacity: 1 }
+                    }
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                >
                     <h1 style={{ fontSize: '2rem' }}>
                         {questions[questionIndex].question}
                     </h1>
@@ -63,7 +75,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                         </button>
                     </div>
                     {resultMessage && <div>{resultMessage}</div>}
-                </div>
+                </motion.div>
             </div>
         );
     } else if (completed) {
