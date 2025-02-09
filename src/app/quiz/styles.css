@@ -104,6 +104,8 @@
     left: 35%;
     border-radius: 5px;
     text-align: center;
+    right: 18%;
+    /* still centered relative to full screen including sidebar, temp solution */
 }
 .image-container {
     display: flex;
@@ -112,7 +114,6 @@
     align-content: center;
     z-index: 1;
     top: -75px;
-    left: 25%;
     margin-top: 20px;
 }
 .feedback-image {
@@ -173,11 +174,15 @@ button:disabled {
 .bg-green {
     background-color: #3E7829;
     padding: 5px 30px;
+    border-radius: 5px;
+    margin: 10px;
 }
 
 .bg-red {
     background-color: #B51515;
     padding: 5px 30px;
+    border-radius: 5px;
+    margin: 10px;
 }
 
 .bg-light {
