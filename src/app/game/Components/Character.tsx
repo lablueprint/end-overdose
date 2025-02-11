@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
 
 function Character() {
-    const maxX = 450; // Define the game frame limit
+    const maxX = 450; // Define the maximum x value of the character (calculated by gamecanvas size - character size)
+    const minX = 0; //Define the minimum x value possible to be within the confines of the gamecanvas
     const speed = 10;
 
     const sceneIndex = useGameStore((state) => state.sceneIndex);
@@ -15,26 +16,26 @@ function Character() {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowLeft') {
-                if (position.x == 0) {
+                if (position.x == minX) {
                     if (sceneIndex == 0) {
                         return;
                     } else {
-                        moveCharacter(450, 0);
+                        moveCharacter(maxX, 0);
                         prevScene();
                     }
                 } else {
-                    moveCharacter(-10, 0);
+                    moveCharacter(speed * -1, 0);
                 }
             } else if (e.key === 'ArrowRight') {
-                if (position.x == 450) {
+                if (position.x == maxX) {
                     if (sceneIndex == sceneNum - 1) {
                         return;
                     } else {
-                        moveCharacter(-450, 0);
+                        moveCharacter(maxX * -1, 0);
                         nextScene();
                     }
                 } else {
-                    moveCharacter(10, 0);
+                    moveCharacter(speed, 0);
                 }
             }
         };
