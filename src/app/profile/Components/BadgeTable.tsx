@@ -19,22 +19,9 @@ const BadgeTable = () => {
         'Badge 1',
         'Badge 2',
         'Badge 3',
-        'Badge 4',
-        'Badge 5',
-        'Badge 6',
-        'Badge 7',
-        'Badge 8',
-        'Badge 9',
-        'Badge 10',
     ]);
 
-    const [badgesEarned, setBadgesEarned] = useState([
-        'Badge 1',
-        'Badge 3',
-        'Badge 7',
-        'Badge 9',
-        'Badge 10',
-    ]);
+    const [badgesEarned, setBadgesEarned] = useState(['Badge 1', 'Badge 3']);
 
     const listValues = badgeList.map((badge: string) =>
         badgesEarned.includes(badge) ? (
@@ -44,12 +31,7 @@ const BadgeTable = () => {
         )
     );
 
-    return (
-        <div className={styles.badgeTableContainer}>
-            <h1 className={styles.badgeHeader}> Badges </h1>
-            <div className={styles.badgeTable}>{listValues}</div>
-        </div>
-    );
+    return <div className={styles.badgeTable}>{listValues}</div>;
 };
 
 export default BadgeTable;

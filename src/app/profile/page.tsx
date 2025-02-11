@@ -78,14 +78,42 @@ export default function Home() {
             <div className={styles.informationContainer}>
                 <div className={styles.lhsInfoContainer}>
                     <div className={styles.profilePictureHolder}></div>
-                    <div className={styles.nameContainer}></div>
+                    <div className={styles.nameContainer}>
+                        {' '}
+                        <p> FirstName LastName @School District</p>
+                    </div>
                 </div>
                 <div className={styles.rhsInfoContainer}>
-                    <div className={styles.progressBar}></div>
-                    <div className={styles.assignmentList}></div>
+                    <div className={styles.progressBar}>
+                        <p> level 2</p>
+                        <div
+                            style={{
+                                borderRadius: '50%',
+                                backgroundColor: 'whitesmoke',
+                                height: '30px',
+                                width: '30px',
+                            }}
+                        ></div>
+                    </div>
+                    <div className={styles.assignmentList}>
+                        <div className={styles.assignment} />
+                        <div className={styles.assignment} />
+                        <div className={styles.assignment} />
+                        <div className={styles.assignment} />
+                    </div>
                 </div>
             </div>
-            <div className={styles.achievementsContainer}></div>
+            <div className={styles.achievementsContainer}>
+                <div className={styles.lhsAchievementsContainer}>
+                    <div className={styles.badgeTableheader}>
+                        <p> Badges </p>
+                        <p> VIEW ALL </p>
+                    </div>
+                    <BadgeTable />
+                </div>
+                <div className={styles.rhsAchievementsContainer}></div>
+            </div>
+
             <div className={styles.shopContainer}></div>
         </div>
     );
