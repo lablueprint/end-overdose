@@ -27,7 +27,7 @@ export default function Dashboard() {
             if (user) {
                 const schoolData = await getSchool(user.school_name);
                 setSchoolDoc(schoolData);
-                setIncludedCourses(schoolData.school.course_ids);
+                setIncludedCourses(schoolData?.school.course_ids);
             }
         }
         fetchSchool();
@@ -51,18 +51,19 @@ export default function Dashboard() {
         <div>
             <h1>Admin Dashboard</h1>
             {/* Below displays the list of all globally available courses and toggle switches to include/exclude them */}
-            {list_of_all_courses.map((course_id) => (
-                <ul key={course_id} className="mb-1">
-                    {course_id}
-                    <Switch
-                        checked={included_courses.includes(course_id)}
-                        onChange={() =>
-                            schoolDoc &&
-                            updateCourseInclusion(schoolDoc.id, course_id)
-                        }
-                    />
-                </ul>
-            ))}
+            {included_courses &&
+                list_of_all_courses.map((course_id) => (
+                    <ul key={course_id} className="mb-1">
+                        {course_id}
+                        <Switch
+                            checked={included_courses.includes(course_id)}
+                            onChange={() =>
+                                schoolDoc &&
+                                updateCourseInclusion(schoolDoc.id, course_id)
+                            }
+                        />
+                    </ul>
+                ))}
         </div>
     );
 }
