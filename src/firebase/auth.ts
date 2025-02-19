@@ -5,11 +5,15 @@ import {
     NextOrObserver,
     User,
     deleteUser,
+    signInWithCustomToken,
 } from 'firebase/auth';
 import { auth } from './clientApp';
 import { addAdmin } from '@/app/api/admins/actions';
 import { Admin } from '@/types/Admin';
+import { Student } from '@/types/Student';
 import { getAdminFromEmail } from '@/app/api/admins/actions';
+import { getStudentFromID } from '@/app/api/students/actions';
+import { validateUserCredentials } from '@/app/api/students/actions';
 
 export async function onAuthStateChanged(cb: NextOrObserver<User>) {
     return _onAuthStateChanged(auth, cb);
@@ -23,6 +27,52 @@ export async function logout(): Promise<{ error: string | null }> {
         return { error: null };
     } catch (error) {
         return { error: (error as Error).message };
+    }
+}
+
+type SignInResultStudent = { student: Student; UID: string };
+export async function signInStudent(
+    schoolName: string,
+    schoolId: string,
+    password: string
+): Promise<{
+    result: SignInResultStudent | null;
+    error: string | null;
+}> {
+    try {
+        const { success, token } = await validateUserCredentials(
+            //Check if ID and password are inside map of selected school
+            schoolName,
+            schoolId,
+            password
+        );
+        if (!success || !token) {
+            return {
+                result: null,
+                error: 'Wrong student ID or password.',
+            };
+        }
+        const result = await signInWithCustomToken(auth, token);
+        if (!result.user.uid) {
+            throw new Error('student id is null.');
+        }
+        const studentDoc = await getStudentFromID(result.user.uid);
+        if (!studentDoc) {
+            return {
+                result: null,
+                error: 'Unable to find student with that id.',
+            };
+        }
+        return {
+            result: { UID: result.user.uid, student: studentDoc },
+            error: null,
+        };
+    } catch (error) {
+        console.log(error);
+        return {
+            result: null,
+            error: (error as Error).message,
+        };
     }
 }
 

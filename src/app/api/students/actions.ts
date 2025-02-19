@@ -14,6 +14,7 @@ import {
     where,
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import jwt from 'jsonwebtoken';
 interface Quiz {
     name: string;
     score: number;
@@ -22,6 +23,7 @@ interface Quiz {
 const db = getFirestore(firebase_app);
 const studentsCollection = collection(db, 'students');
 const auth = getAuth();
+const SECRET_KEY = process.env.NEXT_PUBLIC_JWT_SECRET;
 
 // get all students from the database
 export const getStudents = cache(async () => {
@@ -75,16 +77,24 @@ export const validateUserCredentials = cache(
 
             const querySnapshot = await getDocs(q);
 
+            if (!SECRET_KEY) {
+                throw new Error('SECRET_KEY is not defined');
+            }
+            const token = jwt.sign(
+                { userId: username, password: password, school: schoolName },
+                SECRET_KEY,
+                { expiresIn: '1h' }
+            );
             if (!querySnapshot.empty) {
-                // console.log('Valid username and password found!');
-                return true; // Credentials are valid
+                console.log('Valid username and password found!');
+                return { success: true, token: token }; // Credentials are valid, return token
             } else {
-                // console.log('Invalid credentials or school not found.');
-                return false; // No match found
+                console.log('Invalid credentials or school not found.');
+                return { success: false, token: null }; // No match found
             }
         } catch (error) {
             console.error('Error fetching school:', error);
-            return false;
+            return { success: false, token: null };
         }
     }
 );
