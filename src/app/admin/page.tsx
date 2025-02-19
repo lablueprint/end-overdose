@@ -20,7 +20,11 @@ export default function Dashboard() {
     const { user } = useUserStore(); // Current User
     const [schoolDoc, setSchoolDoc] = useState<SchoolDocument | null>(null);
     const [included_courses, setIncludedCourses] = useState<Array<string>>([]); // List of courses that are included at user's school
-
+    const [idPasswordPairs, setIdPasswordPairs] = useState<Map<string, string>>(
+        []
+    );
+    const [newId, setNewId] = useState('');
+    const [newPassword, setNewPassword] = useState('');
     useEffect(() => {
         // Fetch the school data and included courses for the current user
         async function fetchSchool() {
@@ -28,6 +32,7 @@ export default function Dashboard() {
                 const schoolData = await getSchool(user.school_name);
                 setSchoolDoc(schoolData);
                 setIncludedCourses(schoolData?.school.course_ids);
+                setIdPasswordPairs(schoolData?.school.school_ids);
             }
         }
         fetchSchool();
@@ -47,6 +52,28 @@ export default function Dashboard() {
         );
     };
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        const schoolRef = doc(db, 'schools', schoolDoc.id);
+        await updateDoc(schoolRef, {
+            [`school_ids.${newId}`]: newPassword, // Add new pair to school_ids
+        });
+
+        // Update local state to reflect new entry
+        setIdPasswordPairs((prev) => ({
+            ...prev,
+            [newId]: newPassword,
+        }));
+
+        setSuccess('ID-Password added successfully!');
+        setNewId('');
+        setNewPassword('');
+        setError('');
+
+        // Clear input fields
+        setNewId('');
+        setNewPassword('');
+    };
+
     return (
         <div>
             <h1>Admin Dashboard</h1>
@@ -64,6 +91,27 @@ export default function Dashboard() {
                         />
                     </ul>
                 ))}
+
+            <form>
+                <label>
+                    Name:
+                    <input
+                        type="text"
+                        placeholder="Enter ID"
+                        value={newId}
+                        onChange={(e) => setNewId(e.target.value)}
+                        className="border p-2 rounded mr-2"
+                    />
+                </label>
+                <input
+                    type="text"
+                    placeholder="Enter Password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="border p-2 rounded mr-2"
+                />
+                <input type="submit" value="Submit" />
+            </form>
         </div>
     );
 }
