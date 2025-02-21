@@ -36,6 +36,16 @@ export const getStudents = cache(async () => {
     }
 });
 
+export const getStudentCount = cache(async () => {
+    try {
+        const snapshot = await getDocs(studentsCollection);
+        return snapshot.size;
+    } catch (error) {
+        console.error('Error fetching students:', error);
+        throw new Error('Failed to fetch students.');
+    }
+});
+
 export async function addQuiz(updateQuizzes: Quiz[]) {
     try {
         console.log('work');
