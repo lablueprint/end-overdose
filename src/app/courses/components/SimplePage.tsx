@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import styles from './SimplePage.module.css';
+import VideoPage from './VideoPage';
 
 interface SimplePageProps {
     pageTitle: string;
@@ -90,6 +91,15 @@ export default function SimplePage({
                 sunt in culpa qui officia deserunt mollit anim id est laborum.
             </p>
             <br />
+            <VideoPage
+                videoPath="https://www.youtube.com/watch?v=o2Tpws5C2Eg"
+                startTime="00:00"
+                endTime="05:00"
+                pageTitle={'hi'}
+                pageContent={'pageContent'}
+                pageModule="lesson1" // module name/number
+                pageCourse="opioid" // course name
+            />
             <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
