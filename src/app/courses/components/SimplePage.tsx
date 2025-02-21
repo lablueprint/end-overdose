@@ -11,7 +11,7 @@ interface SimplePageProps {
 
 export default function SimplePage({
     pageTitle,
-    content,
+    lesson,
     //handleNext,
     //handlePrevious,
 }: SimplePageProps) {
@@ -21,23 +21,22 @@ export default function SimplePage({
     // const OpenContent = ({ content }) => {
     //     return <p>{content}</p>;
     // };
-    const OpenContent = ({ content }) => {
+    console.log('simple page lesson content: ', lesson.content);
+    const OpenContent = (lesson) => {
+        console.log('lesson.content: ', lesson.content);
         return (
-
-            // <div>
-            //     {data && data.map((item, index) => (
-            //         <div key={index}>
-            //             <h3>Item {index + 1}</h3>
-            //             <ul>
-            //                 {Object.entries(item).map(([key, value]) => (
-            //                     <li key={key}>
-            //                         <strong>{key}:</strong> {value}
-            //                     </li>
-            //                 ))}
-            //             </ul>
-            //         </div>
-            //     ))}
-            // </div>
+            <ul>
+                {lesson.content.map((index, item) => (
+                    <li key={index}>{item.text}</li>
+                    // {/* {item.subpoints && (
+                    //     <ul>
+                    //         {item.subpoints.map((subpoint, subIndex) => (
+                    //             <li key={subIndex}>○ {subpoint.text} </li>
+                    //         ))}
+                    //     </ul>
+                    // )} */}
+                ))}
+            </ul>
         );
     };
     useEffect(() => {
@@ -64,9 +63,7 @@ export default function SimplePage({
             <br />
             {/*<button onClick={handlePrevious}>Previous</button>*/}
             {/* <p>{pageContent}</p> */}
-            {content && <OpenContent content={content} />}
-
-            {content}
+            {lesson && OpenContent(lesson)}
             <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut

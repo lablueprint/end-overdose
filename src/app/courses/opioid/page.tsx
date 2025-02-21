@@ -22,6 +22,11 @@ export default function OpioidHome() {
             contact: '+91-9876543210',
             city: 'Noida',
         },
+        {
+            company: 'company2',
+            contact: '+91-9876543210',
+            city: 'sf',
+        },
     ];
     // const tempjson = "fiona"
 
@@ -36,6 +41,7 @@ export default function OpioidHome() {
             ></LessonTile>
         </div>
     ));
+    console.log(lessons[currentLesson]);
     return (
         <div style={{ display: 'flex', width: '100%' }}>
             <h1
@@ -93,7 +99,7 @@ export default function OpioidHome() {
                 ) : (
                     <SimplePage
                         pageTitle="Opioid Awareness"
-                        content={tempjson}
+                        lesson={lessons[1]}
                     />
                 )}
             </div>
