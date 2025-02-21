@@ -1,0 +1,45 @@
+.pageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.water {
+    height:500px;
+    width: 500px;
+    background-color: lightblue;
+    position: relative;
+}
+
+.gameCharacter {
+    height: 50px;
+    width: 50px;
+    background-color: black;
+    position: absolute;
+    bottom: 0;
+}
+
+.fire {
+    height:500px;
+    width: 500px;
+    background-color: orangered;
+    position: relative;
+}
+
+.candy {
+    height:500px;
+    width: 500px;
+    background-color: lightpink;
+    position: relative;
+}
+
+.forest {
+    height:500px;
+    width: 500px;
+    background-color: lightseagreen;
+    position: relative;
+}
+
+
