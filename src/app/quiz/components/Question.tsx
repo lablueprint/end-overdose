@@ -5,25 +5,19 @@ import '../styles.css';
 interface QuestionProps {
     question: string;
     answers: string[];
-    question_type: number; // 0 for two-answer (T/F) questions, and 1 for four-answer questions (MCQ) /
     onAnswerSelected: (answerIndex: number) => void; // Add callback for answer selection
 }
 
 export default function Question({
     question,
     answers,
-    question_type,
     onAnswerSelected,
 }: QuestionProps) {
     return (
-        <div className="question-container">
+        <>
             <div>{question}</div>
 
-            <div
-                className={`answers-container ${
-                    question_type === 0 ? 'two-answers' : ''
-                }`}
-            >
+            <div className={`answers-container`}>
                 {answers.map((answer, index) => (
                     <button
                         key={index}
@@ -34,6 +28,6 @@ export default function Question({
                     </button>
                 ))}
             </div>
-        </div>
+        </>
     );
 }
