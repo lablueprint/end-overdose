@@ -1,9 +1,14 @@
 'use client';
 import { useUserStore } from '@/store/userStore';
 import Switch from '@mui/material/Switch';
-import { getSchool, toggleCourseInclusion } from '../api/schools/actions';
+import {
+    getSchool,
+    toggleCourseInclusion,
+    addIdPasswordPair,
+} from '../api/schools/actions';
 import { useState, useEffect } from 'react';
 import { SchoolDocument } from '@/types/School';
+import { doc } from 'firebase/firestore';
 
 // List of all courses available globally, TODO: Fetch this from the database
 const list_of_all_courses = [
@@ -21,18 +26,22 @@ export default function Dashboard() {
     const [schoolDoc, setSchoolDoc] = useState<SchoolDocument | null>(null);
     const [included_courses, setIncludedCourses] = useState<Array<string>>([]); // List of courses that are included at user's school
     const [idPasswordPairs, setIdPasswordPairs] = useState<Map<string, string>>(
-        []
+        new Map()
     );
     const [newId, setNewId] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [schoolId, setSchoolId] = useState('');
     useEffect(() => {
         // Fetch the school data and included courses for the current user
         async function fetchSchool() {
             if (user) {
                 const schoolData = await getSchool(user.school_name);
+                setSchoolId(schoolData.id);
                 setSchoolDoc(schoolData);
                 setIncludedCourses(schoolData?.school.course_ids);
-                setIdPasswordPairs(schoolData?.school.school_ids);
+                setIdPasswordPairs(
+                    new Map(Object.entries(schoolData?.school.school_ids || {}))
+                );
             }
         }
         fetchSchool();
@@ -52,26 +61,27 @@ export default function Dashboard() {
         );
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        const schoolRef = doc(db, 'schools', schoolDoc.id);
-        await updateDoc(schoolRef, {
-            [`school_ids.${newId}`]: newPassword, // Add new pair to school_ids
-        });
+    const handleSubmit = async () => {
+        if (!schoolDoc) {
+            setError('School document not found!');
+            return;
+        }
+        if (!user) {
+            setError('User not found!');
+            return;
+        }
 
-        // Update local state to reflect new entry
-        setIdPasswordPairs((prev) => ({
-            ...prev,
-            [newId]: newPassword,
-        }));
-
-        setSuccess('ID-Password added successfully!');
-        setNewId('');
-        setNewPassword('');
-        setError('');
-
-        // Clear input fields
-        setNewId('');
-        setNewPassword('');
+        try {
+            addIdPasswordPair(schoolId, newId, newPassword);
+            const tempMap = new Map(idPasswordPairs);
+            tempMap.set(newId, newPassword);
+            setIdPasswordPairs(tempMap);
+            setNewId('');
+            setNewPassword('');
+        } catch (err) {
+            setError('Failed to update school IDs.');
+            console.error(err);
+        }
     };
 
     return (
@@ -110,8 +120,21 @@ export default function Dashboard() {
                     onChange={(e) => setNewPassword(e.target.value)}
                     className="border p-2 rounded mr-2"
                 />
-                <input type="submit" value="Submit" />
+                <button
+                    type="button"
+                    onClick={() => schoolDoc && handleSubmit()}
+                >
+                    Submit
+                </button>
             </form>
+            <h2>ID-Password Pairs</h2>
+            <ul>
+                {Array.from(idPasswordPairs.entries()).map(([id, password]) => (
+                    <li key={id}>
+                        <strong>{id}:</strong> {password}
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 }
