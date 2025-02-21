@@ -5,7 +5,7 @@ const lessons = [
         isVideo: false,
     },
     {
-        title: 'Recognizing the Signs',
+        title: 'What is fentanyl?',
         content: 'Learn to identify signs of an overdose...',
         isVideo: true,
     },

@@ -16,6 +16,26 @@ export default function OpioidHome() {
     const handleClick = () => {
         setToggle((prevState) => !prevState);
     };
+    const tempjson = [
+        {
+            company: 'GeeksforGeeks',
+            contact: '+91-9876543210',
+            city: 'Noida',
+        },
+    ];
+    // const tempjson = "fiona"
+
+    const navBarEntries = lessons.map((lesson, index) => (
+        <div key={index}>
+            <LessonTile
+                lessonNumber={index}
+                lessonTitle={lesson.title}
+                lessonPath={'lesson1'}
+                lessonCourse={'opioid'}
+                onHandleChangeLesson={handleChangeLesson}
+            ></LessonTile>
+        </div>
+    ));
     return (
         <div style={{ display: 'flex', width: '100%' }}>
             <h1
@@ -50,24 +70,7 @@ export default function OpioidHome() {
                 >
                     Opioid Lesson
                 </h1>
-                <div>
-                    <LessonTile
-                        lessonNumber={0}
-                        lessonTitle={lessons[0].title}
-                        lessonPath={'lesson1'}
-                        lessonCourse={'opioid'}
-                        onHandleChangeLesson={handleChangeLesson}
-                    ></LessonTile>
-                </div>
-                <div>
-                    <LessonTile
-                        lessonNumber={1}
-                        lessonTitle={lessons[1].title}
-                        lessonPath={'lesson2'}
-                        lessonCourse={'opioid'}
-                        onHandleChangeLesson={handleChangeLesson}
-                    ></LessonTile>
-                </div>
+                {navBarEntries}
             </div>
             <div
                 style={{
@@ -88,7 +91,10 @@ export default function OpioidHome() {
                         pageCourse="opioid" // course name
                     />
                 ) : (
-                    <SimplePage pageTitle="Opioid Awareness" />
+                    <SimplePage
+                        pageTitle="Opioid Awareness"
+                        content={tempjson}
+                    />
                 )}
             </div>
         </div>
