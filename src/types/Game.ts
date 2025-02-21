@@ -21,4 +21,8 @@ export type Scene = {
     actions: Array<Action>;
 };
 
+export interface SceneProp {
+    scene: Scene;
+}
+
 export type Game = Map<string, Scene>; // Maps scene name to scene data

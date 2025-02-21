@@ -1,49 +1,47 @@
 import Image from 'next/image';
 import styles from '../game.module.css';
+import { Scene, Character, SceneProp } from '@/types/Game';
+import { useState } from 'react';
 
-const NewDialogueState = () => {
+export default function NewDialogueState({ scene }: SceneProp) {
+    const [speakerIndex, setSpeakerIndex] = useState(0);
+    const [dialogueIndex, setDialogueIndex] = useState(0);
+
     return (
         <div className={styles.gameContainer}>
             <div className={styles.peopleGroup}>
-                <Image
-                    src="/person_asset.png"
-                    width={130}
-                    height={350}
-                    alt="Character 1 "
-                />
+                {scene.characters.slice(0, 1).map((character, index) => (
+                    <Image
+                        key={index}
+                        src={character.avatar || '/placeholder.svg'}
+                        width={130}
+                        height={350}
+                        alt={`Character ${index + 1}`}
+                    />
+                ))}
             </div>
             <div className={styles.peopleGroup}>
-                <Image
-                    src="/person_asset.png"
-                    width={130}
-                    height={350}
-                    alt="Character 1 "
-                />
-                <Image
-                    src="/person_asset.png"
-                    width={130}
-                    height={350}
-                    alt="Character 1 "
-                />
+                {scene.characters
+                    .slice(1) // From the second character onwards until the end
+                    .map((character, index) => (
+                        <Image
+                            key={index}
+                            src={character.avatar || '/placeholder.svg'}
+                            width={130}
+                            height={350}
+                            alt={`Character ${index + 2}`}
+                        />
+                    ))}
             </div>
             <div className={styles.textSpacing}>
                 <div className={styles.characterName}>
-                    <p> Character Name </p>
+                    <p> {scene.characters[speakerIndex].name} </p>
                 </div>
                 <div className={styles.dialogueBox}>
                     {' '}
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                    eget volutpat orci. Sed in nibh placerat, aliquet justo
-                    quis, semper diam. Vestibulum at tortor aliquam, tincidunt
-                    orci quis, scelerisque dui. Duis sit amet ornare arcu, quis
-                    finibus felis. Nunc quis nisl ut dolor posuere blandit.
-                    Morbi vulputate lobortis quam, non tempor arcu sollicitudin
-                    eget. Donec in enim viverra, scelerisque risus nec, molestie
-                    nisi.
+                    {scene.characters[speakerIndex].dialogue[dialogueIndex]}
                 </div>
             </div>
         </div>
     );
-};
-
-export default NewDialogueState;
+}
