@@ -13,6 +13,7 @@ interface StudentData {
     school_name: string;
     badges?: string[];
     course_completion?: Record<string, any>;
+    kibble_count: number;
 }
 
 // Function to create a random student
@@ -38,6 +39,8 @@ const createRandomStudent = (school: string): StudentData => {
             course1: faker.number.int({ min: 0, max: 100 }), // Random completion between 0-100
             course2: faker.number.int({ min: 0, max: 100 }), // Random completion between 0-100
         },
+
+        kibble_count: faker.number.int({ min: 0, max: 999 }), // Random kibble count between 0-999
     };
 };
 

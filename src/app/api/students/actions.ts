@@ -100,3 +100,21 @@ export const getStudentFromID = cache(async (id: string) => {
         throw new Error('Failed to fetch student.');
     }
 });
+
+// export async function updateKibbleCount() {
+//     try {
+//         console.log('Success');
+//         const snapshot = await getDocs(studentsCollection);
+//         const updatePromises = snapshot.docs.map(async (studentDoc) => {
+//             const studentRef = doc(db, 'students', studentDoc.id);
+//             const kibbleCount = Math.floor(Math.random() * 1000); // Generate random number between 0-999
+//             await updateDoc(studentRef, { kibble_count: kibbleCount });
+//         });
+
+//         await Promise.all(updatePromises);
+//         console.log('Kibble count updated for all students.');
+//     } catch (error) {
+//         console.error('Error updating kibble count:', error);
+//         throw new Error('Failed to update kibble count.');
+//     }
+// }

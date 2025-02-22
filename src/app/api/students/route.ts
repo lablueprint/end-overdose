@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
             school_name: requestData.school_name,
             badges: [],
             course_completion: {},
+            kibble_count: requestData.kibble_count,
         };
 
         if ('badges' in requestData) {
