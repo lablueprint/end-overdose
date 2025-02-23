@@ -18,24 +18,48 @@ export default function SimplePage({
     const [secondsViewed, setSecondsViewed] = useState(0);
     const [allowNextPage, setAllowNextPage] = useState(false);
     const countTo = 10;
-    // const OpenContent = ({ content }) => {
-    //     return <p>{content}</p>;
-    // };
+
     console.log('simple page lesson content: ', lesson.content);
     const OpenContent = (lesson) => {
-        console.log('lesson.content: ', lesson.content);
+        const OpenVideo = (video) => {
+            return (
+                <VideoPage
+                    videoPath={video.videoPath}
+                    startTime={video.startTime}
+                    endTime={video.endTime}
+                    pageTitle={video.pageTitle}
+                    pageContent={video.pageContent}
+                    pageModule={video.pageModule}
+                    pageCourse={video.pageCourse}
+                />
+            );
+        };
+
         return (
             <ul>
-                {lesson.content.map((index, item) => (
-                    <li key={index}>{item.text}</li>
-                    // {/* {item.subpoints && (
-                    //     <ul>
-                    //         {item.subpoints.map((subpoint, subIndex) => (
-                    //             <li key={subIndex}>○ {subpoint.text} </li>
-                    //         ))}
-                    //     </ul>
-                    // )} */}
-                ))}
+                {lesson.content.map((item, index) => {
+
+                    return (
+                        <li key={index}>
+                            {item.video && OpenVideo(item.video)}● {item.text}
+                            {item.subpoints && (
+                                <ul>
+                                    {item.subpoints.map(
+                                        (subpoint, subIndex) => (
+                                            <li
+                                                className={styles.indent}
+                                                key={subIndex}
+                                            >
+                                                {' '}
+                                                ○ {subpoint.text}{' '}
+                                            </li>
+                                        )
+                                    )}
+                                </ul>
+                            )}
+                        </li>
+                    );
+                })}
             </ul>
         );
     };
