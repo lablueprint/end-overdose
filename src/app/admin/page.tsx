@@ -3,9 +3,16 @@ import { useUserStore } from '@/store/userStore';
 
 import Switch from '@mui/material/Switch';
 
-import { getSchool, toggleCourseInclusion } from '../api/schools/actions';
+import {
+    getSchool,
+    toggleCourseInclusion,
+    getSchoolCount,
+} from '../api/schools/actions';
+import { getStudentCount } from '../api/students/actions';
 import { useState, useEffect } from 'react';
 import { SchoolDocument } from '@/types/School';
+import { getCourseCount } from '../api/admins/actions';
+import AuthWrap from '@/components/AuthWrap';
 
 // List of all courses available globally, TODO: Fetch this from the database
 const list_of_all_courses = [
@@ -48,11 +55,39 @@ export default function Dashboard() {
                 : [...prev, courseId]
         );
     };
+    const [studentCount, setStudentCount] = useState<number | null>(null);
+    const [schoolCount, setSchoolCount] = useState<number | null>(null);
+    const [courseCount, setCourseCount] = useState<number | null>(null);
+    useEffect(() => {
+        async function fetchCounts() {
+            const students = await getStudentCount();
+            const schools = await getSchoolCount();
+            if (user) {
+                const courses = await getCourseCount(user.email);
+                setCourseCount(courses);
+            }
+            setStudentCount(students);
+            setSchoolCount(schools);
+        }
+        fetchCounts();
+    }, []);
 
     return (
-        <div>
+        <AuthWrap roles={['school_admin', 'eo_admin']}>
             <h1>Admin Dashboard</h1>
             {/* Below displays the list of all globally available courses and toggle switches to include/exclude them */}
+            <h2>
+                School count:{' '}
+                {schoolCount !== null ? schoolCount : 'Loading...'}
+            </h2>
+            <h2>
+                Student count:{' '}
+                {studentCount !== null ? studentCount : 'Loading...'}
+            </h2>
+            <h2>
+                Course count:{' '}
+                {courseCount !== null ? courseCount : 'Loading...'}
+            </h2>
             {included_courses &&
                 list_of_all_courses.map((course_id) => (
                     <ul key={course_id} className="mb-1">
@@ -66,6 +101,6 @@ export default function Dashboard() {
                         />
                     </ul>
                 ))}
-        </div>
+        </AuthWrap>
     );
 }

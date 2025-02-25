@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Course from './components/Course';
 import DailyQuest from './components/DailyQuest';
+import AuthWrap from '@/components/AuthWrap';
 
 export default function Courses() {
     // Course progress data
@@ -24,27 +25,32 @@ export default function Courses() {
     };
 
     return (
-        <div className="flex gap-8">
-            <div className="grid grid-cols-2 gap-4">
-                {coursesData.map((course) => (
-                    <Link key={course.path} href={`/courses/${course.path}`}>
-                        <Course
-                            courseTitle={course.title}
-                            coursePath={course.path}
-                            courseProgress={course.progress}
-                        />
-                    </Link>
-                ))}
+        <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
+            <div className="flex gap-8">
+                <div className="grid grid-cols-2 gap-4">
+                    {coursesData.map((course) => (
+                        <Link
+                            key={course.path}
+                            href={`/courses/${course.path}`}
+                        >
+                            <Course
+                                courseTitle={course.title}
+                                coursePath={course.path}
+                                courseProgress={course.progress}
+                            />
+                        </Link>
+                    ))}
+                </div>
+                <div className="flex-shrink-0">
+                    <DailyQuest
+                        questPath={dailyQuestData.questPath}
+                        questTitle={dailyQuestData.questTitle}
+                        questDescription={dailyQuestData.questDescription}
+                        totalTasks={dailyQuestData.totalTasks}
+                        completedTasks={dailyQuestData.completedTasks}
+                    />
+                </div>
             </div>
-            <div className="flex-shrink-0">
-                <DailyQuest
-                    questPath={dailyQuestData.questPath}
-                    questTitle={dailyQuestData.questTitle}
-                    questDescription={dailyQuestData.questDescription}
-                    totalTasks={dailyQuestData.totalTasks}
-                    completedTasks={dailyQuestData.completedTasks}
-                />
-            </div>
-        </div>
+        </AuthWrap>
     );
 }

@@ -43,6 +43,25 @@ export const getSchool = cache(async (schoolName: string) => {
     }
 });
 
+export const getSchoolCount = cache(async () => {
+    try {
+        const snapshot = await getDocs(schoolsCollection);
+        return snapshot.size; // Returns the number of schools
+    } catch (error) {
+        console.error('Error fetching school count:', error);
+        throw new Error('Failed to fetch school count.');
+    }
+});
+
+export const getCourseCount = cache(async () => {
+    try {
+        const snapshot = await getDocs(schoolsCollection);
+        return snapshot.size; // Returns the number of courses
+    } catch (error) {
+        console.error('Error fetching course count:', error);
+        throw new Error('Failed to fetch course count.');
+    }
+});
 // Update the inclusion of a course for a school in the database
 // If the course is already included, it will be removed
 // If the course is not included, it will be added
