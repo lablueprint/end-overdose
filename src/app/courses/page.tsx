@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import Course from './components/Course';
 import DailyQuest from './components/DailyQuest';
+import { useUserStore } from '@/store/userStore';
 
 export default function Courses() {
     // Course progress data
@@ -12,6 +15,8 @@ export default function Courses() {
         { title: 'Life Skills', path: 'life-skills', progress: 15 },
         { title: 'Stress Management', path: 'stress', progress: 30 },
     ];
+    const User = useUserStore((state) => state.user);
+    console.log(User?.school_name);
 
     // Daily quest data
     const dailyQuestData = {
