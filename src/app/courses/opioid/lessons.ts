@@ -32,14 +32,14 @@ const lessons = [
                     },
                 ],
             },
-            {
-                video: {
-                    title: 'What Is Naloxone?',
-                    videoPath: 'https://www.youtube.com/watch?v=o2Tpws5C2Eg',
-                    startTime: '00:00',
-                    endTime: '5:00',
-                },
-            },
+            // {
+            //     video: {
+            //         title: 'What Is Naloxone?',
+            //         videoPath: 'https://www.youtube.com/watch?v=o2Tpws5C2Eg',
+            //         startTime: '00:00',
+            //         endTime: '5:00',
+            //     },
+            // },
             {
                 text: 'Fentanyl analogs are the different variations of fentanyl. They often have similar but different chemical structures and may be produced in illegal settings to increase strength compared to medical-grade fentanyl.',
                 subpoints: [
@@ -53,12 +53,6 @@ const lessons = [
                     },
                 ],
             },
-            // video: {
-            //     title: 'What Is Naloxone?',
-            //     videoPath: 'https://www.youtube.com/watch?v=o2Tpws5C2Eg',
-            //     startTime: '00:00',
-            //     endTime: '05:00',
-            // },
         ],
     },
     {

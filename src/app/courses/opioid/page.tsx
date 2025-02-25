@@ -98,8 +98,8 @@ export default function OpioidHome() {
                     />
                 ) : (
                     <SimplePage
-                        pageTitle="Opioid Awareness"
-                        lesson={lessons[1]}
+                        pageTitle={lessons[currentLesson].title}
+                        lesson={lessons[currentLesson]}
                     />
                 )}
             </div>
