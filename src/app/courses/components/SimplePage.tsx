@@ -20,6 +20,22 @@ export default function SimplePage({
     const countTo = 10;
 
     console.log('simple page lesson content: ', lesson.content);
+
+    const RenderSubpoints = (point) => {
+        return (
+            <div>
+                {point.map((subpoint, subIndex) => (
+                    <li className={styles.indent} key={subIndex}>
+                        {' '}
+                        ● {subpoint.text}{' '}
+                        {subpoint.subpoints &&
+                            RenderSubpoints(subpoint.subpoints)}
+                    </li>
+                ))}
+            </div>
+        );
+    };
+
     const OpenContent = (lesson) => {
         const OpenVideo = (video) => {
             return (
@@ -38,23 +54,14 @@ export default function SimplePage({
         return (
             <ul>
                 {lesson.content.map((item, index) => {
-
                     return (
                         <li key={index}>
-                            {item.video && OpenVideo(item.video)}● {item.text}
+                            {item.video && OpenVideo(item.video)}
+                            {!item.video && <div>● {item.text}</div>}
                             {item.subpoints && (
                                 <ul>
-                                    {item.subpoints.map(
-                                        (subpoint, subIndex) => (
-                                            <li
-                                                className={styles.indent}
-                                                key={subIndex}
-                                            >
-                                                {' '}
-                                                ○ {subpoint.text}{' '}
-                                            </li>
-                                        )
-                                    )}
+                                    {item.subpoints &&
+                                        RenderSubpoints(item.subpoints)}
                                 </ul>
                             )}
                         </li>
@@ -138,7 +145,7 @@ export default function SimplePage({
                 sunt in culpa qui officia deserunt mollit anim id est laborum.
             </p>
             <br />
-            <VideoPage
+            {/* <VideoPage
                 videoPath="https://www.youtube.com/watch?v=o2Tpws5C2Eg"
                 startTime="00:00"
                 endTime="05:00"
@@ -146,7 +153,7 @@ export default function SimplePage({
                 pageContent={'pageContent'}
                 pageModule="lesson1" // module name/number
                 pageCourse="opioid" // course name
-            />
+            /> */}
             <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut

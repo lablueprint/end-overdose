@@ -23,12 +23,21 @@ const lessons = [
                 text: 'Fentanyl has become increasingly found contaminating other substances manufactured and purchased outside of regulated settings.',
                 subpoints: [
                     {
-                        text: 'The fentanyl often found mixed into other drugs is illegally manufactured, meaning there is no regulation of its strength which can make it extremely addictive and lethal.',
-                        child2: [],
+                        text: 'INNER1: The fentanyl often found mixed into other drugs is illegally manufactured, meaning there is no regulation of its strength which can make it extremely addictive and lethal.',
+                        subpoints: [
+                            {
+                                text: 'INNER2: The fentanyl often found mixed into other drugs is illegally manufactured, meaning there is no regulation of its strength which can make it extremely addictive and lethal.',
+                                subpoints: [],
+                            },
+                            {
+                                text: 'Fentanyl is approximately 50-100 times stronger than morphine (NIDA).',
+                                subpoints: [],
+                            },
+                        ],
                     },
                     {
                         text: 'Fentanyl is approximately 50-100 times stronger than morphine (NIDA).',
-                        child2: [],
+                        subpoints: [],
                     },
                 ],
             },
@@ -45,11 +54,11 @@ const lessons = [
                 subpoints: [
                     {
                         text: 'On average it takes approximately 2mg of fentanyl for a person to overdose, but exact amount can depend on the analog of fentanyl ingested, the person’s tolerance to fentanyl/opioids, and the method of ingestion.',
-                        child2: [],
+                        subpoints: [],
                     },
                     {
                         text: 'For an individual who has no tolerance to opioids, a small dose of fentanyl can be extremely lethal.',
-                        child2: [],
+                        subpoints: [],
                     },
                 ],
             },

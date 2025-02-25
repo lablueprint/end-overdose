@@ -176,7 +176,7 @@ interface videoPageProps {
     pageCourse: string; // course name
     videoPath: string; // URL path for video
     startTime: string;
-    endTime: string;
+    endTime: string;          
 }
 
 export default function VideoPage({
