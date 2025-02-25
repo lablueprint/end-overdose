@@ -1,10 +1,126 @@
 import { getSchoolAdmins } from '../api/admins/actions';
-import SchoolAdminsList from './components/SchoolAdminList';
+import StatCard from './components/StatCard';
+import FeatureCard from './components/FeatureCard';
+import SchoolsTable from './components/SchoolsTable';
+import styles from './Dashboard.module.css';
 
-// server component that displays the list of school admins
-export default async function SchoolAdmins() {
+export default async function AdminDashboard() {
     const adminsBySchool = await getSchoolAdmins();
 
-    // Client Component that displays the list of school admins
-    return <SchoolAdminsList admins={adminsBySchool} />;
+    // Mock data (replace with actual data from your API)
+    const stats = {
+        enrolledStudents: 988,
+        enrolledSchools: 100,
+        currentCourses: 15,
+    };
+
+    const schoolsData = [
+        {
+            id: '001315',
+            name: 'Fairfax High School',
+            email: 'fairfaxhs@gmail.com',
+            studentCount: 500,
+            avgScore: '98%',
+        },
+        {
+            id: '203418',
+            name: 'Hamilton High School',
+            email: 'hamihs@gmail.com',
+            studentCount: 900,
+            avgScore: '89%',
+        },
+    ];
+
+    return (
+        <div className={styles.container}>
+            {/* Welcome Section */}
+            <div className={styles.welcomeSection}>
+                <p className={styles.welcomeText}>Welcome Back,</p>
+                <h1 className={styles.welcomeName}>Mackenzie Smith</h1>
+            </div>
+
+            <h2 className={styles.dashboardTitle}>Dashboard</h2>
+
+            {/* Stats Cards Row */}
+            <div className={styles.statsRow}>
+                <StatCard
+                    icon={
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                            />
+                        </svg>
+                    }
+                    title="Enrolled Student"
+                    value={stats.enrolledStudents}
+                />
+                <StatCard
+                    icon={
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                            />
+                        </svg>
+                    }
+                    title="Enrolled Schools"
+                    value={stats.enrolledSchools}
+                />
+                <StatCard
+                    icon={
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                            />
+                        </svg>
+                    }
+                    title="Current Courses"
+                    value={stats.currentCourses}
+                />
+            </div>
+
+            {/* Feature Cards */}
+            <div className={styles.featureCardsRow}>
+                <FeatureCard
+                    title="Current Courses"
+                    description="Manage your released courses and create new ones"
+                    buttonText="View Courses"
+                />
+                <FeatureCard
+                    title="Analyze Scores"
+                    description="Track student performance and course scores"
+                    buttonText="View Courses"
+                />
+            </div>
+
+            {/* School List Section */}
+            <div className={styles.schoolsSection}>
+                <h2 className={styles.schoolsSectionTitle}>Schools</h2>
+                <SchoolsTable schools={schoolsData} />
+            </div>
+        </div>
+    );
 }

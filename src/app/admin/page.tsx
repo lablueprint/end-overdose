@@ -1,6 +1,8 @@
 'use client';
 import { useUserStore } from '@/store/userStore';
+
 import Switch from '@mui/material/Switch';
+
 import { getSchool, toggleCourseInclusion } from '../api/schools/actions';
 import { useState, useEffect } from 'react';
 import { SchoolDocument } from '@/types/School';
