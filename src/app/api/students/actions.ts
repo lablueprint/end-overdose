@@ -35,7 +35,7 @@ export const getStudents = cache(async () => {
         throw new Error('Failed to fetch students.');
     }
 });
-
+// return number of students in database
 export const getStudentCount = cache(async () => {
     try {
         const snapshot = await getDocs(studentsCollection);

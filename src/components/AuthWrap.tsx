@@ -34,9 +34,9 @@ export default function AuthWrap({
     if (!loading && user && roles.includes(role)) {
         return <>{children}</>;
     }
-    // if (unauthorized) {
-    //     return <InvalidAccess />;
-    // }
+    if (unauthorized) {
+        return <InvalidAccess />;
+    }
 
     return <div>Loading...</div>;
 }

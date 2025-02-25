@@ -1,9 +1,13 @@
 import React from 'react';
 import AuthWrap from '../../components/AuthWrap';
 
-const EOAdminLayout: React.FC = ({ children }) => {
+interface AdminLayoutProps {
+    children: React.ReactNode;
+}
+
+const EOAdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     return (
-        <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
+        <AuthWrap roles={['eo_admin', 'school_admin']}>
             <div className="courses-layout">{children}</div>
         </AuthWrap>
     );

@@ -1,11 +1,22 @@
+'use client';
 import { getSchoolAdmins } from '../api/admins/actions';
 import StatCard from './components/StatCard';
 import FeatureCard from './components/FeatureCard';
 import SchoolsTable from './components/SchoolsTable';
 import styles from './Dashboard.module.css';
+import { useUserStore } from '@/store/userStore';
+import { useEffect, useState } from 'react';
+import { getCourseCount } from '../api/admins/actions';
+import {
+    getSchool,
+    toggleCourseInclusion,
+    getSchoolCount,
+} from '../api/schools/actions';
+import { getStudentCount } from '../api/students/actions';
 
-export default async function AdminDashboard() {
-    const adminsBySchool = await getSchoolAdmins();
+export default function AdminDashboard() {
+    const adminsBySchool = getSchoolAdmins();
+    const { user } = useUserStore(); // Current User
 
     // Mock data (replace with actual data from your API)
     const stats = {
@@ -30,6 +41,23 @@ export default async function AdminDashboard() {
             avgScore: '89%',
         },
     ];
+
+    const [studentCount, setStudentCount] = useState<number | null>(null);
+    const [schoolCount, setSchoolCount] = useState<number | null>(null);
+    const [courseCount, setCourseCount] = useState<number | null>(null);
+    useEffect(() => {
+        async function fetchCounts() {
+            const students = await getStudentCount();
+            const schools = await getSchoolCount();
+            if (user && user.email) {
+                const courses = await getCourseCount(user.email);
+                setCourseCount(courses);
+            }
+            setStudentCount(students);
+            setSchoolCount(schools);
+        }
+        fetchCounts();
+    }, []);
 
     return (
         <div className={styles.container}>
@@ -59,8 +87,8 @@ export default async function AdminDashboard() {
                             />
                         </svg>
                     }
-                    title="Enrolled Student"
-                    value={stats.enrolledStudents}
+                    title="Enrolled Students"
+                    value={studentCount !== null ? studentCount : 'Loading...'}
                 />
                 <StatCard
                     icon={
@@ -79,7 +107,7 @@ export default async function AdminDashboard() {
                         </svg>
                     }
                     title="Enrolled Schools"
-                    value={stats.enrolledSchools}
+                    value={schoolCount !== null ? schoolCount : 'Loading...'}
                 />
                 <StatCard
                     icon={
@@ -98,7 +126,7 @@ export default async function AdminDashboard() {
                         </svg>
                     }
                     title="Current Courses"
-                    value={stats.currentCourses}
+                    value={courseCount !== null ? courseCount : 'Loading...'}
                 />
             </div>
 

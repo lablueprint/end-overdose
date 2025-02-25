@@ -1,8 +1,6 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './home.css';
-import InvalidAccess from '@/components/InvalidAccess';
-import { useSearchParams, useRouter } from 'next/navigation';
 
 function Home() {
     const [currentPage, setCurrentPage] = useState(0);
@@ -21,22 +19,6 @@ function Home() {
         setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
     };
 
-    const [showPopup, setShowPopup] = useState(false);
-    const searchParams = useSearchParams();
-    const router = useRouter();
-
-    useEffect(() => {
-        const unauthorized = searchParams.get('unauthorized') === 'true';
-        if (unauthorized) {
-            console.log('popup');
-            setShowPopup(true);
-            setTimeout(() => {
-                setShowPopup(false);
-                router.replace('/'); // Remove `unauthorized` from the URL
-            }, 5000);
-        }
-    }, [searchParams, router]);
-
     const handleArrowNavigation = (direction: string) => {
         if (direction === 'next') {
             handleNext();
@@ -47,7 +29,6 @@ function Home() {
 
     return (
         <div className="onboarding-container">
-            {showPopup && <InvalidAccess />}
             <h1 className="onboarding-title">{pages[currentPage].title}</h1>
             <div className="onboarding-placeholder-container">
                 <button
