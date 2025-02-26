@@ -5,14 +5,14 @@ import {
     NextOrObserver,
     User,
     deleteUser,
-    signInWithCustomToken,
 } from 'firebase/auth';
 import { auth } from './clientApp';
 import { addAdmin } from '@/app/api/admins/actions';
+import { addStudent } from '@/app/api/students/actions';
 import { Admin } from '@/types/Admin';
 import { Student } from '@/types/Student';
 import { getAdminFromEmail } from '@/app/api/admins/actions';
-import { getStudentFromID } from '@/app/api/students/actions';
+import { getStudentFromStudentID } from '@/app/api/students/actions';
 import { validateUserCredentials } from '@/app/api/students/actions';
 
 export async function onAuthStateChanged(cb: NextOrObserver<User>) {
@@ -30,41 +30,72 @@ export async function logout(): Promise<{ error: string | null }> {
     }
 }
 
-type SignInResultStudent = { student: Student; UID: string };
+// signs in a student
+type SignInResultStudent = { student: Student & { id: string } };
 export async function signInStudent(
     schoolName: string,
-    schoolId: string,
-    password: string
+    studentID: string,
+    optionalPassword: string = ''
 ): Promise<{
     result: SignInResultStudent | null;
     error: string | null;
 }> {
     try {
-        const { success, token } = await validateUserCredentials(
-            //Check if ID and password are inside map of selected school
+        //Check if ID and optionalPassword are inside map of selected school
+        const { success } = await validateUserCredentials(
             schoolName,
-            schoolId,
-            password
+            studentID,
+            optionalPassword
         );
-        if (!success || !token) {
+        if (!success) {
             return {
                 result: null,
                 error: 'Wrong student ID or password.',
             };
         }
-        const result = await signInWithCustomToken(auth, token);
-        if (!result.user.uid) {
-            throw new Error('student id is null.');
-        }
-        const studentDoc = await getStudentFromID(result.user.uid);
+        // Sign in with firebase using a temporary email and password
+        const temp_user_hash = btoa(studentID + '-' + schoolName);
+        const tempEmail = temp_user_hash + '@eo-placeholder.com';
+        // console.log('tempEmail:', tempEmail);
+        const tempPassword =
+            optionalPassword.length < 6 ? 'placeholder' : optionalPassword;
+
+        let uid = '';
+        signInWithEmailAndPassword(auth, tempEmail, tempPassword)
+            .then(async (result) => {
+                uid = result.user.uid;
+            })
+            .catch(async () => {
+                const signUpResult = await createUserWithEmailAndPassword(
+                    auth,
+                    tempEmail,
+                    tempPassword
+                );
+                uid = signUpResult.user.uid;
+                // create a new student in the firebase students collection
+                const newStudent: Student = {
+                    student_id: studentID,
+                    school_name: schoolName,
+                    quizzes: [],
+                    nameplate: '',
+                    course_completion: {
+                        opioidCourse: { courseProgress: 0, lessonProgress: 0 },
+                        careerCourse: { courseProgress: 0, lessonProgress: 0 },
+                    },
+                    badges: [],
+                };
+                await addStudent(newStudent, uid);
+            });
+        // Get student from firebase students collection
+        const studentDoc = await getStudentFromStudentID(studentID);
         if (!studentDoc) {
             return {
                 result: null,
-                error: 'Unable to find student with that id.',
+                error: 'Unable to find student.',
             };
         }
         return {
-            result: { UID: result.user.uid, student: studentDoc },
+            result: { student: studentDoc },
             error: null,
         };
     } catch (error) {
@@ -76,9 +107,9 @@ export async function signInStudent(
     }
 }
 
-// this signs in the user and returns the admin and its document id
+// signs in an EO or school admin
 type SignInResult = { id: string; admin: Admin };
-export async function signIn(
+export async function signInAdmin(
     email: string,
     password: string
 ): Promise<{ result: SignInResult | null; error: string | null }> {

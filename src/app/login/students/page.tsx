@@ -3,13 +3,8 @@ import Link from 'next/link';
 import styles from '../login.module.css';
 import { useState } from 'react';
 import { WolfPackAlphaUniversity, UCLA, School } from '@/types/School';
-import {
-    validateUserCredentials,
-    getStudentFromID,
-} from '@/app/api/students/actions';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
-import { sign } from 'crypto';
 import { signInStudent } from '@/firebase/auth';
 
 const StudentLogin = () => {
@@ -52,7 +47,7 @@ const StudentLogin = () => {
         );
         // console.log('student ; ', student);
         if (result && !error) {
-            setUID(result.UID); // Set zustand state to hold user if authentication is successful
+            setUID(result.student.id); // Set zustand state to hold user if authentication is successful
             setRole('student');
             setUser(result.student);
             setSuccess(true);

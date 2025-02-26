@@ -11,10 +11,10 @@ import {
     doc,
     updateDoc,
     query,
+    setDoc,
     where,
 } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-import jwt from 'jsonwebtoken';
+
 interface Quiz {
     name: string;
     score: number;
@@ -22,8 +22,6 @@ interface Quiz {
 
 const db = getFirestore(firebase_app);
 const studentsCollection = collection(db, 'students');
-const auth = getAuth();
-const SECRET_KEY = process.env.NEXT_PUBLIC_JWT_SECRET;
 
 // get all students from the database
 export const getStudents = cache(async () => {
@@ -37,6 +35,17 @@ export const getStudents = cache(async () => {
         throw new Error('Failed to fetch students.');
     }
 });
+
+// add a new student to the database
+export async function addStudent(student: Student, docID: string) {
+    try {
+        // add to database
+        await setDoc(doc(studentsCollection, docID), student);
+    } catch (error) {
+        console.error('Error adding admin:', error);
+        throw new Error('Failed to add admin.');
+    }
+}
 
 export async function addQuiz(updateQuizzes: Quiz[]) {
     try {
@@ -63,51 +72,62 @@ export async function addQuiz(updateQuizzes: Quiz[]) {
 
 //takes in school, username, password and checks that username and password are in school's student id map
 export const validateUserCredentials = cache(
-    async (schoolName: string, username: string, password: string = '') => {
+    async (
+        schoolName: string,
+        studentID: string,
+        optionalPassword: string = ''
+    ) => {
         try {
             const schoolRef = collection(db, 'schools');
 
             // Query to find the document where school name matches and user credentials exist
-
             const q = query(
                 schoolRef,
                 where('name', '==', schoolName),
-                where(`school_ids.${username}`, '==', password) // Accessing nested map
+                where(`school_ids.${studentID}`, '==', optionalPassword) // Accessing nested map
             );
 
             const querySnapshot = await getDocs(q);
 
-            if (!SECRET_KEY) {
-                throw new Error('SECRET_KEY is not defined');
-            }
-            const token = jwt.sign(
-                { userId: username, password: password, school: schoolName },
-                SECRET_KEY,
-                { expiresIn: '1h' }
-            );
             if (!querySnapshot.empty) {
-                console.log('Valid username and password found!');
-                return { success: true, token: token }; // Credentials are valid, return token
+                // console.log('Valid username and password found!');
+                return { success: true }; // Credentials are valid
             } else {
-                console.log('Invalid credentials or school not found.');
-                return { success: false, token: null }; // No match found
+                // console.log('Invalid credentials or school not found.');
+                return { success: false }; // No match found
             }
         } catch (error) {
             console.error('Error fetching school:', error);
-            return { success: false, token: null };
+            return { success: false };
         }
     }
 );
 
 //returns student object from firebase based off studentid parameter
-export const getStudentFromID = cache(async (id: string) => {
+export const getStudentFromStudentID = cache(async (id: string) => {
     try {
-        const q = query(studentsCollection, where('student_id', '==', id)); //Find student from ID
+        const q = query(studentsCollection, where('student_id', '==', id)); // Find student from ID
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
             const doc = snapshot.docs[0];
-            return { ...(doc.data() as Student) };
+            return { id: doc.id, ...(doc.data() as Student) };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching student:', error);
+        throw new Error('Failed to fetch student.');
+    }
+});
+
+export const getStudent = cache(async (uid: string) => {
+    try {
+        const studentDocRef = doc(studentsCollection, uid);
+        const studentDoc = await getDoc(studentDocRef);
+
+        if (studentDoc.exists()) {
+            return { id: studentDoc.id, ...(studentDoc.data() as Student) };
         }
 
         return null;
