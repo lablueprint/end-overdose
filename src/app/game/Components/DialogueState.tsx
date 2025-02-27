@@ -3,7 +3,7 @@ import styles from '../game.module.css';
 import { SceneProp } from '@/types/Game';
 import { useState } from 'react';
 
-export default function NewDialogueState({ scene }: SceneProp) {
+export default function DialogueState({ scene }: SceneProp) {
     const [speakerIndex, setSpeakerIndex] = useState(0);
     const [dialogueIndex, setDialogueIndex] = useState(0);
 
