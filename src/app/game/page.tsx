@@ -5,12 +5,6 @@ import { useGameStore } from '@/store/gameStore';
 import Image from 'next/image';
 import NewDialogueState from './Components/NewDialogueState';
 
-const GamePage = () => {
-    return (
-        <div className={styles.pageContainer}>
-            <NewDialogueState />
-        </div>
-    );
-};
+const GamePage = () => {};
 
 export default GamePage;
