@@ -24,12 +24,18 @@
     position: relative;
 }
 
+.background {
+    z-index: 1;
+}
+
 .peopleGroup {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: end;
     margin-bottom: 20px;
+    z-index: 2;
+    background-color: tomato;
 }
 
 .textSpacing {
