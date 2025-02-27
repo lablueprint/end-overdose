@@ -8,7 +8,7 @@
         "start": "next start",
         "lint": "next lint",
         "populate-students": "tsx src/helper/script",
-		"build-service-worker": "npx esbuild auth-service-worker.js --bundle --outfile=public/auth-service-worker.js"
+        "build-service-worker": "npx esbuild auth-service-worker.js --bundle --outfile=public/auth-service-worker.js"
     },
     "dependencies": {
         "@emotion/cache": "^11.13.5",
@@ -19,6 +19,7 @@
         "@mui/material": "^6.1.8",
         "@mui/material-nextjs": "^6.1.8",
         "@types/axios": "^0.9.36",
+        "@types/jsonwebtoken": "^9.0.8",
         "axios": "^1.7.8",
         "firebase": "^11.0.2",
         "framer-motion": "^12.4.0",
