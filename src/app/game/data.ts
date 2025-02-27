@@ -3,22 +3,22 @@ import { Game, Scene, Character, Action, Choice } from '@/types/Game';
 
 const girl1: Character = {
     name: 'Sara',
-    avatar: 'https://png.pngtree.com/element_pic/16/12/20/325f9f6d9939429b528e911224ab40db.jpg',
+    avatar: '/game_test_data/girl1.png',
     dialogue: [
-        'Hey, I’m Sara. I’m so glad you’re here. I need your help.',
+        'Hey, I’m Sara. I’m so glad you’re here. I need your help.sdfghjbvcfghjmnbvfghjkmnbvfghjhbvghjuikbgtyuijkhgtyuijbvcfdrtyuijbvfgtyuikjbvfgtyuikjnbghyuikjhgb',
         'I’m not feeling so great. Can you help me?',
     ],
 };
 
 const girl2: Character = {
     name: 'Jenny',
-    avatar: 'https://image.similarpng.com/file/similarpng/very-thumbnail/2020/07/Cute-girl-on-transparent-background-PNG.png',
+    avatar: '/game_test_data/girl2.png',
     dialogue: ['Oh no, what do I do?'],
 };
 
 const boy1: Character = {
     name: 'Alex',
-    avatar: 'https://png.pngtree.com/png-vector/20220520/ourmid/pngtree-cartoon-happy-school-boy-waving-hand-png-image_4691658.png',
+    avatar: '/game_test_data/boy1.webp',
     dialogue: ['Yay, I’m so happy you helped Sara.'],
 };
 
@@ -39,16 +39,14 @@ const action1: Action = {
 
 const startScene: Scene = {
     scene: 'startScene',
-    background:
-        'https://t4.ftcdn.net/jpg/09/73/50/57/360_F_973505756_ufXazX15LJE69Vzl8UIBw8mv9qHHKgGc.jpg',
+    background: '/game_test_data/classroom.jpg',
     characters: [girl1, girl2],
     actions: [action1],
 };
 
 const endScene: Scene = {
     scene: 'endScene',
-    background:
-        'https://thumbs.dreamstime.com/b/yellow-bus-road-front-school-building-exterior-back-to-pupils-transport-concept-cityscape-background-flat-horizontal-141738978.jpg',
+    background: '/game_test_data/school.webp',
     characters: [boy1],
     actions: [],
 };

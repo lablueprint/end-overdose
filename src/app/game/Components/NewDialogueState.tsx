@@ -7,8 +7,28 @@ export default function NewDialogueState({ scene }: SceneProp) {
     const [speakerIndex, setSpeakerIndex] = useState(0);
     const [dialogueIndex, setDialogueIndex] = useState(0);
 
+    const goToNextDialogue = () => {
+        if (
+            dialogueIndex <
+            scene.characters[speakerIndex].dialogue.length - 1
+        ) {
+            setDialogueIndex(dialogueIndex + 1);
+        } else if (speakerIndex < scene.characters.length - 1) {
+            setSpeakerIndex(speakerIndex + 1);
+            setDialogueIndex(0);
+        }
+    };
+
     return (
-        <div className={styles.gameContainer}>
+        <div className={styles.gameContainer} onClick={goToNextDialogue}>
+            <div className={styles.background}>
+                <Image
+                    src={scene.background}
+                    alt="Background"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                />
+            </div>
             <div className={styles.peopleGroup}>
                 {scene.characters.slice(0, 1).map((character, index) => (
                     <Image
