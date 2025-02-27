@@ -30,7 +30,7 @@ const AdminLogin = () => {
             // wait before redirecting to admin dashboard
             setTimeout(() => {
                 router.push('/admin');
-            }, 1000);
+            }, 300);
         } else {
             if (response.error) setError(response.error);
             setSuccess(false);

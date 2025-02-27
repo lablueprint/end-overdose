@@ -54,7 +54,7 @@ const StudentLogin = () => {
             setError('');
             setTimeout(() => {
                 router.push('/');
-            }, 1000);
+            }, 300);
         } else {
             console.log('Error: ', error);
             setError(error);

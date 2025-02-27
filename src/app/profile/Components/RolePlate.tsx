@@ -15,7 +15,7 @@ const RolePlate = ({ role }: rolePlateProps) => {
     // child
     return (
         <div>
-            <p> {role} </p>
+            <p>Logged in as: {role} </p>
         </div>
     );
 };
