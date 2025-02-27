@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import styles from '../game.module.css';
-import { Scene, Character, SceneProp } from '@/types/Game';
+import { SceneProp } from '@/types/Game';
 import { useState } from 'react';
 
 export default function NewDialogueState({ scene }: SceneProp) {
@@ -29,7 +29,7 @@ export default function NewDialogueState({ scene }: SceneProp) {
                     style={{ objectFit: 'cover' }}
                 />
             </div>
-            <div className={styles.peopleGroup}>
+            <div className={styles.peopleGroup1}>
                 {scene.characters.slice(0, 1).map((character, index) => (
                     <Image
                         key={index}
@@ -40,7 +40,7 @@ export default function NewDialogueState({ scene }: SceneProp) {
                     />
                 ))}
             </div>
-            <div className={styles.peopleGroup}>
+            <div className={styles.peopleGroup2}>
                 {scene.characters
                     .slice(1) // From the second character onwards until the end
                     .map((character, index) => (
