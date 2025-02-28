@@ -2,8 +2,10 @@
 import { useState } from 'react';
 import Question from './Question';
 import Score from './Score';
+import questions from '../questions.json' assert { type: 'json' };
+import Feedback from './Feedback';
 
-import '../styles.css';
+import './startpage.css';
 
 interface McqProps {
     title: string;
@@ -15,32 +17,6 @@ export default function Mcq({ title, description }: McqProps) {
     const handleStart = () => {
         setHasStarted(true);
     };
-    const questions = [
-        {
-            question: 'How are you?',
-            answers: ['1', '2', '3', '4'],
-            question_type: 1,
-            correctAnswer: 1,
-        },
-        {
-            question: 'What is your favorite food?',
-            answers: ['1', '2', '3', '4'],
-            question_type: 1,
-            correctAnswer: 2,
-        },
-        {
-            question: 'Name a breed of cat?',
-            answers: ['1', '2', '3', '4'],
-            question_type: 1,
-            correctAnswer: 3,
-        },
-        {
-            question: 'Are you having a good time?',
-            answers: ['1', '2'],
-            question_type: 0,
-            correctAnswer: 0,
-        },
-    ];
 
     interface MissedQuestion {
         question: string;
@@ -83,28 +59,16 @@ export default function Mcq({ title, description }: McqProps) {
                     },
                 ]);
             }
-
-            // Move to the next question after short delay
-            setTimeout(() => {
-                if (currentQuestionIndex < questions.length - 1) {
-                    setSelectedAnswer(null);
-                    setIsQuestionSelected(false);
-                    setFeedback(
-                        ''
-                    ); /* sets feedback back to empty before displaying next question, changing after short period of time to display green or red styling for that period of time */
-                }
-                setCurrentQuestionIndex(currentQuestionIndex + 1);
-            }, 1000);
         }
     };
 
     // if student has not started the quiz, display the begin quiz button, title, description
     if (!hasStarted) {
         return (
-            <div className="answers-container">
-                <h1>Title: {title}</h1>
-                <p>Description: {description}</p>
-                <button onClick={handleStart}>Begin Quiz</button>
+            <div className="start-container">
+                <h1>{title}</h1>
+                <p>{description}</p>
+                <button onClick={handleStart}>Begin</button>
             </div>
         );
     }
@@ -112,19 +76,23 @@ export default function Mcq({ title, description }: McqProps) {
     return (
         <>
             {currentQuestionIndex < questions.length ? ( // if there are still questions to be answered, display the question
-                <div>
+                <div className="question-container">
                     <Question
                         question={currentQuestion.question}
                         answers={currentQuestion.answers}
-                        question_type={currentQuestion.question_type}
                         onAnswerSelected={handleAnswerSelected}
                     />
                     {feedback && (
-                        <div
-                            className={`feedback ${feedback === 'Wrong!' ? 'wrong' : 'correct'}`}
-                        >
-                            {feedback}
-                        </div>
+                        <Feedback
+                            feedback={feedback}
+                            question={currentQuestion.question}
+                            currentQuestionIndex={currentQuestionIndex}
+                            numQuestions={questions.length}
+                            setSelectedAnswer={setSelectedAnswer}
+                            setIsQuestionSelected={setIsQuestionSelected}
+                            setFeedback={setFeedback}
+                            setCurrentQuestionIndex={setCurrentQuestionIndex}
+                        />
                     )}
                 </div>
             ) : (

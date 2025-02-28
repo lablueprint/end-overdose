@@ -2,10 +2,12 @@
 import Link from 'next/link';
 import styles from '../login.module.css';
 import { useState } from 'react';
-import { loginAdmin, getAdminFromEmail } from '@/app/api/admins/actions';
 import { useUserStore } from '@/store/userStore';
+import { signInAdmin } from '@/firebase/auth';
+import { useRouter } from 'next/navigation';
 
 const AdminLogin = () => {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -13,34 +15,29 @@ const AdminLogin = () => {
     const setUser = useUserStore((state) => state.setUser);
     const setUID = useUserStore((state) => state.setUID);
     const setRole = useUserStore((state) => state.setRole);
-    const user = useUserStore((state) => state.user);
-    const uid = useUserStore((state) => state.uid);
-    const role = useUserStore((state) => state.role);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-
-        const response = await loginAdmin(email, password);
-        if (response.error) {
-            setError(response.error);
-            setSuccess(false);
-        } else {
+        // sign in the admin
+        const response = await signInAdmin(email, password);
+        if (response.result) {
             setSuccess(true);
             setError('');
-            // fetch admin from firestore
-            const admin = await getAdminFromEmail(email);
-            if (admin) {
-                setUID(admin.id);
-                setRole(admin.role);
-                setUser(admin);
-            } else {
-                setError('Unable to find admin with that email');
-                setSuccess(false);
-            }
+            // update global user state
+            setUser(response.result.admin);
+            setUID(response.result.id);
+            setRole(response.result.admin.role);
+            // wait before redirecting to admin dashboard
+            setTimeout(() => {
+                router.push('/admin');
+            }, 300);
+        } else {
+            if (response.error) setError(response.error);
+            setSuccess(false);
         }
     };
 
-    console.log(user);
+    // console.log(user);
     return (
         <div className={styles.splitContainer}>
             <div className={styles.placeHolderHalf}></div>

@@ -1,5 +1,11 @@
 'use client';
-import { useState } from 'react';
-import '../styles.css';
+import TrueFalse from '../components/TrueFalse';
 
-export default function TrueFalse() {}
+export default function MultipleChoice() {
+    return (
+        <TrueFalse
+            title="True or False"
+            description="You will be presented a statement about the lesson you just did."
+        ></TrueFalse>
+    );
+}
