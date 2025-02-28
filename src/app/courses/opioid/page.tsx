@@ -42,6 +42,11 @@ export default function OpioidHome() {
         </div>
     ));
     console.log(lessons[currentLesson]);
+
+    const handleNextLesson = () => {
+        setLesson((prevIndex) => prevIndex + 1);
+    };
+
     return (
         <div style={{ display: 'flex', width: '100%' }}>
             <h1
@@ -100,6 +105,7 @@ export default function OpioidHome() {
                     <SimplePage
                         pageTitle={lessons[currentLesson].title}
                         lesson={lessons[currentLesson]}
+                        handleNext={handleNextLesson}
                     />
                 )}
             </div>

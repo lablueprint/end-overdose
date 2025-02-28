@@ -23,7 +23,7 @@ export default function LessonTileProps({
     return (
         <div className={styles.container}>
             <div onClick={() => onHandleChangeLesson(lessonNumber)}>
-                <h4 className={styles.subtitle}>Lesson #{lessonNumber}</h4>
+                <h4 className={styles.subtitle}>Lesson #{lessonNumber + 1}</h4>
                 <h2 className={styles.title}>{lessonTitle}</h2>
             </div>
         </div>
