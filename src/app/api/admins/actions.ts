@@ -3,25 +3,21 @@
 import { cache } from 'react';
 import { revalidatePath } from 'next/cache';
 import { Admin } from '@/types/Admin';
-import firebase_app from '@/firebase/config';
-import { getAuth } from 'firebase/auth';
-import signIn from '@/firebase/auth/signIn';
-import signUp from '@/firebase/auth/signUp';
 import {
     getFirestore,
     collection,
-    getDoc,
     getDocs,
     doc,
-    addDoc,
+    setDoc,
     deleteDoc,
     query,
     where,
-    setDoc,
+    updateDoc,
 } from 'firebase/firestore';
+import { getAuthenticatedAppForUser } from '@/firebase/serverApp';
+import firebase_app from '@/firebase/config';
 
 const db = getFirestore(firebase_app);
-const auth = getAuth();
 const adminsCollection = collection(db, 'admins');
 
 // get all admins from the database
@@ -38,10 +34,15 @@ export const getAdmins = cache(async () => {
 });
 
 // add a new admin to the database
-export async function addAdmin(admin: Admin) {
+export async function addAdmin(admin: Admin, userId: string) {
     try {
+        // authenticate the user calling this endpoint
+        const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        const auth_db = getFirestore(firebaseServerApp);
+        const adminsCollection = collection(auth_db, 'admins');
+
         // add to database
-        await addDoc(adminsCollection, admin);
+        await setDoc(doc(adminsCollection, userId), admin);
 
         // revalidate data
         revalidatePath('');
@@ -54,11 +55,18 @@ export async function addAdmin(admin: Admin) {
 // delete an admin from the database, indexed by email
 export async function deleteAdmin(adminEmail: string) {
     try {
+        // authenticate the user calling this endpoint
+        const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        const auth_db = getFirestore(firebaseServerApp);
+        const adminsCollection = collection(auth_db, 'admins');
+
         // query admin by email field
         const adminQuery = query(
             adminsCollection,
             where('email', '==', adminEmail)
         );
+
+        // delete from the firebase
         const querySnapshot = await getDocs(adminQuery);
         const docId = querySnapshot.docs[0].id;
         await deleteDoc(doc(adminsCollection, docId));
@@ -71,37 +79,75 @@ export async function deleteAdmin(adminEmail: string) {
     }
 }
 
-// log in an admin
-// getting the authenticated user from firebase auth
-// switch to getting the user from zustand store later
-export async function loginAdmin(email: string, password: string) {
+// Get all of the school admins, grouped by school
+// Returns a hash map with the outer key being school (first string) and the value being another hash map
+// with the key being email (second string) and the value being the Admin object with that email.
+export const getSchoolAdmins = cache(async () => {
     try {
-        const { error } = await signIn(email, password);
-        if (error) {
-            return { error: 'Wrong email or password. Try again.', user: null };
-        }
-        return { success: true };
-    } catch (error) {
-        console.error('Error logging in admin:', error);
-        throw new Error('Failed to log in admin.');
-    }
-}
+        // query admin by email field
+        const adminQuery = query(
+            adminsCollection,
+            where('role', '==', 'school_admin')
+        );
+        const querySnapshot = await getDocs(adminQuery);
+        const SchoolAdmins = querySnapshot.docs.map(
+            (doc) => doc.data() as Admin
+        );
 
-export async function signupAdmin(admin: Admin, password: string) {
-    const { result, error } = await signUp(admin.email, password);
-    if (error) {
-        return { error };
-    }
-    try {
-        if (!result?.userId) {
-            return { error: 'Failed to retrieve user ID. Please try again.' };
-        }
-        //save user role in Firestore
-        await setDoc(doc(db, 'admins', result.userId), admin);
-        return { success: true };
+        // The below structure is a hash map with the outer key being school (first string) and
+        // the value being another hash map with the key being email (second string) and the value
+        // being the Admin object with that email.
+
+        const adminsBySchool = SchoolAdmins.reduce(
+            (acc: Record<string, Record<string, Admin>>, admin: Admin) => {
+                if (!acc[admin.school_name]) {
+                    acc[admin.school_name] = {};
+                }
+                acc[admin.school_name][admin.email] = admin;
+                return acc;
+            },
+            {}
+        );
+
+        return adminsBySchool;
     } catch (error) {
-        console.error('Error signing up admin:', error);
-        throw new Error('Failed to log in admin.');
+        console.error('Error fetching admin:', error);
+        throw new Error('Failed to fetching admin.');
+    }
+});
+
+// Updates the approval status of the admin user with the given email to the new given approval status
+// Input: email of the admin user, new approval status
+// Output: success status and new approval status
+export async function updateAdminApproval(
+    adminEmail: string,
+    newApprovalStatus: boolean
+) {
+    try {
+        // Query admin by email field and get the document reference to it
+        const adminQuery = query(
+            adminsCollection,
+            where('email', '==', adminEmail)
+        );
+        const querySnapshot = await getDocs(adminQuery);
+        const docId = querySnapshot.docs[0].id;
+        const adminDocRef = doc(adminsCollection, docId);
+
+        // Update the 'approved' field
+        await updateDoc(adminDocRef, {
+            approved: newApprovalStatus,
+        });
+
+        // Revalidate the path to ensure the data is up-to-date
+        revalidatePath(`/api/admins/${docId}`);
+
+        return { success: true, newStatus: newApprovalStatus };
+    } catch (error) {
+        console.error('Error updating user approval status:', error);
+        return {
+            success: false,
+            error: 'Failed to update user approval status',
+        };
     }
 }
 

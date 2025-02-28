@@ -1,55 +1,216 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { logout } from '@/firebase/auth';
+import { useUserStore } from '@/store/userStore';
+import { useRouter } from 'next/navigation';
+import GridViewIcon from '@mui/icons-material/GridView';
+import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
+import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import HomeIcon from '@mui/icons-material/Home';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import LogoutIcon from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 export default function NavBar() {
+    const router = useRouter();
     const path = usePathname();
-    // add a new navigation tab here
-    const tabs = [
-        { href: '/courses', tab: 'Courses' },
-        { href: '/quiz', tab: 'Quiz' },
-        { href: '/profile', tab: 'Profile' },
-        { href: '/admin', tab: 'Admin' },
-        { href: '/login', tab: 'Login' },
-        { href: '/signup', tab: 'Signup' },
-        { href: '/testing', tab: 'Testing' },
-    ];
+    const user = useUserStore((state) => state.user);
+    const role = useUserStore((state) => state.role);
+    const setLoading = useUserStore((state) => state.setLoading);
+    const [collapsed, setCollapsed] = useState(false);
+
+    // Toggle sidebar collapse state
+    const toggleSidebar = () => {
+        setCollapsed(!collapsed);
+    };
+
+    // add any new navigation tabs here
+    const tabs = user
+        ? role === 'eo_admin'
+            ? [
+                  {
+                      href: '/eo-admin',
+                      tab: 'Dashboard',
+                      icon: <GridViewIcon />,
+                  },
+                  {
+                      href: '/eo-admin',
+                      tab: 'Courses',
+                      icon: <CollectionsBookmarkIcon />,
+                  },
+                  {
+                      href: '/eo-admin',
+                      tab: 'Schools',
+                      icon: <SchoolOutlinedIcon />,
+                  },
+                  {
+                      href: '/eo-admin',
+                      tab: 'Reports',
+                      icon: <QueryStatsIcon />,
+                  },
+              ]
+            : role === 'school_admin'
+              ? [
+                    {
+                        href: '/admin',
+                        tab: 'Dashboard',
+                        icon: <GridViewIcon />,
+                    },
+                    {
+                        href: '/admin',
+                        tab: 'Courses',
+                        icon: <CollectionsBookmarkIcon />,
+                    },
+                    {
+                        href: '/admin',
+                        tab: 'Schools',
+                        icon: <SchoolOutlinedIcon />,
+                    },
+                    {
+                        href: '/admin',
+                        tab: 'Reports',
+                        icon: <QueryStatsIcon />,
+                    },
+                ]
+              : role === 'student'
+                ? [
+                      {
+                          href: '/courses',
+                          tab: 'Learn',
+                          icon: <HomeIcon />,
+                      },
+                      {
+                          href: '/profile',
+                          tab: 'Profile',
+                          icon: <PermIdentityIcon />,
+                      },
+                      {
+                          href: '/quiz',
+                          tab: 'Certificates',
+                          icon: <WorkspacePremiumIcon />,
+                      },
+                      {
+                          href: '/notifications',
+                          tab: 'Notifications',
+                          icon: <NotificationsNoneIcon />,
+                      },
+                  ]
+                : []
+        : [];
 
     return (
-        <nav className="bg-black p-4 shadow-md h-full">
-            <ul className="flex flex-col justify-start space-y-3">
-                <li className="relative mb-3">
-                    <Link href="/">
+        <nav
+            className={`bg-black p-4 shadow-md h-full flex flex-col transition-all duration-300 ${collapsed ? 'w-16' : 'w-55'}`}
+        >
+            <div className="flex-none mb-6 flex items-center">
+                <div
+                    className={
+                        collapsed ? 'w-full flex justify-center' : 'mr-4'
+                    }
+                >
+                    <button
+                        onClick={toggleSidebar}
+                        className={`text-white p-1 rounded hover:bg-gray-800 ${collapsed ? 'mx-auto mt-4' : ''}`}
+                        aria-label={
+                            collapsed ? 'Expand sidebar' : 'Collapse sidebar'
+                        }
+                    >
+                        {collapsed ? <MenuOpenIcon /> : <MenuIcon />}
+                    </button>
+                    <Link href={user ? '/' : '/login'}>
                         <Image
                             src="/logo.png"
                             alt="logo"
-                            width={100}
-                            height={100}
+                            width={collapsed ? 40 : 80}
+                            height={collapsed ? 40 : 80}
                             style={{
                                 width: 'auto',
                                 height: '100%',
                             }}
                         />
                     </Link>
-                </li>
+                </div>
+            </div>
 
-                {tabs.map(({ href, tab }) => (
+            <ul className="flex-grow flex flex-col space-y-5">
+                {tabs.map(({ href, tab, icon }) => (
                     <li
                         key={href}
-                        className={`relative text-lg w-full ${
+                        className={`relative text-lg w-full rounded-md ${
                             path.startsWith(href)
-                                ? 'bg-white text-black rounded-md'
+                                ? 'bg-white text-black'
                                 : 'text-white'
-                        }`}
+                        } ${collapsed ? 'flex justify-center' : ''}`}
+                        title={collapsed ? tab : ''}
                     >
-                        <Link href={href} className="block w-full px-4 py-2">
-                            {tab}
-                        </Link>
+                        {collapsed ? (
+                            <Link
+                                href={href}
+                                className="py-2 px-2 flex justify-center items-center"
+                            >
+                                {icon}
+                            </Link>
+                        ) : (
+                            <>
+                                <span className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                    {icon}
+                                </span>
+                                <Link
+                                    href={href}
+                                    className="block w-full px-4 py-2 ml-8"
+                                >
+                                    {tab}
+                                </Link>
+                            </>
+                        )}
                     </li>
                 ))}
             </ul>
+
+            {/* Logout button at the bottom */}
+            {user != null && (
+                <div className="flex-none mt-auto pt-3">
+                    <div
+                        className={`relative text-lg w-full ${collapsed ? 'flex justify-center' : ''}`}
+                    >
+                        {collapsed ? (
+                            <button
+                                className="py-2 px-2 text-white"
+                                title="Logout"
+                                onClick={async () => {
+                                    await logout();
+                                    router.push('/login');
+                                }}
+                            >
+                                <LogoutIcon />
+                            </button>
+                        ) : (
+                            <>
+                                <span className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                    <LogoutIcon />
+                                </span>
+                                <button
+                                    className="block w-full rounded-md px-4 py-2 text-white text-lg ml-8 text-left"
+                                    onClick={async () => {
+                                        setLoading(true);
+                                        await logout();
+                                        router.push('/login');
+                                    }}
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
         </nav>
     );
 }
