@@ -23,8 +23,22 @@ export default function SimplePage({
     console.log('simple page lesson content: ', lesson.content);
 
     const RenderSubpoints = (point) => {
+        const OpenVideo = (video) => {
+            return (
+                <VideoPage
+                    videoPath={video.videoPath}
+                    startTime={video.startTime}
+                    endTime={video.endTime}
+                    pageTitle={video.pageTitle}
+                    pageContent={video.pageContent}
+                    pageModule={video.pageModule}
+                    pageCourse={video.pageCourse}
+                />
+            );
+        };
         return (
             <div>
+                {/* {point.video && OpenVideo(point.video)} */}
                 {point.map((subpoint, subIndex) => (
                     <li className={styles.indent} key={subIndex}>
                         {' '}
