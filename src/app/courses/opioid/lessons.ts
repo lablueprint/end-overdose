@@ -104,87 +104,6 @@ const lessons = [
         ],
     },
     {
-        title: 'Recap',
-        content: [
-            {
-                video: {
-                    title: 'Jack Shows How to Respond to an Overdose',
-                    videoPath:
-                        'https://youtu.be/JKwhqIHMD1E?si=TnOTk5xM-IQrQSr7',
-                    startTime: '00:00',
-                    endTime: '05:00',
-                },
-            },
-            {
-                text: 'Let’s go over how to respond 1 more time…',
-                subpoints: [
-                    {
-                        text: '1) Recognizing the symptoms',
-                        subpoints: [
-                            {
-                                text: 'Pinpoint pupils, slowed/stopped breathing, unconsciousness/unresponsiveness',
-                                subpoints: [],
-                            },
-                        ],
-                    },
-                    {
-                        text: '2) Calling 911 & yelling for help',
-                        subpoints: [
-                            {
-                                text: 'You are protected by the Good Samaritan Law!',
-                                subpoints: [],
-                            },
-                        ],
-                    },
-                    {
-                        text: '3) Administering naloxone',
-                        subpoints: [
-                            {
-                                text: 'Administer doses every 2-3 minutes until the person begins breathing.',
-                                subpoints: [],
-                            },
-                        ],
-                    },
-                    {
-                        text: '4) Performing rescue breathing',
-                        subpoints: [
-                            {
-                                text: 'Do this in between administering naloxone doses or if you don’t have any doses to administer.',
-                                subpoints: [],
-                            },
-                        ],
-                    },
-                    {
-                        text: '5) Placing the person in recovery position',
-                        subpoints: [
-                            {
-                                text: 'Do this if the person begins breathing but is still unconscious',
-                                subpoints: [],
-                            },
-                        ],
-                    },
-                ],
-            },
-            {
-                text: 'Here are some other things to consider…',
-                subpoints: [
-                    {
-                        text: 'Make sure the person overdosing gets to a hospital immediately. Naloxone wears off in 30-90 minutes. Try to stay with the person overdosing until emergency responders arrive.',
-                        subpoints: [],
-                    },
-                    {
-                        text: 'Naloxone has virtually NO effect on someone who is not overdosing. If you give it to someone accidentally, they will be fine, but make sure to keep your naloxone safe unless you are responding to an emergency,',
-                        subpoints: [],
-                    },
-                    {
-                        text: 'Naloxone can cause withdrawal symptoms which can make a person nauseous, irritable, and can cause cramps. It may also make the person want to take more drugs, but try not to let them.',
-                        subpoints: [],
-                    },
-                ],
-            },
-        ],
-    },
-    {
         title: 'Responding to an Opioid Overdose',
         content: [
             {
@@ -351,6 +270,87 @@ const lessons = [
                     },
                     {
                         text: 'This position will ensure that the person will not choke if they need to vomit when waking up.',
+                        subpoints: [],
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        title: 'Recap',
+        content: [
+            {
+                video: {
+                    title: 'Jack Shows How to Respond to an Overdose',
+                    videoPath:
+                        'https://youtu.be/JKwhqIHMD1E?si=TnOTk5xM-IQrQSr7',
+                    startTime: '00:00',
+                    endTime: '05:00',
+                },
+            },
+            {
+                text: 'Let’s go over how to respond 1 more time…',
+                subpoints: [
+                    {
+                        text: '1) Recognizing the symptoms',
+                        subpoints: [
+                            {
+                                text: 'Pinpoint pupils, slowed/stopped breathing, unconsciousness/unresponsiveness',
+                                subpoints: [],
+                            },
+                        ],
+                    },
+                    {
+                        text: '2) Calling 911 & yelling for help',
+                        subpoints: [
+                            {
+                                text: 'You are protected by the Good Samaritan Law!',
+                                subpoints: [],
+                            },
+                        ],
+                    },
+                    {
+                        text: '3) Administering naloxone',
+                        subpoints: [
+                            {
+                                text: 'Administer doses every 2-3 minutes until the person begins breathing.',
+                                subpoints: [],
+                            },
+                        ],
+                    },
+                    {
+                        text: '4) Performing rescue breathing',
+                        subpoints: [
+                            {
+                                text: 'Do this in between administering naloxone doses or if you don’t have any doses to administer.',
+                                subpoints: [],
+                            },
+                        ],
+                    },
+                    {
+                        text: '5) Placing the person in recovery position',
+                        subpoints: [
+                            {
+                                text: 'Do this if the person begins breathing but is still unconscious',
+                                subpoints: [],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                text: 'Here are some other things to consider…',
+                subpoints: [
+                    {
+                        text: 'Make sure the person overdosing gets to a hospital immediately. Naloxone wears off in 30-90 minutes. Try to stay with the person overdosing until emergency responders arrive.',
+                        subpoints: [],
+                    },
+                    {
+                        text: 'Naloxone has virtually NO effect on someone who is not overdosing. If you give it to someone accidentally, they will be fine, but make sure to keep your naloxone safe unless you are responding to an emergency,',
+                        subpoints: [],
+                    },
+                    {
+                        text: 'Naloxone can cause withdrawal symptoms which can make a person nauseous, irritable, and can cause cramps. It may also make the person want to take more drugs, but try not to let them.',
                         subpoints: [],
                     },
                 ],
