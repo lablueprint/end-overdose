@@ -6,6 +6,7 @@ export type SchoolDocument = {
 export type School = {
     name: string; //Name of School
     school_ids: Map<string, string>; //key: username, value; passwords
+    course_ids: Array<string>;
 };
 
 export const WolfPackAlphaUniversity: School = {
@@ -15,6 +16,7 @@ export const WolfPackAlphaUniversity: School = {
         ['Cow', 'Mooooooooo'],
         ['Joe Bruin', 'rawrrrrrrrr'],
     ]),
+    course_ids: ['12345', '67890'],
 };
 
 export const UCLA: School = {
@@ -24,6 +26,7 @@ export const UCLA: School = {
         ['Gene Block', 'rip'],
         ['Mick Cronin', 'ILoveJaimeJacquez'],
     ]),
+    course_ids: ['12345'],
 };
 
 export const SchoolDocumentTest: SchoolDocument = {
