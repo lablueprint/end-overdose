@@ -38,7 +38,7 @@ export default function InitAuthState({
                     setUID(authUser.uid);
                     if (!isStudent && 'role' in user) {
                         setRole(user.role);
-                    } else {
+                    } else if (isStudent) {
                         setRole('student');
                     }
                 } else {
