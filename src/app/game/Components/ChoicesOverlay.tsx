@@ -1,34 +1,43 @@
 import Image from 'next/image';
 import styles from '../game.module.css';
+import { SceneProp } from '@/types/Game';
+import { useState } from 'react';
 
-const ChoicesOverlay = () => {
+const ChoicesOverlay = ({ scene }: SceneProp) => {
     return (
         <div className={styles.pageContainer}>
             <div className={styles.gameContainer}>
-                <div className={styles.peopleGroup}>
+                <div className={styles.background}>
                     <Image
-                        src="/person_asset.png"
-                        width={130}
-                        height={350}
-                        alt="Character 1 "
-                        className={styles.blurredImage}
+                        src={scene.background}
+                        alt="Background"
+                        fill
+                        style={{ objectFit: 'cover' }}
                     />
                 </div>
                 <div className={styles.peopleGroup}>
-                    <Image
-                        src="/person_asset.png"
-                        width={130}
-                        height={350}
-                        alt="Character 1 "
-                        className={styles.blurredImage}
-                    />
-                    <Image
-                        src="/person_asset.png"
-                        width={130}
-                        height={350}
-                        alt="Character 1 "
-                        className={styles.blurredImage}
-                    />
+                    {scene.characters.slice(0, 1).map((character, index) => (
+                        <Image
+                            key={index}
+                            src={character.avatar || '/placeholder.svg'}
+                            width={130}
+                            height={350}
+                            alt={`Character ${index + 1}`}
+                        />
+                    ))}
+                </div>
+                <div className={styles.peopleGroup}>
+                    {scene.characters
+                        .slice(1) // From the second character onwards until the end
+                        .map((character, index) => (
+                            <Image
+                                key={index}
+                                src={character.avatar || '/placeholder.svg'}
+                                width={130}
+                                height={350}
+                                alt={`Character ${index + 2}`}
+                            />
+                        ))}
                 </div>
                 <div className={styles.choicesOverlay}>
                     <div>
