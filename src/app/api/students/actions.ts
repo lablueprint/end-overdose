@@ -136,3 +136,22 @@ export const getStudent = cache(async (uid: string) => {
         throw new Error('Failed to fetch student.');
     }
 });
+
+// get kibble count from student id
+export const getKibbleFromStudentID = cache(async (id: string) => {
+    try {
+        const q = query(studentsCollection, where('student_id', '==', id)); // Find student from ID
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+            const doc = snapshot.docs[0];
+            const student = doc.data() as Student;
+            return { kibble_count: student.kibble_count };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching student:', error);
+        throw new Error('Failed to fetch student.');
+    }
+});

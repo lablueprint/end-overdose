@@ -8,6 +8,7 @@ export type Student = {
     email?: string;
     school_name: string;
     nameplate: string;
+    kibble_count: number;
     course_completion: {
         opioidCourse: {
             courseProgress: number; // % of lessons completed
@@ -28,6 +29,7 @@ export const StudentJosh: Student = {
     email: 'josh@fusd.net',
     school_name: 'Fremont Unified School District',
     nameplate: 'Josh Doe',
+    kibble_count: 1000,
     course_completion: {
         opioidCourse: {
             courseProgress: 50, // half of lessons completed
