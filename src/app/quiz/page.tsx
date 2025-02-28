@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import './styles.css';
 
 export default function Quiz() {
     return (
