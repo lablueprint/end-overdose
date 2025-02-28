@@ -4,6 +4,8 @@ import { SceneProp } from '@/types/Game';
 import { useState } from 'react';
 
 const ChoicesOverlay = ({ scene }: SceneProp) => {
+    const action = scene.actions[0];
+    const choices = action.choices;
     return (
         <div className={styles.pageContainer}>
             <div className={styles.gameContainer}>
@@ -15,7 +17,7 @@ const ChoicesOverlay = ({ scene }: SceneProp) => {
                         style={{ objectFit: 'cover' }}
                     />
                 </div>
-                <div className={styles.peopleGroup}>
+                <div className={styles.peopleGroup1}>
                     {scene.characters.slice(0, 1).map((character, index) => (
                         <Image
                             key={index}
@@ -26,7 +28,7 @@ const ChoicesOverlay = ({ scene }: SceneProp) => {
                         />
                     ))}
                 </div>
-                <div className={styles.peopleGroup}>
+                <div className={styles.peopleGroup2}>
                     {scene.characters
                         .slice(1) // From the second character onwards until the end
                         .map((character, index) => (
@@ -43,7 +45,7 @@ const ChoicesOverlay = ({ scene }: SceneProp) => {
                     <div>
                         <p className={styles.question}> What would you do?</p>
                         <div className={styles.choices}>
-                            <button className={styles.choiceButton}>
+                            {/* <button className={styles.choiceButton}>
                                 {' '}
                                 Choice 1
                             </button>
@@ -58,7 +60,16 @@ const ChoicesOverlay = ({ scene }: SceneProp) => {
                             <button className={styles.choiceButton}>
                                 {' '}
                                 Choice 4
-                            </button>
+                            </button> */}
+
+                            {choices.map((choice, index) => (
+                                <button
+                                    key={index}
+                                    className={styles.choiceButton}
+                                >
+                                    {choice.text}
+                                </button>
+                            ))}
                         </div>
                     </div>
                 </div>

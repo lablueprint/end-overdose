@@ -12,7 +12,7 @@ const GamePage = () => {
     const scene: Scene | undefined = game.get('startScene');
     return (
         <div className={styles.pageContainer}>
-            {<ChoicesOverlay scene={scene} />}
+            {scene && <ChoicesOverlay scene={scene} />}
         </div>
     );
 };
