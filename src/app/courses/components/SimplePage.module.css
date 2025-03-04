@@ -6,3 +6,18 @@
 .indent {
     margin-left: 40px;
 }
+
+.buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.button {
+    border: 2px solid;
+    width: 10rem; 
+    height: 4rem;
+    margin: 2rem 1.25rem;
+    padding: 0.5rem; 
+    border-radius: 0.75rem;
+}

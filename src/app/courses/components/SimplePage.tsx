@@ -85,7 +85,11 @@ export default function SimplePage({
             </ul>
         );
     };
+
     useEffect(() => {
+        setSecondsViewed(0); // Reset the counter when a new lesson loads
+        setAllowNextPage(false); // Reset the ability to go to the next page
+
         const id = setInterval(() => {
             setSecondsViewed((oldCount) => {
                 if (oldCount < countTo) {
@@ -97,22 +101,27 @@ export default function SimplePage({
                 }
             });
         }, 1000);
+
         return () => clearInterval(id); // Cleanup on component unmount
-    }, []);
+    }, [lesson]); // Re-run effect when the lesson changes
+
     return (
         <div>
             <br />
             <h1 className={styles.title}>{pageTitle}</h1>
-            {/*<button disabled={!allowNextPage} onClick={handleNext}>
-                Next
-            </button>*/}
             <br />
-            {/*<button onClick={handlePrevious}>Previous</button>*/}
-            {/* <p>{pageContent}</p> */}
+            {/* <button onClick={handlePrevious}>Previous</button> */}
+            {/* {/* <p>{pageContent}</p> */}
             {lesson && OpenContent(lesson)}
-            <button disabled={!allowNextPage} onClick={handleNext}>
-                Next Lesson
-            </button>
+            <div className={styles.buttonContainer}>
+                <button
+                    disabled={!allowNextPage}
+                    onClick={handleNext}
+                    className={styles.button}
+                >
+                    Next Lesson
+                </button>
+            </div>
         </div>
     );
 }
