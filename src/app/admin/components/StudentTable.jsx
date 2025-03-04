@@ -28,7 +28,7 @@ export default function StudentTable({ students }) {
                             </td>
                             <td className={styles.tableCell}>
                                 <button className={styles.viewButton}>
-                                    View More Stats
+                                    View Stats
                                 </button>
                             </td>
                         </tr>

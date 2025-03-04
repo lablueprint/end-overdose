@@ -2,6 +2,7 @@
     background-color: white;
     padding: 1.5rem;
     border-radius: 0.5rem;
+    border: 1px solid black;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     flex: 1;
     min-width: 300px;
@@ -27,6 +28,7 @@
   }
   
   .button {
+    transition: transform 0.2s ease-in-out;
     background-color: #1a2942;
     color: white;
     padding: 0.5rem 1rem;
@@ -34,6 +36,10 @@
     display: flex;
     align-items: center;
     font-size: 0.875rem;
+  }
+
+  .button:hover {
+    transform: scale(1.05);
   }
   
   .buttonIcon {

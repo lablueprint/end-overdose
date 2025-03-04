@@ -1,5 +1,6 @@
 .tableContainer {
     overflow-x: auto;
+    border-radius: 0.5rem;
   }
   
   .table {
@@ -30,8 +31,13 @@
   }
   
   .viewButton {
+    transition: transform 0.2s ease-in-out;
     border: 1px solid rgb(209, 213, 219);
     border-radius: 0.375rem;
     padding: 0.25rem 0.75rem;
     font-size: 0.875rem;
+  }
+
+  .viewButton:hover {
+    transform: scale(1.05);
   }
