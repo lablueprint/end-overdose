@@ -4,20 +4,31 @@ import Link from 'next/link';
 import Course from './components/Course';
 import DailyQuest from './components/DailyQuest';
 import { useUserStore } from '@/store/userStore';
+import StoreItem from './components/StoreItem';
+import styles from './page.module.css';
 
 export default function Courses() {
     // Course progress data
+
+    const User = useUserStore((state) => state.user);
+    //check if User is null
     const coursesData = [
-        { title: 'Opioid Overdose', path: 'opioid', progress: 0 },
-        { title: 'Career Training', path: 'career', progress: 40 },
+        {
+            title: 'Opioid Overdose',
+            path: 'opioid',
+            progress: `${User && 'course_completion' in User ? User.course_completion.opioidCourse.courseProgress : 0}`,
+        },
+        {
+            title: 'Career Training',
+            path: 'career',
+            progress: `${User && 'course_completion' in User ? User.course_completion.careerCourse.courseProgress : 0}`,
+        },
+        //hardcoded right now, change later
         { title: 'Mental Health', path: 'mental-health', progress: 25 },
         { title: 'First Aid', path: 'first-aid', progress: 60 },
         // { title: 'Life Skills', path: 'life-skills', progress: 15 },
         // { title: 'Stress Management', path: 'stress', progress: 30 },
     ];
-    const User = useUserStore((state) => state.user);
-    console.log(User?.school_name);
-
     // Daily quest data
     const dailyQuestData = {
         questPath: 'daily-quest-1',
@@ -27,6 +38,19 @@ export default function Courses() {
         totalTasks: 3,
         completedTasks: 1,
     };
+
+    const products = [
+        {
+            name: 'Basketball',
+            price: 57,
+            image: 'normal.jpg',
+        },
+        {
+            name: 'Football',
+            price: 30,
+            image: 'logo.png',
+        },
+    ];
 
     return (
         <div className="flex gap-8">
@@ -49,6 +73,20 @@ export default function Courses() {
                     totalTasks={dailyQuestData.totalTasks}
                     completedTasks={dailyQuestData.completedTasks}
                 />
+            </div>
+            {User && 'kibble_count' in User && (
+                <div>
+                    <h1>{User.kibble_count}</h1>
+                </div>
+            )}
+            <div className={styles.store}>
+                {products.map((product) => (
+                    <StoreItem
+                        name={product.name}
+                        price={product.price}
+                        image={product.image}
+                    />
+                ))}
             </div>
         </div>
     );
