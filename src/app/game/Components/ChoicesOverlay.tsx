@@ -14,10 +14,10 @@ const ChoicesOverlay = ({ scene }: SceneProp) => {
                         src={scene.background}
                         alt="Background"
                         fill
-                        style={{ objectFit: 'cover' }}
+                        className={styles.blurredImage}
                     />
                 </div>
-                <div className={styles.peopleGroup1}>
+                <div className={styles.blurredPeopleGroup1}>
                     {scene.characters.slice(0, 1).map((character, index) => (
                         <Image
                             key={index}
@@ -28,7 +28,7 @@ const ChoicesOverlay = ({ scene }: SceneProp) => {
                         />
                     ))}
                 </div>
-                <div className={styles.peopleGroup2}>
+                <div className={styles.blurredPeopleGroup2}>
                     {scene.characters
                         .slice(1) // From the second character onwards until the end
                         .map((character, index) => (

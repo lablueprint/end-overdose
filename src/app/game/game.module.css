@@ -28,6 +28,11 @@
     z-index: 1;
 }
 
+.blurredBackground {
+    z-index: 1;
+    filter: blur(4px);
+}
+
 .peopleGroup1 {
     display: flex;
     flex-direction: row;
@@ -41,7 +46,35 @@
     left: 20%;
 }
 
+.blurredPeopleGroup1 {
+    filter: blur(4px);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: end;
+    margin-bottom: 20px;
+    z-index: 2;
+    background-color: tomato;
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+}
+
 .peopleGroup2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: end;
+    margin-bottom: 20px;
+    z-index: 2;
+    background-color: tomato;
+    position: absolute;
+    bottom: 0;
+    left: 60%;
+}
+
+.blurredPeopleGroup2 {
+    filter: blur(4px);
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -121,6 +154,7 @@
 
 .blurredImage {
     filter: blur(4px);
+    object-fit: cover;
 }
 
 .choiceButton:hover {
