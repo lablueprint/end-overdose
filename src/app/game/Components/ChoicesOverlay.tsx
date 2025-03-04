@@ -1,11 +1,42 @@
 import Image from 'next/image';
 import styles from '../game.module.css';
 import { SceneProp } from '@/types/Game';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useGameStore } from '@/store/gameStore';
 
 const ChoicesOverlay = ({ scene }: SceneProp) => {
-    const action = scene.actions[0];
-    const choices = action.choices;
+    const [actionIndex, setActionIndex] = useState(0);
+    const [action, setAction] = useState(scene.actions[actionIndex]);
+    const changeScene = useGameStore((state) => state.changeScene);
+    const toggleDialogue = useGameStore((state) => state.toggleDialogue);
+
+    const [incorrect, setIncorrect] = useState(false);
+    const [incorrectChoices, setIncorrectChoices] = useState<number[]>([]);
+
+    useEffect(() => {
+        setAction(scene.actions[actionIndex]);
+    }, [actionIndex, scene.actions]);
+
+    const evalAnswer = (choiceIndex: number) => {
+        // Check if their answer choice was correct
+        if (action.choices[choiceIndex].nextScene === 'Wrong Action') {
+            // if incorrect
+            setIncorrectChoices((prev) => [...prev, choiceIndex]); // Add incorrect choice to the list
+            setIncorrect(true);
+            return;
+        }
+
+        // If answer choice was correct
+        setIncorrectChoices([]);
+        setIncorrect(false);
+        if (actionIndex < scene.actions.length - 1) {
+            setActionIndex(actionIndex + 1);
+        } else {
+            toggleDialogue();
+            changeScene(action.choices[choiceIndex].nextScene);
+        }
+    };
+
     return (
         <div className={styles.pageContainer}>
             <div className={styles.gameContainer}>
@@ -24,7 +55,7 @@ const ChoicesOverlay = ({ scene }: SceneProp) => {
                             src={character.avatar || '/placeholder.svg'}
                             width={130}
                             height={350}
-                            alt={`Character ${index + 1}`}
+                            alt={character.name}
                         />
                     ))}
                 </div>
@@ -37,7 +68,7 @@ const ChoicesOverlay = ({ scene }: SceneProp) => {
                                 src={character.avatar || '/placeholder.svg'}
                                 width={130}
                                 height={350}
-                                alt={`Character ${index + 2}`}
+                                alt={character.name}
                             />
                         ))}
                 </div>
@@ -45,31 +76,29 @@ const ChoicesOverlay = ({ scene }: SceneProp) => {
                     <div>
                         <p className={styles.question}> What would you do?</p>
                         <div className={styles.choices}>
-                            {/* <button className={styles.choiceButton}>
-                                {' '}
-                                Choice 1
-                            </button>
-                            <button className={styles.choiceButton}>
-                                {' '}
-                                Choice 2
-                            </button>
-                            <button className={styles.choiceButton}>
-                                {' '}
-                                Choice 3
-                            </button>
-                            <button className={styles.choiceButton}>
-                                {' '}
-                                Choice 4
-                            </button> */}
-
-                            {choices.map((choice, index) => (
-                                <button
-                                    key={index}
-                                    className={styles.choiceButton}
-                                >
-                                    {choice.text}
-                                </button>
-                            ))}
+                            {action &&
+                                action.choices.map((choice, index) => (
+                                    <button
+                                        key={index}
+                                        className={`${styles.choiceButton} ${
+                                            incorrectChoices.includes(index)
+                                                ? styles.incorrectChoice
+                                                : ''
+                                        }`}
+                                        onClick={() => evalAnswer(index)}
+                                    >
+                                        {choice.text}
+                                    </button>
+                                ))}
+                        </div>
+                        <div className={styles.incorrect}>
+                            {incorrect ? (
+                                <p className={styles.incorrectText}>
+                                    That answer is incorrect
+                                </p>
+                            ) : (
+                                <p></p>
+                            )}
                         </div>
                     </div>
                 </div>

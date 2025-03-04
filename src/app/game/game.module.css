@@ -161,3 +161,18 @@
     background-color: black;
     color: white
 }
+
+.incorrectText {
+    color: red;
+}
+
+.incorrect {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.incorrectChoice {
+    background-color: black;
+    color: white;
+}

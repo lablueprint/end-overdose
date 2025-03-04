@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Scene } from '@/types/Game';
-import { startScene } from '../app/game/data';
+import { startScene, game } from '../app/game/data';
 
 interface GameState {
     //sceneIndex: number;
@@ -14,6 +14,9 @@ interface GameState {
     currScene: Scene;
     inDialogue: boolean;
     chatIndex: number;
+    toggleDialogue: () => void;
+    nextChat: () => void;
+    changeScene: (sceneName: string) => void;
 }
 
 export const useGameStore = create<GameState>((set) => ({
@@ -28,8 +31,8 @@ export const useGameStore = create<GameState>((set) => ({
         set((state) => ({
             chatIndex: state.chatIndex + 1,
         })),
-    changeScene: (scene: Scene) =>
-        set((state) => ({
-            currScene: scene,
+    changeScene: (scene: string) =>
+        set(() => ({
+            currScene: game.get(scene),
         })),
 }));

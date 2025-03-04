@@ -1,7 +1,11 @@
 export type Character = {
     name: string;
     avatar: string;
-    dialogue: Array<string>;
+};
+
+export type Line = {
+    name: string;
+    text: string;
 };
 
 export type Choice = {
@@ -19,6 +23,7 @@ export type Scene = {
     background: string;
     characters: Array<Character>;
     actions: Array<Action>;
+    dialogue: Array<Line>;
 };
 
 export interface SceneProp {
