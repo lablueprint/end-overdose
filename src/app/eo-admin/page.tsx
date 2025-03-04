@@ -1,12 +1,14 @@
 'use client';
-import { getSchoolAdmins } from '../api/admins/actions';
 import StatCard from './components/StatCard';
 import FeatureCard from './components/FeatureCard';
 import SchoolsTable from './components/SchoolsTable';
 import styles from './Dashboard.module.css';
 import { useUserStore } from '@/store/userStore';
 import { useEffect, useState } from 'react';
+
+//Server Actions
 import { getCourseCount } from '../api/admins/actions';
+import { getSchoolAdmins } from '../api/admins/actions';
 import {
     getSchool,
     toggleCourseInclusion,

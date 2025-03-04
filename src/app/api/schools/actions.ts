@@ -15,17 +15,21 @@ import {
     updateDoc,
 } from 'firebase/firestore';
 
+//1. SETUP THE DATABASE CONNECTION
 const db = getFirestore(firebase_app);
 const schoolsCollection = collection(db, 'schools');
 
-// Get the document for a particular school from the database
-// This assumes that school name is unique in the database
+//SERVER ACTIONS DEFINED BELOW
+
+//2. GETTING SCHOOL INFORMATION
+
+//Return a particular school's information
 export const getSchool = cache(async (schoolName: string) => {
     try {
         // Query for specific school by the school name
         const schoolQuery = query(
             schoolsCollection,
-            where('name', '==', schoolName)
+            where('school_name', '==', schoolName)
         );
 
         const snapshot = await getDocs(schoolQuery);
@@ -43,6 +47,7 @@ export const getSchool = cache(async (schoolName: string) => {
     }
 });
 
+//Return the total number of schools
 export const getSchoolCount = cache(async () => {
     try {
         const snapshot = await getDocs(schoolsCollection);
@@ -52,6 +57,26 @@ export const getSchoolCount = cache(async () => {
         throw new Error('Failed to fetch school count.');
     }
 });
+
+//Return information of ALL THE SCHOOLS (Query all the schools if we want total information about all schools)
+//school_id, school_name, school_email, student_count, aggregated student scores
+
+//Return a list of all school names
+export const getAllSchoolsNames = cache(async () => {
+    try {
+        const snapshot = await getDocs(schoolsCollection);
+        const schoolNames = snapshot.docs.map((doc) => {
+            const schoolData = doc.data() as School;
+            return schoolData.school_name;
+        });
+        return schoolNames; // Returns an array of all school names
+    } catch (error) {
+        console.error('Error fetching all schools:', error);
+        throw new Error('Failed to fetch all schools.');
+    }
+});
+
+//EXTRA SERVER ACTIONS DEFINED BELOW
 
 // Update the inclusion of a course for a school in the database
 // If the course is already included, it will be removed
