@@ -12,6 +12,10 @@ import { getStudentCount } from '../api/students/actions';
 import { useState, useEffect } from 'react';
 import { SchoolDocument } from '@/types/School';
 import { getCourseCount } from '../api/admins/actions';
+import StatCard from './components/StatCard';
+import styles from './Dashboard.module.css';
+import StudentTable from './components/StudentTable';
+import FeatureCard from './components/FeatureCard';
 import AuthWrap from '@/components/AuthWrap';
 
 // List of all courses available globally, TODO: Fetch this from the database
@@ -24,6 +28,20 @@ const list_of_all_courses = [
     'COURSE#24680',
 ];
 
+const studentsData = [
+    {
+        id: '001315',
+        name: 'Amy',
+        email: 'Amy@ucla.edu',
+        avgScore: '98%',
+    },
+    {
+        id: '203418',
+        name: 'Bob',
+        email: 'Bob@ucla.edu',
+        avgScore: '89%',
+    },
+];
 // Admin Dashboard Component, currently displays all courses and toggle switches to include/exclude them
 export default function Dashboard() {
     const { user } = useUserStore(); // Current User
@@ -62,7 +80,7 @@ export default function Dashboard() {
         async function fetchCounts() {
             const students = await getStudentCount();
             const schools = await getSchoolCount();
-            if (user) {
+            if (user && user.email) {
                 const courses = await getCourseCount(user.email);
                 setCourseCount(courses);
             }
@@ -74,33 +92,76 @@ export default function Dashboard() {
 
     return (
         <AuthWrap roles={['school_admin', 'eo_admin']}>
-            <h1>Admin Dashboard</h1>
-            {/* Below displays the list of all globally available courses and toggle switches to include/exclude them */}
-            <h2>
-                School count:{' '}
-                {schoolCount !== null ? schoolCount : 'Loading...'}
-            </h2>
-            <h2>
-                Student count:{' '}
-                {studentCount !== null ? studentCount : 'Loading...'}
-            </h2>
-            <h2>
-                Course count:{' '}
-                {courseCount !== null ? courseCount : 'Loading...'}
-            </h2>
-            {included_courses &&
-                list_of_all_courses.map((course_id) => (
-                    <ul key={course_id} className="mb-1">
-                        {course_id}
-                        <Switch
-                            checked={included_courses.includes(course_id)}
-                            onChange={() =>
-                                schoolDoc &&
-                                updateCourseInclusion(schoolDoc.id, course_id)
-                            }
-                        />
-                    </ul>
-                ))}
+            <div className={styles.container}>
+                <div className={styles.welcomeSection}>
+                    <p className={styles.welcomeText}>Welcome Back,</p>
+                    <h1 className={styles.welcomeName}>Mackenzie Smith</h1>
+                </div>
+                <h2 className={styles.dashboardTitle}>School Dashboard</h2>
+                <div className={styles.statsRow}>
+                    <StatCard
+                        icon={
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                                />
+                            </svg>
+                        }
+                        title="Enrolled Students "
+                        value={
+                            studentCount !== null ? studentCount : 'Loading...'
+                        }
+                    />
+                    <StatCard
+                        icon={
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                />
+                            </svg>
+                        }
+                        title="Current Courses"
+                        value={
+                            courseCount !== null ? courseCount : 'Loading...'
+                        }
+                    />
+                </div>
+                <div className={styles.featureCardsRow}>
+                    <FeatureCard
+                        title="Current Courses"
+                        description="Manage your released courses and create new ones"
+                        buttonText="View Courses"
+                        route="/admin/toggle-courses"
+                    />
+                    <FeatureCard
+                        title="Analyze Scores"
+                        description="Track student performance and course scores"
+                        buttonText="View Student Scores"
+                        route="/admin/toggle-courses" // go to same page for now
+                    />
+                </div>
+                {/* School List Section */}
+                <div className={styles.schoolsSection}>
+                    <h2 className={styles.schoolsSectionTitle}>Students</h2>
+                    <StudentTable students={studentsData} />
+                </div>
+            </div>
         </AuthWrap>
     );
 }
