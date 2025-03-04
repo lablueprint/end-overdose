@@ -6,7 +6,29 @@ import VideoPage from './VideoPage';
 interface SimplePageProps {
     pageTitle: string;
     handleNext: () => void;
+    lesson: Lesson;
     //handlePrevious: () => void;
+}
+
+interface Lesson {
+    title: string;
+    content: ContentItem[];
+}
+
+type ContentItem = TextContent | VideoContent;
+
+interface TextContent {
+    text: string;
+    subpoints?: TextContent[];
+}
+
+interface VideoContent {
+    video: {
+        title: string;
+        videoPath: string;
+        startTime: string;
+        endTime: string;
+    };
 }
 
 export default function SimplePage({
@@ -18,24 +40,9 @@ export default function SimplePage({
 }: SimplePageProps) {
     const [secondsViewed, setSecondsViewed] = useState(0);
     const [allowNextPage, setAllowNextPage] = useState(false);
-    const countTo = 10;
+    const countTo = 1; //CHANGE THIS TO WHAT YOU WANT IT TO BE
 
-    console.log('simple page lesson content: ', lesson.content);
-
-    const RenderSubpoints = (point) => {
-        const OpenVideo = (video) => {
-            return (
-                <VideoPage
-                    videoPath={video.videoPath}
-                    startTime={video.startTime}
-                    endTime={video.endTime}
-                    pageTitle={video.pageTitle}
-                    pageContent={video.pageContent}
-                    pageModule={video.pageModule}
-                    pageCourse={video.pageCourse}
-                />
-            );
-        };
+    const RenderSubpoints = (point: TextContent[]) => {
         return (
             <div>
                 {/* {point.video && OpenVideo(point.video)} */}
@@ -51,37 +58,32 @@ export default function SimplePage({
         );
     };
 
-    const OpenContent = (lesson) => {
-        const OpenVideo = (video) => {
+    const OpenContent = (lesson: Lesson) => {
+        const OpenVideo = (video: VideoContent['video']) => {
             return (
                 <VideoPage
                     videoPath={video.videoPath}
                     startTime={video.startTime}
                     endTime={video.endTime}
-                    pageTitle={video.pageTitle}
-                    pageContent={video.pageContent}
-                    pageModule={video.pageModule}
-                    pageCourse={video.pageCourse}
+                    pageTitle={video.title}
                 />
             );
         };
 
         return (
             <ul>
-                {lesson.content.map((item, index) => {
-                    return (
-                        <li key={index}>
-                            {item.video && OpenVideo(item.video)}
-                            {!item.video && <div>● {item.text}</div>}
-                            {item.subpoints && (
-                                <ul>
-                                    {item.subpoints &&
-                                        RenderSubpoints(item.subpoints)}
-                                </ul>
-                            )}
-                        </li>
-                    );
-                })}
+                {lesson.content.map((item, index) => (
+                    <li key={index}>
+                        {'video' in item ? (
+                            OpenVideo(item.video)
+                        ) : (
+                            <div>● {item.text}</div>
+                        )}
+                        {'subpoints' in item && item.subpoints && (
+                            <ul>{RenderSubpoints(item.subpoints)}</ul>
+                        )}
+                    </li>
+                ))}
             </ul>
         );
     };

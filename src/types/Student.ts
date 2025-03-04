@@ -12,6 +12,7 @@ export type Student = {
         opioidCourse: {
             courseProgress: number; // % of lessons completed
             lessonProgress: number; // % of modules completed in the current lesson
+            progress: number;
         };
         careerCourse: {
             courseProgress: number; // % of lessons completed
@@ -32,6 +33,7 @@ export const StudentJosh: Student = {
         opioidCourse: {
             courseProgress: 50, // half of lessons completed
             lessonProgress: 25, // half of modules completed in the current lesson
+            progress: 3,
         },
         careerCourse: {
             courseProgress: 75,

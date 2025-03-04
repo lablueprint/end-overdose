@@ -1,11 +1,24 @@
+'use client';
 import Link from 'next/link';
 import Course from './components/Course';
 import DailyQuest from './components/DailyQuest';
+import { useUserStore } from '@/store/userStore';
 
 export default function Courses() {
     // Course progress data
+    console.log(
+        'PROGRESS: ',
+        useUserStore((state) => state.progress)
+    );
     const coursesData = [
-        { title: 'Opioid Overdose', path: 'opioid', progress: 0 },
+        {
+            title: 'Opioid Overdose',
+            path: 'opioid',
+            progress: (
+                (useUserStore((state) => state.progress) / 6) *
+                100
+            ).toFixed(2),
+        },
         { title: 'Career Training', path: 'career', progress: 40 },
         { title: 'Mental Health', path: 'mental-health', progress: 25 },
         { title: 'First Aid', path: 'first-aid', progress: 60 },

@@ -1,6 +1,4 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import ReactPlayer from 'react-player';
 import { useState, useRef, useEffect } from 'react';
 // function CustomPlayer({ videoPath, setIsCompleted }) {
 //     const videoRef = useRef<ReactPlayer>(null);
@@ -43,7 +41,7 @@ import { useState, useRef, useEffect } from 'react';
 
 declare global {
     interface Window {
-        YT: any;
+        YT: typeof YT;
         onYouTubeIframeAPIReady: () => void;
     }
 }
@@ -57,7 +55,7 @@ const CustomPlayer = ({
     startTime: string;
     endTime: string;
 }) => {
-    const playerRef = useRef(null);
+    const playerRef = useRef<HTMLDivElement | null>(null);
     const [player, setPlayer] = useState<YT.Player | null>(null);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -83,6 +81,7 @@ const CustomPlayer = ({
     };
 
     const initializePlayer = () => {
+        if (!playerRef.current) return;
         const startSeconds = minutesToSeconds(startTime);
         const endSeconds = minutesToSeconds(endTime);
         const totalSeconds = endSeconds - startSeconds;
@@ -106,13 +105,13 @@ const CustomPlayer = ({
             },
             events: {
                 onReady: () => {
-                    newPlayer.seekTo(startSeconds);
+                    newPlayer.seekTo(startSeconds, true);
                     setDuration(totalSeconds);
                     setTotalTime(totalSeconds);
                 },
                 onStateChange: (event: YT.OnStateChangeEvent) => {
                     if (event.data === window.YT.PlayerState.ENDED) {
-                        newPlayer.seekTo(startSeconds);
+                        newPlayer.seekTo(startSeconds, true);
                     }
                 },
             },
@@ -171,37 +170,22 @@ const CustomPlayer = ({
 
 interface videoPageProps {
     pageTitle: string;
-    pageContent: string;
-    pageModule: string; // module name/number
-    pageCourse: string; // course name
     videoPath: string; // URL path for video
     startTime: string;
-    endTime: string;          
+    endTime: string;
 }
 
 export default function VideoPage({
-    pageTitle,
-    pageContent,
-    pageModule,
-    pageCourse,
     videoPath,
     startTime,
     endTime,
+    pageTitle,
 }: videoPageProps) {
-    const router = useRouter();
-    // not sure if this is necessary and/or is good code, lowkey just hardcoding a totalCoursePages for now for a next page link
-    const totalCoursePages = 3;
     const [isCompleted, setIsCompleted] = useState(false);
-    //const handleNext = () => {
-    //if (parseInt(pagePath) + 1 !== totalCoursePages)
-    //router.push(
-    //`/courses/${pageCourse}/${pageModule}/`
-    //);
-    //};
+
     return (
         <div>
             <h1>Page {pageTitle}</h1>
-            <p>{pageContent}</p>
             <div
                 className="video-container"
                 style={{
