@@ -6,8 +6,6 @@ import Switch from '@mui/material/Switch';
 import { getSchool, toggleCourseInclusion } from '@/app/api/schools/actions';
 import { useState, useEffect } from 'react';
 import { SchoolDocument } from '@/types/School';
-import { getCourseCount } from '@/app/api//admins/actions';
-import AuthWrap from '@/components/AuthWrap';
 
 export default function ToggleCoursesPage() {
     const list_of_all_courses = [
