@@ -3,7 +3,7 @@ import Link from 'next/link';
 import styles from '../login.module.css';
 import { useState } from 'react';
 import { useUserStore } from '@/store/userStore';
-import { signIn } from '@/firebase/auth';
+import { signInAdmin } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
 
 const AdminLogin = () => {
@@ -19,7 +19,7 @@ const AdminLogin = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         // sign in the admin
-        const response = await signIn(email, password);
+        const response = await signInAdmin(email, password);
         if (response.result) {
             setSuccess(true);
             setError('');
@@ -30,7 +30,7 @@ const AdminLogin = () => {
             // wait before redirecting to admin dashboard
             setTimeout(() => {
                 router.push('/admin');
-            }, 1000);
+            }, 300);
         } else {
             if (response.error) setError(response.error);
             setSuccess(false);

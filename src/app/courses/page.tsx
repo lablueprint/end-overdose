@@ -12,8 +12,8 @@ export default function Courses() {
         { title: 'Career Training', path: 'career', progress: 40 },
         { title: 'Mental Health', path: 'mental-health', progress: 25 },
         { title: 'First Aid', path: 'first-aid', progress: 60 },
-        { title: 'Life Skills', path: 'life-skills', progress: 15 },
-        { title: 'Stress Management', path: 'stress', progress: 30 },
+        // { title: 'Life Skills', path: 'life-skills', progress: 15 },
+        // { title: 'Stress Management', path: 'stress', progress: 30 },
     ];
     const User = useUserStore((state) => state.user);
     console.log(User?.school_name);

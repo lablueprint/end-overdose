@@ -3,12 +3,9 @@ import Link from 'next/link';
 import styles from '../login.module.css';
 import { useState } from 'react';
 import { WolfPackAlphaUniversity, UCLA, School } from '@/types/School';
-import {
-    validateUserCredentials,
-    getStudentFromID,
-} from '@/app/api/students/actions';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
+import { signInStudent } from '@/firebase/auth';
 
 const StudentLogin = () => {
     const router = useRouter();
@@ -43,34 +40,24 @@ const StudentLogin = () => {
         event.preventDefault();
         // console.log('Logging in as Student:', { schoolId, schoolName });
         //call the firebase sign-in function here
-        const authentication = await validateUserCredentials(
-            //Check if ID and password are inside map of selected school
+        const { result, error } = await signInStudent(
             schoolName,
             schoolId,
             password
         );
-
-        if (authentication) {
-            const student = await getStudentFromID(schoolId);
-            // console.log('student ; ', student);
-            if (student) {
-                setUID(student.student_id); //Set zustand state to hold user if authentication is successful
-                setRole('student');
-                setUser(student);
-                setSuccess(true);
-                setError('');
-                setTimeout(() => {
-                    router.push('/');
-                }, 1000);
-            } else {
-                setError(
-                    'Authentication successful, but unable to find student with that id in the database.'
-                );
-            }
+        // console.log('student ; ', student);
+        if (result && !error) {
+            setUID(result.student.id); // Set zustand state to hold user if authentication is successful
+            setRole('student');
+            setUser(result.student);
+            setSuccess(true);
+            setError('');
+            setTimeout(() => {
+                router.push('/');
+            }, 300);
         } else {
-            setError('Wrong student ID or password.');
-            console.log('User was unable to be authenticated');
-            return;
+            console.log('Error: ', error);
+            setError(error);
         }
     };
 

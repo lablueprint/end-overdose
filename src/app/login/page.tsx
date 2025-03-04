@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import styles from './login.module.css';
 import { useUserStore } from '@/store/userStore';
-import { signIn } from '@/firebase/auth';
+import { signInAdmin, signInStudent } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
@@ -26,11 +26,12 @@ const LoginPage = () => {
                 <Link className={styles.link} href="/login/students">
                     <button className={styles.button}>Student Login</button>
                 </Link>
-                {/* <Link className={styles.link}> */}
+                <br />
                 <button
                     className={styles.button}
                     onClick={async () => {
-                        const response = await signIn(
+                        router.push('/');
+                        const response = await signInAdmin(
                             'asdf@asdf.com',
                             'asdfasdf'
                         );
@@ -39,13 +40,48 @@ const LoginPage = () => {
                             setUser(response.result.admin);
                             setUID(response.result.id);
                             setRole(response.result.admin.role);
-                            router.push('/');
                         }
                     }}
                 >
-                    Automatic Login
+                    Automatic School Admin Login
                 </button>
-                {/* </Link> */}
+                <button
+                    className={styles.button}
+                    onClick={async () => {
+                        router.push('/');
+                        const response = await signInAdmin(
+                            'a@a.com',
+                            'asdfasdf'
+                        );
+                        if (response.result) {
+                            // update global user state
+                            setUser(response.result.admin);
+                            setUID(response.result.id);
+                            setRole(response.result.admin.role);
+                        }
+                    }}
+                >
+                    Automatic EO Admin Login
+                </button>
+                <button
+                    className={styles.button}
+                    onClick={async () => {
+                        router.push('/');
+                        const response = await signInStudent(
+                            'UCLA',
+                            'Gene Block',
+                            'rip'
+                        );
+                        if (response.result) {
+                            // update global user state
+                            setUser(response.result.student);
+                            setUID(response.result.student.id);
+                            setRole('student');
+                        }
+                    }}
+                >
+                    Automatic Student Login
+                </button>
             </div>
         </div>
     );
