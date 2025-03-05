@@ -15,6 +15,9 @@ import {
     updateDoc,
 } from 'firebase/firestore';
 
+//SERVER ACTIONS
+import { getSchoolAverage } from '@/app/api/students/actions';
+
 //1. SETUP THE DATABASE CONNECTION
 const db = getFirestore(firebase_app);
 const schoolsCollection = collection(db, 'schools');
@@ -60,6 +63,46 @@ export const getSchoolCount = cache(async () => {
 
 //Return information of ALL THE SCHOOLS (Query all the schools if we want total information about all schools)
 //school_id, school_name, school_email, student_count, aggregated student scores
+// Enhanced School Information Type
+interface EnhancedSchool extends School {
+    average_score: number | null;
+}
+
+export const getAllSchools = cache(async () => {
+    try {
+        const snapshot = await getDocs(schoolsCollection);
+
+        // Get all schools
+        const schools = snapshot.docs.map((doc) => doc.data() as School);
+
+        // Create an array of promises to get average scores
+        const schoolPromises = schools.map(async (school) => {
+            // Get average score for each school
+            const average_score = await getSchoolAverage(school.school_name);
+            //DEBUG
+            // console.log(
+            //     `School: ${school.school_name}, Avg Score:`,
+            //     average_score
+            // );
+            // Return enhanced school object
+            return {
+                school_id: school.school_id,
+                school_name: school.school_name,
+                school_email: school.school_email || '',
+                student_count: school.student_count,
+                average_score: average_score,
+            } as EnhancedSchool;
+        });
+
+        // Wait for all promises to resolve
+        const enhancedSchools = await Promise.all(schoolPromises);
+
+        return enhancedSchools;
+    } catch (error) {
+        console.error('Error fetching all schools:', error);
+        throw new Error('Failed to fetch all schools.');
+    }
+});
 
 //Return a list of all school names
 export const getAllSchoolsNames = cache(async () => {

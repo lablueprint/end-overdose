@@ -9,57 +9,57 @@ import { useEffect, useState } from 'react';
 //Server Actions
 import { getCourseCount } from '../api/admins/actions';
 import { getSchoolAdmins } from '../api/admins/actions';
-import {
-    getSchool,
-    toggleCourseInclusion,
-    getSchoolCount,
-} from '../api/schools/actions';
+import { getSchoolCount, getAllSchools } from '../api/schools/actions';
 import { getStudentCount } from '../api/students/actions';
 
 export default function AdminDashboard() {
-    const adminsBySchool = getSchoolAdmins();
     const { user } = useUserStore(); // Current User
-
-    // Mock data (replace with actual data from your API)
-    const stats = {
-        enrolledStudents: 988,
-        enrolledSchools: 100,
-        currentCourses: 15,
-    };
-
-    const schoolsData = [
-        {
-            id: '001315',
-            name: 'Fairfax High School',
-            email: 'fairfaxhs@gmail.com',
-            studentCount: 500,
-            avgScore: '98%',
-        },
-        {
-            id: '203418',
-            name: 'Hamilton High School',
-            email: 'hamihs@gmail.com',
-            studentCount: 900,
-            avgScore: '89%',
-        },
-    ];
 
     const [studentCount, setStudentCount] = useState<number | null>(null);
     const [schoolCount, setSchoolCount] = useState<number | null>(null);
     const [courseCount, setCourseCount] = useState<number | null>(null);
+    const [schoolsData, setSchoolsData] = useState<any[]>([]);
+
     useEffect(() => {
-        async function fetchCounts() {
-            const students = await getStudentCount();
-            const schools = await getSchoolCount();
-            if (user && user.email) {
-                const courses = await getCourseCount(user.email);
-                setCourseCount(courses);
+        async function fetchData() {
+            try {
+                // Fetch counts
+                const students = await getStudentCount();
+                const schools = await getSchoolCount();
+
+                // Fetch all schools with their details
+                const allSchools = await getAllSchools();
+
+                // Transform schools data to match the expected format
+                const schoolData = allSchools.map((school) => ({
+                    school_id: school.school_id,
+                    school_name: school.school_name,
+                    school_email: school.school_email || '',
+                    student_count: school.student_count,
+                    average_score:
+                        school.average_score !== null
+                            ? school.average_score
+                            : 'N/A',
+                }));
+                //DEBUG
+                //console.log('Final Schools Data:', schoolData);
+
+                setSchoolsData(schoolData);
+                setStudentCount(students);
+                setSchoolCount(schools);
+
+                // Course count (if user exists)
+                if (user && user.email) {
+                    const courses = await getCourseCount(user.email);
+                    setCourseCount(courses);
+                }
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
             }
-            setStudentCount(students);
-            setSchoolCount(schools);
         }
-        fetchCounts();
-    }, []);
+
+        fetchData();
+    }, [user]);
 
     return (
         <div className={styles.container}>

@@ -71,71 +71,44 @@ export const getStudentFromID = cache(async (id: string) => {
 });
 
 //3. AVERAGING STUDENT SCORES/INFORMATION (Using aggregate function)
-
-//Get average courseScore for each course, for all students of a specific school
-export const getSchoolCourseAverages = cache(async (schoolName: string) => {
+export const getSchoolAverage = cache(async (schoolName: string) => {
     try {
-        // Query to find all students from a specific school
+        // Query students from the specific school
         const q = query(
             studentsCollection,
             where('school_name', '==', schoolName)
         );
         const snapshot = await getDocs(q);
 
+        // If no students found, return null or 0
         if (snapshot.empty) {
-            return { error: 'No students found for this school' };
+            return null;
         }
 
-        // Initialize counters
-        let opioidCourseTotal = 0;
-        let opioidCourseCount = 0;
-        let careerCourseTotal = 0;
-        let careerCourseCount = 0;
+        // Convert snapshot to students array
+        const students = snapshot.docs.map((doc) => doc.data() as Student);
 
-        //NOTE: We should only add them to the average score if they have a above 0 score
-        //
-        // Iterate through students and accumulate scores
-        snapshot.docs.forEach((doc) => {
-            const student = doc.data() as Student;
+        // Calculate average course scores for each student
+        const studentAverages = students.map((student) => {
+            const opioidScore =
+                student.course_completion.opioidCourse.courseScore;
+            const careerScore =
+                student.course_completion.careerCourse.courseScore;
 
-            // Check if the student has completed the opioid course
-            if (
-                student.course_completion?.opioidCourse?.courseScore !==
-                undefined
-            ) {
-                opioidCourseTotal +=
-                    student.course_completion.opioidCourse.courseScore;
-                opioidCourseCount++;
-            }
-
-            // Check if the student has completed the career course
-            if (
-                student.course_completion?.careerCourse?.courseScore !==
-                undefined
-            ) {
-                careerCourseTotal +=
-                    student.course_completion.careerCourse.courseScore;
-                careerCourseCount++;
-            }
+            // Average of two course scores for each student
+            return (opioidScore + careerScore) / 2;
         });
 
-        // Calculate averages
-        const averages = {
-            totalStudents: snapshot.size,
-            opioidCourse:
-                opioidCourseCount > 0
-                    ? opioidCourseTotal / opioidCourseCount
-                    : 0,
-            careerCourse:
-                careerCourseCount > 0
-                    ? careerCourseTotal / careerCourseCount
-                    : 0,
-        };
+        // Calculate the average of student averages
+        const schoolAverage =
+            studentAverages.reduce((sum, score) => sum + score, 0) /
+            studentAverages.length;
 
-        return averages;
+        // Round to two decimal places
+        return Number(schoolAverage.toFixed(2));
     } catch (error) {
-        console.error('Error calculating school course averages:', error);
-        throw new Error('Failed to calculate school course averages.');
+        console.error('Error calculating school average:', error);
+        throw new Error('Failed to calculate school average.');
     }
 });
 

@@ -16,15 +16,21 @@ export default function SchoolsTable({ schools }) {
                 </thead>
                 <tbody>
                     {schools.map((school) => (
-                        <tr key={school.id} className={styles.tableRow}>
-                            <td className={styles.tableCell}>{school.id}</td>
-                            <td className={styles.tableCell}>{school.name}</td>
-                            <td className={styles.tableCell}>{school.email}</td>
+                        <tr key={school.school_id} className={styles.tableRow}>
                             <td className={styles.tableCell}>
-                                {school.studentCount}
+                                {school.school_id}
                             </td>
                             <td className={styles.tableCell}>
-                                {school.avgScore}
+                                {school.school_name}
+                            </td>
+                            <td className={styles.tableCell}>
+                                {school.school_email}
+                            </td>
+                            <td className={styles.tableCell}>
+                                {school.student_count}
+                            </td>
+                            <td className={styles.tableCell}>
+                                {school.average_score}
                             </td>
                             <td className={styles.tableCell}>
                                 <button className={styles.viewButton}>
