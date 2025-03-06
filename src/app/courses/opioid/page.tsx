@@ -8,7 +8,7 @@ import lessons from './lessons';
 import { useRouter, useParams } from 'next/navigation';
 
 export default function OpioidHome() {
-    const [toggle, setToggle] = useState(true);
+    const [toggle, setToggle] = useState(false);
     const [currentLesson, setLesson] = useState(0);
     const handleChangeLesson = (lessonNumber) => {
         setLesson(lessonNumber);
