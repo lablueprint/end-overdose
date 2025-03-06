@@ -6,7 +6,29 @@ import VideoPage from './VideoPage';
 interface SimplePageProps {
     pageTitle: string;
     handleNext: () => void;
+    lesson: Lesson;
     //handlePrevious: () => void;
+}
+
+interface Lesson {
+    title: string;
+    content: ContentItem[];
+}
+
+type ContentItem = TextContent | VideoContent;
+
+interface TextContent {
+    text: string;
+    subpoints?: TextContent[];
+}
+
+interface VideoContent {
+    video: {
+        title: string;
+        videoPath: string;
+        startTime: string;
+        endTime: string;
+    };
 }
 
 export default function SimplePage({
@@ -18,10 +40,9 @@ export default function SimplePage({
 }: SimplePageProps) {
     const [secondsViewed, setSecondsViewed] = useState(0);
     const [allowNextPage, setAllowNextPage] = useState(false);
-    const countTo = 10;
+    const countTo = 1; //CHANGE THIS TO WHAT YOU WANT IT TO BE
 
-
-    const RenderSubpoints = (point) => {
+    const RenderSubpoints = (point: TextContent[]) => {
         return (
             <div>
                 {point.map((subpoint, subIndex) => (
@@ -38,41 +59,40 @@ export default function SimplePage({
         );
     };
 
-    const OpenContent = (lesson) => {
-        const OpenVideo = (video) => {
+    const OpenContent = (lesson: Lesson) => {
+        const OpenVideo = (video: VideoContent['video']) => {
             return (
                 <VideoPage
                     videoPath={video.videoPath}
                     startTime={video.startTime}
                     endTime={video.endTime}
-                    pageTitle={video.pageTitle}
-                    pageContent={video.pageContent}
-                    pageModule={video.pageModule}
-                    pageCourse={video.pageCourse}
+                    pageTitle={video.title}
                 />
             );
         };
   
         return (
             <ul>
-                {lesson.content.map((item, index) => {
-                    return (
-                        <li key={index}>
-                            {item.video && OpenVideo(item.video)}
-                            {!item.video && item.text && <div>● {item.text}</div>}
-                            {item.subpoints && (
-                                <ul>
-                                    {item.subpoints &&
-                                        RenderSubpoints(item.subpoints)}
-                                </ul>
-                            )}
-                        </li>
-                    );
-                })}
+                {lesson.content.map((item, index) => (
+                    <li key={index}>
+                        {'video' in item ? (
+                            OpenVideo(item.video)
+                        ) : (
+                            <div>● {item.text}</div>
+                        )}
+                        {'subpoints' in item && item.subpoints && (
+                            <ul>{RenderSubpoints(item.subpoints)}</ul>
+                        )}
+                    </li>
+                ))}
             </ul>
         );
     };
+
     useEffect(() => {
+        setSecondsViewed(0); // Reset the counter when a new lesson loads
+        setAllowNextPage(false); // Reset the ability to go to the next page
+
         const id = setInterval(() => {
             setSecondsViewed((oldCount) => {
                 if (oldCount < countTo) {
@@ -84,22 +104,27 @@ export default function SimplePage({
                 }
             });
         }, 1000);
+
         return () => clearInterval(id); // Cleanup on component unmount
-    }, []);
+    }, [lesson]); // Re-run effect when the lesson changes
+
     return (
         <div>
             <br />
             <h1 className={styles.title}>{pageTitle}</h1>
-            {/*<button disabled={!allowNextPage} onClick={handleNext}>
-                Next
-            </button>*/}
             <br />
-            {/*<button onClick={handlePrevious}>Previous</button>*/}
-            {/* <p>{pageContent}</p> */}
+            {/* <button onClick={handlePrevious}>Previous</button> */}
+            {/* {/* <p>{pageContent}</p> */}
             {lesson && OpenContent(lesson)}
-            <button disabled={!allowNextPage} onClick={handleNext}>
-                Next Lesson
-            </button>
+            <div className={styles.buttonContainer}>
+                <button
+                    disabled={!allowNextPage}
+                    onClick={handleNext}
+                    className={styles.button}
+                >
+                    Next Lesson
+                </button>
+            </div>
         </div>
     );
 }

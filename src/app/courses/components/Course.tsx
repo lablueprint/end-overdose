@@ -5,7 +5,7 @@ import styles from './courses.module.css';
 interface CourseProps {
     coursePath: string;
     courseTitle: string;
-    courseProgress: number;
+    courseProgress: number | string;
 }
 
 export default function Course({

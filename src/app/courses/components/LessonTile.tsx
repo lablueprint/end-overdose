@@ -21,8 +21,11 @@ export default function LessonTileProps({
     const router = useRouter();
 
     return (
-        <div className={styles.container}>
-            <div onClick={() => onHandleChangeLesson(lessonNumber)}>
+        <div
+            className={styles.container}
+            onClick={() => onHandleChangeLesson(lessonNumber)}
+        >
+            <div>
                 <h4 className={styles.subtitle}>Lesson #{lessonNumber + 1}</h4>
                 <h2 className={styles.title}>{lessonTitle}</h2>
             </div>

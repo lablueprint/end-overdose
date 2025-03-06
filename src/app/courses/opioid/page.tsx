@@ -6,12 +6,18 @@ import SimplePage from '../components/SimplePage';
 import VideoPage from '../components/VideoPage';
 import lessons from './lessons';
 import { useRouter, useParams } from 'next/navigation';
+import { useUserStore } from '@/store/userStore';
 
 export default function OpioidHome() {
-    const [toggle, setToggle] = useState(true);
-    const [currentLesson, setLesson] = useState(0);
-    const handleChangeLesson = (lessonNumber) => {
+    const [toggle, setToggle] = useState(false);
+    const [currentLesson, setLesson] = useState(
+        useUserStore((state) => state.progress) //this makes the user start at the lesson they left off at
+    );
+    const setProgress = useUserStore((state) => state.setProgress);
+
+    const handleChangeLesson = (lessonNumber: number) => {
         setLesson(lessonNumber);
+        setProgress(lessonNumber);
     };
     const handleClick = () => {
         setToggle((prevState) => !prevState);
@@ -43,11 +49,20 @@ export default function OpioidHome() {
     ));
 
     const handleNextLesson = () => {
-        setLesson((prevIndex) => prevIndex + 1);
+        if (currentLesson < 5) {
+            //5 is the # of lessons in opioid course
+            setLesson((prevIndex) => {
+                const nextIndex = prevIndex + 1;
+                setProgress(nextIndex);
+                console.log('Progress updated to:', nextIndex); // Debugging log
+                return nextIndex;
+            });
+        }
     };
 
     return (
         <div style={{ display: 'flex', width: '100%' }}>
+            <div>{useUserStore((state) => state.progress)}</div>
             <h1
                 onClick={handleClick}
                 style={{
@@ -90,23 +105,11 @@ export default function OpioidHome() {
                     padding: '0 10px',
                 }}
             >
-                {lessons[currentLesson].isVideo ? (
-                    <VideoPage
-                        videoPath="https://www.youtube.com/watch?v=o2Tpws5C2Eg"
-                        startTime="00:00"
-                        endTime="05:00"
-                        pageTitle={lessons[currentLesson].title}
-                        pageContent={lessons[currentLesson].content}
-                        pageModule="lesson1" // module name/number
-                        pageCourse="opioid" // course name
-                    />
-                ) : (
-                    <SimplePage
-                        pageTitle={lessons[currentLesson].title}
-                        lesson={lessons[currentLesson]}
-                        handleNext={handleNextLesson}
-                    />
-                )}
+                <SimplePage
+                    pageTitle={lessons[currentLesson].title}
+                    lesson={lessons[currentLesson]}
+                    handleNext={handleNextLesson}
+                />
             </div>
         </div>
     );
