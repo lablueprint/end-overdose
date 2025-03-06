@@ -1,13 +1,7 @@
 'use client';
 import { useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
-export default function VideoPage({
-    videoPath,
-    setIsCompleted,
-}: {
-    videoPath: string;
-    setIsCompleted: (value: boolean) => void;
-}) {
+export default function VideoPage({ videoPath }: { videoPath: string }) {
     const videoRef = useRef<ReactPlayer | null>(null);
     const [thePlayed, setThePlayed] = useState(0);
     const [highestSecond, setHighestSecond] = useState(0);
@@ -35,9 +29,6 @@ export default function VideoPage({
                                         }
                                         return prev;
                                     });
-                                }}
-                                onEnded={() => {
-                                    setIsCompleted(true);
                                 }}
                                 playing={playing}
                                 onPlay={() => {
