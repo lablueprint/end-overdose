@@ -30,6 +30,7 @@ const LoginPage = () => {
                 <button
                     className={styles.button}
                     onClick={async () => {
+                        router.push('/');
                         const response = await signInAdmin(
                             'asdf@asdf.com',
                             'asdfasdf'
@@ -39,15 +40,33 @@ const LoginPage = () => {
                             setUser(response.result.admin);
                             setUID(response.result.id);
                             setRole(response.result.admin.role);
-                            router.push('/');
                         }
                     }}
                 >
-                    Automatic Admin Login
+                    Automatic School Admin Login
                 </button>
                 <button
                     className={styles.button}
                     onClick={async () => {
+                        router.push('/');
+                        const response = await signInAdmin(
+                            'a@a.com',
+                            'asdfasdf'
+                        );
+                        if (response.result) {
+                            // update global user state
+                            setUser(response.result.admin);
+                            setUID(response.result.id);
+                            setRole(response.result.admin.role);
+                        }
+                    }}
+                >
+                    Automatic EO Admin Login
+                </button>
+                <button
+                    className={styles.button}
+                    onClick={async () => {
+                        router.push('/');
                         const response = await signInStudent(
                             'UCLA',
                             'Gene Block',
@@ -58,7 +77,6 @@ const LoginPage = () => {
                             setUser(response.result.student);
                             setUID(response.result.student.id);
                             setRole('student');
-                            router.push('/');
                         }
                     }}
                 >
