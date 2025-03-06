@@ -20,29 +20,16 @@ export default function SimplePage({
     const [allowNextPage, setAllowNextPage] = useState(false);
     const countTo = 10;
 
-    console.log('simple page lesson content: ', lesson.content);
 
     const RenderSubpoints = (point) => {
-        const OpenVideo = (video) => {
-            return (
-                <VideoPage
-                    videoPath={video.videoPath}
-                    startTime={video.startTime}
-                    endTime={video.endTime}
-                    pageTitle={video.pageTitle}
-                    pageContent={video.pageContent}
-                    pageModule={video.pageModule}
-                    pageCourse={video.pageCourse}
-                />
-            );
-        };
         return (
             <div>
-                {/* {point.video && OpenVideo(point.video)} */}
                 {point.map((subpoint, subIndex) => (
                     <li className={styles.indent} key={subIndex}>
-                        {' '}
-                        ● {subpoint.text}{' '}
+                       {subpoint.video && OpenVideo(subpoint.video)}
+                        {!subpoint.video && subpoint.text && (
+                            <div>● {subpoint.text}</div>
+                        )}
                         {subpoint.subpoints &&
                             RenderSubpoints(subpoint.subpoints)}
                     </li>
@@ -65,14 +52,14 @@ export default function SimplePage({
                 />
             );
         };
-
+  
         return (
             <ul>
                 {lesson.content.map((item, index) => {
                     return (
                         <li key={index}>
                             {item.video && OpenVideo(item.video)}
-                            {!item.video && <div>● {item.text}</div>}
+                            {!item.video && item.text && <div>● {item.text}</div>}
                             {item.subpoints && (
                                 <ul>
                                     {item.subpoints &&

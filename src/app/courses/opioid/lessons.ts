@@ -67,7 +67,7 @@ const lessons = [
         content: [
             {
                 video: {
-                    title: 'What Is Naloxone?',
+                    pageTitle: 'What Is Naloxone?',
                     videoPath:
                         'https://youtu.be/dPS-F91Mkg0?si=HWYS1tzyzssmqhwo',
                     startTime: '00:00',
@@ -108,7 +108,7 @@ const lessons = [
         content: [
             {
                 video: {
-                    title: 'Opioid overdose triad',
+                    pageTitle: 'Opioid overdose triad',
                     videoPath: 'https://www.youtube.com/watch?v=pS5UVJ19VX0',
                     startTime: '00:00',
                     endTime: '0:59',
@@ -127,10 +127,6 @@ const lessons = [
                             {
                                 text: 'Unconsciousness or unresponsiveness. The person will be unresponsive to talking or stimulation.',
                                 subpoints: [
-                                    {
-                                        text: '!! megan!! Video: How To Stimulate',
-                                        subpoints: [],
-                                    },
                                     {
                                         text: 'Try talking to the person, if they don’t respond perform a trapezius pinch on the person’s shoulder. This should wake someone up if they are sleeping. If they are unconscious, they will not respond.',
                                         subpoints: [],
@@ -217,7 +213,6 @@ const lessons = [
                 ],
             },
             {
-                text: 'Video: Learn to rescue breathe',
                 subpoints: [
                     {
                         text: 'First, lay the person on their back, then peel back the packages and place the naloxone spray in one nostril. Push the plunger all the way down to administer.',
@@ -277,11 +272,37 @@ const lessons = [
         ],
     },
     {
+        title: 'How To Stimulate',
+        content: [
+            {
+                video: {
+                    pageTitle: 'How To Stimulate',
+                    videoPath: 'https://www.youtube.com/watch?v=uz5si4m44D8',
+                    startTime: '00:00',
+                    endTime: '0:35',
+                },
+            },
+        ],
+    },
+    {
+        title: 'Learn to rescue breathe',
+        content: [
+            {
+                video: {
+                    pageTitle: 'Learn to rescue breathe',
+                    videoPath: 'https://www.youtube.com/watch?v=QxpHP7bHzKc',
+                    startTime: '00:00',
+                    endTime: '1:03',
+                },
+            },
+        ],
+    },
+    {
         title: 'Recap',
         content: [
             {
                 video: {
-                    title: 'Jack Shows How to Respond to an Overdose',
+                    pageTitle: 'Jack Shows How to Respond to an Overdose',
                     videoPath:
                         'https://youtu.be/JKwhqIHMD1E?si=TnOTk5xM-IQrQSr7',
                     startTime: '00:00',

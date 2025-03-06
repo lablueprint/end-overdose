@@ -41,7 +41,6 @@ export default function OpioidHome() {
             ></LessonTile>
         </div>
     ));
-    console.log(lessons[currentLesson]);
 
     const handleNextLesson = () => {
         setLesson((prevIndex) => prevIndex + 1);
