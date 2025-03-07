@@ -22,11 +22,12 @@ export async function handleUserCreation(
             student_id: '',
             quizzes: [],
             nameplate: '',
-            course_completion: {
-                opioidCourse: { courseProgress: 0, lessonProgress: 0 },
-                careerCourse: { courseProgress: 0, lessonProgress: 0 },
-            },
             badges: [],
+            kibble_count: 0,
+            course_completion: {
+                opioidCourse: { courseScore: 0, courseProgress: 0 },
+                careerCourse: { courseScore: 0, courseProgress: 0 },
+            },
         };
         await addStudent(newStudent, uid);
     } else {

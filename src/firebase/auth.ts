@@ -7,12 +7,8 @@ import {
     deleteUser,
 } from 'firebase/auth';
 import { auth } from './clientApp';
-import { addAdmin } from '@/app/api/admins/actions';
-import { addStudent } from '@/app/api/students/actions';
 import { Admin } from '@/types/Admin';
 import { Student } from '@/types/Student';
-import { getAdminFromEmail } from '@/app/api/admins/actions';
-import { getStudent } from '@/app/api/students/actions';
 import { getUserInfo, handleUserCreation } from './auth_helpers';
 
 export async function onAuthStateChanged(cb: NextOrObserver<User>) {

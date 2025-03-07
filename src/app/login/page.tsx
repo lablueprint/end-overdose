@@ -186,7 +186,7 @@ const AdminLogin = () => {
                         router.push('/');
                         const response = await signIn({
                             role: 'Student',
-                            email: 'asdf@asdf.com',
+                            email: 'asdf@asdff.com',
                             password: 'asdfasdf',
                         });
                         if (response.result) {

@@ -4,7 +4,6 @@ import styles from './signup.module.css';
 import { useState } from 'react';
 import { signUp } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
-import { WolfPackAlphaUniversity, UCLA } from '@/types/School';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 type Inputs = {
@@ -26,10 +25,10 @@ const SignUpPage = () => {
         </option>
     ));
 
-    const schools = [WolfPackAlphaUniversity, UCLA];
+    const schools = ['USC', 'UCLA'];
     const schoolValues = schools.map((school) => (
-        <option key={school.name} value={school.name}>
-            {school.name}
+        <option key={school} value={school}>
+            {school}
         </option>
     ));
 

@@ -23,7 +23,6 @@ interface Quiz {
 //1. SET UP THE DATABASE TO BE REFERENCED IN THE API
 const db = getFirestore(firebase_app);
 const studentsCollection = collection(db, 'students');
-const auth = getAuth();
 
 //CREATE SERVER ACTIONS
 
@@ -171,5 +170,33 @@ export async function addQuiz(updateQuizzes: Quiz[]) {
     } catch (error) {
         console.error(error);
         throw new Error('Failed to log in admin.');
+    }
+}
+
+// get student by document id
+export const getStudent = cache(async (uid: string) => {
+    try {
+        const studentDocRef = doc(studentsCollection, uid);
+        const studentDoc = await getDoc(studentDocRef);
+
+        if (studentDoc.exists()) {
+            return { id: studentDoc.id, ...(studentDoc.data() as Student) };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching student:', error);
+        throw new Error('Failed to fetch student.');
+    }
+});
+
+// add a new student to the database
+export async function addStudent(student: Student, docID: string) {
+    try {
+        // add to database
+        await setDoc(doc(studentsCollection, docID), student);
+    } catch (error) {
+        console.error('Error adding admin:', error);
+        throw new Error('Failed to add admin.');
     }
 }
