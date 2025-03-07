@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { Student } from '@/types/Student';
 import { logout } from '@/firebase/auth';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
@@ -48,7 +49,7 @@ export default function NavBar() {
             setTabs([]);
             return;
         }
-        
+
         // Set tabs based on role
         if (role === 'eo_admin') {
             setTabs([

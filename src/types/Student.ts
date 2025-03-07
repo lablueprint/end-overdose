@@ -5,7 +5,7 @@ interface Quiz {
 
 export type Student = {
     student_id: string;
-    email?: string;
+    email: string;
     school_name: string;
     nameplate: string;
     course_completion: {

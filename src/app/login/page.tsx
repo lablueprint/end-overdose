@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import styles from './login.module.css';
 import { useUserStore } from '@/store/userStore';
-import { signInAdmin, signInStudent } from '@/firebase/auth';
+import { signInAdmin, signinStudent } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
