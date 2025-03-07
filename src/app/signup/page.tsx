@@ -25,7 +25,7 @@ const SignUpPage = () => {
         </option>
     ));
 
-    const schools = ['USC', 'UCLA'];
+    const schools = ['UCLA', 'USC', 'UCSD', 'UCI', 'UCB'];
     const schoolValues = schools.map((school) => (
         <option key={school} value={school}>
             {school}
@@ -58,8 +58,7 @@ const SignUpPage = () => {
                         <div className={styles.titleTextContainer}>
                             <h1 className={styles.h1}>Create an Account</h1>
                             <h2 className={styles.h2}>
-                                Enter the following information to setup your
-                                account
+                                We're so glad you could join us!
                             </h2>
                         </div>
                         {error && <p style={{ color: 'red' }}>{error}</p>}

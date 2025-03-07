@@ -82,17 +82,17 @@ export default function NavBar() {
                     icon: <GridViewIcon />,
                 },
                 {
-                    href: '/admin',
+                    href: '/courses',
                     tab: 'Courses',
                     icon: <CollectionsBookmarkIcon />,
                 },
                 {
-                    href: '/admin',
+                    href: '/schools',
                     tab: 'Schools',
                     icon: <SchoolOutlinedIcon />,
                 },
                 {
-                    href: '/admin',
+                    href: '/reports',
                     tab: 'Reports',
                     icon: <QueryStatsIcon />,
                 },

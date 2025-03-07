@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import './styles.css';
 import AuthWrap from '@/components/AuthWrap';
 
 export default function Quiz() {

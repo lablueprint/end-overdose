@@ -1,10 +1,6 @@
 'use server';
 import { addStudent, getStudent } from '@/app/api/students/actions';
-import {
-    addAdmin,
-    getAdmin,
-    getAdminFromEmail,
-} from '@/app/api/admins/actions';
+import { addAdmin, getAdmin } from '@/app/api/admins/actions';
 import { Student } from '@/types/Student';
 import { Admin } from '@/types/Admin';
 

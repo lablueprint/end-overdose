@@ -183,12 +183,12 @@ const AdminLogin = () => {
                 <button
                     className={styles.button}
                     onClick={async () => {
-                        router.push('/');
                         const response = await signIn({
                             role: 'Student',
-                            email: 'asdf@asdff.com',
+                            email: 'hi@test.com',
                             password: 'asdfasdf',
                         });
+                        router.push('/');
                         if (response.result) {
                             // update global user state
                             setUser(response.result.user);
