@@ -20,6 +20,7 @@ import firebase_app from '@/firebase/config';
 
 const db = getFirestore(firebase_app);
 const adminsCollection = collection(db, 'admins');
+const schoolsCollection = collection(db, 'schools');
 
 // get all admins from the database
 export const getAdmins = cache(async () => {
@@ -115,6 +116,21 @@ export const getSchoolAdmins = cache(async () => {
         console.error('Error fetching admin:', error);
         throw new Error('Failed to fetching admin.');
     }
+});
+
+export const getCourseCount = cache(async (email: string) => {
+    const q = query(adminsCollection, where('email', '==', email));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        throw new Error('Admin not found');
+    }
+    const schoolName = snapshot.docs[0].data().school_name;
+    const q2 = query(schoolsCollection, where('name', '==', schoolName));
+    const snapshot2 = await getDocs(q2);
+    if (snapshot2.empty) {
+        throw new Error('School not found');
+    }
+    return snapshot2.docs[0].data().course_ids.length;
 });
 
 // Updates the approval status of the admin user with the given email to the new given approval status
