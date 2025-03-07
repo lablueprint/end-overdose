@@ -2,17 +2,12 @@
 import Link from 'next/link';
 import styles from './signup.module.css';
 import { useState } from 'react';
-import { Admin } from '@/types/Admin';
-import { signUpAdmin, signupStudent } from '@/firebase/auth';
+import { signUp } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
 import { WolfPackAlphaUniversity, UCLA } from '@/types/School';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 type Inputs = {
-    name: {
-        first: string;
-        last: string;
-    };
     role: string;
     email: string;
     password: string;
@@ -41,10 +36,7 @@ const SignUpPage = () => {
     const { register, handleSubmit } = useForm<Inputs>();
 
     const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
-        if (data.role === 'Student') {
-            const response = await signupStudent(data);
-        }
-        const response = await signUpAdmin(data);
+        const response = await signUp(data);
 
         if (response.error) {
             setError(response.error);
@@ -73,9 +65,7 @@ const SignUpPage = () => {
                         </div>
                         {error && <p style={{ color: 'red' }}>{error}</p>}
                         {success && (
-                            <p style={{ color: 'green' }}>
-                                Admin Signup successful!
-                            </p>
+                            <p style={{ color: 'green' }}>Signup successful!</p>
                         )}
                         <div className={styles.formContainer}>
                             <form

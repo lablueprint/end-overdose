@@ -6,6 +6,7 @@ import { Admin } from '@/types/Admin';
 import {
     getFirestore,
     collection,
+    getDoc,
     getDocs,
     doc,
     setDoc,
@@ -168,3 +169,19 @@ export const getAdminFromEmail = cache(async (email: string) => {
         throw new Error('Failed to fetch admins.');
     }
 });
+
+export async function getAdmin(id: string) {
+    try {
+        const adminDocRef = doc(adminsCollection, id);
+        const adminDoc = await getDoc(adminDocRef);
+
+        if (adminDoc.exists()) {
+            return { id: adminDoc.id, ...(adminDoc.data() as Admin) };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        throw new Error('Failed to fetch admin.');
+    }
+}

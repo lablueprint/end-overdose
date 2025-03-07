@@ -1,45 +1,161 @@
 'use client';
 import Link from 'next/link';
 import styles from './login.module.css';
+import { useState } from 'react';
 import { useUserStore } from '@/store/userStore';
-import { signInAdmin, signinStudent } from '@/firebase/auth';
+import { signIn } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
-const LoginPage = () => {
+type Inputs = {
+    role: string;
+    email: string;
+    password: string;
+};
+
+const AdminLogin = () => {
     const router = useRouter();
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState<boolean>(false);
     const setUser = useUserStore((state) => state.setUser);
     const setUID = useUserStore((state) => state.setUID);
     const setRole = useUserStore((state) => state.setRole);
 
+    const roles = ['Student', 'School Admin', 'End Overdose Admin'];
+    const roleValues = roles.map((role) => (
+        <option key={role} value={role}>
+            {role}
+        </option>
+    ));
+
+    const { register, handleSubmit } = useForm<Inputs>();
+    const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
+        const response = await signIn(data);
+        if (response.result) {
+            setSuccess(true);
+            setError('');
+            // update global user state
+            setUser(response.result.user);
+            setUID(response.result.id);
+            if (data.role === 'End Overdose Admin') {
+                setRole('eo_admin');
+            } else if (data.role === 'School Admin') {
+                setRole('school_admin');
+            } else {
+                setRole('student');
+            }
+            // wait before redirecting to admin dashboard
+            setTimeout(() => {
+                router.push('/');
+            }, 300);
+        } else {
+            if (response.error) setError(response.error);
+            setSuccess(false);
+        }
+    };
+
     return (
-        <div className={styles.container}>
-            <div className={styles.card}>
-                <h2>
-                    Don&apos;t have an account?{' '}
-                    <Link className={styles.link} href="/signup">
-                        Sign up
-                    </Link>
-                </h2>
-                <Link className={styles.link} href="/login/admin">
-                    <button className={styles.button}>Admin Login</button>
-                </Link>
-                <Link className={styles.link} href="/login/students">
-                    <button className={styles.button}>Student Login</button>
-                </Link>
-                <br />
+        <div className={styles.splitContainer}>
+            <div className={styles.placeHolderHalf}></div>
+            <div className={styles.loginHalf}>
+                <div className={styles.contentContainer}>
+                    <div className={styles.bodyContainer}>
+                        <div className={styles.titleTextContainer}>
+                            <h1 className={styles.h1}>Login</h1>
+                            <h2 className={styles.h2}>
+                                Login to your account using your email and
+                                password
+                            </h2>
+                        </div>
+                        <div className={styles.formContainer}>
+                            {error && <p style={{ color: 'red' }}>{error}</p>}
+                            {success && (
+                                <p style={{ color: 'green' }}>
+                                    Login successful!
+                                </p>
+                            )}
+                            <form
+                                className={styles.form}
+                                onSubmit={handleSubmit(onSubmit)}
+                            >
+                                <div className={styles.subForm}>
+                                    <label className={styles.h2} htmlFor="role">
+                                        Role
+                                    </label>
+                                    <select
+                                        className={styles.input}
+                                        id="role"
+                                        {...register('role', {
+                                            required: true,
+                                        })}
+                                    >
+                                        {roleValues}
+                                    </select>
+                                </div>
+                                <div className={styles.subForm}>
+                                    <label
+                                        className={styles.h2}
+                                        htmlFor="email"
+                                    >
+                                        Email:
+                                    </label>
+                                    <input
+                                        className={styles.input}
+                                        type="email"
+                                        id="email"
+                                        {...register('email', {
+                                            required: true,
+                                        })}
+                                    />
+                                </div>
+                                <div className={styles.subForm}>
+                                    <label
+                                        className={styles.h2}
+                                        htmlFor="password"
+                                    >
+                                        Password:
+                                    </label>
+                                    <input
+                                        className={styles.input}
+                                        type="password"
+                                        id="password"
+                                        {...register('password', {
+                                            required: true,
+                                        })}
+                                    />
+                                </div>
+                                <button
+                                    className={styles.loginButton}
+                                    type="submit"
+                                >
+                                    Submit
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div className={styles.navigationContainer}>
+                        <h2 className={styles.h2}>
+                            {`Don't have an account?   `}
+                            <Link className={styles.link} href="/signup">
+                                Sign-up
+                            </Link>
+                        </h2>
+                    </div>
+                </div>
                 <button
                     className={styles.button}
                     onClick={async () => {
                         router.push('/');
-                        const response = await signInAdmin(
-                            'asdf@asdf.com',
-                            'asdfasdf'
-                        );
+                        const response = await signIn({
+                            role: 'School Admin',
+                            email: 'asdf@asdf.com',
+                            password: 'asdfasdf',
+                        });
                         if (response.result) {
                             // update global user state
-                            setUser(response.result.admin);
+                            setUser(response.result.user);
                             setUID(response.result.id);
-                            setRole(response.result.admin.role);
+                            setRole('school_admin');
                         }
                     }}
                 >
@@ -49,15 +165,16 @@ const LoginPage = () => {
                     className={styles.button}
                     onClick={async () => {
                         router.push('/');
-                        const response = await signInAdmin(
-                            'a@a.com',
-                            'asdfasdf'
-                        );
+                        const response = await signIn({
+                            role: 'End Overdose Admin',
+                            email: 'asdf@asdf.com',
+                            password: 'asdfasdf',
+                        });
                         if (response.result) {
                             // update global user state
-                            setUser(response.result.admin);
+                            setUser(response.result.user);
                             setUID(response.result.id);
-                            setRole(response.result.admin.role);
+                            setRole('eo_admin');
                         }
                     }}
                 >
@@ -67,15 +184,15 @@ const LoginPage = () => {
                     className={styles.button}
                     onClick={async () => {
                         router.push('/');
-                        const response = await signInStudent(
-                            'UCLA',
-                            'Gene Block',
-                            'rip'
-                        );
+                        const response = await signIn({
+                            role: 'Student',
+                            email: 'asdf@asdf.com',
+                            password: 'asdfasdf',
+                        });
                         if (response.result) {
                             // update global user state
-                            setUser(response.result.student);
-                            setUID(response.result.student.id);
+                            setUser(response.result.user);
+                            setUID(response.result.id);
                             setRole('student');
                         }
                     }}
@@ -87,4 +204,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default AdminLogin;
