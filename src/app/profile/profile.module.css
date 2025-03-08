@@ -126,43 +126,43 @@
 }
 
 .inactiveText {
-    color: gray;
+    color: white;
 }
 
 .profileContainer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     width:100%;
     height: 100%;
 }
 
-.informationContainer {
+.leftSide {
     background-color: black;
-    height:35%;
-    width: 100%;
+    height:100%;
+    width: 70%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding-top: 70px;
     padding-left: 20px;
 }
 
-.achievementsContainer {
-    background-color: #333333;
-    height: 45%;
-    width: 100%;
+.rightSide {
+    background-color: black;
+    height: 100%;
+    width: 30%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding-left: 20px;
 }
 
 .shopContainer {
     background-color: grey;
-    height: 20%;
+    height: 100%;
     width: 100%;
 }
 
 .lhsInfoContainer {
-    background-color: black;
+    background-color: blue;
     height: 100%;
     width: 60%;
 }
@@ -176,16 +176,17 @@
 }
 
 .profilePictureHolder {
-    background-color: lightpink;
     width: 100%;
-    height: 70%;
-    border-radius: 52px;    
+    height: 30%;
+    border-radius: 52px;  
+    position: relative;
+    overflow: hidden;  
 }
 
 .nameContainer {
     background-color: black;
     color: whitesmoke;
-    width: 300px;
+    width: 100%;
     height: 104px;
     margin-top: 20px;
     align-items: center;
@@ -221,8 +222,8 @@
 }
 
 .lhsAchievementsContainer {
-    background-color: coral;
-    height: 100%;
+    background-color: black;
+    height: 30%;
     width: 60%;
 }
 
@@ -248,7 +249,8 @@
     align-items: center;
     border-radius: 30px;
     height: 50%;
-    background-color: blueviolet;
+    background-color: black;
+    margin-top: 20px;
 }
 
 /* */
@@ -265,5 +267,116 @@
     height: 100px;
     border-radius: 50%;
 }
+
+.nameTag {
+    font-size: 44px;
+    font-weight: 700;
+}
+
+.achievementsTag {
+    font-size: 28px;
+    font-weight: 400;
+    color: white;
+}
+
+.colorButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px; /* Square button */
+    height: 40px;
+    background: transparent; /* Fully transparent background */
+    color: white; /* Text color */
+    border-radius: 5px; /* Optional: Slight rounding */
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20; /* Ensure it's above other elements */
+  }
+
+  /*********************************** COLOR PICKER DIALOGUE ***************/ 
+
+  /* Dialog Overlay */
+.dialogContainer {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 50;
+  }
+  
+  /* Dialog Box */
+  .dialog {
+    position: relative;
+    width: 60%;
+    max-width: 500px;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Close Button */
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .closeButton:hover {
+    color: red;
+  }
+  
+  /* Main Content Layout */
+  .dialogContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px;
+  }
+  
+  /* Left Side: Large Color Preview */
+  .colorPreview {
+    width: 150px;
+    height: 150px;
+    border: 2px solid black;
+    border-radius: 10px;
+  }
+  
+  /* Right Side: Color Grid */
+  .colorGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  
+  /* Individual Color Square */
+  .colorSquare {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    transition: transform 0.1s ease-in-out;
+  }
+  
+  .colorSquare:hover {
+    transform: scale(1.1);
+  }
+  
 
 
