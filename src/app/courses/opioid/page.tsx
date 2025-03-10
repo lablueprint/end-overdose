@@ -9,11 +9,38 @@ import styles from './OpioidHome.module.css'; // Import the CSS module
 import { updateCourseProgress } from '@/app/api/students/actions';
 import { getCourseProgress } from '@/app/api/students/actions';
 
+interface Lesson {
+    title: string;
+    content: ContentItem[];
+}
+
+type ContentItem = TextContent | VideoContent;
+
+interface TextContent {
+    text: string;
+    subpoints?: TextContent[];
+    video?: VideoType;
+}
+
+interface VideoContent {
+    video: {
+        title: string;
+        videoPath: string;
+        startTime: string;
+        endTime: string;
+    };
+}
+
+interface VideoType {
+    title: string;
+    videoPath: string;
+    startTime: string;
+    endTime: string;
+}
+
 export default function OpioidHome() {
     const [toggle, setToggle] = useState(false);
-    // const [courseCompleted, setCourseCompleted] = useState(false);
     const user = useUserStore((state) => state.user);
-    // const courseProgress = user ? user.opioidCourse?.courseProgress || 0 : 0;
     const [courseProgress, setCourseProgress] = useState(0);
 
     const totalLessons = lessons.length;
@@ -24,13 +51,6 @@ export default function OpioidHome() {
     const [showExitModal, setShowExitModal] = useState(false);
     const router = useRouter();
 
-    // useEffect(() => {
-    //     if (currentLesson === totalLessons) {
-    //         setCourseCompleted(true);
-    //     } else {
-    //         setCourseCompleted(false);
-    //     }
-    // }, [currentLesson, totalLessons]);
     const fetchOpioidCourseProgress = async () => {
         try {
             if (user) {
@@ -57,18 +77,18 @@ export default function OpioidHome() {
     }, []);
 
     const handleChangeLesson = (lessonNumber: number) => {
-        if (user) {
-            // Safely check if opioidCourse exists before accessing it
-            const updatedOpioidCourse = user.opioidCourse || {
-                courseProgress: 0,
-            };
+        if (user && 'course_completion' in user) {
+            const updatedOpioidCourse = user.course_completion
+                ?.opioidCourse || { courseProgress: 0 };
 
-            // Update the global state only if user exists and opioidCourse is defined
             useUserStore.getState().setUser({
                 ...user,
-                opioidCourse: {
-                    ...updatedOpioidCourse,
-                    courseProgress: (lessonNumber / totalLessons) * 100,
+                course_completion: {
+                    ...user.course_completion,
+                    opioidCourse: {
+                        ...updatedOpioidCourse,
+                        courseProgress: (lessonNumber / totalLessons) * 100,
+                    },
                 },
             });
         }
@@ -92,21 +112,30 @@ export default function OpioidHome() {
     ));
 
     const handleNextLesson = () => {
-        if (currentLesson < totalLessons && user) {
+        if (
+            currentLesson < totalLessons &&
+            user &&
+            'course_completion' in user
+        ) {
             setLesson((prevIndex) => {
                 const nextIndex = prevIndex + 1;
-                const updatedOpioidCourse = user.opioidCourse || {
+                const updatedOpioidCourse = user.course_completion
+                    .opioidCourse || {
                     courseProgress: 0,
                 };
 
                 // Update global state with new course progress
                 useUserStore.getState().setUser({
                     ...user,
-                    opioidCourse: {
-                        ...updatedOpioidCourse,
-                        courseProgress: (nextIndex / totalLessons) * 100,
+                    course_completion: {
+                        ...user.course_completion,
+                        opioidCourse: {
+                            ...updatedOpioidCourse,
+                            courseProgress: (nextIndex / totalLessons) * 100,
+                        },
                     },
                 });
+
                 return nextIndex;
             });
         }
@@ -123,17 +152,20 @@ export default function OpioidHome() {
         console.log('Saving progress:', currentLesson);
 
         // Ensure the user exists and safely access opioidCourse
-        if (user) {
-            const updatedOpioidCourse = user.opioidCourse || {
+        if (user && 'course_completion' in user) {
+            const updatedOpioidCourse = user.course_completion.opioidCourse || {
                 courseProgress: 0,
             };
             const progressPercentage = (currentLesson / totalLessons) * 100;
             // Update the global user state with the current progress
             useUserStore.getState().setUser({
                 ...user,
-                opioidCourse: {
-                    ...updatedOpioidCourse,
-                    courseProgress: progressPercentage, // Save the progress
+                course_completion: {
+                    ...user.course_completion,
+                    opioidCourse: {
+                        ...updatedOpioidCourse,
+                        courseProgress: progressPercentage,
+                    },
                 },
             });
 
@@ -145,13 +177,11 @@ export default function OpioidHome() {
 
     return (
         <div className={styles.container}>
-            <div>{user ? courseProgress : 'Loading...'}</div>
-
+            {/* <div>{user ? courseProgress : 'Loading...'}</div> //for testing */}
             {/* Exit Course Button */}
             <button onClick={handleExitClick} className={styles.exitButton}>
                 Exit Course
             </button>
-
             {/* Confirmation Modal */}
             {showExitModal && (
                 <div className={styles.modalBackground}>

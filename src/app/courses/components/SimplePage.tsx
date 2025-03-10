@@ -9,7 +9,6 @@ interface SimplePageProps {
     handleNext: () => void;
     lesson: Lesson;
     courseCompleted: boolean;
-    //handlePrevious: () => void;
 }
 
 interface Lesson {
@@ -44,8 +43,6 @@ interface VideoType {
 export default function SimplePage({
     pageTitle,
     lesson,
-    //handleNext,
-    //handlePrevious,
     handleNext,
     courseCompleted,
 }: SimplePageProps) {
