@@ -13,7 +13,7 @@ const girl2: Character = {
 
 const line1_1: Line = {
     name: 'Sara',
-    text: 'Hey, I’m Sara. I’m so glad you’re here. I need your help.sdfghjbvcfghjmnbvfghjkmnbvfghjhbvghjuikbgtyuijkhgtyuijbvcfdrtyuijbvfgtyuikjbvfgtyuikjnbghyuikjhgb',
+    text: 'Hey, I’m Sara. I’m so glad you’re here. I need your help.sdfghjbvcfghjmnbvfghjkmnbvfghjhbvghjuikbgtyuijkhgtyuijbvcfdrtyuij',
 };
 
 const line1_2: Line = {
