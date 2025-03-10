@@ -1,7 +1,8 @@
 .container {
     position: relative;
     cursor: pointer;
-    border: 2px solid;
+    background-color: pink;
+    border: 2px solid black;
     width: 22rem; /* equivalent to w-80 */
     height: 6rem; /* equivalent to h-64 */
     margin: 2rem 1.25rem; /* equivalent to m-5 */

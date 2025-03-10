@@ -21,11 +21,9 @@ export default function LessonTileProps({
         router.push(`/courses/${lessonCourse}/${lessonPath}/1`);
     };
     return (
-        <div className={styles.container}>
-            <div onClick={handleClick}>
-                <h4 className={styles.subtitle}>Lesson #{lessonNumber}</h4>
-                <h2 className={styles.title}>{lessonTitle}</h2>
-            </div>
+        <div className={styles.container} onClick={handleClick}>
+            <h4 className={styles.subtitle}>Lesson #{lessonNumber}</h4>
+            <h2 className={styles.title}>{lessonTitle}</h2>
         </div>
     );
 }
