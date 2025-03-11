@@ -201,7 +201,15 @@ export async function addStudent(student: Student, docID: string) {
     }
 }
 
-export async function updateCourseProgress(courseName, progress) {
+interface UpdateCourseProgressResponse {
+    success?: boolean;
+    error?: string;
+}
+
+export async function updateCourseProgress(
+    courseName: string,
+    progress: number
+): Promise<UpdateCourseProgressResponse> {
     try {
         const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); //later, replace userId with the actual user's Id
         const userDoc = await getDoc(userRef);
@@ -222,7 +230,7 @@ export async function updateCourseProgress(courseName, progress) {
 }
 
 // Function to fetch course progress from Firestore
-export async function getCourseProgress(courseName) {
+export async function getCourseProgress(courseName: string) {
     try {
         const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); // Get the user document reference using the user's ID
         const userDoc = await getDoc(userRef);
