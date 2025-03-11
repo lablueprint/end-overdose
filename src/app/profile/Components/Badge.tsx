@@ -31,20 +31,25 @@ import styles from '../profile.module.css';
 interface BadgeProps {
     badgeTitle: string;
     isActive: boolean;
+    disableModal?: boolean;
 }
 
-const Badge = ({ badgeTitle, isActive }: BadgeProps) => {
+const Badge = ({ badgeTitle, isActive, disableModal }: BadgeProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const badgeDescription =
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+
+    const handleClick = () => {
+        if (!disableModal) setIsOpen(true);
+    };
 
     return (
         <div className={styles.badgeContainer}>
             <div
                 className={styles.badgeCircle}
                 style={{ backgroundColor: isActive ? 'gold' : 'grey' }}
-                onClick={() => setIsOpen(true)}
+                onClick={() => handleClick}
             />
             <Dialog
                 open={isOpen}

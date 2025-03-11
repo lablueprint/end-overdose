@@ -1,9 +1,5 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import styles from '../profile.module.css';
-import Badge from './Badge';
-
 /* NO ARGUMENTS
  *
  * Notes
@@ -13,23 +9,14 @@ import Badge from './Badge';
  *  and a list of the earned badges, badgesEarned (str list).
  */
 
-const BadgeTable = () => {
-    const [badgeList, setBadgeList] = useState([
-        //TODO: FETCH FORM DATABASE
-        'Badge 1',
-        'Badge 2',
-        'Badge 3',
-    ]);
+import React from 'react';
+import styles from '../profile.module.css';
+import Badge from './Badge';
 
-    const [badgesEarned, setBadgesEarned] = useState(['Badge 1', 'Badge 3']);
-
-    const listValues = badgeList.map((badge: string) =>
-        badgesEarned.includes(badge) ? (
-            <Badge key={badge} badgeTitle={badge} isActive={true} />
-        ) : (
-            <Badge key={badge} badgeTitle={badge} isActive={false} />
-        )
-    );
+const BadgeTable = ({ selectedBadges }: { selectedBadges: string[] }) => {
+    const listValues = selectedBadges.map((badge: string) => (
+        <Badge key={badge} badgeTitle={badge} isActive={true} />
+    ));
 
     return <div className={styles.badgeTable}>{listValues}</div>;
 };

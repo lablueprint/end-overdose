@@ -12,6 +12,7 @@ import { useUserStore } from '@/store/userStore';
 import { getKibbleFromStudentID } from '@/app/api/students/actions';
 import Image from 'next/image';
 import ColorPickerDialog from './Components/ColorPickerDialogue';
+import BadgeModal from './Components/BadgeModal';
 /*
  * Notes:
  * userRole (string): role of account (student or administrator currently)
@@ -28,6 +29,24 @@ export default function Home() {
     const [selectedColor, setSelectedColor] = useState('#009F5D');
     const [selectedCat, setSelectedCat] = useState('/cat.png');
     const [selectedBackground, setSelectedBackground] = useState('/fish.png');
+
+    const [selectedBadges, setSelectedBadges] = useState([
+        'Badge 1',
+        'Badge 2',
+        'Badge 3',
+    ]);
+    const [badgesEarned, setBadgesEarned] = useState([
+        'Badge 1',
+        'Badge 2',
+        'Badge 3',
+        'Badge 4',
+        'Badge 5',
+        'Badge 6',
+        'Badge 7',
+        'Badge 8',
+        'Badge 9',
+    ]);
+    const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
 
     // const [name, setName] = useState('FirstName LastName');
     const [profileChanged, setProfileChanged] = useState(false);
@@ -134,10 +153,15 @@ export default function Home() {
                     <p className={styles.achievementsTag}>Achievements</p>
                 </div>
                 <div className={styles.lhsAchievementsContainer}>
-                    <BadgeTable />
+                    <BadgeTable selectedBadges={selectedBadges} />
                 </div>
                 <div className={styles.viewButtonContainer}>
-                    <button className={styles.viewButton}> View All </button>
+                    <button
+                        className={styles.viewButton}
+                        onClick={() => setIsBadgeModalOpen(true)}
+                    >
+                        <p className={styles.viewText}> View All </p>
+                    </button>
                 </div>
             </div>
             <div className={styles.rightSide}></div>
@@ -151,6 +175,14 @@ export default function Home() {
                 selectedBackground={selectedBackground}
                 setSelectedBackground={setSelectedBackground}
             />
+            {isBadgeModalOpen && (
+                <BadgeModal
+                    selectedBadges={selectedBadges}
+                    setSelectedBadges={setSelectedBadges}
+                    badgesEarned={badgesEarned}
+                    onClose={() => setIsBadgeModalOpen(false)}
+                />
+            )}
         </div>
     );
 }

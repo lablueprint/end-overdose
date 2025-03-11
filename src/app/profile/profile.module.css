@@ -126,7 +126,7 @@
 }
 
 .inactiveText {
-    color: white;
+    color: #0C1321;
 }
 
 .profileContainer {
@@ -137,7 +137,7 @@
 }
 
 .leftSide {
-    background-color: black;
+    background-color: #F4F4F4;
     height:100%;
     width: 60%;
     display: flex;
@@ -147,9 +147,9 @@
 }
 
 .rightSide {
-    background-color: black;
+    background-color: #F4F4F4;
     height: 100%;
-    width: 30%;
+    width: 40%;
     display: flex;
     flex-direction: column;
     padding-left: 20px;
@@ -168,7 +168,7 @@
 }
 
 .rhsInfoContainer {
-    background-color: black;
+    background-color: #F4F4F4;
     height: 100%;
     width: 40%;
     padding-right: 5px;
@@ -184,7 +184,7 @@
 }
 
 .nameContainer {
-    background-color: black;
+    background-color: #F4F4F4;
     color: whitesmoke;
     width: 100%;
     height: 104px;
@@ -222,7 +222,7 @@
 }
 
 .lhsAchievementsContainer {
-    background-color: black;
+    background-color: #F4F4F4;
     height: 30%;
     width: 60%;
 }
@@ -249,7 +249,7 @@
     align-items: center;
     border-radius: 30px;
     height: 50%;
-    background-color: black;
+    background-color: #F4F4F4;
     margin-top: 20px;
 }
 
@@ -271,12 +271,13 @@
 .nameTag {
     font-size: 44px;
     font-weight: 700;
+    color: #0C1321
 }
 
 .achievementsTag {
     font-size: 28px;
     font-weight: 400;
-    color: white;
+    color: #0C1321;
 }
 
 .colorButton {
@@ -397,8 +398,8 @@
   
 /**********/
   .viewButton {
-    color: white;
-    border: 1px solid white;
+    color: #0C1321;
+    border: 1px solid #0C1321;
     border-radius: 10px;
     padding: 5px;
     width: 100%
@@ -709,6 +710,66 @@
     object-fit: cover; /* Or contain, based on your preference */
     z-index: 1; /* Behind the overlay cat image */
   }
+
+  /************** Baddge Modal ************/
+
+  .badgeDialogOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badgeDialogPanel {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.badgeDialogTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.modalSection {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.modalSubTitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.modalBadgeWrapper {
+    display: inline-block;
+    margin: 0.5rem;
+}
+
+.badgeDialogCloseButton {
+    margin-top: 2rem;
+    padding: 10px 16px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.viewText {
+    color: #0C1321
+}
+
   
   
 
