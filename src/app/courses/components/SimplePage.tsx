@@ -149,9 +149,9 @@ export default function SimplePage({
                 <button
                     disabled={!allowNextPage}
                     onClick={courseCompleted ? handleFinishCourse : handleNext}
-                    className={
-                        courseCompleted ? styles.completeButton : styles.button
-                    }
+                    className={`${styles.button} 
+        ${courseCompleted ? styles.completeButton : ''} 
+        ${allowNextPage ? styles.activeButton : ''}`}
                 >
                     {courseCompleted ? 'Complete Course' : 'Next Lesson'}
                 </button>
