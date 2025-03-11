@@ -25,7 +25,9 @@ export default function Home() {
     const [selectedProfilePicture, setSelectedProfilePicture] = useState(0);
     const [kibbleCount, setKibbleCount] = useState(0);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedColor, setSelectedColor] = useState('#009F5D'); // Default white
+    const [selectedColor, setSelectedColor] = useState('#009F5D');
+    const [selectedCat, setSelectedCat] = useState('/cat.png');
+    const [selectedBackground, setSelectedBackground] = useState('/fish.png');
 
     // const [name, setName] = useState('FirstName LastName');
     const [profileChanged, setProfileChanged] = useState(false);
@@ -103,16 +105,19 @@ export default function Home() {
                     style={{ backgroundColor: selectedColor }}
                 >
                     <Image
-                        src="/fish.png"
-                        alt=""
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        style={{
-                            width: '100%',
-                            height: 'auto',
-                            objectFit: 'contain',
-                        }}
+                        src={selectedBackground}
+                        alt="Background"
+                        fill
+                        className={styles.backgroundImage}
+                    />
+                    <Image
+                        src={selectedCat}
+                        alt="Overlay"
+                        width={100}
+                        height={100}
+                        sizes="(max-width: 768px) 33vw, 100px"
+                        priority
+                        className={styles.overlayImage}
                     />
                     <button
                         className={styles.colorButton}
@@ -131,6 +136,9 @@ export default function Home() {
                 <div className={styles.lhsAchievementsContainer}>
                     <BadgeTable />
                 </div>
+                <div className={styles.viewButtonContainer}>
+                    <button className={styles.viewButton}> View All </button>
+                </div>
             </div>
             <div className={styles.rightSide}></div>
             <ColorPickerDialog
@@ -138,6 +146,10 @@ export default function Home() {
                 setIsOpen={setIsDialogOpen}
                 selectedColor={selectedColor}
                 setSelectedColor={setSelectedColor}
+                selectedCat={selectedCat}
+                setSelectedCat={setSelectedCat}
+                selectedBackground={selectedBackground}
+                setSelectedBackground={setSelectedBackground}
             />
         </div>
     );
