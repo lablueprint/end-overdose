@@ -121,14 +121,32 @@ const lessons = [
                         text: 'The three main signs of an opioid overdose or the “opioid overdose triad” are:',
                         subpoints: [
                             {
-                                text: 'Pinpoint or very small, constricted pupils. The pupils will not respond to light and will remain small whether a light is on or off of them.',
+                                text: '**Pinpoint or very small, constricted pupils.** The pupils will not respond to light and will remain small whether a light is on or off of them.',
                                 subpoints: [],
                             },
                             {
-                                text: 'Unconsciousness or unresponsiveness. The person will be unresponsive to talking or stimulation.',
+                                text: '**Unconsciousness or unresponsiveness.** The person will be unresponsive to talking or stimulation.',
                                 subpoints: [
                                     {
+                                        video: {
+                                            pageTitle: 'How To Simulate',
+                                            videoPath:
+                                                'https://youtu.be/uz5si4m44D8?si=ya4AqILDHKWJbnK60',
+                                            startTime: '00:00',
+                                            endTime: '0:59',
+                                        },
+                                    },
+                                    {
                                         text: 'Try talking to the person, if they don’t respond perform a trapezius pinch on the person’s shoulder. This should wake someone up if they are sleeping. If they are unconscious, they will not respond.',
+                                        subpoints: [],
+                                    },
+                                ],
+                            },
+                            {
+                                text: '**Slowed or stopped breathing.** Normally, adults breathe around 12-20 times per minute, or about 1 time every 5 seconds.',
+                                subpoints: [
+                                    {
+                                        text: 'Get eye level with the person’s chest & place your ear near their nose and mouth. Listen for breath sounds while looking for chest rise and fall. Count their breaths.',
                                         subpoints: [],
                                     },
                                 ],
@@ -203,17 +221,14 @@ const lessons = [
                 text: 'The third step in responding to an opioid overdose is administering naloxone to restore the person’s breathing.',
                 subpoints: [
                     {
-                        text: 'First, lay the person on their back, then peel back the packages and place the naloxone spray in one nostril. Push the plunger all the way down to administer.',
-                        subpoints: [],
+                        video: {
+                            pageTitle: 'Learn to Rescue Breathe',
+                            videoPath:
+                                'https://youtu.be/QxpHP7bHzKc?si=eddrcVqL8PNaWb95',
+                            startTime: '00:00',
+                            endTime: '0:59',
+                        },
                     },
-                    {
-                        text: 'Once you press the plunger, there will be nothing left in the dose.',
-                        subpoints: [],
-                    },
-                ],
-            },
-            {
-                subpoints: [
                     {
                         text: 'First, lay the person on their back, then peel back the packages and place the naloxone spray in one nostril. Push the plunger all the way down to administer.',
                         subpoints: [],
@@ -271,32 +286,32 @@ const lessons = [
             },
         ],
     },
-    {
-        title: 'How To Stimulate',
-        content: [
-            {
-                video: {
-                    pageTitle: 'How To Stimulate',
-                    videoPath: 'https://www.youtube.com/watch?v=uz5si4m44D8',
-                    startTime: '00:00',
-                    endTime: '0:35',
-                },
-            },
-        ],
-    },
-    {
-        title: 'Learn to rescue breathe',
-        content: [
-            {
-                video: {
-                    pageTitle: 'Learn to rescue breathe',
-                    videoPath: 'https://www.youtube.com/watch?v=QxpHP7bHzKc',
-                    startTime: '00:00',
-                    endTime: '1:03',
-                },
-            },
-        ],
-    },
+    // {
+    //     title: 'How To Stimulate',
+    //     content: [
+    //         {
+    //             video: {
+    //                 pageTitle: 'How To Stimulate',
+    //                 videoPath: 'https://www.youtube.com/watch?v=uz5si4m44D8',
+    //                 startTime: '00:00',
+    //                 endTime: '0:35',
+    //             },
+    //         },
+    //     ],
+    // },
+    // {
+    //     title: 'Learn to rescue breathe',
+    //     content: [
+    //         {
+    //             video: {
+    //                 pageTitle: 'Learn to rescue breathe',
+    //                 videoPath: 'https://www.youtube.com/watch?v=QxpHP7bHzKc',
+    //                 startTime: '00:00',
+    //                 endTime: '1:03',
+    //             },
+    //         },
+    //     ],
+    // },
     {
         title: 'Recap',
         content: [

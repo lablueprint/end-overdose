@@ -2,12 +2,13 @@
 import { useState, useEffect } from 'react';
 import styles from './SimplePage.module.css';
 import VideoPage from './VideoPage';
+import { updateCourseProgress } from '@/app/api/students/actions';
 
 interface SimplePageProps {
     pageTitle: string;
     handleNext: () => void;
     lesson: Lesson;
-    //handlePrevious: () => void;
+    courseCompleted: boolean;
 }
 
 interface Lesson {
@@ -20,6 +21,7 @@ type ContentItem = TextContent | VideoContent;
 interface TextContent {
     text: string;
     subpoints?: TextContent[];
+    video?: VideoType;
 }
 
 interface VideoContent {
@@ -31,54 +33,73 @@ interface VideoContent {
     };
 }
 
+interface VideoType {
+    title: string;
+    videoPath: string;
+    startTime: string;
+    endTime: string;
+}
+
 export default function SimplePage({
     pageTitle,
     lesson,
-    //handleNext,
-    //handlePrevious,
     handleNext,
+    courseCompleted,
 }: SimplePageProps) {
     const [secondsViewed, setSecondsViewed] = useState(0);
     const [allowNextPage, setAllowNextPage] = useState(false);
     const countTo = 1; //CHANGE THIS TO WHAT YOU WANT IT TO BE
 
+    const boldText = (text: string) => {
+        if (!text) return null;
+        // Replace **bolded phrases** with <strong>bolded phrases</strong>
+        const parts = text.split(/(\*\*.*?\*\*)/g); // Splits by **text** while keeping separators
+
+        return parts.map((part, index) => {
+            if (part.startsWith('**') && part.endsWith('**')) {
+                return <strong key={index}>{part.slice(2, -2)}</strong>;
+            }
+            return part;
+        });
+    };
+
+    const OpenVideo = (video: VideoContent['video']) => {
+        return (
+            <VideoPage
+                videoPath={video.videoPath}
+                startTime={video.startTime}
+                endTime={video.endTime}
+                pageTitle={video.title}
+            />
+        );
+    };
+
     const RenderSubpoints = (point: TextContent[]) => {
         return (
-            <div>
+            <ul>
                 {point.map((subpoint, subIndex) => (
                     <li className={styles.indent} key={subIndex}>
-                       {subpoint.video && OpenVideo(subpoint.video)}
+                        {subpoint.video && OpenVideo(subpoint.video)}
                         {!subpoint.video && subpoint.text && (
-                            <div>● {subpoint.text}</div>
+                            <div>● {boldText(subpoint.text)}</div>
                         )}
                         {subpoint.subpoints &&
                             RenderSubpoints(subpoint.subpoints)}
                     </li>
                 ))}
-            </div>
+            </ul>
         );
     };
 
     const OpenContent = (lesson: Lesson) => {
-        const OpenVideo = (video: VideoContent['video']) => {
-            return (
-                <VideoPage
-                    videoPath={video.videoPath}
-                    startTime={video.startTime}
-                    endTime={video.endTime}
-                    pageTitle={video.title}
-                />
-            );
-        };
-  
         return (
             <ul>
                 {lesson.content.map((item, index) => (
                     <li key={index}>
-                        {'video' in item ? (
+                        {item.video ? (
                             OpenVideo(item.video)
                         ) : (
-                            <div>● {item.text}</div>
+                            <div>● {boldText((item as TextContent).text)}</div>
                         )}
                         {'subpoints' in item && item.subpoints && (
                             <ul>{RenderSubpoints(item.subpoints)}</ul>
@@ -108,6 +129,14 @@ export default function SimplePage({
         return () => clearInterval(id); // Cleanup on component unmount
     }, [lesson]); // Re-run effect when the lesson changes
 
+    const handleFinishCourse = async () => {
+        if (!courseCompleted) return; // Prevent calling it if course is not yet finished
+
+        // Ensure to update course completion to 100% once finished
+        handleNext();
+        await updateCourseProgress('opioidCourse', 100);
+    };
+
     return (
         <div>
             <br />
@@ -119,10 +148,12 @@ export default function SimplePage({
             <div className={styles.buttonContainer}>
                 <button
                     disabled={!allowNextPage}
-                    onClick={handleNext}
-                    className={styles.button}
+                    onClick={courseCompleted ? handleFinishCourse : handleNext}
+                    className={`${styles.button} 
+        ${courseCompleted ? styles.completeButton : ''} 
+        ${allowNextPage ? styles.activeButton : ''}`}
                 >
-                    Next Lesson
+                    {courseCompleted ? 'Complete Course' : 'Next Lesson'}
                 </button>
             </div>
         </div>

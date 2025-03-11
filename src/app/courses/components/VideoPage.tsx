@@ -1,7 +1,20 @@
 'use client';
 import { useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
-export default function VideoPage({ videoPath }: { videoPath: string }) {
+
+interface VideoPageProps {
+    videoPath: string;
+    startTime?: string; // Make optional if not always needed
+    endTime?: string;
+    pageTitle?: string;
+}
+
+export default function VideoPage({
+    videoPath,
+    startTime,
+    endTime,
+    pageTitle,
+}: VideoPageProps) {
     const videoRef = useRef<ReactPlayer | null>(null);
     const [thePlayed, setThePlayed] = useState(0);
     const [highestSecond, setHighestSecond] = useState(0);
