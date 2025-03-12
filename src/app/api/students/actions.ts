@@ -200,3 +200,57 @@ export async function addStudent(student: Student, docID: string) {
         throw new Error('Failed to add admin.');
     }
 }
+
+interface UpdateCourseProgressResponse {
+    success?: boolean;
+    error?: string;
+}
+
+export async function updateCourseProgress(
+    courseName: string,
+    progress: number
+): Promise<UpdateCourseProgressResponse> {
+    try {
+        const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); //later, replace userId with the actual user's Id
+        const userDoc = await getDoc(userRef);
+
+        if (!userDoc.exists()) {
+            return { error: 'Student document not found' };
+        }
+
+        await updateDoc(userRef, {
+            [`course_completion.${courseName}.courseProgress`]: progress, // Update the courseProgress field
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to update course progress.');
+    }
+}
+
+// Function to fetch course progress from Firestore
+export async function getCourseProgress(courseName: string) {
+    try {
+        const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); // Get the user document reference using the user's ID
+        const userDoc = await getDoc(userRef);
+
+        if (!userDoc.exists()) {
+            return { error: 'Student document not found' };
+        }
+
+        const userData = userDoc.data(); // Get user data from Firestore
+        const courseProgress =
+            userData?.course_completion?.[courseName]?.courseProgress;
+
+        // If course progress exists, return it
+        if (courseProgress !== undefined) {
+            return { progress: courseProgress };
+        } else {
+            return { error: 'Course progress not found for this user' };
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch course progress.');
+    }
+}

@@ -1,0 +1,112 @@
+.container {
+    display: flex;
+    width: 100%;
+}
+
+.exitButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 10px 15px;
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.modalBackground {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.modalButton {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.confirmButton {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.cancelButton {
+    background-color: #d9534f;
+    color: white;
+}
+
+.arrow {
+    position: absolute;
+    left: 32.5rem;
+    top: 0.5rem;
+    font-size: 30px;
+    cursor: pointer;
+    transition: transform 0.5s ease-in-out;
+}
+
+.arrowRotated {
+    transform: translateX(21rem) rotate(180deg);
+}
+
+.navBar {
+    flex: 2.8;
+    overflow-y: auto;
+    max-height: 98vh;
+    transition: flex-grow 0.5s ease-in-out;
+}
+
+.courseTitle {
+    font-weight: 700;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.courseContent {
+    flex: 6;
+    max-height: 98vh;
+    overflow-y: auto;
+    padding: 0 10px;
+}
+
+.courseCompleted {
+    text-align: center;
+    padding: 50px;
+}
+
+.completeButton {
+    padding: 10px 20px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.goToCoursesButton {
+    padding: 10px 20px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
