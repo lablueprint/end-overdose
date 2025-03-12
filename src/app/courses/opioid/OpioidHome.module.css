@@ -4,9 +4,7 @@
 }
 
 .exitButton {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+    float: right;
     padding: 10px 15px;
     background-color: #d9534f;
     color: white;

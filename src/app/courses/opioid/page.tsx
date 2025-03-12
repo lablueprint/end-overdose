@@ -176,72 +176,108 @@ export default function OpioidHome() {
     };
 
     return (
-        <div className={styles.container}>
-            {/* <div>{user ? courseProgress : 'Loading...'}</div> //for testing */}
-            {/* Exit Course Button */}
-            <button onClick={handleExitClick} className={styles.exitButton}>
-                Exit Course
-            </button>
-            {/* Confirmation Modal */}
-            {showExitModal && (
-                <div className={styles.modalBackground}>
-                    <div className={styles.modalContent}>
-                        <h2>Are you sure you want to exit?</h2>
-                        <p>Your progress will be saved.</p>
-                        <button
-                            onClick={confirmExit}
-                            className={
-                                styles.modalButton + ' ' + styles.confirmButton
-                            }
-                        >
-                            Yes
-                        </button>
-                        <button
-                            onClick={() => setShowExitModal(false)}
-                            className={
-                                styles.modalButton + ' ' + styles.cancelButton
-                            }
-                        >
-                            No
-                        </button>
-                    </div>
-                </div>
-            )}
+        <div style={{ display: 'flex', width: '100%' }}>
             <h1
                 onClick={handleClick}
-                className={`${styles.arrow} ${toggle ? styles.arrowRotated : ''}`}
+                style={{
+                    position: 'absolute',
+                    left: '32.5rem',
+                    top: '0.5rem',
+                    fontSize: '30px',
+                    cursor: 'pointer',
+                    rotate: toggle ? '180deg' : '0deg',
+                    transform: `translateX(${toggle ? '21rem' : '0'})`,
+                }}
             >
                 &larr;
             </h1>
-            <div className={styles.navBar}>
-                <h1 onClick={handleClick} className={styles.courseTitle}>
-                    Opioid Lesson
+            <div
+                style={{
+                    flex: toggle ? 0 : 2.8,
+                    overflowY: 'auto',
+                    maxHeight: '98vh',
+                    transition: 'flex-grow 0.5s ease-in-out',
+                }}
+            >
+                <h1
+                    onClick={handleClick}
+                    style={{
+                        fontWeight: '700',
+                        fontSize: '20px',
+                        cursor: 'pointer',
+                    }}
+                >
+                    Opioid Course
                 </h1>
                 {navBarEntries}
             </div>
-            <div className={styles.courseContent}>
-                {currentLesson == totalLessons ? (
-                    <div className={styles.courseCompleted}>
-                        <h1>Good Job!</h1>
-                        <p>
-                            You have successfully completed the{' '}
-                            <strong>Opioid</strong> course!
-                        </p>
-                        <button
-                            onClick={() => router.push('/courses')}
-                            className={styles.goToCoursesButton}
-                        >
-                            Go to Courses
-                        </button>
-                    </div>
-                ) : (
-                    <SimplePage
-                        pageTitle={lessons[currentLesson].title}
-                        lesson={lessonData}
-                        handleNext={handleNextLesson}
-                        courseCompleted={currentLesson === totalLessons - 1}
-                    />
-                )}
+            <div
+                style={{
+                    flex: toggle ? 10 : 6,
+                    maxHeight: '98vh',
+                    overflowY: 'auto',
+                    padding: '0 10px',
+                }}
+            >
+                <div className={styles.courseContent}>
+                    <button
+                        onClick={handleExitClick}
+                        className={styles.exitButton}
+                    >
+                        Exit Course
+                    </button>
+                    {/* Confirmation Modal */}
+                    {showExitModal && (
+                        <div className={styles.modalBackground}>
+                            <div className={styles.modalContent}>
+                                <h2>Are you sure you want to exit?</h2>
+                                <p>Your progress will be saved.</p>
+                                <button
+                                    onClick={confirmExit}
+                                    className={
+                                        styles.modalButton +
+                                        ' ' +
+                                        styles.confirmButton
+                                    }
+                                >
+                                    Yes
+                                </button>
+                                <button
+                                    onClick={() => setShowExitModal(false)}
+                                    className={
+                                        styles.modalButton +
+                                        ' ' +
+                                        styles.cancelButton
+                                    }
+                                >
+                                    No
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                    {currentLesson == totalLessons ? (
+                        <div className={styles.courseCompleted}>
+                            <h1>Good Job!</h1>
+                            <p>
+                                You have successfully completed the{' '}
+                                <strong>Opioid</strong> course!
+                            </p>
+                            <button
+                                onClick={() => router.push('/courses')}
+                                className={styles.goToCoursesButton}
+                            >
+                                Go to Courses
+                            </button>
+                        </div>
+                    ) : (
+                        <SimplePage
+                            pageTitle={lessons[currentLesson].title}
+                            lesson={lessonData}
+                            handleNext={handleNextLesson}
+                            courseCompleted={currentLesson === totalLessons - 1}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );
