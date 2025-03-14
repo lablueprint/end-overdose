@@ -50,8 +50,11 @@
 }
 
 .question-card {
-    border-bottom: 1px solid #ccc;
+    width: 300px;
+    height: 150px;
+    border: 1px solid #ccc;
     padding: 1rem;
+    box-sizing: border-box;
 }
 
 .question-card p {

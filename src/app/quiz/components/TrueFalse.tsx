@@ -68,23 +68,26 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                 <div>
                     {questionIndex + 1 < questions.length && (
                         <div className="tf-question-container under">
-                            <h1 style={{ fontSize: '2rem' }}>
-                                {questions[questionIndex + 1].question}
+                            <h1 className="tf-question-text">
+                                {questions[questionIndex].question}
                             </h1>
-                            <div className="center-content">
-                                <button
-                                    className={`bg-green ${selectedAnswer === false ? 'selected' : ''}`}
+                            <div className="image-container">
+                                <img
+                                    className="left-option-image"
+                                    src={'/true.svg'}
+                                    alt="feedback"
+                                    width={300}
+                                    height={200}
                                     onClick={() => checkAnswer(true)}
-                                >
-                                    True
-                                </button>
-                                or
-                                <button
-                                    className={`bg-red ${selectedAnswer === false ? 'selected' : ''}`}
+                                />
+                                <img
+                                    className="right-option-image"
+                                    src={'/false.svg'}
+                                    alt="feedback"
+                                    width={300}
+                                    height={200}
                                     onClick={() => checkAnswer(false)}
-                                >
-                                    False
-                                </button>
+                                />
                             </div>
                         </div>
                     )}
@@ -102,23 +105,26 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                             }
                             transition={{ duration: 0.5, ease: 'easeOut' }}
                         >
-                            <h1 style={{ fontSize: '2rem' }}>
+                            <h1 className="tf-question-text">
                                 {questions[questionIndex].question}
                             </h1>
-                            <div className="center-content">
-                                <button
-                                    className={`bg-green ${selectedAnswer === false ? 'selected' : ''}`}
+                            <div className="image-container">
+                                <img
+                                    className="left-option-image"
+                                    src={'/true.svg'}
+                                    alt="feedback"
+                                    width={300}
+                                    height={200}
                                     onClick={() => checkAnswer(true)}
-                                >
-                                    True
-                                </button>
-                                or
-                                <button
-                                    className={`bg-red ${selectedAnswer === false ? 'selected' : ''}`}
+                                />
+                                <img
+                                    className="right-option-image"
+                                    src={'/false.svg'}
+                                    alt="feedback"
+                                    width={300}
+                                    height={200}
                                     onClick={() => checkAnswer(false)}
-                                >
-                                    False
-                                </button>
+                                />
                             </div>
                             {resultMessage && <div>{resultMessage}</div>}
                         </motion.div>
@@ -127,7 +133,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                 <div className="image-container">
                     {image && (
                         <img
-                            class="feedback-image"
+                            className="feedback-image"
                             src={image}
                             alt="feedback"
                             width={300}
@@ -138,7 +144,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                 <div className="cat-image-container">
                     {catImage && (
                         <img
-                            class="feedback-image"
+                            className="feedback-image"
                             src={catImage}
                             alt="feedback"
                             width={100}
