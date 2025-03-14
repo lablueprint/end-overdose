@@ -2,15 +2,18 @@ import { create } from 'zustand';
 import { Scene } from '@/types/Game';
 import { startScene, game } from '../app/game/data';
 
+/**
+ * Notes:
+ *
+ * currScene = scene being shown
+ * inDialogue true = in dialogue, false = in action
+ * chatIndex used to progress dialogue and actions.
+ * toggleDialogue() switches from dialogue to action and vice versa
+ * nextChat() progresses along dialogue by one line
+ * changeScene changes currScene to argument.
+ */
+
 interface GameState {
-    //sceneIndex: number;
-    //position: { x: number; y: number };
-    //setScene: (index: number) => void;
-    //nextScene: () => void;
-    // prevScene: () => void;
-    //moveCharacter: (dx: number, dy: number) => void;
-    //sceneNum: number;
-    //
     currScene: Scene;
     inDialogue: boolean;
     chatIndex: number;

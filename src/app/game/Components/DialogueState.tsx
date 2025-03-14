@@ -8,10 +8,6 @@ export default function DialogueState({ scene }: SceneProp) {
     const [dialogueIndex, setDialogueIndex] = useState(0);
     const toggleDialogue = useGameStore((state) => state.toggleDialogue);
 
-    console.log('dialogueIndex: ', dialogueIndex);
-    console.log('dialogue name: ', scene.dialogue[dialogueIndex].name);
-    console.log('dialogue text: ', scene.dialogue[dialogueIndex].text);
-
     const goToNextDialogue = () => {
         if (dialogueIndex < scene.dialogue.length - 1) {
             setDialogueIndex(dialogueIndex + 1);
