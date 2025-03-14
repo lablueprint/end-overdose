@@ -5,6 +5,28 @@ import Badge from './Badge';
 import styles from '../profile.module.css';
 import { useState } from 'react';
 
+/**
+ * Notes:
+ *
+ * Four arugments: selectedBadges, setSelectedBadges, badgesEarned, onClose
+ *
+ * selectedBadges is the current list of badges that is selected. Currently does not have a limit of above 3. It is passed down from parent, but not held in global state.
+ * We should review if this is best pracitce.
+ *
+ * setSelectedBadges is the setter function passed down from useState from the parent
+ *
+ * badgesEarned is all of the badges the user has the choice of choosing.
+ *
+ * onClose is a function on the proper behavior when closing the modal.
+ *
+ * BadgeModal
+ *
+ * TODO:
+ * Lots.
+ *
+ * Interface is ugly. Need to track earned and unearned badges. Selection currently allows you to select more than 3. This is a very quick put together demo, but needs further work.
+ */
+
 interface BadgeModalProps {
     selectedBadges: string[];
     setSelectedBadges: (badges: string[]) => void;

@@ -5,6 +5,20 @@ import styles from '../profile.module.css';
 import { Fragment } from 'react';
 import Image from 'next/image';
 
+/**
+ * Notes:
+ *
+ * Six Arguments: isOpen, setIsOpen, selectedColor, setSelectedColor, selectedBackground, setSelectedBackground, selectedCat, setSelected Cat
+ *
+ * selectedBadges is the current list of badges that is selected. Currently does not have a limit of above 3. It is passed down from parent, but not held in global state.
+ * We should review if this is best pracitce.
+ *
+ * Arguments are self explanatory and all are passed down from parent.
+ *
+ * TODO:
+ * Store changes in database for user reflecting change in background, cat, and color.
+ */
+
 interface ColorPickerDialogProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;

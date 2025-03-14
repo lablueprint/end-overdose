@@ -1,12 +1,10 @@
 'use client';
 
-/* NO ARGUMENTS
+/* ONE ARGUMENT: Selected badges is a list of the names of the badges that you have currently selected
  *
  * Notes
  *
- * Component for holding badges and handling earned/unearned appearance
- * Internally, badgeTable internally holds (and in the future fetches) a list of all available badges called badgeList (str list)
- *  and a list of the earned badges, badgesEarned (str list).
+ * As of 3/13, Badge Table is just used as a convenient group of badges. This component may become useless in future iterations
  */
 
 import React from 'react';

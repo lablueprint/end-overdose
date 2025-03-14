@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import {
     Description,
     Dialog,
@@ -11,7 +10,7 @@ import styles from '../profile.module.css';
 /**
  * Notes:
  *
- * TWO ARGUMENTS: badgetitle, isActive
+ * THREE ARGUMENTS: badgetitle, isActive, disableModal
  *
  *
  * Badge element that table is constructed with
@@ -19,6 +18,8 @@ import styles from '../profile.module.css';
  * isActive represents whether or not the player has the badge.
  * An active badge currently displays as gold with gold text, while an inactive badge is greyed out.
  * The badgeTitle displays below the badge.
+ *
+ * disableModal is for when you do not want the info modal to pop up, such as the badge selection modal in the showcase of profiles. It is a boolean value.
  *
  * Each badge contains a dialog, which is the modal with an explanation of how to get the badge. C
  * urrently the badge description is basic lorem ipsum.
@@ -48,7 +49,7 @@ const Badge = ({ badgeTitle, isActive, disableModal }: BadgeProps) => {
         <div className={styles.badgeContainer}>
             <div
                 className={styles.badgeCircle}
-                style={{ backgroundColor: isActive ? 'gold' : 'grey' }}
+                style={{ backgroundColor: isActive ? 'gold' : 'grey' }} //Changes background color of badge dependent on active state
                 onClick={() => handleClick}
             />
             <Dialog
