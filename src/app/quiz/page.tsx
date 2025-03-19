@@ -14,7 +14,7 @@ export default function Quiz() {
                     <Link href="/quiz/true-false">True/False</Link>
                 </li>
                 <li>
-                    <Link href="/quiz/scenario-game">Scenario Game</Link>
+                    <Link href="/game">Scenario Game</Link>
                 </li>
             </div>
         </AuthWrap>
