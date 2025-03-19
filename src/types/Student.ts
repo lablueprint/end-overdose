@@ -30,7 +30,7 @@ export const StudentJosh: Student = {
     email: 'josh@fusd.net',
     school_name: 'Fremont Unified School District',
     nameplate: 'Josh Doe',
-    kibble_count: 10,
+    kibble_count: 1000,
     course_completion: {
         opioidCourse: {
             courseScore: 50, // half of lessons completed
