@@ -1,8 +1,9 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { Student } from '@/types/Student';
 import { logout } from '@/firebase/auth';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
@@ -25,85 +26,116 @@ export default function NavBar() {
     const role = useUserStore((state) => state.role);
     const setLoading = useUserStore((state) => state.setLoading);
     const [collapsed, setCollapsed] = useState(false);
+    const setUser = useUserStore((state) => state.setUser);
+    const setRole = useUserStore((state) => state.setRole);
+    const setUID = useUserStore((state) => state.setUID);
+    interface Tab {
+        href: string;
+        tab: string;
+        icon: React.JSX.Element;
+    }
+
+    const [tabs, setTabs] = useState<Tab[]>([]);
+    console.log('role:', role);
 
     // Toggle sidebar collapse state
     const toggleSidebar = () => {
         setCollapsed(!collapsed);
     };
 
-    // add any new navigation tabs here
-    const tabs = user
-        ? role === 'eo_admin'
-            ? [
-                  {
-                      href: '/eo-admin',
-                      tab: 'Dashboard',
-                      icon: <GridViewIcon />,
-                  },
-                  {
-                      href: '/eo-admin',
-                      tab: 'Courses',
-                      icon: <CollectionsBookmarkIcon />,
-                  },
-                  {
-                      href: '/eo-admin',
-                      tab: 'Schools',
-                      icon: <SchoolOutlinedIcon />,
-                  },
-                  {
-                      href: '/eo-admin',
-                      tab: 'Reports',
-                      icon: <QueryStatsIcon />,
-                  },
-              ]
-            : role === 'school_admin'
-              ? [
-                    {
-                        href: '/admin',
-                        tab: 'Dashboard',
-                        icon: <GridViewIcon />,
-                    },
-                    {
-                        href: '/admin',
-                        tab: 'Courses',
-                        icon: <CollectionsBookmarkIcon />,
-                    },
-                    {
-                        href: '/admin',
-                        tab: 'Schools',
-                        icon: <SchoolOutlinedIcon />,
-                    },
-                    {
-                        href: '/admin',
-                        tab: 'Reports',
-                        icon: <QueryStatsIcon />,
-                    },
-                ]
-              : role === 'student'
-                ? [
-                      {
-                          href: '/courses',
-                          tab: 'Learn',
-                          icon: <HomeIcon />,
-                      },
-                      {
-                          href: '/profile',
-                          tab: 'Profile',
-                          icon: <PermIdentityIcon />,
-                      },
-                      {
-                          href: '/quiz',
-                          tab: 'Certificates',
-                          icon: <WorkspacePremiumIcon />,
-                      },
-                      {
-                          href: '/notifications',
-                          tab: 'Notifications',
-                          icon: <NotificationsNoneIcon />,
-                      },
-                  ]
-                : []
-        : [];
+    // Reset and set tabs based on user role
+    useEffect(() => {
+        if (!user) {
+            setTabs([]);
+            return;
+        }
+
+        // Set tabs based on role
+        if (role === 'eo_admin') {
+            setTabs([
+                {
+                    href: '/eo-admin',
+                    tab: 'Dashboard',
+                    icon: <GridViewIcon />,
+                },
+                {
+                    href: '/eo-admin',
+                    tab: 'Courses',
+                    icon: <CollectionsBookmarkIcon />,
+                },
+                {
+                    href: '/eo-admin',
+                    tab: 'Schools',
+                    icon: <SchoolOutlinedIcon />,
+                },
+                {
+                    href: '/eo-admin',
+                    tab: 'Reports',
+                    icon: <QueryStatsIcon />,
+                },
+            ]);
+        } else if (role === 'school_admin') {
+            setTabs([
+                {
+                    href: '/admin',
+                    tab: 'Dashboard',
+                    icon: <GridViewIcon />,
+                },
+                {
+                    href: '/courses',
+                    tab: 'Courses',
+                    icon: <CollectionsBookmarkIcon />,
+                },
+                {
+                    href: '/schools',
+                    tab: 'Schools',
+                    icon: <SchoolOutlinedIcon />,
+                },
+                {
+                    href: '/reports',
+                    tab: 'Reports',
+                    icon: <QueryStatsIcon />,
+                },
+            ]);
+        } else if (role === 'student') {
+            setTabs([
+                {
+                    href: '/courses',
+                    tab: 'Learn',
+                    icon: <HomeIcon />,
+                },
+                {
+                    href: '/profile',
+                    tab: 'Profile',
+                    icon: <PermIdentityIcon />,
+                },
+                {
+                    href: '/quiz',
+                    tab: 'Certificates',
+                    icon: <WorkspacePremiumIcon />,
+                },
+                {
+                    href: '/notifications',
+                    tab: 'Notifications',
+                    icon: <NotificationsNoneIcon />,
+                },
+            ]);
+        } else {
+            // Clear tabs for unknown roles
+            setTabs([]);
+        }
+    }, [user, role]);
+
+    // Handle logout
+    const handleLogout = async () => {
+        setLoading(true);
+        setTabs([]);
+        setUser(null);
+        setRole('');
+        setUID('');
+        await logout();
+        router.push('/login');
+    };
 
     return (
         <nav
@@ -142,7 +174,7 @@ export default function NavBar() {
             <ul className="flex-grow flex flex-col space-y-5">
                 {tabs.map(({ href, tab, icon }) => (
                     <li
-                        key={href}
+                        key={`${href}-${tab}`}
                         className={`relative text-lg w-full rounded-md ${
                             path.startsWith(href)
                                 ? 'bg-white text-black'
@@ -184,10 +216,7 @@ export default function NavBar() {
                             <button
                                 className="py-2 px-2 text-white"
                                 title="Logout"
-                                onClick={async () => {
-                                    await logout();
-                                    router.push('/login');
-                                }}
+                                onClick={handleLogout}
                             >
                                 <LogoutIcon />
                             </button>
@@ -198,11 +227,7 @@ export default function NavBar() {
                                 </span>
                                 <button
                                     className="block w-full rounded-md px-4 py-2 text-white text-lg ml-8 text-left"
-                                    onClick={async () => {
-                                        setLoading(true);
-                                        await logout();
-                                        router.push('/login');
-                                    }}
+                                    onClick={handleLogout}
                                 >
                                     Logout
                                 </button>

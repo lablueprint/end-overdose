@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useUserStore } from '@/store/userStore';
 import { getIdToken, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase/clientApp';
-import { getAdminFromEmail } from '@/app/api/admins/actions';
+import { getAdmin } from '@/app/api/admins/actions';
 import { setCookie } from '@/firebase/cookies';
 import { getStudent } from '@/app/api/students/actions';
 
@@ -27,24 +27,27 @@ export default function InitAuthState({
                 const token = await getIdToken(authUser);
                 setCookie('user-token', token);
 
-                const email = authUser.email || '';
-                const isStudent = email.endsWith('@eo-placeholder.com');
-                const user = isStudent
-                    ? await getStudent(authUser.uid)
-                    : await getAdminFromEmail(email);
+                const student = await getStudent(authUser.uid);
 
-                if (user) {
-                    setUser(user);
+                if (student) {
+                    setUser(student);
                     setUID(authUser.uid);
-                    if (!isStudent && 'role' in user) {
-                        setRole(user.role);
-                    } else {
-                        setRole('student');
-                    }
+                    setRole('student');
                 } else {
-                    setUser(null);
-                    setRole('');
-                    setUID('');
+                    const admin = await getAdmin(authUser.uid);
+                    if (admin) {
+                        setUser(admin);
+                        setUID(authUser.uid);
+                        if ('role' in admin) {
+                            setRole(admin.role);
+                        } else {
+                            setRole('');
+                        }
+                    } else {
+                        setUser(null);
+                        setRole('');
+                        setUID('');
+                    }
                 }
             }
             // user is logged out
