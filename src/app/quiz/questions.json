@@ -1,0 +1,17 @@
+[
+    {
+        "question": "How are you?",
+        "answers": ["spectacular", "bad", "good", "ok"],
+        "correctAnswer": 0
+    },
+    {
+        "question": "Best matcha spot?",
+        "answers": ["damo", "stereoscope", "junbi", "community goods"],
+        "correctAnswer": 1
+    },
+    {
+        "question": "What is the best pet?",
+        "answers": ["monkey", "alligator", "dog", "cat"],
+        "correctAnswer": 3
+    }
+]

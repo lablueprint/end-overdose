@@ -1,10 +1,10 @@
 'use client';
 import Link from 'next/link';
-import './styles.css';
+import AuthWrap from '@/components/AuthWrap';
 
 export default function Quiz() {
     return (
-        <>
+        <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
             <div>
                 <h1> Quizzes </h1>
                 <li>
@@ -17,6 +17,6 @@ export default function Quiz() {
                     <Link href="/quiz/scenario-game">Scenario Game</Link>
                 </li>
             </div>
-        </>
+        </AuthWrap>
     );
 }

@@ -1,0 +1,50 @@
+.container {
+    padding: 1.5rem;
+    background-color: rgb(249, 250, 251);
+    min-height: 100vh;
+  }
+  
+  .welcomeSection {
+    margin-bottom: 1.5rem;
+  }
+  
+  .welcomeText {
+    font-size: 0.875rem;
+    color: rgb(107, 114, 128);
+  }
+  
+  .welcomeName {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  
+  .dashboardTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .statsRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .featureCardsRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .schoolsSection {
+    margin-top: 2rem;
+  }
+  
+  .schoolsSectionTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  

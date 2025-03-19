@@ -1,55 +1,22 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import styles from '../profile.module.css';
-import Badge from './Badge';
-
-/* NO ARGUMENTS
+/* ONE ARGUMENT: Selected badges is a list of the names of the badges that you have currently selected
  *
  * Notes
  *
- * Component for holding badges and handling earned/unearned appearance
- * Internally, badgeTable internally holds (and in the future fetches) a list of all available badges called badgeList (str list)
- *  and a list of the earned badges, badgesEarned (str list).
+ * As of 3/13, Badge Table is just used as a convenient group of badges. This component may become useless in future iterations
  */
 
-const BadgeTable = () => {
-    const [badgeList, setBadgeList] = useState([
-        //TODO: FETCH FORM DATABASE
-        'Badge 1',
-        'Badge 2',
-        'Badge 3',
-        'Badge 4',
-        'Badge 5',
-        'Badge 6',
-        'Badge 7',
-        'Badge 8',
-        'Badge 9',
-        'Badge 10',
-    ]);
+import React from 'react';
+import styles from '../profile.module.css';
+import Badge from './Badge';
 
-    const [badgesEarned, setBadgesEarned] = useState([
-        'Badge 1',
-        'Badge 3',
-        'Badge 7',
-        'Badge 9',
-        'Badge 10',
-    ]);
+const BadgeTable = ({ selectedBadges }: { selectedBadges: string[] }) => {
+    const listValues = selectedBadges.map((badge: string) => (
+        <Badge key={badge} badgeTitle={badge} isActive={true} />
+    ));
 
-    const listValues = badgeList.map((badge: string) =>
-        badgesEarned.includes(badge) ? (
-            <Badge key={badge} badgeTitle={badge} isActive={true} />
-        ) : (
-            <Badge key={badge} badgeTitle={badge} isActive={false} />
-        )
-    );
-
-    return (
-        <div className={styles.badgeTableContainer}>
-            <h1 className={styles.badgeHeader}> Badges </h1>
-            <div className={styles.badgeTable}>{listValues}</div>
-        </div>
-    );
+    return <div className={styles.badgeTable}>{listValues}</div>;
 };
 
 export default BadgeTable;

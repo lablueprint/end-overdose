@@ -4,8 +4,9 @@ import React, { useEffect } from 'react';
 import { useUserStore } from '@/store/userStore';
 import { getIdToken, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase/clientApp';
-import { getAdminFromEmail } from '@/app/api/admins/actions';
+import { getAdmin } from '@/app/api/admins/actions';
 import { setCookie } from '@/firebase/cookies';
+import { getStudent } from '@/app/api/students/actions';
 
 export default function InitAuthState({
     children,
@@ -24,19 +25,29 @@ export default function InitAuthState({
             // user is signed in
             if (authUser) {
                 const token = await getIdToken(authUser);
-                // set the user token as a cookie
                 setCookie('user-token', token);
-                // update the global user state
-                if (authUser.email) {
-                    const admin = await getAdminFromEmail(authUser.email);
-                    if (admin) {
-                        setUser(admin.approved ? admin : null);
-                        setRole(admin.role);
-                    }
+
+                const student = await getStudent(authUser.uid);
+
+                if (student) {
+                    setUser(student);
+                    setUID(authUser.uid);
+                    setRole('student');
                 } else {
-                    setUser(null);
-                    setRole('');
-                    setUID('');
+                    const admin = await getAdmin(authUser.uid);
+                    if (admin) {
+                        setUser(admin);
+                        setUID(authUser.uid);
+                        if ('role' in admin) {
+                            setRole(admin.role);
+                        } else {
+                            setRole('');
+                        }
+                    } else {
+                        setUser(null);
+                        setRole('');
+                        setUID('');
+                    }
                 }
             }
             // user is logged out
@@ -50,7 +61,7 @@ export default function InitAuthState({
         });
 
         return () => unsubscribe();
-    }, [setUser, setLoading]);
+    }, [setUser, setLoading, setUID, setRole]);
 
     return <>{children}</>;
 }

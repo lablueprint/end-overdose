@@ -9,8 +9,9 @@
     ],
     "plugins": ["@typescript-eslint", "prettier"],
     "rules": {
-        "prettier/prettier": "error",
-        "@typescript-eslint/no-unused-vars": "warn"
+        "@typescript-eslint/no-unused-vars": "warn",
+        "prettier/prettier": ["error", { "endOfLine": "auto" }]
+
     },
     "env": {
         "browser": true,
