@@ -8,7 +8,7 @@ interface AdminLayoutProps {
 const EOAdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     return (
         <AuthWrap roles={['eo_admin', 'school_admin']}>
-            <div className="courses-layout">{children}</div>
+            <>{children}</>
         </AuthWrap>
     );
 };
