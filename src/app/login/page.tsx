@@ -6,6 +6,7 @@ import { useUserStore } from '@/store/userStore';
 import { signIn } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import Image from 'next/image';
 
 type Inputs = {
     role: string;
@@ -56,7 +57,14 @@ const AdminLogin = () => {
 
     return (
         <div className={styles.splitContainer}>
-            <div className={styles.placeHolderHalf}></div>
+            <div className={styles.placeHolderHalf}>
+                <Image
+                    className={styles.catImage}
+                    src="/space-cat-login.png"
+                    fill
+                    alt=""
+                ></Image>
+            </div>
             <div className={styles.loginHalf}>
                 <div className={styles.contentContainer}>
                     <div className={styles.bodyContainer}>
@@ -79,7 +87,10 @@ const AdminLogin = () => {
                                 onSubmit={handleSubmit(onSubmit)}
                             >
                                 <div className={styles.subForm}>
-                                    <label className={styles.h2} htmlFor="role">
+                                    <label
+                                        className={styles.whiteh2}
+                                        htmlFor="role"
+                                    >
                                         Role
                                     </label>
                                     <select
@@ -94,7 +105,7 @@ const AdminLogin = () => {
                                 </div>
                                 <div className={styles.subForm}>
                                     <label
-                                        className={styles.h2}
+                                        className={styles.whiteh2}
                                         htmlFor="email"
                                     >
                                         Email:
@@ -110,7 +121,7 @@ const AdminLogin = () => {
                                 </div>
                                 <div className={styles.subForm}>
                                     <label
-                                        className={styles.h2}
+                                        className={styles.whiteh2}
                                         htmlFor="password"
                                     >
                                         Password:
@@ -128,7 +139,7 @@ const AdminLogin = () => {
                                     className={styles.loginButton}
                                     type="submit"
                                 >
-                                    Submit
+                                    Sign in
                                 </button>
                             </form>
                         </div>

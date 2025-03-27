@@ -4,13 +4,14 @@
 }
 
 .placeHolderHalf {
-    background-color: lightgrey;
+    background-color: #0C1321;
+    position: relative;
     width: 50%;
     height: 100vh;
 }
 
 .loginHalf {
-    background-color: white;
+    background-color: #0C1321;
     width: 50%;
     height: 100vh;
     display: flex;
@@ -21,18 +22,25 @@
     padding-bottom: 72px;
     padding-left: 93px;
     padding-right: 93px;
+    overflow-y: auto;
 }
 
 .h1 {
     font-size: 32px;
     font-weight: 500;
-    color: #333333;
+    color: white;
 }
 
 .h2 {
     font-size: 16px;
     font-weight: 400;
     color: #666666;
+}
+
+.whiteh2 {
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
 }
 
 .contentContainer {
@@ -53,6 +61,7 @@
     border-width: 1px;
     border-radius: 12px;
     border-color: #666666;
+    background-color: #0C1321;
     opacity: 35%;
     padding: 12px;
 }
@@ -73,8 +82,7 @@
     width: 250px;
     height: 64px;
     border-radius: 10px;
-    opacity: 25%;
-    background-color: #111111;
+    background-color: #FF7B00;
     color: white;
 }
 
@@ -122,4 +130,9 @@
 
 .button:hover {
     background-color: gray;
+}
+
+.catImage {
+    object-fit: cover;
+    object-position: right center;
 }
