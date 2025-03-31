@@ -8,6 +8,10 @@ import { useUserStore } from '@/store/userStore';
 import styles from './OpioidHome.module.css'; // Import the CSS module
 import { updateCourseProgress } from '@/app/api/students/actions';
 import { getCourseProgress } from '@/app/api/students/actions';
+import '@fontsource/roboto-condensed';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 interface Lesson {
     title: string;
@@ -95,18 +99,30 @@ export default function OpioidHome() {
         setLesson(lessonNumber); // Update the local lesson state
     };
 
-    const handleClick = () => {
+    const returnToCourses = () => {
+        router.push('/courses');
+    };
+    const handleToggleNavBarDisplay = () => {
         setToggle((prevState) => !prevState);
     };
 
     const navBarEntries = lessons.map((lesson, index) => (
-        <div key={index}>
+        <div
+            key={index}
+            // onClick={() => {
+            //     setSelectedTile(index);
+            // }}
+            style={{
+                fontFamily: 'Roboto Condensed, sans-serif',
+            }}
+        >
             <LessonTile
                 lessonNumber={index}
                 lessonTitle={lesson.title}
                 lessonPath={'lesson1'}
                 lessonCourse={'opioid'}
                 onHandleChangeLesson={handleChangeLesson}
+                selected={index == currentLesson}
             />
         </div>
     ));
@@ -177,44 +193,116 @@ export default function OpioidHome() {
 
     return (
         <div style={{ display: 'flex', width: '100%' }}>
-            <h1
-                onClick={handleClick}
-                style={{
-                    position: 'absolute',
-                    left: '32.5rem',
-                    top: '0.5rem',
-                    fontSize: '30px',
-                    cursor: 'pointer',
-                    rotate: toggle ? '180deg' : '0deg',
-                    transform: `translateX(${toggle ? '21rem' : '0'})`,
-                }}
-            >
-                &larr;
-            </h1>
             <div
                 style={{
-                    flex: toggle ? 0 : 2.8,
+                    flex: toggle ? 0 : 2.1,
                     overflowY: 'auto',
-                    maxHeight: '98vh',
+                    maxHeight: '100vh',
                     transition: 'flex-grow 0.5s ease-in-out',
+                    backgroundColor: toggle ? 'white' : '#0C1321',
+                    padding: toggle ? '30px' : '60px',
+                    fontFamily: 'Roboto Condensed, sans-serif',
                 }}
             >
-                <h1
-                    onClick={handleClick}
-                    style={{
-                        fontWeight: '700',
-                        fontSize: '20px',
-                        cursor: 'pointer',
-                    }}
-                >
-                    Opioid Course
-                </h1>
-                {navBarEntries}
+                {toggle ? (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            left: '13.5rem',
+                            top: '50%',
+                            transform: 'translateY(-50%)', // Center correction
+                            width: '30px',
+                            height: '49px',
+                            flexShrink: '0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            color: toggle ? 'black' : 'white',
+                        }}
+                    >
+                        <ArrowForwardIosIcon
+                            onClick={handleToggleNavBarDisplay}
+                        ></ArrowForwardIosIcon>
+                    </div>
+                ) : (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            left: '37rem',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '30px',
+                            height: '49px',
+                            flexShrink: '0',
+                            backgroundColor: '#0C1321',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            color: toggle ? 'black' : 'white',
+                        }}
+                    >
+                        <ArrowBackIosIcon
+                            onClick={handleToggleNavBarDisplay}
+                        ></ArrowBackIosIcon>
+                    </div>
+                )}
+                {!toggle ? (
+                    <div>
+
+                        <h1
+                            onClick={returnToCourses}
+                            style={{
+                                fontWeight: '400',
+                                fontSize: '15px',
+                                cursor: 'pointer',
+                                color: 'white',
+                                fontFamily: 'Roboto Condensed, sans-serif',
+                                lineHeight: 'normal',
+                            }}
+                        >
+                            <ArrowBackIcon></ArrowBackIcon>
+                            Back to Courses
+                            <br />
+                            <br />
+                        </h1>
+                        <h1
+                            style={{
+                                fontWeight: '300',
+                                fontSize: '18px',
+                                cursor: 'pointer',
+                                color: 'white',
+                                fontFamily: 'Roboto Condensed, sans-serif',
+                            }}
+                        >
+                            Course Name
+                        </h1>
+                        <h1
+                            style={{
+                                fontWeight: '600',
+                                fontSize: '18px',
+                                cursor: 'pointer',
+                                letterSpacing: '0.72px',
+                                color: 'white',
+                                fontFamily: 'Roboto Condensed, sans-serif',
+                            }}
+                        >
+                            Opioid Course 
+                        </h1>
+                        <br />
+
+                        {navBarEntries}
+                    </div>
+                ) : (
+                    ''
+                )}
             </div>
             <div
                 style={{
                     flex: toggle ? 10 : 6,
-                    maxHeight: '98vh',
+                    height: '100vh', //help
                     overflowY: 'auto',
                     padding: '0 10px',
                 }}
