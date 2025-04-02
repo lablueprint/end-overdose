@@ -7,8 +7,16 @@ import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import styles from './OpioidHome.module.css'; // Import the CSS module
 import { updateCourseProgress } from '@/app/api/students/actions';
-import { getCourseProgress } from '@/app/api/students/actions';
 import '@fontsource/roboto-condensed';
+import '@fontsource/roboto-condensed/300.css';
+import '@fontsource/roboto-condensed/400.css';
+import '@fontsource/roboto-condensed/500.css';
+import '@fontsource/roboto-condensed/600.css';
+import '@fontsource/roboto-condensed/700.css';
+
+import { getCourseProgress } from '@/app/api/students/actions';
+
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -109,9 +117,6 @@ export default function OpioidHome() {
     const navBarEntries = lessons.map((lesson, index) => (
         <div
             key={index}
-            // onClick={() => {
-            //     setSelectedTile(index);
-            // }}
             style={{
                 fontFamily: 'Roboto Condensed, sans-serif',
             }}
@@ -281,7 +286,7 @@ export default function OpioidHome() {
                         </h1>
                         <h1
                             style={{
-                                fontWeight: '600',
+                                fontWeight: '500',
                                 fontSize: '18px',
                                 cursor: 'pointer',
                                 letterSpacing: '0.72px',

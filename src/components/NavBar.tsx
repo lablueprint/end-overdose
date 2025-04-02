@@ -19,6 +19,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
+
+
+
 export default function NavBar() {
     const router = useRouter();
     const path = usePathname();
@@ -136,7 +139,9 @@ export default function NavBar() {
         await logout();
         router.push('/login');
     };
+    const hideNavBar = path.startsWith('/courses/') && path !== '/courses';
 
+    if (hideNavBar) return null;
     return (
         <nav
             className={`bg-black p-4 shadow-md h-full flex flex-col transition-all duration-300 ${collapsed ? 'w-16' : 'w-55'}`}
@@ -147,6 +152,7 @@ export default function NavBar() {
                         collapsed ? 'w-full flex justify-center' : 'mr-4'
                     }
                 >
+                     <p>{path}</p>;
                     <button
                         onClick={toggleSidebar}
                         className={`text-white p-1 rounded hover:bg-gray-800 ${collapsed ? 'mx-auto mt-4' : ''}`}

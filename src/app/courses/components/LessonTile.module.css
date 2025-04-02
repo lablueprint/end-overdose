@@ -21,7 +21,7 @@
 
 .title {
     line-height: 2rem; /* equivalent to leading-8 */
-    font-weight: bold; /* equivalent to font-bold */
+    font-weight: 500; /* equivalent to font-bold */
     font-size: 20px;
 }
 .subtitle {
