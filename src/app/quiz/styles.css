@@ -175,8 +175,11 @@
     color: white;
     font-size: 1rem;
     font-weight: normal;
-    width: 500px;  /* Fixed width */
-    height: 300px; /* Fixed height */
+    width: 60vh; 
+    max-width: 600px;
+    min-width: 300px;
+    height: 50vh;
+    min-height: 300px;
     margin: auto;
     padding: 50px 100px;
 }
@@ -225,3 +228,32 @@ button:disabled {
     color: black;
     padding: 5px 30px;
 }
+
+.correct-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-color: rgba(142, 182, 121, 0.33);
+    text-align: center;
+    border-top: 5px solid #2E7707;
+  }
+
+.incorrect-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-color: rgba(207, 123, 123, 0.33);
+    text-align: center;
+    border-top: 5px solid #9A5252;
+  }
+
+  .feedback-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 20px;
+    color: black;
+  }

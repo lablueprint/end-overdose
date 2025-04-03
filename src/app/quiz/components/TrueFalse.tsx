@@ -4,6 +4,7 @@ import '../styles.css';
 import trueFalseQuestions from '../true-false/questions';
 import Image from 'next/image';
 import { motion } from 'motion/react';
+import TrueFalseFeedback from './TrueFalseFeedback';
 
 interface TrueFalseProps {
     title: string;
@@ -32,12 +33,12 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
 
         if (isCorrect) {
             setNumCorrect(numCorrect + 1);
-            setResultMessage('Correct!');
+            setResultMessage('correct');
             setAnimationProps({ x: 150, y: 50, rotate: 15, opacity: 0 });
             setImage('/CheckLogo.png');
             setCatImage('/happyNarcat.png');
         } else {
-            setResultMessage('Incorrect!');
+            setResultMessage('incorrect');
             setAnimationProps({ x: -150, y: 50, rotate: -15, opacity: 0 });
             setImage('/XLogo.png');
             setCatImage('/sadNarcat.png');
@@ -49,6 +50,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
             setHideCard(true);
             setImage(null);
             setCatImage(null);
+            setSelectedAnswer(null);
             setTimeout(() => {
                 setHideCard(false);
                 if (questionIndex < questions.length - 1) {
@@ -123,14 +125,18 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                                     alt="feedback"
                                     width={300}
                                     height={200}
-                                    onClick={() => checkAnswer(false)}
+                                    onClick={() => checkAnswer(false)} // issue with false
                                 />
                             </div>
-                            {resultMessage && <div>{resultMessage}</div>}
+                            {selectedAnswer !== null && (
+                                <TrueFalseFeedback
+                                    answer={resultMessage === 'correct'}
+                                />
+                            )}
                         </motion.div>
                     )}
                 </div>
-                <div className="image-container">
+                {/* <div className="image-container">
                     {image && (
                         <img
                             className="feedback-image"
@@ -151,7 +157,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                             height={100}
                         />
                     )}
-                </div>
+                </div> */}
             </div>
         );
     } else if (completed) {
