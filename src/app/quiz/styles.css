@@ -9,29 +9,33 @@
     padding: 20px;
     font-size: 1.5rem;
     font-weight: bold;
+    color: black;
+    
 }
 
 /* Style the answer buttons for MC questions */
 .answers-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Two answers per row */
-    gap: 0px; /* Spacing between answers */
+    gap: 10px; /* Spacing between answers */
     margin-top: 20px;
     width: 98%; /* Adjust width as needed */
+    color: white;
 }
 
 .answers-container button {
-    padding: 20px 15px;
+    padding: 80px 15px;
     font-size: 1rem;
-    background-color: lightgray;
-    border-radius: 5px;
+    background-color: #141E31;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .answers-container button:hover {
-    color: #fff;
-    transform: scale(1.05);
+    background-color: #141E31;
+    transform: scale(1.10);
+    transform: rotate(-5deg);
 }
 
 .answers-container button:active {

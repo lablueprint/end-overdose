@@ -13,8 +13,8 @@ interface TrueFalseProps {
 }
 interface MissedQuestion {
     question: string;
-    correctAnswer: number;
-    selectedAnswer: number | null; // 1 is true, 0 is false
+    correctAnswer: string;
+    selectedAnswer: string | null; // 1 is true, 0 is false
 }
 
 export default function TrueFalse({ title, description }: TrueFalseProps) {
@@ -57,8 +57,10 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                 ...prevMissed,
                 {
                     question: questions[questionIndex].question,
-                    correctAnswer: questions[questionIndex].answer ? 1 : 0, // this might not work
-                    selectedAnswer: selectedAnswer ? 1 : 0,
+                    correctAnswer: questions[questionIndex].answer
+                        ? 'True'
+                        : 'False',
+                    selectedAnswer: selectedAnswer ? 'True' : 'False',
                 },
             ]);
         }
