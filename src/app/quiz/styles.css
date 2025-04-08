@@ -32,6 +32,10 @@
     transition: all 0.3s ease;
 }
 
+.answers-container button.corrrect {
+    background-color: #3E7829; /* Correct answer color */
+}
+
 .answers-container button:hover {
     background-color: #141E31;
     transform: scale(1.10);
