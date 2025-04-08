@@ -3,6 +3,7 @@ import { useState } from 'react';
 import '../styles.css';
 import trueFalseQuestions from '../true-false/questions';
 import Image from 'next/image';
+import Score from './Score';
 import { motion } from 'motion/react';
 import TrueFalseFeedback from './TrueFalseFeedback';
 
@@ -10,14 +11,23 @@ interface TrueFalseProps {
     title: string;
     description: string;
 }
+interface MissedQuestion {
+    question: string;
+    correctAnswer: number;
+    selectedAnswer: number | null; // 1 is true, 0 is false
+}
 
 export default function TrueFalse({ title, description }: TrueFalseProps) {
+    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>( //  array storing missed questions
+        []
+    );
     const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
     const [started, setStarted] = useState(false);
     const [completed, setCompleted] = useState(false);
     const questions = trueFalseQuestions;
     const [questionIndex, setQuestionIndex] = useState(0);
     const [numCorrect, setNumCorrect] = useState(0);
+    const [isQuestionSelected, setIsQuestionSelected] = useState(false);
     const [resultMessage, setResultMessage] = useState<string | null>(null);
     const [animationProps, setAnimationProps] = useState<Record<
         string,
@@ -42,6 +52,15 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
             setAnimationProps({ x: -150, y: 50, rotate: -15, opacity: 0 });
             setImage('/XLogo.png');
             setCatImage('/sadNarcat.png');
+            setMissedQuestions((prevMissed) => [
+                // add missed question to missedQuestions array
+                ...prevMissed,
+                {
+                    question: questions[questionIndex].question,
+                    correctAnswer: questions[questionIndex].answer ? 1 : 0, // this might not work
+                    selectedAnswer: selectedAnswer ? 1 : 0,
+                },
+            ]);
         }
 
         setTimeout(() => {
@@ -51,6 +70,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
             setImage(null);
             setCatImage(null);
             setSelectedAnswer(null);
+            setIsQuestionSelected(false);
             setTimeout(() => {
                 setHideCard(false);
                 if (questionIndex < questions.length - 1) {
@@ -67,6 +87,11 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
     if (started && !completed) {
         return (
             <div className="true-false-container">
+                <progress
+                    value={questionIndex}
+                    max={questions.length}
+                    className="progress-bar"
+                />
                 <div>
                     {questionIndex + 1 < questions.length && (
                         <div className="tf-question-container under">
@@ -128,12 +153,14 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                                     onClick={() => checkAnswer(false)} // issue with false
                                 />
                             </div>
-                            {selectedAnswer !== null && (
-                                <TrueFalseFeedback
-                                    answer={resultMessage === 'correct'}
-                                />
-                            )}
+                            {/* {selectedAnswer !== null && (
+                            )} */}
                         </motion.div>
+                    )}
+                    {selectedAnswer !== null && (
+                        <TrueFalseFeedback
+                            answer={resultMessage === 'correct'}
+                        />
                     )}
                 </div>
                 {/* <div className="image-container">
@@ -162,25 +189,46 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         );
     } else if (completed) {
         return (
-            <div className="true-false-container">
-                <div className="tf-question-container">
-                    <h1 style={{ fontSize: '2rem' }}>Quiz Completed!</h1>
-                    <div>
-                        You got {numCorrect} out of {questions.length} correct!
-                    </div>
-                    <button
-                        className="bg-light"
-                        onClick={() => {
-                            setStarted(true);
-                            setCompleted(false);
-                            setNumCorrect(0);
-                            setImage(null);
-                            setCatImage(null);
-                        }}
-                    >
-                        Restart
-                    </button>
-                </div>
+            // <div className="true-false-container">
+            //     <div className="tf-question-container">
+            //         <h1 style={{ fontSize: '2rem' }}>Quiz Completed!</h1>
+            //         <div>
+            //             You got {numCorrect} out of {questions.length} correct!
+            //         </div>
+            //         <button
+            //             className="bg-light"
+            //             onClick={() => {
+            //                 setStarted(true);
+            //                 setCompleted(false);
+            //                 setNumCorrect(0);
+            //                 setImage(null);
+            //                 setCatImage(null);
+            //             }}
+            //         >
+            //             Restart
+            //         </button>
+            //     </div>
+            // </div>
+            <div>
+                <Score
+                    numQuestions={questions.length}
+                    currentScore={numCorrect}
+                    setCurrentScore={setNumCorrect}
+                    setCurrentQuestionIndex={setQuestionIndex}
+                    setSelectedAnswer={(newSelectedAnswer: number | null) =>
+                        setSelectedAnswer(
+                            newSelectedAnswer === 1
+                                ? true
+                                : newSelectedAnswer === 0
+                                  ? false
+                                  : null
+                        )
+                    }
+                    setFeedback={setResultMessage}
+                    missedQuestions={missedQuestions}
+                    setMissedQuestions={setMissedQuestions}
+                    setIsQuestionSelected={setIsQuestionSelected}
+                />
             </div>
         );
     } else {

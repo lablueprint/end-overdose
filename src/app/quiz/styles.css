@@ -122,20 +122,21 @@
     margin-top: 20px;
 }
 .left-option-image {
-    position: absolute;
-    bottom: -350px; 
-    left: -300px; 
+    display: flex;
+    position: relative;
+    bottom: -300px; 
+    left: -220px; 
     width: 200px;
-    transition: transform 0.3s ease-in-out; /* Smooth scaling effect */
+    transition: transform 0.3s ease-in-out;
 }
 .left-option-image:hover {
     transform: scale(1.1);
 }
 .right-option-image {
-    position: absolute; 
-    bottom: -375px; 
-    left: 175px;
-    width: 300px; 
+    position: relative; 
+    bottom: -300px; 
+    left: 75px;
+    width: 200px; 
     transition: transform 0.3s ease-in-out;
 }
 
@@ -169,6 +170,8 @@
 }
 
 .tf-question-container {
+    display: flex;
+    flex-direction: column; 
     background-color: #161C2E;
     border-radius: 10px;
     position: relative;
@@ -255,5 +258,16 @@ button:disabled {
     font-size: 1.5rem;
     font-weight: bold;
     margin-top: 20px;
+    color: black;
+    max-width: 100%;
+  }
+
+  .progress-bar {
+    border-radius: 5px;
+    position: relative;
+    bottom: 100px;
+    left: 0;
+    width: 100%;
+    height: 10px;
     color: black;
   }

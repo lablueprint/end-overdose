@@ -18,10 +18,10 @@ export default function TrueFalseFeedback({ answer }: TrueFalseFeedbackProps) {
             setFeedback('Incorrect!');
             setClassName('incorrect-bar');
         }
-        // const timer = setTimeout(() => {
-        //     setIsOpen(false);
-        // }, 5000);
-        // return () => clearTimeout(timer);
+        const timer = setTimeout(() => {
+            setIsOpen(false);
+        }, 5000);
+        return () => clearTimeout(timer);
     }, [answer]);
 
     return (
