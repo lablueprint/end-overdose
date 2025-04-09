@@ -270,12 +270,61 @@ button:disabled {
     max-width: 100%;
   }
 
-  .progress-bar {
-    border-radius: 5px;
-    position: relative;
-    bottom: 100px;
-    left: 0;
+  .custom-progress-container {
+    position: absolute; /* slightly off-centered rn */
+    top: -200px;
     width: 100%;
-    height: 10px;
-    color: black;
+    height: 12px;
+    background-color: #C0C0C0;
+    border-radius: 6px;
   }
+  
+  .custom-progress-fill {
+    height: 100%;
+    background: black;
+    transition: width 0.3s ease-in-out;
+    border-radius: 6px;
+  }
+
+  .dialog-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 32rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: #171D2F;
+    color: white;
+    padding: 3rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg in Tailwind */
+  }
+
+  .dialog-title {
+    font-size: 2rem;
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .dialog-description {
+    font-size: 1rem;
+    text-align: center;
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+
+  .dialog-button {
+    background-color: white;
+    color: #171D2F;
+    text-align: center;
+    padding: 0px 40px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+.dialog-button:hover {
+        background-color: lightgray;
+ }
+  

@@ -1,5 +1,12 @@
 'use client';
 import { useState } from 'react';
+import {
+    Description,
+    Dialog,
+    DialogPanel,
+    DialogTitle,
+    DialogBackdrop,
+} from '@headlessui/react';
 import '../styles.css';
 import trueFalseQuestions from '../true-false/questions';
 import Image from 'next/image';
@@ -36,6 +43,13 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
     const [hideCard, setHideCard] = useState(false);
     const [image, setImage] = useState<string | null>(null);
     const [catImage, setCatImage] = useState<string | null>(null);
+
+    // for opening dialogue
+    const [isOpen, setIsOpen] = useState(true);
+    const onContinue = () => {
+        setIsOpen(false);
+        setStarted(true);
+    };
 
     const checkAnswer = (answer: boolean) => {
         setSelectedAnswer(answer);
@@ -84,14 +98,38 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         }, 400);
     };
 
-    if (started && !completed) {
+    if (!started && !completed) {
+        return (
+            <Dialog open={isOpen} onClose={onContinue} className="relative">
+                <DialogBackdrop className="fixed inset-0 bg-black/30" />
+                <div className="dialog-container">
+                    <DialogPanel className="dialog-panel">
+                        <DialogTitle className="dialog-title">
+                            True or False
+                        </DialogTitle>
+                        <Description className="dialog-description">
+                            You will be presented with a statement regarding the
+                            lesson you just completed. You must click either
+                            true or false{' '}
+                        </Description>
+                        <div className="dialog-button">
+                            <button onClick={onContinue}>Begin</button>
+                        </div>
+                    </DialogPanel>
+                </div>
+            </Dialog>
+        );
+    } else if (started && !completed) {
         return (
             <div className="true-false-container">
-                <progress
-                    value={questionIndex}
-                    max={questions.length}
-                    className="progress-bar"
-                />
+                <div className="custom-progress-container">
+                    <div
+                        className="custom-progress-fill"
+                        style={{
+                            width: `${(questionIndex / questions.length) * 100}%`,
+                        }}
+                    ></div>
+                </div>
                 <div>
                     {questionIndex + 1 < questions.length && (
                         <div className="tf-question-container under">
@@ -163,28 +201,6 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                         />
                     )}
                 </div>
-                {/* <div className="image-container">
-                    {image && (
-                        <img
-                            className="feedback-image"
-                            src={image}
-                            alt="feedback"
-                            width={300}
-                            height={300}
-                        />
-                    )}
-                </div>
-                <div className="cat-image-container">
-                    {catImage && (
-                        <img
-                            className="feedback-image"
-                            src={catImage}
-                            alt="feedback"
-                            width={100}
-                            height={100}
-                        />
-                    )}
-                </div> */}
             </div>
         );
     } else if (completed) {
@@ -233,26 +249,18 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         );
     } else {
         return (
-            <div className="true-false-container">
-                <div className="tf-question-container">
-                    <h1 style={{ fontSize: '2rem' }}>{title}</h1>
-                    <div>{description}</div>
-                    <div> You must select either: </div>
-                    <div className="center-content">
-                        <div className="bg-green">True</div>
-                        or
-                        <div className="bg-red">False</div>
-                    </div>
+            <Dialog open={isOpen} onClose={onContinue} className="relative">
+                <DialogBackdrop className="fixed inset-0 bg-black/30" />
+                <div className="dialog-container">
+                    <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-lg shadow-lg">
+                        <DialogTitle>Do the quiz</DialogTitle>
+                        <Description>click true or false</Description>
+                        <div className="continue-container">
+                            <button onClick={onContinue}>Continue</button>
+                        </div>
+                    </DialogPanel>
                 </div>
-                <button
-                    className="bg-light"
-                    onClick={() => {
-                        setStarted(true);
-                    }}
-                >
-                    Start
-                </button>
-            </div>
+            </Dialog>
         );
     }
 }

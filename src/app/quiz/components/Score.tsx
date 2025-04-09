@@ -85,11 +85,16 @@ export default function Score({
     return (
         <div className="score-container">
             <div className="score-panel">
-                <p>You Scored</p>
+                <p>Score</p>
                 <p className="score-number">{percentage}%</p>
                 <button className="score-button" onClick={retakeQuiz}>
                     Retry
                 </button>
+                {currentScore / numQuestions >= 0.8 && ( // if the user scored 80% or higher, display the next lesson button
+                    <button className="score-button" onClick={nextLesson}>
+                        Next Lesson
+                    </button>
+                )}
             </div>
             <div className="missed-questions-container">
                 {missedQuestions.length !== 0 ? (
@@ -109,7 +114,7 @@ export default function Score({
                                     Correct Answer:
                                 </span>{' '}
                                 {
-                                    //displays the actual text, not index
+                                    // displays the actual text, not index (what causes error for tf)
                                     questions.find(
                                         (q) => q.question === item.question
                                     )?.answers[item.correctAnswer]
@@ -132,16 +137,6 @@ export default function Score({
                         </li>
                     ))}
                 </ul>
-                {currentScore / numQuestions >= 0.8 && ( // if the user scored 80% or higher, display the next lesson button
-                    <div className="next-lesson-container">
-                        <button
-                            className="next-lesson-button"
-                            onClick={nextLesson}
-                        >
-                            Next Lesson
-                        </button>
-                    </div>
-                )}
             </div>
         </div>
     );
