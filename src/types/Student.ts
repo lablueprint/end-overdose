@@ -22,6 +22,7 @@ export type Student = {
     };
     quizzes: Quiz[];
     badges: string[];
+    certificates: string[];
 };
 
 // example:
@@ -30,7 +31,7 @@ export const StudentJosh: Student = {
     email: 'josh@fusd.net',
     school_name: 'Fremont Unified School District',
     nameplate: 'Josh Doe',
-    kibble_count: 10,
+    kibble_count: 1000,
     course_completion: {
         opioidCourse: {
             courseScore: 50, // half of lessons completed
@@ -46,4 +47,28 @@ export const StudentJosh: Student = {
         { name: 'quiz2', score: 80 },
     ],
     badges: ['coolbadge', 'wonderfulbadge'],
+    certificates: ['opioidCertificate'],
+};
+
+// Type guard function
+export const isStudent = (obj: any): obj is Student => {
+    return (
+        typeof obj === 'object' &&
+        obj !== null &&
+        typeof obj.student_id === 'string' &&
+        typeof obj.email === 'string' &&
+        typeof obj.school_name === 'string' &&
+        typeof obj.nameplate === 'string' &&
+        typeof obj.kibble_count === 'number' &&
+        typeof obj.course_completion === 'object' &&
+        typeof obj.course_completion.opioidCourse === 'object' &&
+        typeof obj.course_completion.opioidCourse.courseScore === 'number' &&
+        typeof obj.course_completion.opioidCourse.courseProgress === 'number' &&
+        typeof obj.course_completion.careerCourse === 'object' &&
+        typeof obj.course_completion.careerCourse.courseScore === 'number' &&
+        typeof obj.course_completion.careerCourse.courseProgress === 'number' &&
+        Array.isArray(obj.quizzes) && // Assuming `Quiz[]` is an array
+        Array.isArray(obj.badges) &&
+        Array.isArray(obj.certificates)
+    );
 };
