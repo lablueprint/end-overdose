@@ -1,0 +1,43 @@
+.card {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    width: 16rem;
+  }
+  
+  .iconContainer {
+    margin-right: 1rem;
+  }
+  
+  .icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgb(243, 244, 246);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .iconSvg {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+  
+  .contentContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .title {
+    font-size: 0.875rem;
+    color: rgb(107, 114, 128);
+  }
+  
+  .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }

@@ -2,3 +2,44 @@
     font-size: 30px;
     font-weight: 700;
 }
+
+.indent {
+    margin-left: 40px;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.button {
+    border: 2px solid;
+    width: 10rem; 
+    height: 4rem;
+    margin: 2rem 1.25rem;
+    padding: 0.5rem; 
+    border-radius: 0.75rem;
+}
+
+.completeButton {
+    border: 2px solid;
+    width: 10rem; 
+    height: 4rem;
+    margin: 2rem 1.25rem;
+    padding: 0.5rem; 
+    border-radius: 0.75rem;
+    background-color: rgb(220, 220, 220);
+}
+
+.activeButton {
+    background-color: rgb(150, 150, 150); /* Darker color */
+    color: white;
+    cursor: pointer;
+}
+
+.button:disabled {
+    background-color: rgb(220, 220, 220);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
