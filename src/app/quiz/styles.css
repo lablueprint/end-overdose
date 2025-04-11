@@ -157,7 +157,7 @@
     position: relative;
     bottom: -320px; 
     left: -230px; 
-    width: 190px;
+    width: 195px;
     transition: transform 0.3s ease-in-out;
 }
 .left-option-image:hover {
