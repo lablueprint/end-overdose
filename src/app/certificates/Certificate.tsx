@@ -18,6 +18,7 @@ export default function Certificate({ courseName }: Props) {
     const handleDownload = async () => {
         if (ref.current) {
             try {
+                await document.fonts.ready;
                 const dataUrl = await toPng(ref.current, {
                     cacheBust: true,
                     pixelRatio: 2, // optional: increases resolution
@@ -34,7 +35,7 @@ export default function Certificate({ courseName }: Props) {
 
     return (
         <div className={styles.certificateContainer}>
-            <div ref={ref}>
+            <div ref={ref} style={{ fontFamily: 'sans-serif' }}>
                 <img
                     src="/certificate.png"
                     alt="Certificate"
