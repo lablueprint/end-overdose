@@ -150,3 +150,30 @@ export const toggleCourseInclusion = async (
         console.error('Error toggling course inclusion:', error);
     }
 };
+
+export const addIdPasswordPair = async (
+    schoolId: string,
+    newId: string,
+    newPassword: string
+) => {
+    // should also take strings for id and password
+    try {
+        // Get the school document reference
+        const schoolDocRef = doc(db, 'schools', schoolId);
+        const schoolSnapshot = await getDoc(schoolDocRef);
+
+        if (!schoolSnapshot.exists()) {
+            throw new Error('School document not found.');
+        }
+
+        // Update the school document with the new ID-password pair
+        await updateDoc(schoolDocRef, {
+            [`school_ids.${newId}`]: newPassword, // Dynamically add the new ID-password pair
+        });
+
+        // Revalidate the school data in the cache
+        revalidatePath('/');
+    } catch (error) {
+        console.error('Error toggling course inclusion:', error);
+    }
+};
