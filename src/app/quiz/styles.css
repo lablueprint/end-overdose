@@ -18,13 +18,30 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Two answers per row */
     gap: 10px; /* Spacing between answers */
-    margin-top: 20px;
-    width: 98%; /* Adjust width as needed */
+    margin-top: 30px;
+    width: 90%; /* Adjust width as needed */
     color: white;
 }
 
+.mcq-answer-text {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: white;
+}
+.mcq-question-text {
+    margin-top: -30px;
+    font-size: 2rem;
+    font-weight: 500;
+    color: black;
+}
+
+.star-image-center {
+    display: block;
+    margin: -40px auto 0 auto;
+}
+
 .answers-container button {
-    padding: 80px 15px;
+    padding: 50px 15px;
     font-size: 1rem;
     background-color: #141E31;
     border-radius: 10px;
@@ -104,6 +121,12 @@
     font-size: 1rem;
     background-color: lightgray;
     border-radius: 5px;
+    transition: all 0.3s ease;
+
+}
+
+.continue-container button:hover {
+    opacity: 0.8;
 }
 .true-false-container {
     position: absolute;
@@ -132,9 +155,9 @@
 .left-option-image {
     display: flex;
     position: relative;
-    bottom: -300px; 
-    left: -220px; 
-    width: 200px;
+    bottom: -320px; 
+    left: -230px; 
+    width: 190px;
     transition: transform 0.3s ease-in-out;
 }
 .left-option-image:hover {
@@ -142,8 +165,8 @@
 }
 .right-option-image {
     position: relative; 
-    bottom: -300px; 
-    left: 75px;
+    bottom: -320px; 
+    left: 75px; 
     width: 200px; 
     transition: transform 0.3s ease-in-out;
 }
@@ -209,9 +232,9 @@ button {
     transition: background 0.3s ease;
 }
 
-button:hover {
+/* button:hover {
     opacity: 0.8;
-}
+} */
 
 button:disabled {
     opacity: 0.5;
@@ -314,17 +337,18 @@ button:disabled {
     margin-bottom: 1rem;
   }
 
-  .dialog-button {
+  .dialog-button button {
     background-color: white;
     color: #171D2F;
     text-align: center;
-    padding: 0px 40px;
+    padding: 10px 40px;
     border-radius: 5px;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
   }
-.dialog-button:hover {
+
+.dialog-button button:hover {
         background-color: lightgray;
  }
-  
+
+ 

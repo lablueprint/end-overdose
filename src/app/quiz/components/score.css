@@ -24,7 +24,20 @@
     margin: 10px;
 }
 
-.score-button {
+.next-button {
+    border: #171D2F 1px solid;
+    background-color: #171D2F;
+    color: white;
+    padding: 7px 10px;
+    border-radius: 5px;
+    margin: 10px;
+    font-size: 1rem;
+    width: 50%;
+    max-width: 200px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.retry-button {
     border: #171D2F 1px solid;
     padding: 7px 10px;
     border-radius: 5px;
@@ -35,7 +48,10 @@
     transition: transform 0.3s ease-in-out;
 }
 
-.score-button:hover {
+.retry-button:hover {
+    transform: scale(1.05);
+}
+.next-button:hover {
     transform: scale(1.05);
 }
 

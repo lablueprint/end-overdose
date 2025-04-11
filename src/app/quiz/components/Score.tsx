@@ -38,6 +38,7 @@ export default function Score({
 }: ScoreProps) {
     const percentage = ((currentScore / numQuestions) * 100).toFixed(0);
 
+    // match props for both TF and MCQ, right now some features don't work for TF
     const retakeQuiz = () => {
         setCurrentScore(0);
         setCurrentQuestionIndex(0);
@@ -51,7 +52,7 @@ export default function Score({
         console.log('Next lesson!!', percentage);
     };
     const user = useUserStore((state) => state.user);
-    const name = 'quiz3';
+    const name = 'quiz4'; // hard coded quiz name for now, causes override issue for taking tf and multiple choice quiz
     function isStudent(user: Student | Admin | null): user is Student {
         return user !== null && 'quizzes' in user;
     }
@@ -87,11 +88,19 @@ export default function Score({
             <div className="score-panel">
                 <p>Score</p>
                 <p className="score-number">{percentage}%</p>
-                <button className="score-button" onClick={retakeQuiz}>
+                {currentScore / numQuestions >= 0.8 && (
+                    <img // only happy cat available as of now
+                        // className="right-option-image"
+                        src={'/passed-test-image.svg'}
+                        width={300}
+                        height={200}
+                    />
+                )}
+                <button className="retry-button" onClick={retakeQuiz}>
                     Retry
                 </button>
                 {currentScore / numQuestions >= 0.8 && ( // if the user scored 80% or higher, display the next lesson button
-                    <button className="score-button" onClick={nextLesson}>
+                    <button className="next-button" onClick={nextLesson}>
                         Next Lesson
                     </button>
                 )}
