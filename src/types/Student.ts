@@ -22,7 +22,7 @@ export type Student = {
     };
     quizzes: Quiz[];
     badges: string[];
-    kibble_count: number;
+    certificates: string[];
 };
 
 // example:
@@ -47,5 +47,5 @@ export const StudentJosh: Student = {
         { name: 'quiz2', score: 80 },
     ],
     badges: ['coolbadge', 'wonderfulbadge'],
-    kibble_count: 27,
+    certificates: ['opioidCertificate'],
 };
