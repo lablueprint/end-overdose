@@ -4,25 +4,34 @@ import { useParams } from 'next/navigation';
 import styles from './Dashboard.module.css';
 import { useUserStore } from '@/store/userStore';
 import { useEffect, useState } from 'react';
-import StudentsTable from './components/StudentsTable';
+import { getSchoolStudents } from '@/app/api/students/actions'; // Adjust the import path as needed
+import StudentsTable from './components/StudentsTable'; // Import the StudentsTable component
 
-//NOTE: Interfaces here
-interface Course {
-    id: number;
+interface Quiz {
     name: string;
-}
-
-interface StudentCourse {
-    courseId: number;
     score: number;
 }
 
 interface Student {
-    id: string;
-    name: string;
-    avatar: string;
-    averageGrade: number;
-    courses: StudentCourse[];
+    student_id: string;
+    email: string;
+    school_name: string;
+    nameplate: string;
+    kibble_count: number;
+    course_completion: {
+        opioidCourse: {
+            courseScore: number; // % of final score >=80 then we do ++passed
+            courseProgress: number; // % of lessons completed == 100
+            //attempts on final
+        };
+        careerCourse: {
+            courseScore: number; // % of final score
+            courseProgress: number; // % of lessons completed
+        };
+    };
+    quizzes: Quiz[];
+    badges: string[];
+    certificates: string[];
 }
 
 export default function SchoolDashboard() {
@@ -30,66 +39,25 @@ export default function SchoolDashboard() {
     const params = useParams();
     const schoolName = params['school-name'] as string;
 
-    // Use these interfaces when initializing state
     const [students, setStudents] = useState<Student[]>([]);
-    const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Simulate API call to get students and courses for this school
         const fetchData = async () => {
             setLoading(true);
-
-            // Example data - replace with your actual API call
-            const exampleCourses = [
-                { id: 1, name: 'Stimulant Emergency' },
-                { id: 2, name: 'Prevention Jobs' },
-                { id: 3, name: 'Recognizing Signs' },
-                // Add more courses as needed
-            ];
-
-            const exampleStudents = [
-                {
-                    id: '015627358',
-                    name: 'Arya Nasikkar',
-                    avatar: '/avatars/arya.jpg',
-                    averageGrade: 89,
-                    courses: [
-                        { courseId: 1, score: 70 },
-                        { courseId: 2, score: 99 },
-                        { courseId: 3, score: 68 },
-                    ],
-                },
-                {
-                    id: '325627350',
-                    name: 'Joanna Bui',
-                    avatar: '/avatars/joanna.jpg',
-                    averageGrade: 70,
-                    courses: [
-                        { courseId: 1, score: 100 },
-                        { courseId: 2, score: 68 },
-                        { courseId: 3, score: 68 },
-                    ],
-                },
-                {
-                    id: '006627321',
-                    name: 'Mackenzie Smith',
-                    avatar: '/avatars/mackenzie.jpg',
-                    averageGrade: 61,
-                    courses: [
-                        { courseId: 1, score: 68 },
-                        { courseId: 2, score: 55 },
-                        { courseId: 3, score: 78 },
-                    ],
-                },
-            ];
-
-            setCourses(exampleCourses);
-            setStudents(exampleStudents);
-            setLoading(false);
+            try {
+                const schoolStudents = await getSchoolStudents(schoolName);
+                setStudents(schoolStudents);
+            } catch (error) {
+                console.error('Error fetching school data:', error);
+            } finally {
+                setLoading(false);
+            }
         };
 
-        fetchData();
+        if (schoolName) {
+            fetchData();
+        }
     }, [schoolName, user]);
 
     return (
@@ -106,7 +74,7 @@ export default function SchoolDashboard() {
                         Loading student data...
                     </div>
                 ) : (
-                    <StudentsTable students={students} courses={courses} />
+                    <StudentsTable students={students} />
                 )}
             </div>
         </div>

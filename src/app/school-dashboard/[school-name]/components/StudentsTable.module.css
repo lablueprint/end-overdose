@@ -1,137 +1,68 @@
-/* StudentsTable.module.css */
 .tableContainer {
-    background-color: #f9fafb;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  overflow-x: auto;
+  background-color: #f9fafb;
 }
 
 .table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: system-ui, -apple-system, sans-serif;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
 
-/* Header styles */
 .table th {
-    padding: 16px 12px;
-    text-align: left;
-    color: #6b7280;
-    font-weight: 500;
-    font-size: 14px;
-    border-bottom: 1px solid #e5e7eb;
+  padding: 16px 10px;
+  text-align: left;
+  font-weight: 600;
+  background-color: #f3f4f6;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.sortIcon {
-    font-size: 10px;
-    margin-left: 4px;
-}
-
-.rankHeader {
-    width: 40px;
-}
-
-.studentHeader {
-    width: 250px;
-}
-
-.gradeHeader {
-    width: 100px;
-}
-
-.courseHeader {
-    width: 120px;
-}
-
-/* Row styles */
-.tableRow {
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.tableRow:last-child {
-    border-bottom: none;
-}
-
-/* Cell styles */
 .table td {
-    padding: 12px;
-    vertical-align: middle;
+  padding: 16px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #fff;
 }
 
-.rankCell {
-    text-align: center;
-    color: #6b7280;
-    font-weight: 500;
+.table tr:nth-child(even) td {
+  background-color: #fffbf0; /* Light yellow background for even rows */
 }
 
-.studentCell {
-    padding: 12px 16px;
+.rankColumn {
+  width: 40px;
+  text-align: center;
 }
 
-.studentInfo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.studentColumn {
+  width: 120px;
 }
 
-.avatarContainer {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
+.gradeColumn {
+  width: 100px;
+  text-align: center;
 }
 
-.avatar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.courseColumn {
+  text-align: center;
 }
 
-.studentDetails {
-    display: flex;
-    flex-direction: column;
+.inProgress {
+  background-color: rgba(234, 179, 8, 0.05) !important;
+  color: #b45309;
 }
 
-.studentName {
-    font-weight: 500;
-    color: #111827;
-}
-
-.studentId {
-    font-size: 12px;
-    color: #6b7280;
-}
-
-.gradeCell {
-    font-weight: 500;
-    color: #111827;
-}
-
-.courseCell {
-    text-align: center;
-}
-
-.courseResult {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 4px;
+.inProgress div:first-child {
+  font-weight: 500;
+  margin-bottom: 4px;
 }
 
 .pass {
-    background-color: #86efac;
-    color: #14532d;
+  background-color: rgba(34, 197, 94, 0.05) !important;
+  color: #16a34a;
 }
 
 .fail {
-    background-color: #fca5a5;
-    color: #7f1d1d;
-}
-
-.courseScore {
-    font-size: 12px;
-    color: #6b7280;
+  background-color: rgba(239, 68, 68, 0.05) !important;
+  color: #dc2626;
 }

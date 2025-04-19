@@ -117,6 +117,22 @@ export const getSchoolAverage = cache(async (schoolName: string) => {
     }
 });
 
+//GET ALL THE STUDENTS FROM A PARTICULAR SCHOOL
+export const getSchoolStudents = cache(async (schoolName: string) => {
+    try {
+        const q = query(
+            studentsCollection,
+            where('school_name', '==', schoolName)
+        );
+        const snapshot = await getDocs(q);
+        const students = snapshot.docs.map((doc) => doc.data() as Student);
+        return students;
+    } catch (error) {
+        console.error('Error fetching school students:', error);
+        throw new Error('Failed to fetch school students.');
+    }
+});
+
 //4. VALIDATE STUDENT CREDENTIALS
 
 //takes in school, username, password and checks that username and password are in school's student id map
