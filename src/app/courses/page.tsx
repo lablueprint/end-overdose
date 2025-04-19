@@ -82,10 +82,10 @@ export default function Courses() {
     ];
 
     const levelPositions = [
-        { top: '208px', left: '160px' },
-        { top: '223px', left: '240px' },
-        { top: '297px', left: '245px' },
-        { top: '287px', left: '345px' },
+        { top: '38.9%', left: '12.1%' },
+        { top: '41.6%', left: '18.1%' },
+        { top: '55.5%', left: '18.5%' },
+        { top: '53.6%', left: '26.1%' },
         // Add more as needed...
     ];
 
@@ -145,6 +145,7 @@ export default function Courses() {
                 </p>
             </div>
             <div className={styles.mapContainer}>
+                {' '}
                 <img className={styles.map} src="/planetcourse.svg" alt="Map" />
                 {levelPositions.map((pos, index) => {
                     if (index < currentLevel) {

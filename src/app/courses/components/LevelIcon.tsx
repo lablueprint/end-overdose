@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './LevelIcon.module.css';
 
 interface LevelIconProps {
     type: 'completed' | 'current';
@@ -13,8 +14,10 @@ const LevelIcon: React.FC<LevelIconProps> = ({ type, top, left }) => {
         left,
     };
 
+    const className = `${styles.levelIcon} ${type === 'current' ? styles.pulse : ''}`;
+
     return (
-        <div style={style}>
+        <div className={className} style={style}>
             {type === 'completed' ? (
                 <svg
                     width="68"
