@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useUserStore } from '@/store/userStore';
 import { signIn } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
+import { getAuth, sendSignInLinkToEmail } from 'firebase/auth';
 
 const AdminLogin = () => {
     const router = useRouter();
@@ -15,6 +16,8 @@ const AdminLogin = () => {
     const setUser = useUserStore((state) => state.setUser);
     const setUID = useUserStore((state) => state.setUID);
     const setRole = useUserStore((state) => state.setRole);
+
+    const auth = getAuth();
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -27,6 +30,7 @@ const AdminLogin = () => {
             setUser(response.result.admin);
             setUID(response.result.id);
             setRole(response.result.admin.role);
+            //sendSignInLinkToEmail();
             // wait before redirecting to admin dashboard
             setTimeout(() => {
                 router.push('/admin');
