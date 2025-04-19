@@ -45,6 +45,7 @@ export default function Mcq({ title, description }: McqProps) {
     const currentQuestion = questions[currentQuestionIndex];
 
     const [feedback, setFeedback] = useState<string>('');
+    const [completed, setCompleted] = useState(false);
 
     // for opening dialogue
     const [started, setStarted] = useState(false);
@@ -74,18 +75,15 @@ export default function Mcq({ title, description }: McqProps) {
                     },
                 ]);
             }
+            if (currentQuestionIndex === questions.length - 1) {
+                // if last question, set isCompleted to true
+                setCompleted(true);
+            }
         }
     };
 
     // if student has not started the quiz, display the begin quiz button, title, description
     if (!hasStarted) {
-        // return (
-        //     <div className="start-container">
-        //         <h1>{title}</h1>
-        //         <p>{description}</p>
-        //         <button onClick={handleStart}>Begin</button>
-        //     </div>
-        // );
         return (
             <Dialog open={isOpen} onClose={handleStart} className="relative">
                 <DialogBackdrop className="fixed inset-0 bg-black/30" />
@@ -108,7 +106,7 @@ export default function Mcq({ title, description }: McqProps) {
 
     return (
         <>
-            {currentQuestionIndex < questions.length ? ( // if there are still questions to be answered, display the question
+            {!completed ? ( // if there are still questions to be answered, display the question
                 <div className="question-container">
                     <Question
                         question={currentQuestion.question}
@@ -141,6 +139,8 @@ export default function Mcq({ title, description }: McqProps) {
                         missedQuestions={missedQuestions}
                         setMissedQuestions={setMissedQuestions}
                         setIsQuestionSelected={setIsQuestionSelected}
+                        setIsCompleted={setCompleted}
+                        isMCQ={true}
                     />
                 </div>
             )}
