@@ -8,10 +8,12 @@ import styles from './page.module.css';
 import AuthWrap from '@/components/AuthWrap';
 import { getCourseProgress } from '../api/students/actions';
 import { useState, useEffect } from 'react';
+import LevelIcon from './components/LevelIcon';
 
 export default function Courses() {
     const [opioidCourseProgress, setOpioidCourseProgress] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [currentLevel, setCurrentLevel] = useState(2);
     // Course progress data
     const user = useUserStore((state) => state.user);
     useEffect(() => {
@@ -79,7 +81,15 @@ export default function Courses() {
         },
     ];
 
-    return (
+    const levelPositions = [
+        { top: '208px', left: '160px' },
+        { top: '223px', left: '240px' },
+        { top: '297px', left: '245px' },
+        { top: '287px', left: '345px' },
+        // Add more as needed...
+    ];
+
+    /* return (
         <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
             <div className="flex gap-8">
                 <div className="grid grid-cols-2 gap-4">
@@ -121,6 +131,55 @@ export default function Courses() {
                         />
                     </>
                 ))}
+            </div>
+        </AuthWrap>
+    ); */
+
+    return (
+        <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
+            <div className={styles.header}>
+                <h1>OVERDOSE PREVENTION: KNOWING SIGNS</h1>
+                <p>
+                    Lorem ipsum dolor sit ameet, consecttur adipiscing elit.
+                    Lorem ipsur dolor sit amet, consectetur adipiscing elit.
+                </p>
+            </div>
+            <div className={styles.mapContainer}>
+                <img className={styles.map} src="/planetcourse.svg" alt="Map" />
+                {levelPositions.map((pos, index) => {
+                    if (index < currentLevel) {
+                        return (
+                            <LevelIcon
+                                key={index}
+                                type="completed"
+                                top={pos.top}
+                                left={pos.left}
+                            />
+                        );
+                    } else if (index === currentLevel) {
+                        return (
+                            <LevelIcon
+                                key={index}
+                                type="current"
+                                top={pos.top}
+                                left={pos.left}
+                            />
+                        );
+                    }
+                    return null; // Don't render anything for future levels
+                })}
+            </div>
+            <div className={styles.footer}>
+                <div className={styles.footerText}>
+                    <p>
+                        {' '}
+                        If this content brings up tough emotions,{' '}
+                        <a className={styles.helpLink}>
+                            {' '}
+                            you are not alone, get support here.{' '}
+                        </a>
+                    </p>{' '}
+                </div>
             </div>
         </AuthWrap>
     );
