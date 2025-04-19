@@ -135,6 +135,17 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                             }}
                         ></div>
                     </div>
+                    <h1 className="quiz-name-info">{title}</h1>
+                    <h1
+                        style={{
+                            position: 'absolute',
+                            top: -125,
+                            left: 0,
+                            margin: 0,
+                        }}
+                    >
+                        Determine whether this statement is true or false.
+                    </h1>
                     <div>
                         {questionIndex < questions.length && (
                             <div className="tf-question-container under">
