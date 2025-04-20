@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './StudentsTable.module.css';
 
 interface Quiz {
@@ -28,6 +27,20 @@ interface Student {
 }
 
 const StudentsTable = ({ students }: { students: Student[] }) => {
+    // Helper function to determine course status
+    const getCourseStatus = (score: number) => {
+        if (score >= 70) return styles.pass;
+        if (score > 0) return styles.fail;
+        return styles.inProgress;
+    };
+
+    // Helper function to get status text
+    const getStatusText = (score: number) => {
+        if (score >= 70) return 'Pass';
+        if (score > 0 && score < 70) return 'Fail';
+        return 'In Progress';
+    };
+
     return (
         <div className={styles.tableContainer}>
             <table className={styles.table}>
@@ -67,15 +80,37 @@ const StudentsTable = ({ students }: { students: Student[] }) => {
 
                         return (
                             <tr key={student.student_id}>
-                                <td>{index + 1}</td>
-                                <td>{student.student_id}</td>
-                                <td>{avgGrade}%</td>
-                                <td className={styles.inProgress}>
-                                    <div>In Progress</div>
+                                <td className={styles.rankColumn}>
+                                    {index + 1}
+                                </td>
+                                <td className={styles.studentColumn}>
+                                    {student.student_id}
+                                </td>
+                                <td className={styles.gradeColumn}>
+                                    {avgGrade}%
+                                </td>
+                                <td
+                                    className={getCourseStatus(
+                                        opioidCourse.courseScore
+                                    )}
+                                >
+                                    <div>
+                                        {getStatusText(
+                                            opioidCourse.courseScore
+                                        )}
+                                    </div>
                                     <div>{opioidCourse.courseScore}%</div>
                                 </td>
-                                <td className={styles.inProgress}>
-                                    <div>In Progress</div>
+                                <td
+                                    className={getCourseStatus(
+                                        careerCourse.courseScore
+                                    )}
+                                >
+                                    <div>
+                                        {getStatusText(
+                                            careerCourse.courseScore
+                                        )}
+                                    </div>
                                     <div>{careerCourse.courseScore}%</div>
                                 </td>
                             </tr>
