@@ -60,7 +60,7 @@ export const getStudentFromID = cache(async (id: string) => {
 
         if (!snapshot.empty) {
             const doc = snapshot.docs[0];
-            return { ...(doc.data() as Student) };
+            return { id:doc.id, ...(doc.data() as Student) };
         }
 
         return null;
@@ -207,11 +207,13 @@ interface UpdateCourseProgressResponse {
 }
 
 export async function updateCourseProgress(
+    student_id: string,
     courseName: string,
     progress: number
 ): Promise<UpdateCourseProgressResponse> {
     try {
-        const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); //later, replace userId with the actual user's Id
+        const studentWithID = await getStudentFromID(student_id);
+        const userRef = doc(db, 'students', studentWithID.id); // getting actual user's id
         const userDoc = await getDoc(userRef);
 
         if (!userDoc.exists()) {
@@ -229,28 +231,28 @@ export async function updateCourseProgress(
     }
 }
 
-// Function to fetch course progress from Firestore
-export async function getCourseProgress(courseName: string) {
-    try {
-        const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); // Get the user document reference using the user's ID
-        const userDoc = await getDoc(userRef);
+// // Function to fetch course progress from Firestore
+// export async function getCourseProgress(courseName: string) {
+//     try {
+//         const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); // Get the user document reference using the user's ID
+//         const userDoc = await getDoc(userRef);
 
-        if (!userDoc.exists()) {
-            return { error: 'Student document not found' };
-        }
+//         if (!userDoc.exists()) {
+//             return { error: 'Student document not found' };
+//         }
 
-        const userData = userDoc.data(); // Get user data from Firestore
-        const courseProgress =
-            userData?.course_completion?.[courseName]?.courseProgress;
+//         const userData = userDoc.data(); // Get user data from Firestore
+//         const courseProgress =
+//             userData?.course_completion?.[courseName]?.courseProgress;
 
-        // If course progress exists, return it
-        if (courseProgress !== undefined) {
-            return { progress: courseProgress };
-        } else {
-            return { error: 'Course progress not found for this user' };
-        }
-    } catch (error) {
-        console.error(error);
-        throw new Error('Failed to fetch course progress.');
-    }
-}
+//         // If course progress exists, return it
+//         if (courseProgress !== undefined) {
+//             return { progress: courseProgress };
+//         } else {
+//             return { error: 'Course progress not found for this user' };
+//         }
+//     } catch (error) {
+//         console.error(error);
+//         throw new Error('Failed to fetch course progress.');
+//     }
+// }

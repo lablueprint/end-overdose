@@ -13,9 +13,9 @@ import '@fontsource/roboto-condensed/400.css';
 import '@fontsource/roboto-condensed/500.css';
 import '@fontsource/roboto-condensed/600.css';
 import '@fontsource/roboto-condensed/700.css';
+import { isStudent } from '@/types/Student';
 
-import { getCourseProgress } from '@/app/api/students/actions';
-
+// import { getCourseProgress } from '@/app/api/students/actions';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -65,18 +65,19 @@ export default function OpioidHome() {
 
     const fetchOpioidCourseProgress = async () => {
         try {
-            if (user) {
-                const response = await getCourseProgress('opioidCourse');
-                if (response.progress !== undefined) {
-                    setCourseProgress(response.progress);
+            if (isStudent(user)) {
+                const response =
+                    user.course_completion.opioidCourse.courseProgress;
+                if (response !== undefined) {
+                    setCourseProgress(response);
 
                     // Calculate current lesson based on the fetched progress
                     const lessonIndex = Math.round(
-                        (response.progress / 100) * totalLessons
+                        (response / 100) * totalLessons
                     );
                     setLesson(lessonIndex); // Set currentLesson based on progress
                 } else {
-                    console.error('Error fetching progress:', response.error);
+                    console.error('Error fetching progress');
                 }
             }
         } catch (error) {
@@ -190,7 +191,11 @@ export default function OpioidHome() {
                 },
             });
 
-            await updateCourseProgress('opioidCourse', progressPercentage);
+            await updateCourseProgress(
+                user.student_id,
+                'opioidCourse',
+                progressPercentage
+            );
         }
         //redirect to home page or course selection
         window.location.href = '/courses';
@@ -256,7 +261,6 @@ export default function OpioidHome() {
                 )}
                 {!toggle ? (
                     <div>
-
                         <h1
                             onClick={returnToCourses}
                             style={{
@@ -294,7 +298,7 @@ export default function OpioidHome() {
                                 fontFamily: 'Roboto Condensed, sans-serif',
                             }}
                         >
-                            Opioid Course 
+                            Opioid Course
                         </h1>
                         <br />
 

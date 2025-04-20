@@ -6,7 +6,7 @@ import { useUserStore } from '@/store/userStore';
 import StoreItem from './components/StoreItem';
 import styles from './page.module.css';
 import AuthWrap from '@/components/AuthWrap';
-import { getCourseProgress } from '../api/students/actions';
+//import { getCourseProgress } from '../api/students/actions';
 import { useState, useEffect } from 'react';
 import { isStudent } from '@/types/Student';
 
