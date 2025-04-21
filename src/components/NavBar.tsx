@@ -14,7 +14,6 @@ import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -113,11 +112,6 @@ export default function NavBar() {
                     href: '/quiz',
                     tab: 'Certificates',
                     icon: <WorkspacePremiumIcon />,
-                },
-                {
-                    href: '/notifications',
-                    tab: 'Notifications',
-                    icon: <NotificationsNoneIcon />,
                 },
             ]);
         } else {

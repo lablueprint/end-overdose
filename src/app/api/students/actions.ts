@@ -54,22 +54,27 @@ export const getStudentCount = cache(async () => {
 });
 
 //returns student object from firebase based off studentid parameter
-export const getStudentFromID = cache(async (id: string) => {
-    try {
-        const q = query(studentsCollection, where('student_id', '==', id)); //Find student from ID
-        const snapshot = await getDocs(q);
+export const getStudentFromID = cache(
+    async (id: string, updateQuizzes: Quiz[]) => {
+        try {
+            const q = query(studentsCollection, where('student_id', '==', id)); //Find student from ID
+            const snapshot = await getDocs(q);
 
-        if (!snapshot.empty) {
-            const doc = snapshot.docs[0];
-            return { ...(doc.data() as Student) };
+            if (!snapshot.empty) {
+                const doc = snapshot.docs[0];
+                await updateDoc(doc.ref, {
+                    quizzes: updateQuizzes,
+                });
+                return { ...(doc.data() as Student) };
+            }
+
+            return { error: 'Student document not found' };
+        } catch (error) {
+            console.error('Error fetching student:', error);
+            throw new Error('Failed to fetch student.');
         }
-
-        return null;
-    } catch (error) {
-        console.error('Error fetching student:', error);
-        throw new Error('Failed to fetch student.');
     }
-});
+);
 
 //3. AVERAGING STUDENT SCORES/INFORMATION (Using aggregate function)
 export const getSchoolAverage = cache(async (schoolName: string) => {
@@ -191,6 +196,23 @@ export const getStudent = cache(async (uid: string) => {
     }
 });
 
+// export async function updateKibbleCount() {
+//     try {
+//         console.log('Success');
+//         const snapshot = await getDocs(studentsCollection);
+//         const updatePromises = snapshot.docs.map(async (studentDoc) => {
+//             const studentRef = doc(db, 'students', studentDoc.id);
+//             const kibbleCount = Math.floor(Math.random() * 1000); // Generate random number between 0-999
+//             await updateDoc(studentRef, { kibble_count: kibbleCount });
+//         });
+
+//         await Promise.all(updatePromises);
+//         console.log('Kibble count updated for all students.');
+//     } catch (error) {
+//         console.error('Error updating kibble count:', error);
+//         throw new Error('Failed to update kibble count.');
+//     }
+// }
 // add a new student to the database
 export async function addStudent(student: Student, docID: string) {
     try {
@@ -263,3 +285,22 @@ export async function getCourseProgress(courseName: string) {
         throw new Error('Failed to fetch course progress.');
     }
 }
+
+// get kibble count from student id
+export const getKibbleFromStudentID = cache(async (id: string) => {
+    try {
+        const q = query(studentsCollection, where('student_id', '==', id)); // Find student from ID
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+            const doc = snapshot.docs[0];
+            const student = doc.data() as Student;
+            return { kibble_count: student.kibble_count };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching student:', error);
+        throw new Error('Failed to fetch student.');
+    }
+});
