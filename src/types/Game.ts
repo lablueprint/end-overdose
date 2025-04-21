@@ -27,6 +27,7 @@ export type Line = {
 export type Choice = {
     text: string;
     nextScene: string;
+    nextDialogue?: Line[];
 };
 
 export type Action = {

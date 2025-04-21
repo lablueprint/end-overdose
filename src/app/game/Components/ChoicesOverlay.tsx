@@ -3,37 +3,61 @@ import styles from '../game.module.css';
 import { SceneProp } from '@/types/Game';
 import { useState, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { useRef } from 'react';
 
 const ChoicesOverlay = ({ scene }: SceneProp) => {
     const [actionIndex, setActionIndex] = useState(0);
-    const [action, setAction] = useState(scene.actions[actionIndex]);
+    const [action, setAction] = useState(() => scene.actions?.[0]);
     const changeScene = useGameStore((state) => state.changeScene);
     const toggleDialogue = useGameStore((state) => state.toggleDialogue);
+    const setCustomDialogue = useGameStore((state) => state.setCustomDialogue);
+    const setPendingScene = useGameStore((state) => state.setPendingScene);
 
     const [incorrect, setIncorrect] = useState(false);
-    const [incorrectChoices, setIncorrectChoices] = useState<number[]>([]);
-
+    const incorrectChoices = useGameStore((state) => state.incorrectChoices);
+    const setIncorrectChoices = useGameStore(
+        (state) => state.setIncorrectChoices
+    );
     useEffect(() => {
         setAction(scene.actions[actionIndex]);
+        setHasCountedThisQuestion(false);
+        hasFailedRef.current = false;
     }, [actionIndex, scene.actions]);
 
+    const incrementCorrect = useGameStore((state) => state.incrementCorrect);
+    const incrementTotal = useGameStore((state) => state.incrementTotal);
+    const [hasCountedThisQuestion, setHasCountedThisQuestion] = useState(false);
+
+    const hasFailedRef = useRef(false);
+
     const evalAnswer = (choiceIndex: number) => {
-        // Check if their answer choice was correct
-        if (action.choices[choiceIndex].nextScene === 'Wrong Action') {
-            // if incorrect
-            setIncorrectChoices((prev) => [...prev, choiceIndex]); // Add incorrect choice to the list
-            setIncorrect(true);
-            return;
+        if (incorrectChoices.includes(choiceIndex)) {
+            return; // already tried this one, ignore
         }
 
-        // If answer choice was correct
-        setIncorrectChoices([]);
-        setIncorrect(false);
-        if (actionIndex < scene.actions.length - 1) {
-            setActionIndex(actionIndex + 1);
+        const choice = action.choices[choiceIndex];
+
+        if (!hasCountedThisQuestion) {
+            incrementTotal();
+            setHasCountedThisQuestion(true);
+        }
+
+        if (choice.nextDialogue) {
+            setCustomDialogue(choice.nextDialogue);
+
+            if (choice.nextScene === 'Wrong Action') {
+                setIncorrectChoices([...incorrectChoices, choiceIndex]);
+                hasFailedRef.current = true;
+                toggleDialogue();
+            } else {
+                if (!hasFailedRef.current && hasCountedThisQuestion) {
+                    incrementCorrect(); //only count if no earlier mistake
+                }
+                setPendingScene(choice.nextScene || 'resultScene');
+                toggleDialogue();
+            }
         } else {
-            toggleDialogue();
-            changeScene(action.choices[choiceIndex].nextScene);
+            changeScene(choice.nextScene || 'resultScene');
         }
     };
 

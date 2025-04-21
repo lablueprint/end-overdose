@@ -5,6 +5,7 @@ import DialogueState from './Components/DialogueState';
 import { Scene } from '@/types/Game';
 import ChoicesOverlay from './Components/ChoicesOverlay';
 import { useGameStore } from '@/store/gameStore';
+import ResultPage from './Components/ResultPage';
 
 /**
  * Notes:
@@ -18,13 +19,17 @@ const GamePage = () => {
     const scene: Scene | undefined = useGameStore((state) => state.currScene);
     const inDialogue = useGameStore((state) => state.inDialogue);
 
+    if (!scene) {
+        return <div>Loading...</div>; // or a nicer loading UI
+    }
+
+    if (scene.scene === 'resultScene') {
+        return <ResultPage />;
+    }
+
     return (
         <div className={styles.pageContainer}>
-            {scene && inDialogue ? (
-                <DialogueState scene={scene} />
-            ) : (
-                <ChoicesOverlay scene={scene} />
-            )}
+            {inDialogue ? <DialogueState /> : <ChoicesOverlay scene={scene} />}
         </div>
     );
 };
