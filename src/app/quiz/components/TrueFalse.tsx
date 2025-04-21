@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
     Description,
     Dialog,
@@ -44,6 +44,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
     const [hideCard, setHideCard] = useState(false);
     const [image, setImage] = useState<string | null>(null);
     const [catImage, setCatImage] = useState<string | null>(null);
+    const fadeOutIndexRef = useRef<number>(0); // to keep track of the fade out index
 
     // for opening dialogue
     const [isOpen, setIsOpen] = useState(true);
@@ -53,6 +54,11 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
     };
 
     const checkAnswer = (answer: boolean) => {
+        if (isQuestionSelected) return;
+        setIsQuestionSelected(true);
+        fadeOutIndexRef.current = questionIndex;
+        if (questionIndex < questions.length - 1)
+            setQuestionIndex(questionIndex + 1);
         setSelectedAnswer(answer);
         const isCorrect = answer === questions[questionIndex].answer;
 
@@ -86,7 +92,6 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
             setImage(null);
             setCatImage(null);
             setSelectedAnswer(null);
-            setIsQuestionSelected(false);
             setTimeout(() => {
                 setHideCard(false);
                 if (questionIndex < questions.length - 1) {
@@ -96,6 +101,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                     setCompleted(true);
                     // setQuestionIndex(0);
                 }
+                setIsQuestionSelected(false);
             }, 100);
         }, 400);
     };
@@ -172,41 +178,20 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                                 </div>
                             </div>
                         )}
-                        {!hideCard && (
+                        {animationProps && (
                             <motion.div
                                 className="tf-question-container under"
                                 initial={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
-                                animate={
-                                    animationProps || {
-                                        x: 0,
-                                        y: 0,
-                                        rotate: 0,
-                                        opacity: 1,
-                                    }
-                                }
+                                animate={animationProps}
                                 transition={{ duration: 0.5, ease: 'easeOut' }}
                             >
                                 <h1 className="tf-question-text">
-                                    {questions[questionIndex].question}
+                                    {
+                                        questions[fadeOutIndexRef.current]
+                                            .question
+                                    }
                                 </h1>
-                                <div className="image-container">
-                                    <img
-                                        className="left-option-image"
-                                        src={'/true.svg'}
-                                        alt="feedback"
-                                        width={300}
-                                        height={200}
-                                        onClick={() => checkAnswer(true)}
-                                    />
-                                    <img
-                                        className="right-option-image"
-                                        src={'/false.svg'}
-                                        alt="feedback"
-                                        width={300}
-                                        height={200}
-                                        onClick={() => checkAnswer(false)} // issue with false
-                                    />
-                                </div>
+                                <div className="image-container"></div>
                             </motion.div>
                         )}
                         {selectedAnswer !== null && (
