@@ -98,7 +98,7 @@ const ChoicesOverlay = ({ scene }: SceneProp) => {
                 </div>
                 <div className={styles.choicesOverlay}>
                     <div>
-                        <p className={styles.question}> What would you do?</p>
+                        {/* <p className={styles.question}> What would you do?</p> */}
                         <div className={styles.choices}>
                             {action &&
                                 action.choices.map((choice, index) => (

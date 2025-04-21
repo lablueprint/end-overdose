@@ -10,7 +10,9 @@ export default function ResultPage() {
 
     return (
         <div className={styles.resultContainer}>
-            <h1>Slay Game Complete!</h1>
+            <h1>
+                Slay <br></br>Game Complete!
+            </h1>
             {/* <p>Correct Answers: {correct}</p>
             <p>Total Questions: {total}</p> */}
             <h2>Accuracy: {accuracy}%</h2>

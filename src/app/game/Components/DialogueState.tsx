@@ -47,7 +47,7 @@ export default function DialogueState() {
                     style={{ objectFit: 'cover' }}
                 />
             </div>
-            <div className={styles.peopleGroup1}>
+            {/* <div className={styles.peopleGroup1}>
                 {scene.characters.slice(0, 1).map((character, index) => (
                     <Image
                         key={index}
@@ -70,7 +70,7 @@ export default function DialogueState() {
                             alt={`Character ${index + 2}`}
                         />
                     ))}
-            </div>
+            </div> */}
             {/* <div className={styles.textSpacing}>
                 <div className={styles.characterName}>
                     <p> {scene.dialogue[dialogueIndex].name} </p>
@@ -82,7 +82,7 @@ export default function DialogueState() {
             </div> */}
             <div className={styles.textSpacing}>
                 <div className={styles.dialogueBox}>
-                    <div className={styles.avatarAndText}>
+                    <div className={styles.avatarSection}>
                         <Image
                             src={
                                 scene.characters[
@@ -90,17 +90,17 @@ export default function DialogueState() {
                                 ].avatar
                             }
                             alt="Avatar"
-                            width={60}
-                            height={60}
+                            width={120}
+                            height={120}
                             className={styles.avatar}
                         />
-                        <div className={styles.textContent}>
-                            <div className={styles.characterName}>
-                                {dialogue[dialogueIndex].name}
-                            </div>
-                            <div className={styles.messageText}>
-                                {dialogue[dialogueIndex].text}
-                            </div>
+                    </div>
+                    <div className={styles.textSection}>
+                        <div className={styles.characterName}>
+                            {dialogue[dialogueIndex].name}
+                        </div>
+                        <div className={styles.messageText}>
+                            {dialogue[dialogueIndex].text}
                         </div>
                     </div>
                     <div className={styles.arrow}>▶</div>
