@@ -57,12 +57,15 @@ export default function OpioidHome() {
 
     const totalLessons = lessons.length;
     // Calculate currentLesson as the integer index of the lesson based on courseProgress
-    const initialLesson = Math.round((courseProgress * totalLessons) / 100);
+    //const initialLesson = Math.round((courseProgress * totalLessons) / 100);
 
-    const [currentLesson, setLesson] = useState(initialLesson); // Start at the calculated lesson index
+    const [currentLesson, setLesson] = useState(0); // Start at the calculated lesson index
+    const [highestReachedLesson, setHighestReachedLesson] = useState<number>(0); // setting highest reached lesson to maintain progress
+    const [progressLoaded, setProgressLoaded] = useState(false);
     const [showExitModal, setShowExitModal] = useState(false);
     const router = useRouter();
 
+    // TODO: get rid of this function (defined and called later)
     const fetchOpioidCourseProgress = async () => {
         try {
             if (isStudent(user)) {
@@ -76,6 +79,8 @@ export default function OpioidHome() {
                         (response / 100) * totalLessons
                     );
                     setLesson(lessonIndex); // Set currentLesson based on progress
+                    setHighestReachedLesson(lessonIndex);
+                    setProgressLoaded(true);
                 } else {
                     console.error('Error fetching progress');
                 }
@@ -85,11 +90,36 @@ export default function OpioidHome() {
         }
     };
 
+    // TODO: get highest course progress from database (previous opioid progress) and start first lesson from there (not restart from 0)
     useEffect(() => {
+        const fetchOpioidCourseProgress = async () => {
+            if (!user || !isStudent(user)) {
+                setProgressLoaded(true);
+                return;
+            }
+
+            try {
+                const response =
+                    user.course_completion.opioidCourse.courseProgress;
+                const lessonIndex = Math.round((response / 100) * totalLessons);
+
+                setCourseProgress(response);
+                setLesson(lessonIndex);
+                setHighestReachedLesson(lessonIndex);
+            } catch (error) {
+                console.error('Error fetching progress:', error);
+            } finally {
+                setProgressLoaded(true); 
+            }
+        };
+
         fetchOpioidCourseProgress();
-    }, []);
+    }, [user]);
+
+    if (!progressLoaded) return <div>Loading course...</div>;
 
     const handleChangeLesson = (lessonNumber: number) => {
+        if (lessonNumber > highestReachedLesson) return; // blocks unreached lessons
         if (user && 'course_completion' in user) {
             const updatedOpioidCourse = user.course_completion
                 ?.opioidCourse || { courseProgress: 0 };
@@ -129,6 +159,7 @@ export default function OpioidHome() {
                 lessonCourse={'opioid'}
                 onHandleChangeLesson={handleChangeLesson}
                 selected={index == currentLesson}
+                disabled={index > highestReachedLesson}
             />
         </div>
     ));
@@ -141,6 +172,9 @@ export default function OpioidHome() {
         ) {
             setLesson((prevIndex) => {
                 const nextIndex = prevIndex + 1;
+                if (nextIndex > highestReachedLesson) {
+                    setHighestReachedLesson(nextIndex); // ✅ CHANGED
+                }
                 const updatedOpioidCourse = user.course_completion
                     .opioidCourse || {
                     courseProgress: 0,
@@ -178,7 +212,8 @@ export default function OpioidHome() {
             const updatedOpioidCourse = user.course_completion.opioidCourse || {
                 courseProgress: 0,
             };
-            const progressPercentage = (currentLesson / totalLessons) * 100;
+            const progressPercentage =
+                (highestReachedLesson / totalLessons) * 100;
             // Update the global user state with the current progress
             useUserStore.getState().setUser({
                 ...user,
