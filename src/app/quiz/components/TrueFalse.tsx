@@ -41,9 +41,6 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         string,
         number
     > | null>(null);
-    const [hideCard, setHideCard] = useState(false);
-    const [image, setImage] = useState<string | null>(null);
-    const [catImage, setCatImage] = useState<string | null>(null);
     const fadeOutIndexRef = useRef<number>(0); // to keep track of the fade out index
 
     // for opening dialogue
@@ -66,13 +63,9 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
             setCurrentScore(currentScore + 1);
             setResultMessage('correct');
             setAnimationProps({ x: 150, y: 50, rotate: 15, opacity: 0 });
-            setImage('/CheckLogo.png');
-            setCatImage('/happyNarcat.png');
         } else {
             setResultMessage('incorrect');
             setAnimationProps({ x: -150, y: 50, rotate: -15, opacity: 0 });
-            setImage('/XLogo.png');
-            setCatImage('/sadNarcat.png');
             setMissedQuestions((prevMissed) => [
                 // add missed question to missedQuestions array
                 ...prevMissed,
@@ -88,12 +81,8 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         setTimeout(() => {
             setResultMessage(null);
             setAnimationProps(null);
-            setHideCard(true);
-            setImage(null);
-            setCatImage(null);
             setSelectedAnswer(null);
             setTimeout(() => {
-                setHideCard(false);
                 if (questionIndex < questions.length - 1) {
                     setQuestionIndex(questionIndex + 1);
                     setSelectedAnswer(null);
@@ -153,37 +142,48 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                         Determine whether this statement is true or false.
                     </h1>
                     <div>
-                        {questionIndex < questions.length && (
-                            <div className="tf-question-container under">
-                                <h1 className="tf-question-text">
-                                    {questions[questionIndex].question}
-                                </h1>
-                                <div className="image-container">
-                                    <img
-                                        className="left-option-image"
-                                        src={'/true.svg'}
-                                        alt="feedback"
-                                        width={300}
-                                        height={200}
-                                        onClick={() => checkAnswer(true)}
-                                    />
-                                    <img
-                                        className="right-option-image"
-                                        src={'/false.svg'}
-                                        alt="feedback"
-                                        width={300}
-                                        height={200}
-                                        onClick={() => checkAnswer(false)}
-                                    />
+                        {questionIndex < questions.length &&
+                            (animationProps === null ||
+                                fadeOutIndexRef.current <
+                                    questions.length - 1) && (
+                                <div className="tf-question-container under">
+                                    <h1 className="tf-question-text">
+                                        {questions[questionIndex].question}
+                                    </h1>
+                                    <div className="image-container">
+                                        <img
+                                            className="left-option-image"
+                                            src={'/true.svg'}
+                                            alt="feedback"
+                                            width={300}
+                                            height={200}
+                                            onClick={() => checkAnswer(true)}
+                                        />
+                                        <img
+                                            className="right-option-image"
+                                            src={'/false.svg'}
+                                            alt="feedback"
+                                            width={300}
+                                            height={200}
+                                            onClick={() => checkAnswer(false)}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
                         {animationProps && (
                             <motion.div
                                 className="tf-question-container under"
-                                initial={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
+                                initial={{
+                                    opacity: 1,
+                                    x: 0,
+                                    y: 0,
+                                    rotate: 0,
+                                }}
                                 animate={animationProps}
-                                transition={{ duration: 0.5, ease: 'easeOut' }}
+                                transition={{
+                                    duration: 0.5,
+                                    ease: 'easeOut',
+                                }}
                             >
                                 <h1 className="tf-question-text">
                                     {
