@@ -3,6 +3,7 @@
 import { cache } from 'react';
 import { Student } from '@/types/Student';
 import firebase_app from '@/firebase/config';
+import { auth } from '@/firebase/clientApp'; // Adjusted the path to match the project structure
 import {
     getFirestore,
     collection,
@@ -158,11 +159,11 @@ export const validateUserCredentials = cache(
 export async function addQuiz(updateQuizzes: Quiz[]) {
     try {
         console.log('work');
-        // const user = auth.currentUser;
-        // if (!user) {
-        //     return { error: 'User data not found' };
-        // }
-        const userRef = doc(db, 'students', '12n2OCj3WNa0cM4e2rUh'); // hard coded student id for now
+        const user = auth.currentUser;
+        if (!user) {
+            return { error: 'User data not found' };
+        }
+        const userRef = doc(db, 'students', user.uid); // Use the user's unique ID
         const userDoc = await getDoc(userRef); // DocumentSnapshot
         if (!userDoc.exists()) {
             return { error: 'Student document not found' };
@@ -233,7 +234,11 @@ export async function updateCourseProgress(
     progress: number
 ): Promise<UpdateCourseProgressResponse> {
     try {
-        const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); //later, replace userId with the actual user's Id
+        const user = auth.currentUser;
+        if (!user) {
+            return { error: 'User data not found' };
+        }
+        const userRef = doc(db, 'students', user.uid); //later, replace userId with the actual user's Id
         const userDoc = await getDoc(userRef);
 
         if (!userDoc.exists()) {
@@ -254,7 +259,11 @@ export async function updateCourseProgress(
 // Function to fetch course progress from Firestore
 export async function getCourseProgress(courseName: string) {
     try {
-        const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); // Get the user document reference using the user's ID
+        const user = auth.currentUser;
+        if (!user) {
+            return { error: 'User data not found' };
+        }
+        const userRef = doc(db, 'students', user.uid); // Get the user document reference using the user's ID
         const userDoc = await getDoc(userRef);
 
         if (!userDoc.exists()) {
