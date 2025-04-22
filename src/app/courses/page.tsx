@@ -143,6 +143,25 @@ export default function Courses() {
                     Lorem ipsum dolor sit ameet, consecttur adipiscing elit.
                     Lorem ipsur dolor sit amet, consectetur adipiscing elit.
                 </p>
+                <div
+                    style={{
+                        display: 'flex',
+                        gap: '12px',
+                        justifyContent: 'center',
+                        margin: '1rem 0',
+                    }}
+                >
+                    <button
+                        onClick={() =>
+                            setCurrentLevel((prev) => Math.max(prev - 1, 0))
+                        }
+                    >
+                        ◀️ Previous Level
+                    </button>
+                    <button onClick={() => setCurrentLevel((prev) => prev + 1)}>
+                        ▶️ Next Level
+                    </button>
+                </div>
             </div>
             <div className={styles.mapContainer}>
                 {' '}

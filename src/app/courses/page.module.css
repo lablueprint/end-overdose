@@ -66,3 +66,18 @@
     color: #C01A18;
     text-decoration: underline;
 }
+
+.levelButton {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    background-color: #e3e3e3;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .levelButton:hover {
+    background-color: #ccc;
+  }
+  
