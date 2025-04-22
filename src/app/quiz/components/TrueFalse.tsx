@@ -23,6 +23,7 @@ interface MissedQuestion {
     question: string;
     correctAnswer: number;
     selectedAnswer: number | null; // 1 is true, 0 is false
+    isCorrect: boolean;
 }
 
 export default function TrueFalse({ title, description }: TrueFalseProps) {
@@ -59,6 +60,16 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         setSelectedAnswer(answer);
         const isCorrect = answer === questions[questionIndex].answer;
 
+        setMissedQuestions((prevMissed) => [
+            // add missed question to missedQuestions array
+            ...prevMissed,
+            {
+                question: questions[questionIndex].question,
+                correctAnswer: questions[questionIndex].answer ? 1 : 0,
+                selectedAnswer: Number(answer),
+                isCorrect: isCorrect,
+            },
+        ]);
         if (isCorrect) {
             setCurrentScore(currentScore + 1);
             setResultMessage('correct');
@@ -66,17 +77,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         } else {
             setResultMessage('incorrect');
             setAnimationProps({ x: -150, y: 50, rotate: -15, opacity: 0 });
-            setMissedQuestions((prevMissed) => [
-                // add missed question to missedQuestions array
-                ...prevMissed,
-                {
-                    question: questions[questionIndex].question,
-                    correctAnswer: questions[questionIndex].answer ? 1 : 0,
-                    selectedAnswer: Number(answer),
-                },
-            ]);
         }
-        console.log('missed questions', missedQuestions);
 
         setTimeout(() => {
             setResultMessage(null);

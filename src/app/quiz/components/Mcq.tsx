@@ -30,6 +30,7 @@ export default function Mcq({ title, description }: McqProps) {
         question: string;
         correctAnswer: number;
         selectedAnswer: number | null;
+        isCorrect: boolean;
     }
 
     const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>( //  array storing missed questions
@@ -57,6 +58,19 @@ export default function Mcq({ title, description }: McqProps) {
     const handleAnswerSelected = (answerIndex: number) => {
         setSelectedAnswer(answerIndex);
         setIsQuestionSelected(true);
+        setMissedQuestions((prevMissed) => [
+            // add missed question to missedQuestions array
+            ...prevMissed,
+            {
+                question: questions[currentQuestionIndex].question,
+                correctAnswer: questions[currentQuestionIndex].correctAnswer,
+                selectedAnswer: answerIndex,
+                isCorrect:
+                    answerIndex === currentQuestion.correctAnswer
+                        ? true
+                        : false,
+            },
+        ]);
         if (!isQuestionSelected) {
             // check for correct answer
             if (answerIndex === currentQuestion.correctAnswer) {
@@ -64,16 +78,6 @@ export default function Mcq({ title, description }: McqProps) {
                 setCurrentScore(currentScore + 1);
             } else {
                 setFeedback('Wrong!');
-                setMissedQuestions((prevMissed) => [
-                    // add missed question to missedQuestions array
-                    ...prevMissed,
-                    {
-                        question: questions[currentQuestionIndex].question,
-                        correctAnswer:
-                            questions[currentQuestionIndex].correctAnswer,
-                        selectedAnswer: answerIndex,
-                    },
-                ]);
             }
             if (currentQuestionIndex === questions.length - 1) {
                 // if last question, set isCompleted to true
