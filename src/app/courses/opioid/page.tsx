@@ -15,8 +15,6 @@ import '@fontsource/roboto-condensed/600.css';
 import '@fontsource/roboto-condensed/700.css';
 import { isStudent } from '@/types/Student';
 
-// import { getCourseProgress } from '@/app/api/students/actions';
-
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -56,8 +54,6 @@ export default function OpioidHome() {
     const [courseProgress, setCourseProgress] = useState(0);
 
     const totalLessons = lessons.length;
-    // Calculate currentLesson as the integer index of the lesson based on courseProgress
-    //const initialLesson = Math.round((courseProgress * totalLessons) / 100);
 
     const [currentLesson, setLesson] = useState(0); // Start at the calculated lesson index
     const [highestReachedLesson, setHighestReachedLesson] = useState<number>(0); // setting highest reached lesson to maintain progress
@@ -65,38 +61,13 @@ export default function OpioidHome() {
     const [showExitModal, setShowExitModal] = useState(false);
     const router = useRouter();
 
-    // TODO: get rid of this function (defined and called later)
-    const fetchOpioidCourseProgress = async () => {
-        try {
-            if (isStudent(user)) {
-                const response =
-                    user.course_completion.opioidCourse.courseProgress;
-                if (response !== undefined) {
-                    setCourseProgress(response);
-
-                    // Calculate current lesson based on the fetched progress
-                    const lessonIndex = Math.round(
-                        (response / 100) * totalLessons
-                    );
-                    setLesson(lessonIndex); // Set currentLesson based on progress
-                    setHighestReachedLesson(lessonIndex);
-                    setProgressLoaded(true);
-                } else {
-                    console.error('Error fetching progress');
-                }
-            }
-        } catch (error) {
-            console.error('Error fetching data: ', error);
-        }
-    };
-
-    // TODO: get highest course progress from database (previous opioid progress) and start first lesson from there (not restart from 0)
+    // TODO: make the isStudent type guard work
     useEffect(() => {
         const fetchOpioidCourseProgress = async () => {
-            if (!user || !isStudent(user)) {
-                setProgressLoaded(true);
-                return;
-            }
+            // if (!user || !isStudent(user)) {
+            //     setProgressLoaded(true);
+            //     return;
+            // }
 
             try {
                 const response =
@@ -109,7 +80,7 @@ export default function OpioidHome() {
             } catch (error) {
                 console.error('Error fetching progress:', error);
             } finally {
-                setProgressLoaded(true); 
+                setProgressLoaded(true);
             }
         };
 
@@ -119,8 +90,11 @@ export default function OpioidHome() {
     if (!progressLoaded) return <div>Loading course...</div>;
 
     const handleChangeLesson = (lessonNumber: number) => {
-        if (lessonNumber > highestReachedLesson) return; // blocks unreached lessons
-        if (user && 'course_completion' in user) {
+        if (
+            lessonNumber > highestReachedLesson &&
+            user &&
+            'course_completion' in user
+        ) {
             const updatedOpioidCourse = user.course_completion
                 ?.opioidCourse || { courseProgress: 0 };
 
@@ -173,7 +147,7 @@ export default function OpioidHome() {
             setLesson((prevIndex) => {
                 const nextIndex = prevIndex + 1;
                 if (nextIndex > highestReachedLesson) {
-                    setHighestReachedLesson(nextIndex); // ✅ CHANGED
+                    setHighestReachedLesson(nextIndex);
                 }
                 const updatedOpioidCourse = user.course_completion
                     .opioidCourse || {
@@ -202,11 +176,8 @@ export default function OpioidHome() {
         setShowExitModal(true);
     };
 
-    // Confirm Exit - Save progress and update global state
+    // save progress to user state and update firebase upon exit
     const confirmExit = async () => {
-        // Save progress to database (Replace later with actual API call)
-        console.log('Saving progress:', currentLesson);
-
         // Ensure the user exists and safely access opioidCourse
         if (user && 'course_completion' in user) {
             const updatedOpioidCourse = user.course_completion.opioidCourse || {
@@ -226,6 +197,7 @@ export default function OpioidHome() {
                 },
             });
 
+            // update firebase
             await updateCourseProgress(
                 user.student_id,
                 'opioidCourse',
@@ -414,3 +386,10 @@ export default function OpioidHome() {
         </div>
     );
 }
+
+// TODO: no delay for continue when revisiting a completed lesson: enable button when timer ends OR if course progress is beyond the index of the current lesson
+// - this logic is handled in the simplepage component so pass lessonCompletion as a prop from this page
+// TODO: make isStudent type guard work
+// TODO: not resetting lesson index after clicking on a previous lesson and (i think fix needed in handleNext after handleChange)
+// - i think updateCourseProgress is being called in SimplePage handleNext - that shouldn't be happening i dont think
+// - also think something fishy like this is happening because when the course is completed the progress is updated to 100 but theres an error saying that could not update course progress from within UpdateCourseProgress

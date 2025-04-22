@@ -9,7 +9,7 @@ interface SimplePageProps {
     pageTitle: string;
     handleNext: () => void;
     lesson: Lesson;
-    courseCompleted: boolean;
+    courseCompleted: boolean
 }
 
 interface Lesson {

@@ -60,7 +60,7 @@ export const getStudentFromID = cache(async (id: string) => {
 
         if (!snapshot.empty) {
             const doc = snapshot.docs[0];
-            return { id:doc.id, ...(doc.data() as Student) };
+            return { id: doc.id, ...(doc.data() as Student) };
         }
 
         return null;
