@@ -7,6 +7,7 @@ import { signUp } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
 import { School } from '@/types/School';
 import { WolfPackAlphaUniversity, UCLA } from '@/types/School';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import {
     getAuth,
     sendSignInLinkToEmail,
@@ -17,20 +18,22 @@ import {
 } from 'firebase/auth';
 import { addAdmin } from '@/app/api/admins/actions';
 
+type Inputs = {
+    role: string;
+    email: string;
+    password: string;
+    school_name: string;
+};
+
 const SignUpPage = () => {
     const router = useRouter();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [schoolName, setSchoolName] = useState('');
-    // const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState<boolean>(false);
 
-    const schools = [WolfPackAlphaUniversity, UCLA];
-
-    const schoolValues = schools.map((school: School) => (
-        <option key={school.name} value={school.name}>
-            {school.name}
+    const roles = ['Student', 'School Admin', 'End Overdose Admin'];
+    const roleValues = roles.map((role) => (
+        <option key={role} value={role}>
+            {role}
         </option>
     ));
 
@@ -53,25 +56,37 @@ const SignUpPage = () => {
         linkDomain: 'end-overdose-bcbd0.firebaseapp.com',
     };
 
-    //Change selected school from dropdown selection
-    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    //Change selected school from dropdown selection MERGE CONCLICT SO COMMENTED OUT IF DONT NEED DELETE
+    /*const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedSchoolName = e.target.value;
         if (selectedSchoolName) {
             setSchoolName(selectedSchoolName);
         }
-    };
+    };*/
+    const schools = ['UCLA', 'USC', 'UCSD', 'UCI', 'UCB'];
+    const schoolValues = schools.map((school) => (
+        <option key={school} value={school}>
+            {school}
+        </option>
+    ));
 
-    const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
+    const { register, handleSubmit } = useForm<Inputs>();
 
-        // Check if passwords match
-        // if (password !== confirmPassword) {
-        //     setError('Passwords do not match.');
-        //     return;
-        // }
-        const auth = getAuth();
+    // Check if passwords match
+    // if (password !== confirmPassword) {
+    //     setError('Passwords do not match.');
+    //     return;
+    // }
+    const onSubmit: SubmitHandler<Inputs> = async ({
+        email,
+        password,
+        role,
+        school_name,
+    }) => {
+        setError('');
 
         try {
+            const auth = getAuth();
             // 1) Create the user in Firebase Auth with email & password
             const { user } = await createUserWithEmailAndPassword(
                 auth,
@@ -87,7 +102,7 @@ const SignUpPage = () => {
                 },
                 email,
                 role: 'school_admin',
-                school_name: schoolName,
+                school_name: 'UCLA',
                 approved: false,
             };
 
@@ -108,8 +123,11 @@ const SignUpPage = () => {
             console.error(err);
             setError(err.message || 'Something went wrong.');
         }
+    };
 
-        /*const response = await signUp(newAdmin, password);
+    /*const response = await signUp(newAdmin, password);
+        const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
+        const response = await signUp(data);
 
         if (response.error) {
             setError(response.error);
@@ -121,7 +139,6 @@ const SignUpPage = () => {
                 router.push('/login');
             }, 1000);
         }*/
-    };
 
     useEffect(() => {
         const auth = getAuth();
@@ -137,34 +154,45 @@ const SignUpPage = () => {
                         <div className={styles.titleTextContainer}>
                             <h1 className={styles.h1}>Create an Account</h1>
                             <h2 className={styles.h2}>
-                                Enter the following information to setup your
-                                account
+                                We're so glad you could join us!
                             </h2>
                         </div>
                         {error && <p style={{ color: 'red' }}>{error}</p>}
                         {success && (
-                            <p style={{ color: 'green' }}>
-                                Admin Signup successful!
-                            </p>
+                            <p style={{ color: 'green' }}>Signup successful!</p>
                         )}
                         <div className={styles.formContainer}>
                             <form
                                 className={styles.form}
-                                onSubmit={handleSubmit}
+                                onSubmit={handleSubmit(onSubmit)}
                             >
+                                <div className={styles.subForm}>
+                                    <label className={styles.h2} htmlFor="role">
+                                        Role
+                                    </label>
+                                    <select
+                                        className={styles.input}
+                                        id="role"
+                                        {...register('role', {
+                                            required: true,
+                                        })}
+                                    >
+                                        {roleValues}
+                                    </select>
+                                </div>
                                 <div className={styles.subForm}>
                                     <label
                                         className={styles.h2}
-                                        htmlFor="schoolName"
+                                        htmlFor="school_name"
                                     >
                                         School Name
                                     </label>
                                     <select
                                         className={styles.input}
-                                        id="schoolName"
-                                        name="schoolName"
-                                        onChange={(e) => handleSelectChange(e)}
-                                        required
+                                        id="school_name"
+                                        {...register('school_name', {
+                                            required: true,
+                                        })}
                                     >
                                         {schoolValues}
                                     </select>
@@ -180,11 +208,9 @@ const SignUpPage = () => {
                                         className={styles.input}
                                         type="email"
                                         id="email"
-                                        value={email}
-                                        onChange={(e) =>
-                                            setEmail(e.target.value)
-                                        }
-                                        required
+                                        {...register('email', {
+                                            required: true,
+                                        })}
                                     />
                                 </div>
                                 <div className={styles.subForm}>
@@ -198,11 +224,9 @@ const SignUpPage = () => {
                                         className={styles.input}
                                         type="password"
                                         id="password"
-                                        value={password}
-                                        onChange={(e) =>
-                                            setPassword(e.target.value)
-                                        }
-                                        required
+                                        {...register('password', {
+                                            required: true,
+                                        })}
                                     />
                                 </div>
                                 <button

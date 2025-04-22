@@ -46,7 +46,7 @@ export default function Feedback({
             <Dialog open={isOpen} onClose={onContinue} className="relative">
                 <DialogBackdrop className="fixed inset-0 bg-black/30" />
                 <div className="dialog-container">
-                    <DialogPanel className="dialog-panel">
+                    <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-lg shadow-lg">
                         <DialogTitle
                             className={`feedback ${feedback === 'Wrong!' ? 'wrong' : 'correct'}`}
                         >

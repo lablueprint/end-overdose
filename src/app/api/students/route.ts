@@ -5,27 +5,42 @@ import { getFirestore, addDoc, collection } from 'firebase/firestore';
 const db = getFirestore(firebase_app);
 
 export async function POST(request: NextRequest) {
-    console.log('HERE');
+    console.log('Processing student creation request');
     try {
         const requestData = await request.json();
         console.log('Request Data:', requestData); // Log request data for debugging
 
         const studentJSON = {
             student_id: requestData.student_id,
-            name: {
-                first: requestData.name.first,
-                last: requestData.name.last,
-            },
+            email: requestData.email || null,
             school_name: requestData.school_name,
+            nameplate: requestData.nameplate,
+            kibble_count: requestData.kibble_count || 0,
+            course_completion: {
+                opioidCourse: {
+                    courseScore: 0,
+                    courseProgress: 0,
+                },
+                careerCourse: {
+                    courseScore: 0,
+                    courseProgress: 0,
+                },
+            },
+            quizzes: [],
             badges: [],
-            course_completion: {},
         };
 
-        if ('badges' in requestData) {
-            studentJSON.badges = requestData.badges;
-        }
-        if ('course_completion' in requestData) {
+        // Apply any provided data from the request
+        if (requestData.course_completion) {
             studentJSON.course_completion = requestData.course_completion;
+        }
+
+        if (requestData.quizzes) {
+            studentJSON.quizzes = requestData.quizzes;
+        }
+
+        if (requestData.badges) {
+            studentJSON.badges = requestData.badges;
         }
 
         const newStudentRef = await addDoc(

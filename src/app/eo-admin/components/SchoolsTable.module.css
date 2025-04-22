@@ -1,0 +1,37 @@
+.tableContainer {
+    overflow-x: auto;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tableHead {
+    background-color: #0f172a;
+    color: white;
+  }
+  
+  .tableHeaderCell {
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+  
+  .tableRow {
+    border-bottom: 1px solid rgb(229, 231, 235);
+  }
+  
+  .tableRow:hover {
+    background-color: rgb(249, 250, 251);
+  }
+  
+  .tableCell {
+    padding: 0.75rem 1rem;
+  }
+  
+  .viewButton {
+    border: 1px solid rgb(209, 213, 219);
+    border-radius: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+  }
