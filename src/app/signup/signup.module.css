@@ -1,43 +1,58 @@
 .splitContainer {
     display: flex;
     flex-direction: row;
+    background-image: url('../../../public/onboardingBG.svg');
+    background-size: cover;
+    background-position: center bottom;
 }
 
 .placeHolderHalf {
-    background-color: lightgrey;
     width: 50%;
     height: 100vh;
 }
+.placeHolderHalf .narcat {
+    position: absolute;
+    bottom: 50px;
+    right: 130px;
+    width: 350px;
+    height: 350px;
+    background-image: url('../../../public/cowboyNarcat.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
 
 .loginHalf {
-    background-color: white;
+    background-color: transparent;
     width: 50%;
     height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    padding-top: 72px;
-    padding-bottom: 72px;
+    padding-top: 100px;
+    padding-bottom: auto;
     padding-left: 93px;
     padding-right: 93px;
 }
 
 .h1 {
-    font-size: 32px;
-    font-weight: 500;
-    color: #333333;
+    font-size: 36px;
+    line-height: 40px;
+    font-weight: 600;
+    color: #f8fafc;
 }
 
 .h2 {
     font-size: 16px;
     font-weight: 400;
-    color: #666666;
+    color: #888888;
 }
-
+.titleTextContainer .h2 {
+    color: #888888;
+}
 .contentContainer {
     width: 100%;
-    height: 100%;
+    height: 70%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -45,37 +60,64 @@
 
 .subForm {
     display: flex;
-    flex-direction: column;;
+    flex-direction: column;
 }
 
 .input {
-    height: 56px;
+    height: 48px;
     border-width: 1px;
     border-radius: 12px;
-    border-color: #666666;
     opacity: 35%;
     padding: 12px;
 }
 
+.formControl {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    border-radius: 4px;
+    outline: none;
+    transition: box-shadow 0.2s;
+}
+
+.subForm .h2 {
+    color: #f8fafc;
+}
+
+/*.formControl:focus {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  }*/
+
 .form {
-    display:flex;
+    display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
 .bodyContainer {
-    display:flex;
+    display: flex;
     flex-direction: column;
     gap: 40px;
 }
 
+.form .buttonContainer {
+    display: flex;
+    justify-content: space-between;
+}
+.robotVerPlaceholder {
+    width: 60%;
+    height: 48px;
+    border: white 1px solid;
+    border-radius: 8px;
+}
+
 .loginButton {
-    width: 250px;
-    height: 64px;
-    border-radius: 10px;
-    opacity: 25%;
-    background-color: #111111;
-    color: white;
+    width: 35%;
+    height: 48px;
+    border-radius: 8px;
+    opacity: 95%;
+    background-color: #ffffff;
+    color: black;
 }
 
 .navigationContainer {
@@ -91,5 +133,7 @@
 }
 
 .link {
-    text-decoration: underline;
+    text-decoration: none;
+    font-weight: 700;
+    color: white;
 }

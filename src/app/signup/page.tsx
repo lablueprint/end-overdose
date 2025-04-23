@@ -69,15 +69,13 @@ const SignUpPage = () => {
 
     return (
         <div className={styles.splitContainer}>
-            <div className={styles.placeHolderHalf}></div>
             <div className={styles.loginHalf}>
                 <div className={styles.contentContainer}>
                     <div className={styles.bodyContainer}>
                         <div className={styles.titleTextContainer}>
-                            <h1 className={styles.h1}>Create an Account</h1>
+                            <h1 className={styles.h1}>CREATE AN ACCOUNT</h1>
                             <h2 className={styles.h2}>
-                                Enter the following information to setup your
-                                account
+                                We're so glad you could join us!
                             </h2>
                         </div>
                         {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -99,12 +97,16 @@ const SignUpPage = () => {
                                         School Name
                                     </label>
                                     <select
-                                        className={styles.input}
+                                        className={`${styles.input} ${styles.formControl}`}
                                         id="schoolName"
                                         name="schoolName"
+                                        defaultValue=""
                                         onChange={(e) => handleSelectChange(e)}
                                         required
                                     >
+                                        <option value="" disabled hidden>
+                                            Select your school…
+                                        </option>
                                         {schoolValues}
                                     </select>
                                 </div>
@@ -113,10 +115,10 @@ const SignUpPage = () => {
                                         className={styles.h2}
                                         htmlFor="email"
                                     >
-                                        Email:
+                                        Email address:
                                     </label>
                                     <input
-                                        className={styles.input}
+                                        className={`${styles.input} ${styles.formControl}`}
                                         type="email"
                                         id="email"
                                         value={email}
@@ -134,7 +136,7 @@ const SignUpPage = () => {
                                         Password:
                                     </label>
                                     <input
-                                        className={styles.input}
+                                        className={`${styles.input} ${styles.formControl}`}
                                         type="password"
                                         id="password"
                                         value={password}
@@ -144,12 +146,17 @@ const SignUpPage = () => {
                                         required
                                     />
                                 </div>
-                                <button
-                                    className={styles.loginButton}
-                                    type="submit"
-                                >
-                                    Submit
-                                </button>
+                                <div className={styles.buttonContainer}>
+                                    <div
+                                        className={styles.robotVerPlaceholder}
+                                    ></div>
+                                    <button
+                                        className={styles.loginButton}
+                                        type="submit"
+                                    >
+                                        SIGN UP
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -157,11 +164,14 @@ const SignUpPage = () => {
                         <h2 className={styles.h2}>
                             {`Already have an account?   `}
                             <Link className={styles.link} href="/login">
-                                Login
+                                Sign In
                             </Link>
                         </h2>
                     </div>
                 </div>
+            </div>
+            <div className={styles.placeHolderHalf}>
+                <div className={styles.narcat}></div>
             </div>
         </div>
     );
