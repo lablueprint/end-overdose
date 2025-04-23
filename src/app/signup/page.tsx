@@ -1,10 +1,22 @@
 'use client';
 import Link from 'next/link';
 import styles from './signup.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Admin } from '@/types/Admin';
 import { signUp } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
+import { School } from '@/types/School';
+import { WolfPackAlphaUniversity, UCLA } from '@/types/School';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import {
+    getAuth,
+    sendSignInLinkToEmail,
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+    setPersistence,
+    browserSessionPersistence,
+} from 'firebase/auth';
+import { addAdmin } from '@/app/api/admins/actions';
 
 type Inputs = {
     role: string;
@@ -25,6 +37,32 @@ const SignUpPage = () => {
         </option>
     ));
 
+    const actionCodeSettings = {
+        // URL you want to redirect back to. The domain (www.example.com) for this
+        // URL must be in the authorized domains list in the Firebase Console.
+        url: `${window.location.origin}/login`,
+        // This must be true.
+        handleCodeInApp: true,
+        //links specificlaly for IOS or android
+        //iOS: {
+        //bundleId: 'com.example.ios',
+        //},
+        //android: {
+        //packageName: 'com.example.android',
+        //installApp: true,
+        //minimumVersion: '12',
+        //},
+        // The domain must be configured in Firebase Hosting and owned by the project.
+        linkDomain: 'end-overdose-bcbd0.firebaseapp.com',
+    };
+
+    //Change selected school from dropdown selection MERGE CONCLICT SO COMMENTED OUT IF DONT NEED DELETE
+    /*const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedSchoolName = e.target.value;
+        if (selectedSchoolName) {
+            setSchoolName(selectedSchoolName);
+        }
+    };*/
     const schools = ['UCLA', 'USC', 'UCSD', 'UCI', 'UCB'];
     const schoolValues = schools.map((school) => (
         <option key={school} value={school}>
@@ -34,7 +72,61 @@ const SignUpPage = () => {
 
     const { register, handleSubmit } = useForm<Inputs>();
 
-    const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
+    // Check if passwords match
+    // if (password !== confirmPassword) {
+    //     setError('Passwords do not match.');
+    //     return;
+    // }
+    const onSubmit: SubmitHandler<Inputs> = async ({
+        email,
+        password,
+        role,
+        school_name,
+    }) => {
+        setError('');
+
+        try {
+            const auth = getAuth();
+            // 1) Create the user in Firebase Auth with email & password
+            const { user } = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+            // 2) Build your Admin object
+            const newAdmin: Admin = {
+                name: {
+                    first: 'Test',
+                    last: 'Test',
+                },
+                email,
+                role: 'school_admin',
+                school_name: 'UCLA',
+                approved: false,
+            };
+
+            // 3) Write it into your “admins” collection keyed by uid
+            await addAdmin(newAdmin, user.uid);
+
+            // 4) Send email‑verification instead of a magic link:
+            await sendEmailVerification(user);
+            console.log('Verification email sent');
+
+            setSuccess(true);
+
+            // 5) Redirect to login or dashboard
+            setTimeout(() => {
+                router.push('/login');
+            }, 1000);
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message || 'Something went wrong.');
+        }
+    };
+
+    /*const response = await signUp(newAdmin, password);
+        const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
         const response = await signUp(data);
 
         if (response.error) {
@@ -46,8 +138,12 @@ const SignUpPage = () => {
             setTimeout(() => {
                 router.push('/login');
             }, 1000);
-        }
-    };
+        }*/
+
+    useEffect(() => {
+        const auth = getAuth();
+        auth.signOut();
+    }, []);
 
     return (
         <div className={styles.splitContainer}>
