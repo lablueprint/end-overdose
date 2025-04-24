@@ -54,27 +54,20 @@ export const getStudentCount = cache(async () => {
 });
 
 //returns student object from firebase based off studentid parameter
-export const getStudentFromID = cache(
-    async (id: string, updateQuizzes: Quiz[]) => {
-        try {
-            const q = query(studentsCollection, where('student_id', '==', id)); //Find student from ID
-            const snapshot = await getDocs(q);
+export const getStudentFromID = cache(async (id: string) => {
+    try {
+        const q = query(studentsCollection, where('student_id', '==', id)); //Find student from ID
+        const snapshot = await getDocs(q);
 
-            if (!snapshot.empty) {
-                const doc = snapshot.docs[0];
-                await updateDoc(doc.ref, {
-                    quizzes: updateQuizzes,
-                });
-                return { ...(doc.data() as Student) };
-            }
-
-            return { error: 'Student document not found' };
-        } catch (error) {
-            console.error('Error fetching student:', error);
-            throw new Error('Failed to fetch student.');
+        if (!snapshot.empty) {
+            const doc = snapshot.docs[0];
+            return { id: doc.id, ...(doc.data() as Student) };
         }
+    } catch (error) {
+        console.error('Error fetching student:', error);
+        throw new Error('Failed to fetch student.');
     }
-);
+});
 
 //3. AVERAGING STUDENT SCORES/INFORMATION (Using aggregate function)
 export const getSchoolAverage = cache(async (schoolName: string) => {
@@ -246,15 +239,18 @@ interface UpdateCourseProgressResponse {
 }
 
 export async function updateCourseProgress(
+    student_id: string,
     courseName: string,
     progress: number
 ): Promise<UpdateCourseProgressResponse> {
     try {
-        const user = auth.currentUser;
-        if (!user) {
-            return { error: 'User data not found' };
+        const studentWithID = await getStudentFromID(student_id);
+
+        if (!studentWithID) {
+            return { error: 'Student not found' };
         }
-        const userRef = doc(db, 'students', user.uid); //later, replace userId with the actual user's Id
+
+        const userRef = doc(db, 'students', studentWithID.id); // getting actual user's id
         const userDoc = await getDoc(userRef);
 
         if (!userDoc.exists()) {

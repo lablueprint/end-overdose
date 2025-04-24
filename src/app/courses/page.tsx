@@ -1,13 +1,10 @@
 'use client';
-import Link from 'next/link';
-import Course from './components/Course';
-import DailyQuest from './components/DailyQuest';
 import { useUserStore } from '@/store/userStore';
-import StoreItem from './components/StoreItem';
 import styles from './page.module.css';
 import AuthWrap from '@/components/AuthWrap';
-import { getCourseProgress } from '../api/students/actions';
+//import { getCourseProgress } from '../api/students/actions';
 import { useState, useEffect } from 'react';
+import { isStudent } from '@/types/Student';
 import LevelIcon from './components/LevelIcon';
 
 export default function Courses() {
@@ -19,17 +16,12 @@ export default function Courses() {
     useEffect(() => {
         const fetchOpioidCourseProgress = async () => {
             try {
-                if (user) {
-                    // Call the API function to get the course progress
-                    const response = await getCourseProgress('opioidCourse');
-                    if (response.progress) {
-                        setOpioidCourseProgress(response.progress);
-                    } else {
-                        console.error(
-                            'Error fetching progress:',
-                            response.error
-                        );
-                    }
+                if (isStudent(user)) {
+                    // short-circuit evaluation, only checking role value if it exists
+                    // checking that the user is a student by checking against admin attributes
+                    setOpioidCourseProgress(
+                        user.course_completion.opioidCourse.courseProgress
+                    );
                 }
             } catch (error) {
                 console.error('Error fetching data: ', error);
