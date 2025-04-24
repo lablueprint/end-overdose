@@ -1,11 +1,19 @@
 'use client';
 import { useState } from 'react';
+import {
+    Description,
+    Dialog,
+    DialogPanel,
+    DialogTitle,
+    DialogBackdrop,
+} from '@headlessui/react';
 import Question from './Question';
 import Score from './Score';
 import questions from '../questions.json' assert { type: 'json' };
 import Feedback from './Feedback';
 
 import './startpage.css';
+import '../styles.css';
 
 interface McqProps {
     title: string;
@@ -37,7 +45,15 @@ export default function Mcq({ title, description }: McqProps) {
     const currentQuestion = questions[currentQuestionIndex];
 
     const [feedback, setFeedback] = useState<string>('');
+    const [completed, setCompleted] = useState(false);
 
+    // for opening dialogue
+    const [started, setStarted] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
+    const onContinue = () => {
+        setIsOpen(false);
+        setStarted(true);
+    };
     const handleAnswerSelected = (answerIndex: number) => {
         setSelectedAnswer(answerIndex);
         setIsQuestionSelected(true);
@@ -59,23 +75,38 @@ export default function Mcq({ title, description }: McqProps) {
                     },
                 ]);
             }
+            if (currentQuestionIndex === questions.length - 1) {
+                // if last question, set isCompleted to true
+                setCompleted(true);
+            }
         }
     };
 
     // if student has not started the quiz, display the begin quiz button, title, description
     if (!hasStarted) {
         return (
-            <div className="start-container">
-                <h1>{title}</h1>
-                <p>{description}</p>
-                <button onClick={handleStart}>Begin</button>
-            </div>
+            <Dialog open={isOpen} onClose={handleStart} className="relative">
+                <DialogBackdrop className="fixed inset-0 bg-black/30" />
+                <div className="dialog-container">
+                    <DialogPanel className="dialog-panel">
+                        <DialogTitle className="dialog-title">
+                            {title}
+                        </DialogTitle>
+                        <Description className="dialog-description">
+                            {description}
+                        </Description>
+                        <div className="dialog-button">
+                            <button onClick={handleStart}>Begin</button>
+                        </div>
+                    </DialogPanel>
+                </div>
+            </Dialog>
         );
     }
 
     return (
         <>
-            {currentQuestionIndex < questions.length ? ( // if there are still questions to be answered, display the question
+            {!completed ? ( // if there are still questions to be answered, display the question
                 <div className="question-container">
                     <Question
                         question={currentQuestion.question}
@@ -108,6 +139,8 @@ export default function Mcq({ title, description }: McqProps) {
                         missedQuestions={missedQuestions}
                         setMissedQuestions={setMissedQuestions}
                         setIsQuestionSelected={setIsQuestionSelected}
+                        setIsCompleted={setCompleted}
+                        isMCQ={true}
                     />
                 </div>
             )}

@@ -14,13 +14,9 @@ import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-
-
-
 
 export default function NavBar() {
     const router = useRouter();
@@ -117,11 +113,6 @@ export default function NavBar() {
                     tab: 'Certificates',
                     icon: <WorkspacePremiumIcon />,
                 },
-                {
-                    href: '/notifications',
-                    tab: 'Notifications',
-                    icon: <NotificationsNoneIcon />,
-                },
             ]);
         } else {
             // Clear tabs for unknown roles
@@ -152,7 +143,6 @@ export default function NavBar() {
                         collapsed ? 'w-full flex justify-center' : 'mr-4'
                     }
                 >
-                     <p>{path}</p>;
                     <button
                         onClick={toggleSidebar}
                         className={`text-white p-1 rounded hover:bg-gray-800 ${collapsed ? 'mx-auto mt-4' : ''}`}

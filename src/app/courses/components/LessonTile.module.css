@@ -14,16 +14,20 @@
     align-items: 'center';
     color: white;
 }
+
 .selectedContainer {
     background-color: #f0f0f0;
     color: black;
 }
 
 .title {
-    line-height: 2rem; /* equivalent to leading-8 */
-    font-weight: 500; /* equivalent to font-bold */
+    line-height: 2rem;
+    /* equivalent to leading-8 */
+    font-weight: 500;
+    /* equivalent to font-bold */
     font-size: 20px;
 }
+
 .subtitle {
     line-height: 1rem;
     font-size: 12px;

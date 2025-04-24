@@ -8,7 +8,7 @@ interface AdminLayoutProps {
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     return (
         <AuthWrap roles={['school_admin', 'eo_admin']}>
-            <div className="courses-layout">{children}</div>
+            <>{children}</>
         </AuthWrap>
     );
 };

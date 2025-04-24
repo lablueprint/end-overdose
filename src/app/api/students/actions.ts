@@ -3,6 +3,7 @@
 import { cache } from 'react';
 import { Student } from '@/types/Student';
 import firebase_app from '@/firebase/config';
+import { auth } from '@/firebase/clientApp'; // Adjusted the path to match the project structure
 import {
     getFirestore,
     collection,
@@ -62,8 +63,6 @@ export const getStudentFromID = cache(async (id: string) => {
             const doc = snapshot.docs[0];
             return { id: doc.id, ...(doc.data() as Student) };
         }
-
-        return null;
     } catch (error) {
         console.error('Error fetching student:', error);
         throw new Error('Failed to fetch student.');
@@ -112,6 +111,22 @@ export const getSchoolAverage = cache(async (schoolName: string) => {
     }
 });
 
+//GET ALL THE STUDENTS FROM A PARTICULAR SCHOOL
+export const getSchoolStudents = cache(async (schoolName: string) => {
+    try {
+        const q = query(
+            studentsCollection,
+            where('school_name', '==', schoolName)
+        );
+        const snapshot = await getDocs(q);
+        const students = snapshot.docs.map((doc) => doc.data() as Student);
+        return students;
+    } catch (error) {
+        console.error('Error fetching school students:', error);
+        throw new Error('Failed to fetch school students.');
+    }
+});
+
 //4. VALIDATE STUDENT CREDENTIALS
 
 //takes in school, username, password and checks that username and password are in school's student id map
@@ -153,11 +168,11 @@ export const validateUserCredentials = cache(
 export async function addQuiz(updateQuizzes: Quiz[]) {
     try {
         console.log('work');
-        // const user = auth.currentUser;
-        // if (!user) {
-        //     return { error: 'User data not found' };
-        // }
-        const userRef = doc(db, 'students', '12n2OCj3WNa0cM4e2rUh'); // hard coded student id for now
+        const user = auth.currentUser;
+        if (!user) {
+            return { error: 'User data not found' };
+        }
+        const userRef = doc(db, 'students', user.uid); // Use the user's unique ID
         const userDoc = await getDoc(userRef); // DocumentSnapshot
         if (!userDoc.exists()) {
             return { error: 'Student document not found' };
@@ -190,6 +205,23 @@ export const getStudent = cache(async (uid: string) => {
     }
 });
 
+// export async function updateKibbleCount() {
+//     try {
+//         console.log('Success');
+//         const snapshot = await getDocs(studentsCollection);
+//         const updatePromises = snapshot.docs.map(async (studentDoc) => {
+//             const studentRef = doc(db, 'students', studentDoc.id);
+//             const kibbleCount = Math.floor(Math.random() * 1000); // Generate random number between 0-999
+//             await updateDoc(studentRef, { kibble_count: kibbleCount });
+//         });
+
+//         await Promise.all(updatePromises);
+//         console.log('Kibble count updated for all students.');
+//     } catch (error) {
+//         console.error('Error updating kibble count:', error);
+//         throw new Error('Failed to update kibble count.');
+//     }
+// }
 // add a new student to the database
 export async function addStudent(student: Student, docID: string) {
     try {
@@ -213,6 +245,11 @@ export async function updateCourseProgress(
 ): Promise<UpdateCourseProgressResponse> {
     try {
         const studentWithID = await getStudentFromID(student_id);
+
+        if (!studentWithID) {
+            return { error: 'Student not found' };
+        }
+
         const userRef = doc(db, 'students', studentWithID.id); // getting actual user's id
         const userDoc = await getDoc(userRef);
 
@@ -231,28 +268,51 @@ export async function updateCourseProgress(
     }
 }
 
-// // Function to fetch course progress from Firestore
-// export async function getCourseProgress(courseName: string) {
-//     try {
-//         const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); // Get the user document reference using the user's ID
-//         const userDoc = await getDoc(userRef);
+// Function to fetch course progress from Firestore
+export async function getCourseProgress(courseName: string) {
+    try {
+        const user = auth.currentUser;
+        if (!user) {
+            return { error: 'User data not found' };
+        }
+        const userRef = doc(db, 'students', user.uid); // Get the user document reference using the user's ID
+        const userDoc = await getDoc(userRef);
 
-//         if (!userDoc.exists()) {
-//             return { error: 'Student document not found' };
-//         }
+        if (!userDoc.exists()) {
+            return { error: 'Student document not found' };
+        }
 
-//         const userData = userDoc.data(); // Get user data from Firestore
-//         const courseProgress =
-//             userData?.course_completion?.[courseName]?.courseProgress;
+        const userData = userDoc.data(); // Get user data from Firestore
+        const courseProgress =
+            userData?.course_completion?.[courseName]?.courseProgress;
 
-//         // If course progress exists, return it
-//         if (courseProgress !== undefined) {
-//             return { progress: courseProgress };
-//         } else {
-//             return { error: 'Course progress not found for this user' };
-//         }
-//     } catch (error) {
-//         console.error(error);
-//         throw new Error('Failed to fetch course progress.');
-//     }
-// }
+        // If course progress exists, return it
+        if (courseProgress !== undefined) {
+            return { progress: courseProgress };
+        } else {
+            return { error: 'Course progress not found for this user' };
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch course progress.');
+    }
+}
+
+// get kibble count from student id
+export const getKibbleFromStudentID = cache(async (id: string) => {
+    try {
+        const q = query(studentsCollection, where('student_id', '==', id)); // Find student from ID
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+            const doc = snapshot.docs[0];
+            const student = doc.data() as Student;
+            return { kibble_count: student.kibble_count };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching student:', error);
+        throw new Error('Failed to fetch student.');
+    }
+});

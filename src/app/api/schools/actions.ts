@@ -50,6 +50,27 @@ export const getSchool = cache(async (schoolName: string) => {
     }
 });
 
+//BETTER SCHOOL INFORMATION
+export const getSchoolData = cache(async (schoolName: string) => {
+    try {
+        const schoolQuery = query(
+            schoolsCollection,
+            where('school_name', '==', schoolName)
+        );
+
+        const snapshot = await getDocs(schoolQuery);
+        if (snapshot.empty) {
+            return null; // No school found with that name
+        }
+
+        // Return just the school data without the ID
+        return snapshot.docs[0].data() as School;
+    } catch (error) {
+        console.error('Error fetching school:', error);
+        throw new Error('Failed to fetch school.');
+    }
+});
+
 //Return the total number of schools
 export const getSchoolCount = cache(async () => {
     try {
@@ -146,6 +167,33 @@ export const toggleCourseInclusion = async (
 
         // Revalidate the school data in the cache
         revalidatePath(`/api/schools/${schoolId}`);
+    } catch (error) {
+        console.error('Error toggling course inclusion:', error);
+    }
+};
+
+export const addIdPasswordPair = async (
+    schoolId: string,
+    newId: string,
+    newPassword: string
+) => {
+    // should also take strings for id and password
+    try {
+        // Get the school document reference
+        const schoolDocRef = doc(db, 'schools', schoolId);
+        const schoolSnapshot = await getDoc(schoolDocRef);
+
+        if (!schoolSnapshot.exists()) {
+            throw new Error('School document not found.');
+        }
+
+        // Update the school document with the new ID-password pair
+        await updateDoc(schoolDocRef, {
+            [`school_ids.${newId}`]: newPassword, // Dynamically add the new ID-password pair
+        });
+
+        // Revalidate the school data in the cache
+        revalidatePath('/');
     } catch (error) {
         console.error('Error toggling course inclusion:', error);
     }
