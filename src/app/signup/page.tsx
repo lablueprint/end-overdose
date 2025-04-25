@@ -16,6 +16,8 @@ const SignUpPage = () => {
     // const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState<boolean>(false);
+    // DELETE LATER TEMPORARY TOGGLE FOR STUDENT OR ADMIN
+    const [student, setStudent] = useState(false);
 
     const schools = [WolfPackAlphaUniversity, UCLA];
 

@@ -8,14 +8,14 @@
 
 .placeHolderHalf {
     width: 50%;
-    height: 100vh;
+    min-height: 100%;
 }
 .placeHolderHalf .narcat {
     position: absolute;
-    bottom: 50px;
-    right: 130px;
-    width: 350px;
-    height: 350px;
+    bottom: 8%;
+    right: 8%;
+    width: 24%;
+    height: 50%;
     background-image: url('../../../public/cowboyNarcat.png');
     background-size: cover;
     background-repeat: no-repeat;
