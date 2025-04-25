@@ -29,7 +29,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    padding-top: 100px;
+    padding-top: 6%;
     padding-bottom: auto;
     padding-left: 93px;
     padding-right: 93px;
@@ -47,12 +47,13 @@
     font-weight: 400;
     color: #888888;
 }
+
 .titleTextContainer .h2 {
     color: #888888;
 }
 .contentContainer {
     width: 100%;
-    height: 70%;
+    max-height: 70%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -64,11 +65,11 @@
 }
 
 .input {
-    height: 48px;
+    height: 45px;
     border-width: 1px;
     border-radius: 12px;
     opacity: 35%;
-    padding: 12px;
+    padding: 10px;
 }
 
 .formControl {

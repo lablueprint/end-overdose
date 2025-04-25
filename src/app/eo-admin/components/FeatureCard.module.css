@@ -1,0 +1,44 @@
+.card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  
+  .description {
+    font-size: 0.875rem;
+    color: rgb(107, 114, 128);
+    margin-bottom: 1rem;
+  }
+  
+  .placeholder {
+    height: 6rem;
+    background-color: rgb(243, 244, 246);
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+  }
+  
+  .button {
+    background-color: #1a2942;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+  }
+  
+  .buttonIcon {
+    height: 1rem;
+    width: 1rem;
+    margin-left: 0.5rem;
+  }
+  

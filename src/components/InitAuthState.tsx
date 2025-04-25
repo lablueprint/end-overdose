@@ -4,8 +4,19 @@ import React, { useEffect } from 'react';
 import { useUserStore } from '@/store/userStore';
 import { getIdToken, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase/clientApp';
-import { getAdminFromEmail } from '@/app/api/admins/actions';
+import {
+    addAdmin,
+    getAdminFromEmail,
+    getAdmin,
+} from '@/app/api/admins/actions';
+import { getStudent } from '@/app/api/students/actions';
 import { setCookie } from '@/firebase/cookies';
+import { Admin } from '@/types/Admin';
+import {
+    getAuth,
+    isSignInWithEmailLink,
+    signInWithEmailLink,
+} from 'firebase/auth';
 
 export default function InitAuthState({
     children,
@@ -16,6 +27,57 @@ export default function InitAuthState({
 
     useEffect(() => {
         setLoading(true);
+        // Confirm the link is a sign-in with email link.
+        const auth = getAuth();
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            // Additional state parameters can also be passed via URL.
+            // This can be used to continue the user's intended action before triggering
+            // the sign-in operation.
+            // Get the email if available. This should be available if the user completes
+            // the flow on the same device where they started it.
+            let email = window.localStorage.getItem('emailForSignIn');
+            if (!email) {
+                // User opened the link on a different device. To prevent session fixation
+                // attacks, ask the user to provide the associated email again. For example:
+                console.log(email);
+                email = window.prompt(
+                    'Please provide your email for confirmation'
+                );
+            }
+            if (email) {
+                // The client SDK will parse the code from the link for you.
+                signInWithEmailLink(auth, email, window.location.href)
+                    .then((result) => {
+                        // Clear email from storage.
+                        const newAdmin: Admin = {
+                            name: {
+                                // MAKE SURE TO IMPORT FIRST AND LAST NAME
+                                first: 'Test',
+                                last: 'Test',
+                            },
+                            email,
+                            role: 'school_admin',
+                            school_name: 'UCLA', // ALSO MAKE SURE TO IMPORT
+                            approved: false,
+                        };
+                        if (auth.currentUser?.uid) {
+                            addAdmin(newAdmin, auth.currentUser?.uid);
+                        }
+                        window.localStorage.removeItem('emailForSignIn');
+                        // You can access the new user by importing getAdditionalUserInfo
+                        // and calling it with result:
+                        // getAdditionalUserInfo(result)
+                        // You can access the user's profile via:
+                        // getAdditionalUserInfo(result)?.profile
+                        // You can check if the user is new or existing:
+                        // getAdditionalUserInfo(result)?.isNewUser
+                    })
+                    .catch((error) => {
+                        // Some error occurred, you can inspect the code: error.code
+                        // Common errors could be invalid email and invalid or expired OTPs.
+                    });
+            }
+        }
 
         // listen for auth state changes
         const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
@@ -24,19 +86,29 @@ export default function InitAuthState({
             // user is signed in
             if (authUser) {
                 const token = await getIdToken(authUser);
-                // set the user token as a cookie
                 setCookie('user-token', token);
-                // update the global user state
-                if (authUser.email) {
-                    const admin = await getAdminFromEmail(authUser.email);
-                    if (admin) {
-                        setUser(admin.approved ? admin : null);
-                        setRole(admin.role);
-                    }
+
+                const student = await getStudent(authUser.uid);
+
+                if (student) {
+                    setUser(student);
+                    setUID(authUser.uid);
+                    setRole('student');
                 } else {
-                    setUser(null);
-                    setRole('');
-                    setUID('');
+                    const admin = await getAdmin(authUser.uid);
+                    if (admin) {
+                        setUser(admin);
+                        setUID(authUser.uid);
+                        if ('role' in admin) {
+                            setRole(admin.role);
+                        } else {
+                            setRole('');
+                        }
+                    } else {
+                        setUser(null);
+                        setRole('');
+                        setUID('');
+                    }
                 }
             }
             // user is logged out
@@ -50,7 +122,7 @@ export default function InitAuthState({
         });
 
         return () => unsubscribe();
-    }, [setUser, setLoading]);
+    }, [setUser, setLoading, setUID, setRole]);
 
     return <>{children}</>;
 }

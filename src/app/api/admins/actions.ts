@@ -3,9 +3,15 @@
 import { cache } from 'react';
 import { revalidatePath } from 'next/cache';
 import { Admin } from '@/types/Admin';
+import { School } from '@/types/School';
+import firebase_app from '@/firebase/config';
+import { getAuth } from 'firebase/auth';
+import signIn from '@/firebase/auth/signIn';
+import signUp from '@/firebase/auth/signUp';
 import {
     getFirestore,
     collection,
+    getDoc,
     getDocs,
     doc,
     setDoc,
@@ -15,10 +21,10 @@ import {
     updateDoc,
 } from 'firebase/firestore';
 import { getAuthenticatedAppForUser } from '@/firebase/serverApp';
-import firebase_app from '@/firebase/config';
 
 const db = getFirestore(firebase_app);
 const adminsCollection = collection(db, 'admins');
+const schoolsCollection = collection(db, 'schools');
 
 // get all admins from the database
 export const getAdmins = cache(async () => {
@@ -116,6 +122,21 @@ export const getSchoolAdmins = cache(async () => {
     }
 });
 
+export const getCourseCount = cache(async (email: string) => {
+    const q = query(adminsCollection, where('email', '==', email));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        throw new Error('Admin not found');
+    }
+    const schoolName = snapshot.docs[0].data().school_name;
+    const q2 = query(schoolsCollection, where('name', '==', schoolName));
+    const snapshot2 = await getDocs(q2);
+    if (snapshot2.empty) {
+        throw new Error('School not found');
+    }
+    return snapshot2.docs[0].data().course_ids.length;
+});
+
 // Updates the approval status of the admin user with the given email to the new given approval status
 // Input: email of the admin user, new approval status
 // Output: success status and new approval status
@@ -168,3 +189,19 @@ export const getAdminFromEmail = cache(async (email: string) => {
         throw new Error('Failed to fetch admins.');
     }
 });
+
+export async function getAdmin(id: string) {
+    try {
+        const adminDocRef = doc(adminsCollection, id);
+        const adminDoc = await getDoc(adminDocRef);
+
+        if (adminDoc.exists()) {
+            return { id: adminDoc.id, ...(adminDoc.data() as Admin) };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        throw new Error('Failed to fetch admin.');
+    }
+}
