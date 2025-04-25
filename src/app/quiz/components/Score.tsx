@@ -6,11 +6,13 @@ import { Student } from '@/types/Student';
 import { Admin } from '@/types/Admin';
 import './score.css';
 import questions from '../questions.json' assert { type: 'json' };
+import Results from './Results';
 
 interface MissedQuestion {
     question: string;
     correctAnswer: number;
     selectedAnswer: number | null;
+    isCorrect: boolean;
 }
 
 interface ScoreProps {
@@ -117,13 +119,17 @@ export default function Score({
                         )}
                     </div>
                     <div className="missed-questions-container">
+                        <Results
+                            missedQuestions={missedQuestions}
+                            isMCQ={isMCQ}
+                        />
                         {missedQuestions.length !== 0 ? (
                             <h2>Missed Questions</h2>
                         ) : (
                             <h2>Perfect!!!</h2>
                         )}
                         {/* this unordered list will be rendered conditionally based on the isMCQ prop */}
-                        <ul>
+                        {/* <ul>
                             {missedQuestions.map((item, index) => (
                                 <li key={index} className="question-card">
                                     <p className="question-label">
@@ -165,7 +171,7 @@ export default function Score({
                                     </p>
                                 </li>
                             ))}
-                        </ul>
+                        </ul> */}
                     </div>
                 </div>
             )}
