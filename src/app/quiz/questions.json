@@ -13,5 +13,10 @@
         "question": "What is the best pet?",
         "answers": ["monkey", "alligator", "dog", "cat"],
         "correctAnswer": 3
+    },
+    {
+        "question": "What is the best project team?",
+        "answers": ["End Overdose", "UW", "Teapot"],
+        "correctAnswer": 0
     }
 ]

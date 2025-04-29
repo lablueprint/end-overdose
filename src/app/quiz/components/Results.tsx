@@ -24,35 +24,50 @@ export default function Results({ missedQuestions, isMCQ }: ResultsProps) {
                     <ul>
                         {missedQuestions.map((item, index) => (
                             <li key={index} className="results-card">
+                                <img
+                                    className="answer-image"
+                                    src={
+                                        item.isCorrect
+                                            ? `/correct-result-image.svg`
+                                            : `/incorrect-result-image.svg`
+                                    }
+                                    alt={`Result image`}
+                                    width={100}
+                                    height={100}
+                                />
                                 <p>Question: {item.question}</p>
                                 <ul>
-                                    {questions[index].answers.map((answer, i) => (
-                                        <li
-                                            key={i}
-                                            className={
-                                                i === item.correctAnswer
-                                                    ? 'answer-item-correct'
-                                                    : i === item.selectedAnswer
-                                                      ? 'answer-item-incorrect'
-                                                      : 'answer-item-neutral'
-                                            }
-                                        >
-                                            <img
-                                                className="option-icon"
-                                                src={
+                                    {questions[index].answers.map(
+                                        (answer, i) => (
+                                            <li
+                                                key={i}
+                                                className={
                                                     i === item.correctAnswer
-                                                        ? `/correct${i + 1}.svg`
-                                                        : i === item.selectedAnswer
-                                                          ? `/incorrect${i + 1}.svg`
-                                                          : `/resultsOption${i + 1}.svg`
+                                                        ? 'answer-item-correct'
+                                                        : i ===
+                                                            item.selectedAnswer
+                                                          ? 'answer-item-incorrect'
+                                                          : 'answer-item-neutral'
                                                 }
-                                                alt={`Option ${i + 1}`}
-                                                width={60}
-                                                height={60}
-                                            />
-                                            <span>{answer}</span>
-                                        </li>
-                                    ))}
+                                            >
+                                                <img
+                                                    className="option-icon"
+                                                    src={
+                                                        i === item.correctAnswer
+                                                            ? `/correct${i + 1}.svg`
+                                                            : i ===
+                                                                item.selectedAnswer
+                                                              ? `/incorrect${i + 1}.svg`
+                                                              : `/resultsOption${i + 1}.svg`
+                                                    }
+                                                    alt={`Option ${i + 1}`}
+                                                    width={60}
+                                                    height={60}
+                                                />
+                                                <span>{answer}</span>
+                                            </li>
+                                        )
+                                    )}
                                 </ul>
                             </li>
                         ))}
@@ -62,6 +77,17 @@ export default function Results({ missedQuestions, isMCQ }: ResultsProps) {
                     <ul>
                         {missedQuestions.map((item, index) => (
                             <li key={index} className="results-card">
+                                <img
+                                    className="answer-image"
+                                    src={
+                                        item.isCorrect
+                                            ? `/correct-result-image.svg`
+                                            : `/incorrect-result-image.svg`
+                                    }
+                                    alt={`Result image`}
+                                    width={100}
+                                    height={100}
+                                />
                                 <p>Question: {item.question}</p>
                                 <ul>
                                     {[true, false].map((answer, i) => (

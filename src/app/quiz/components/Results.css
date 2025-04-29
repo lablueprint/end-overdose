@@ -41,14 +41,17 @@
     width: 100%;
 }
 
-/* .results-card li {
-    padding: 5px 10px;
-    border-radius: 4px;
-} */
+
 
 .option-icon {
     margin-right: 0px;
     flex-shrink: 0;
+}
+
+.answer-image {
+    margin-left: auto;
+    padding-right: 10px;
+    transform: translateY(30px);
 }
 
 .answer-item-correct {
