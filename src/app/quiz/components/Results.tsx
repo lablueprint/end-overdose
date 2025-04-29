@@ -106,7 +106,8 @@ export default function Results({ missedQuestions, isMCQ }: ResultsProps) {
                                                 src={
                                                     i === item.correctAnswer
                                                         ? `/correct${i + 1}.svg`
-                                                        : i === item.selectedAnswer
+                                                        : i ===
+                                                            item.selectedAnswer
                                                           ? `/incorrect${i + 1}.svg`
                                                           : `/resultsOption${i + 1}.svg`
                                                 }
