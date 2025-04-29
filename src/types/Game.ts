@@ -31,7 +31,8 @@ export type Choice = {
 };
 
 export type Action = {
-    type: string;
+    type: 'decision';
+    question: string;
     choices: Array<Choice>;
 };
 

@@ -61,6 +61,7 @@ const choice1_4: Choice = {
 
 const action1: Action = {
     type: 'decision',
+    question: 'What is the name of Daisy’s homeland?',
     choices: [choice1_1, choice1_2, choice1_3, choice1_4],
 };
 

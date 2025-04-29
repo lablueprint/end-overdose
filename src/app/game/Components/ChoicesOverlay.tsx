@@ -5,7 +5,32 @@ import { useState, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useRef } from 'react';
 
-const ChoicesOverlay = ({ scene }: SceneProp) => {
+interface ChoicesOverlayProps {
+    scene: Scene;
+    currentScore: number;
+    setCurrentScore: (score: number) => void;
+    totalQuestions: number;
+    setTotalQuestions: (total: number) => void;
+    missedQuestions: Question[];
+    setMissedQuestions: (missed: Question[]) => void;
+}
+
+interface Question {
+    question: string;
+    correctAnswer: number | string;
+    selectedAnswer: number | string | null;
+    isCorrect: boolean;
+}
+
+const ChoicesOverlay = ({
+    scene,
+    currentScore,
+    setCurrentScore,
+    totalQuestions,
+    setTotalQuestions,
+    missedQuestions,
+    setMissedQuestions,
+}: ChoicesOverlayProps) => {
     const [actionIndex, setActionIndex] = useState(0);
     const [action, setAction] = useState(() => scene.actions?.[0]);
     const changeScene = useGameStore((state) => state.changeScene);
@@ -32,30 +57,44 @@ const ChoicesOverlay = ({ scene }: SceneProp) => {
 
     const evalAnswer = (choiceIndex: number) => {
         if (incorrectChoices.includes(choiceIndex)) {
-            return; // already tried this one, ignore
+            return; // already tried
         }
 
         const choice = action.choices[choiceIndex];
 
         if (!hasCountedThisQuestion) {
-            incrementTotal();
+            setTotalQuestions(totalQuestions + 1);
             setHasCountedThisQuestion(true);
         }
 
+        const correctChoiceIndex = action.choices.findIndex(
+            (c) => c.nextScene !== 'Wrong Action'
+        );
+
+        const correctChoiceText =
+            action.choices[correctChoiceIndex]?.text || '';
+        const selectedChoiceText = action.choices[choiceIndex]?.text || '';
+
+        const isCorrect = choiceIndex === correctChoiceIndex;
+
+        if (isCorrect) {
+            setCurrentScore(currentScore + 1);
+        }
+
+        setMissedQuestions((prev) => [
+            ...prev,
+            {
+                question: action.question,
+                correctAnswer: correctChoiceText,
+                selectedAnswer: selectedChoiceText,
+                isCorrect: isCorrect,
+            },
+        ]);
+
         if (choice.nextDialogue) {
             setCustomDialogue(choice.nextDialogue);
-
-            if (choice.nextScene === 'Wrong Action') {
-                setIncorrectChoices([...incorrectChoices, choiceIndex]);
-                hasFailedRef.current = true;
-                toggleDialogue();
-            } else {
-                if (!hasFailedRef.current && hasCountedThisQuestion) {
-                    incrementCorrect(); //only count if no earlier mistake
-                }
-                setPendingScene(choice.nextScene || 'resultScene');
-                toggleDialogue();
-            }
+            setPendingScene(choice.nextScene || 'resultScene');
+            toggleDialogue();
         } else {
             changeScene(choice.nextScene || 'resultScene');
         }
