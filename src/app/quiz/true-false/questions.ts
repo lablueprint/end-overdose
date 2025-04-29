@@ -19,6 +19,10 @@ const trueFalseQuestions = [
         question: 'The Earth is round.',
         answer: true,
     },
+    {
+        question: 'End overdose the goat',
+        answer: true,
+    },
 ];
 
 export default trueFalseQuestions;
