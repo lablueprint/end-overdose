@@ -95,8 +95,7 @@ export default function Score({
             {1 && (
                 <div className="score-container">
                     <div className="score-panel">
-                        <p>Score</p>
-                        <p className="score-number">{percentage}%</p>
+                        <p className="score-number">Score: {percentage}%</p>
                         <img
                             src={
                                 currentScore / numQuestions >= 0.8
@@ -123,55 +122,6 @@ export default function Score({
                             missedQuestions={missedQuestions}
                             isMCQ={isMCQ}
                         />
-                        {missedQuestions.length !== 0 ? (
-                            <h2>Missed Questions</h2>
-                        ) : (
-                            <h2>Perfect!!!</h2>
-                        )}
-                        {/* this unordered list will be rendered conditionally based on the isMCQ prop */}
-                        {/* <ul>
-                            {missedQuestions.map((item, index) => (
-                                <li key={index} className="question-card">
-                                    <p className="question-label">
-                                        Question {index + 1}
-                                    </p>
-                                    <p>{item.question}</p>
-                                    <p>
-                                        <span className="question-label">
-                                            Correct Answer:
-                                        </span>{' '}
-                                        {isMCQ
-                                            ? questions.find(
-                                                  (q) =>
-                                                      q.question ===
-                                                      item.question
-                                              )?.answers[item.correctAnswer]
-                                            : item.correctAnswer === 1
-                                              ? 'True'
-                                              : 'False'}
-                                    </p>
-
-                                    <p>
-                                        <span className="question-label">
-                                            Selected Answer:
-                                        </span>{' '}
-                                        {item.selectedAnswer !== null
-                                            ? isMCQ
-                                                ? questions.find(
-                                                      (q) =>
-                                                          q.question ===
-                                                          item.question
-                                                  )?.answers[
-                                                      item.selectedAnswer
-                                                  ]
-                                                : item.selectedAnswer === 1
-                                                  ? 'True'
-                                                  : 'False'
-                                            : 'No answer selected'}
-                                    </p>
-                                </li>
-                            ))}
-                        </ul> */}
                     </div>
                 </div>
             )}
