@@ -139,10 +139,15 @@ export default function Score({
                                                   (q) =>
                                                       q.question ===
                                                       item.question
-                                              )?.answers[item.correctAnswer]
-                                            : item.correctAnswer === 1
-                                              ? 'True'
-                                              : 'False'}
+                                              )?.answers[
+                                                  item.correctAnswer as number
+                                              ]
+                                            : typeof item.correctAnswer ===
+                                                'string'
+                                              ? item.correctAnswer
+                                              : item.correctAnswer === 1
+                                                ? 'True'
+                                                : 'False'}
                                     </p>
 
                                     <p>
@@ -156,11 +161,14 @@ export default function Score({
                                                           q.question ===
                                                           item.question
                                                   )?.answers[
-                                                      item.selectedAnswer
+                                                      item.selectedAnswer as number
                                                   ]
-                                                : item.selectedAnswer === 1
-                                                  ? 'True'
-                                                  : 'False'
+                                                : typeof item.selectedAnswer ===
+                                                    'string'
+                                                  ? item.selectedAnswer
+                                                  : item.selectedAnswer === 1
+                                                    ? 'True'
+                                                    : 'False'
                                             : 'No answer selected'}
                                     </p>
                                 </li>

@@ -41,6 +41,7 @@ const GamePage = () => {
                 missedQuestions={missedQuestions}
                 setMissedQuestions={setMissedQuestions}
                 setIsQuestionSelected={setIsQuestionSelected}
+                isMCQ={false}
             />
         );
     }
