@@ -30,6 +30,13 @@
 
 .results-card p {
     margin-bottom: 20px;
+    max-width: 80%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    text-overflow: ellipsis;
+    display: inline-block;
+    line-height: 1.5;
 }
 
 .results-card ul {
