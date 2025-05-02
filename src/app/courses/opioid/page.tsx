@@ -74,7 +74,6 @@ export default function OpioidHome() {
                     const response =
                         user.course_completion.opioidCourse.courseProgress;
 
-                    console.log('response: ' + response);
                     const lessonIndex = Math.round(
                         (response / 100) * totalLessons
                     );
@@ -82,7 +81,6 @@ export default function OpioidHome() {
                     setCourseProgress(response);
                     setLesson(lessonIndex);
                     setHighestReachedLesson(lessonIndex);
-                    console.log('lesson index: ' + lessonIndex);
                 }
             } catch (error) {
                 console.error('Error fetching progress:', error);

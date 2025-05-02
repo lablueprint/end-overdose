@@ -25,19 +25,6 @@ export default function Courses() {
         ) + quizCompletion
     );
 
-    /* NTC Lesson 1 (0): 0    
-NTC Quiz 1 (1): 1
-NTC Lesson 2(1 + Quiz Completion): 2
-NTC Quiz 2(2): 3
-NTC Lesson 3(2 + Quiz Completion): 4
-NTC Quiz 3 (3): 5
-NTC Lesson 4 (3 + Quiz Completion): 6
-NTC Quiz 4 (4): 7
-NTC Lesson 5(4 + Quiz Completion): 8
-NTC Quiz 5(5): 9
-NTC Lesson 6 (5 + quiz Completion): 10
-NTC Quiz 6(6): 11 /** */
-
     useEffect(() => {
         const fetchOpioidCourseProgress = async () => {
             try {
@@ -68,16 +55,6 @@ NTC Quiz 6(6): 11 /** */
 
         fetchOpioidCourseProgress();
     }, [user, quizCompletion]);
-
-    console.log('Map Index:' + mapIndex);
-
-    console.log('Student: ' + user);
-    console.log('isStudent: ' + isStudent(user));
-    if (isStudent(user)) {
-        console.log(
-            'User: ' + user.course_completion.opioidCourse.courseProgress
-        );
-    }
 
     const coursesData = [
         {
