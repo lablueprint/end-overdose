@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import styles from './signup.module.css';
 import { useState, useEffect } from 'react';
+import { Student } from '@/types/Student';
 import { Admin } from '@/types/Admin';
 import { signUp } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
@@ -17,6 +18,7 @@ import {
     browserSessionPersistence,
 } from 'firebase/auth';
 import { addAdmin } from '@/app/api/admins/actions';
+import { addStudent } from '@/app/api/students/actions';
 
 type Inputs = {
     role: string;
@@ -95,32 +97,71 @@ const SignUpPage = () => {
                 email,
                 password
             );
+            const verifySettings =
+                role === 'School Admin'
+                    ? {
+                          url: `${window.location.origin}/login`,
+                          handleCodeInApp: true,
+                      }
+                    : {
+                          url: `${window.location.origin}/onboarding`,
+                          handleCodeInApp: true,
+                      };
 
             // 2) Build your Admin object
-            const newAdmin: Admin = {
-                name: {
-                    first: 'Test',
-                    last: 'Test',
-                },
-                email,
-                role: 'school_admin',
-                school_name: 'UCLA',
-                approved: false,
-            };
-
-            // 3) Write it into your “admins” collection keyed by uid
-            await addAdmin(newAdmin, user.uid);
+            if (role === 'Student') {
+                // build your student object
+                const newStudent: Student = {
+                    student_id: '12345',
+                    email,
+                    school_name,
+                    nameplate: '',
+                    kibble_count: 1000,
+                    course_completion: {
+                        opioidCourse: {
+                            courseScore: 0, // half of lessons completed
+                            courseProgress: 0, // half of modules completed in the current lesson
+                        },
+                        careerCourse: {
+                            courseScore: 0,
+                            courseProgress: 0,
+                        },
+                    },
+                    quizzes: [
+                        { name: 'quiz1', score: 0 },
+                        { name: 'quiz2', score: 0 },
+                    ],
+                    badges: [],
+                    certificates: [],
+                };
+                await addStudent(newStudent, user.uid);
+                setSuccess(true);
+                router.push('/onboarding');
+                return;
+            } else {
+                // default to school admin
+                const newAdmin: Admin = {
+                    name: { first: 'Test', last: 'Test' },
+                    email,
+                    role: 'school_admin',
+                    school_name,
+                    approved: false,
+                };
+                await addAdmin(newAdmin, user.uid);
+            }
 
             // 4) Send email‑verification instead of a magic link:
-            await sendEmailVerification(user);
-            console.log('Verification email sent');
+            if (role === 'SchoolAdmin') {
+                await sendEmailVerification(user, verifySettings);
+                console.log('Verification email sent');
+                setSuccess(true);
 
-            setSuccess(true);
-
-            // 5) Redirect to login or dashboard
-            setTimeout(() => {
-                router.push('/login');
-            }, 1000);
+                // 5) Redirect to login or dashboard
+                setTimeout(() => {
+                    router.push('/login');
+                }, 1000);
+            } else {
+            }
         } catch (err: any) {
             console.error(err);
             setError(err.message || 'Something went wrong.');
