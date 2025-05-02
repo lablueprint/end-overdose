@@ -20,6 +20,7 @@ interface Question {
     correctAnswer: number | string;
     selectedAnswer: number | string | null;
     isCorrect: boolean;
+    allChoices: string[];
 }
 
 const ChoicesOverlay = ({
@@ -56,17 +57,12 @@ const ChoicesOverlay = ({
     const hasFailedRef = useRef(false);
 
     const evalAnswer = (choiceIndex: number) => {
+        // Prevent repeated attempts on the same wrong answer
         if (incorrectChoices.includes(choiceIndex)) {
-            return; // already tried
+            return;
         }
 
         const choice = action.choices[choiceIndex];
-
-        if (!hasCountedThisQuestion) {
-            setTotalQuestions(totalQuestions + 1);
-            setHasCountedThisQuestion(true);
-        }
-
         const correctChoiceIndex = action.choices.findIndex(
             (c) => c.nextScene !== 'Wrong Action'
         );
@@ -74,23 +70,42 @@ const ChoicesOverlay = ({
         const correctChoiceText =
             action.choices[correctChoiceIndex]?.text || '';
         const selectedChoiceText = action.choices[choiceIndex]?.text || '';
-
         const isCorrect = choiceIndex === correctChoiceIndex;
 
-        if (isCorrect) {
-            setCurrentScore(currentScore + 1);
+        // If this is the first answer to this question
+        if (!hasCountedThisQuestion) {
+            setTotalQuestions(totalQuestions + 1);
+            setHasCountedThisQuestion(true);
+
+            // Mark the question as failed if it's wrong
+            if (!isCorrect) {
+                hasFailedRef.current = true;
+            }
+
+            // If correct and no prior failure, increment score
+            if (isCorrect && !hasFailedRef.current) {
+                setCurrentScore(currentScore + 1);
+            }
+
+            // Record the FIRST attempt (even if it's correct later, don't record again)
+            setMissedQuestions((prev) => [
+                ...prev,
+                {
+                    question: action.question,
+                    correctAnswer: correctChoiceText,
+                    selectedAnswer: selectedChoiceText,
+                    isCorrect: isCorrect && !hasFailedRef.current,
+                    allChoices: action.choices.map((c) => c.text),
+                },
+            ]);
         }
 
-        setMissedQuestions((prev) => [
-            ...prev,
-            {
-                question: action.question,
-                correctAnswer: correctChoiceText,
-                selectedAnswer: selectedChoiceText,
-                isCorrect: isCorrect,
-            },
-        ]);
+        // Track incorrect attempts visually
+        if (!isCorrect) {
+            setIncorrectChoices([...incorrectChoices, choiceIndex]);
+        }
 
+        // Move to next scene or show feedback dialogue
         if (choice.nextDialogue) {
             setCustomDialogue(choice.nextDialogue);
             setPendingScene(choice.nextScene || 'resultScene');

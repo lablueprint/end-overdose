@@ -7,6 +7,7 @@ import ChoicesOverlay from './Components/ChoicesOverlay';
 import { useGameStore } from '@/store/gameStore';
 import Score from '../quiz/components/Score';
 import { useState } from 'react';
+import { warnOptionHasBeenDeprecated } from 'next/dist/server/config';
 
 export interface Question {
     question: string;
@@ -26,6 +27,20 @@ const GamePage = () => {
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [feedback, setFeedback] = useState('');
 
+    const resetGame = () => {
+        setCurrentScore(0);
+        setTotalQuestions(0);
+        setMissedQuestions([]);
+        setIsQuestionSelected(false);
+        setSelectedAnswer(null);
+        setFeedback('');
+
+        // Clear in-game state
+        useGameStore.getState().setIncorrectChoices([]);
+        useGameStore.getState().changeScene('startScene');
+        useGameStore.getState().toggleDialogue(false);
+    };
+
     if (!scene) {
         return <div>Loading...</div>; // or a nicer loading UI
     }
@@ -40,8 +55,12 @@ const GamePage = () => {
                 setFeedback={setFeedback}
                 missedQuestions={missedQuestions}
                 setMissedQuestions={setMissedQuestions}
+                setIsCompleted={() => {}}
                 setIsQuestionSelected={setIsQuestionSelected}
                 isMCQ={false}
+                quizIndex={0}
+                isGame={true}
+                onRetry={resetGame}
             />
         );
     }
