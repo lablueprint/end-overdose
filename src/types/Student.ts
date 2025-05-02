@@ -1,3 +1,5 @@
+import { Admin } from './Admin';
+
 interface Quiz {
     name: string;
     score: number;
@@ -51,24 +53,28 @@ export const StudentJosh: Student = {
 };
 
 // Type guard function
-export const isStudent = (obj: any): obj is Student => {
+export const isStudent = (obj: Student | Admin | null): obj is Student => {
     return (
-        typeof obj === 'object' &&
-        obj !== null &&
-        typeof obj.student_id === 'string' &&
-        typeof obj.email === 'string' &&
-        typeof obj.school_name === 'string' &&
-        typeof obj.nameplate === 'string' &&
-        typeof obj.kibble_count === 'number' &&
-        typeof obj.course_completion === 'object' &&
-        typeof obj.course_completion.opioidCourse === 'object' &&
-        typeof obj.course_completion.opioidCourse.courseScore === 'number' &&
-        typeof obj.course_completion.opioidCourse.courseProgress === 'number' &&
-        typeof obj.course_completion.careerCourse === 'object' &&
-        typeof obj.course_completion.careerCourse.courseScore === 'number' &&
-        typeof obj.course_completion.careerCourse.courseProgress === 'number' &&
-        Array.isArray(obj.quizzes) && // Assuming `Quiz[]` is an array
-        Array.isArray(obj.badges) &&
-        Array.isArray(obj.certificates)
+        //typeof obj === 'object' &&
+        (obj as Student) !== null
+        /*typeof (obj as Student).student_id === 'string' &&
+        typeof (obj as Student).email === 'string' &&
+        typeof (obj as Student).school_name === 'string' &&
+        typeof (obj as Student).nameplate === 'string' &&
+        typeof (obj as Student).kibble_count === 'number' &&
+        typeof (obj as Student).course_completion === 'object' &&
+        typeof (obj as Student).course_completion.opioidCourse === 'object' &&
+        typeof (obj as Student).course_completion.opioidCourse.courseScore ===
+            'number' &&
+        typeof (obj as Student).course_completion.opioidCourse
+            .courseProgress === 'number' &&
+        typeof (obj as Student).course_completion.careerCourse === 'object' &&
+        typeof (obj as Student).course_completion.careerCourse.courseScore ===
+            'number' &&
+        typeof (obj as Student).course_completion.careerCourse
+            .courseProgress === 'number' &&
+        Array.isArray((obj as Student).quizzes) && // Assuming `Quiz[]` is an array
+        Array.isArray((obj as Student).badges) &&
+        Array.isArray((obj as Student).certificates) */
     );
 };
