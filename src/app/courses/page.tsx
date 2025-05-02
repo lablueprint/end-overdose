@@ -244,6 +244,11 @@ NTC Quiz 6(6): 11 /** */
                                 type="current"
                                 top={pos.top}
                                 left={pos.left}
+                                href={
+                                    index % 2 === 0
+                                        ? '/courses/opioid'
+                                        : '/quiz'
+                                }
                             />
                         );
                     }
