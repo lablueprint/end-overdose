@@ -1,0 +1,120 @@
+.splitContainer {
+    display: flex;
+    flex-direction: row;
+    background-image: url('../../../public/signin.svg');
+    background-size: cover;
+    background-position: center bottom;
+    border: 2px solid red; /* Adds a visible red border */
+}
+
+.placeHolderHalf {
+    width: 50%;
+    min-height: 100%;
+    border: 2px solid green; /* Adds a visible green border */
+}
+
+.loginHalf {
+    background-color: transparent;
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 6%;
+    padding-bottom: auto;
+    padding-left: 50px;
+    padding-right: 50px;
+    border: 2px solid purple; /* Adds a visible blue border */
+}
+
+.contentContainer {
+    padding: 2rem;
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid yellow; /* for visualization */
+}
+
+.h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.h2 {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #aaaaaa;
+}
+
+/* FORM STYLES */
+.formContainer {
+    padding: 2rem;
+    margin-top: 2rem;
+    width: 100%;
+    border: 1px solid white;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    font-size: 1rem;
+    color: #aaaaaa;
+}
+
+.input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    background-color: #1a1e2a;
+    border: 1px solid #303545;
+    color: white;
+    font-size: 1rem;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #4a5af8;
+}
+
+/* CHECKBOX STYLING */
+.checkboxContainer {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.checkboxGroup {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.checkbox {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+}
+
+.checkboxLabel {
+    font-size: 0.9rem;
+    color: #aaaaaa;
+    line-height: 1.4;
+}
+
+.link {
+    color: #ffffff;
+    text-decoration: underline;
+}
