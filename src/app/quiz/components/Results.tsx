@@ -14,8 +14,11 @@ interface MissedQuestion {
 interface ResultsProps {
     missedQuestions: MissedQuestion[];
     isMCQ: boolean;
+    quizIndex: number;
 }
-export default function Results({ missedQuestions, isMCQ }: ResultsProps) {
+export default function Results({ missedQuestions, isMCQ, quizIndex }: ResultsProps) {
+    const currentQuiz = questions[quizIndex];
+    
     return (
         <div className="results-container">
             <h1 style={{ color: 'white' }}>Review</h1>
@@ -37,7 +40,7 @@ export default function Results({ missedQuestions, isMCQ }: ResultsProps) {
                                 />
                                 <p>Question: {item.question}</p>
                                 <ul>
-                                    {questions[index].answers.map(
+                                    {currentQuiz[index]?.answers?.map(
                                         (answer, i) => (
                                             <li
                                                 key={i}

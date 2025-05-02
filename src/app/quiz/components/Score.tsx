@@ -27,6 +27,7 @@ interface ScoreProps {
     setMissedQuestions: (newMissedQuestion: []) => void;
     setIsQuestionSelected: (newIsQuestionSelected: boolean) => void;
     setIsCompleted: (newSetIsCompleted: boolean) => void;
+    quizIndex: number;
 }
 
 export default function Score({
@@ -41,6 +42,7 @@ export default function Score({
     setIsQuestionSelected,
     setIsCompleted,
     isMCQ,
+    quizIndex,
 }: ScoreProps) {
     const percentage = ((currentScore / numQuestions) * 100).toFixed(0);
 
@@ -59,7 +61,7 @@ export default function Score({
         console.log('Next lesson!!', percentage);
     };
     const user = useUserStore((state) => state.user);
-    const name = 'quiz4'; // hard coded quiz name for now, causes override issue for taking tf and multiple choice quiz
+    const name = `quiz${quizIndex + 1}`;
     function isStudent(user: Student | Admin | null): user is Student {
         return user !== null && 'quizzes' in user;
     }
@@ -88,7 +90,7 @@ export default function Score({
             }
         };
         updateQuiz();
-    }, [currentScore, numQuestions]);
+    }, [currentScore, numQuestions, name]);
 
     return (
         <>
@@ -121,6 +123,7 @@ export default function Score({
                         <Results
                             missedQuestions={missedQuestions}
                             isMCQ={isMCQ}
+                            quizIndex={quizIndex}
                         />
                     </div>
                 </div>
