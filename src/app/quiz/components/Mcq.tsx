@@ -34,7 +34,9 @@ export default function Mcq({ title, description, quizIndex }: McqProps) {
         isCorrect: boolean;
     }
 
-    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>([]);
+    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>(
+        []
+    );
     const [currentScore, setCurrentScore] = useState(0);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
