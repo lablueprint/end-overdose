@@ -23,10 +23,10 @@ export default function Question({
                         <div>
                             <img
                                 className="star-image-center"
-                                src={`/mcq-star-${index}.svg`}
+                                src={`/mcq-fish-${index}.svg`}
                                 alt="feedback"
-                                width={200}
-                                height={100}
+                                width={150}
+                                height={75}
                             />
                         </div>
                         <div className="mcq-answer-text">{answer}</div>

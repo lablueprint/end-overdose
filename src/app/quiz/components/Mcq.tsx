@@ -18,9 +18,10 @@ import '../styles.css';
 interface McqProps {
     title: string;
     description: string;
+    quizIndex: number; // Add quizIndex prop to select which quiz to display
 }
 
-export default function Mcq({ title, description }: McqProps) {
+export default function Mcq({ title, description, quizIndex }: McqProps) {
     const [hasStarted, setHasStarted] = useState(false);
     const handleStart = () => {
         setHasStarted(true);
@@ -30,19 +31,20 @@ export default function Mcq({ title, description }: McqProps) {
         question: string;
         correctAnswer: number;
         selectedAnswer: number | null;
+        isCorrect: boolean;
     }
 
-    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>( //  array storing missed questions
+    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>(
         []
     );
-
     const [currentScore, setCurrentScore] = useState(0);
-
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [isQuestionSelected, setIsQuestionSelected] = useState(false);
 
-    const currentQuestion = questions[currentQuestionIndex];
+    // Get the current quiz and question
+    const currentQuiz = questions[quizIndex];
+    const currentQuestion = currentQuiz[currentQuestionIndex];
 
     const [feedback, setFeedback] = useState<string>('');
     const [completed, setCompleted] = useState(false);
@@ -57,6 +59,19 @@ export default function Mcq({ title, description }: McqProps) {
     const handleAnswerSelected = (answerIndex: number) => {
         setSelectedAnswer(answerIndex);
         setIsQuestionSelected(true);
+        setMissedQuestions((prevMissed) => [
+            // add missed question to missedQuestions array
+            ...prevMissed,
+            {
+                question: currentQuiz[currentQuestionIndex].question,
+                correctAnswer: currentQuiz[currentQuestionIndex].correctAnswer,
+                selectedAnswer: answerIndex,
+                isCorrect:
+                    answerIndex === currentQuestion.correctAnswer
+                        ? true
+                        : false,
+            },
+        ]);
         if (!isQuestionSelected) {
             // check for correct answer
             if (answerIndex === currentQuestion.correctAnswer) {
@@ -64,19 +79,9 @@ export default function Mcq({ title, description }: McqProps) {
                 setCurrentScore(currentScore + 1);
             } else {
                 setFeedback('Wrong!');
-                setMissedQuestions((prevMissed) => [
-                    // add missed question to missedQuestions array
-                    ...prevMissed,
-                    {
-                        question: questions[currentQuestionIndex].question,
-                        correctAnswer:
-                            questions[currentQuestionIndex].correctAnswer,
-                        selectedAnswer: answerIndex,
-                    },
-                ]);
             }
-            if (currentQuestionIndex === questions.length - 1) {
-                // if last question, set isCompleted to true
+            // Check if last question in the current quiz
+            if (currentQuestionIndex === currentQuiz.length - 1) {
                 setCompleted(true);
             }
         }
@@ -118,7 +123,7 @@ export default function Mcq({ title, description }: McqProps) {
                             feedback={feedback}
                             question={currentQuestion.question}
                             currentQuestionIndex={currentQuestionIndex}
-                            numQuestions={questions.length}
+                            numQuestions={currentQuiz.length}
                             setSelectedAnswer={setSelectedAnswer}
                             setIsQuestionSelected={setIsQuestionSelected}
                             setFeedback={setFeedback}
@@ -130,7 +135,7 @@ export default function Mcq({ title, description }: McqProps) {
                 // if all questions have been answered, display the score
                 <div>
                     <Score
-                        numQuestions={questions.length}
+                        numQuestions={currentQuiz.length}
                         currentScore={currentScore}
                         setCurrentScore={setCurrentScore}
                         setCurrentQuestionIndex={setCurrentQuestionIndex}
@@ -141,6 +146,7 @@ export default function Mcq({ title, description }: McqProps) {
                         setIsQuestionSelected={setIsQuestionSelected}
                         setIsCompleted={setCompleted}
                         isMCQ={true}
+                        quizIndex={quizIndex} // Pass quiz index to Score component
                     />
                 </div>
             )}
