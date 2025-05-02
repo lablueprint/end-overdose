@@ -16,7 +16,12 @@ import {
     browserSessionPersistence,
 } from 'firebase/auth';
 export default function SignInPage() {
-    const { register } = useForm();
+    const { register, handleSubmit } = useForm();
+
+    const onSubmit = (data) => {
+        console.log('Form submitted:', data);
+        // Placeholder for form submission logic
+    };
 
     return (
         <div className={styles.splitContainer}>
@@ -90,6 +95,15 @@ export default function SignInPage() {
                                     Subscribe to our monthly newsletter
                                 </label>
                             </div>
+                        </div>
+
+                        <div className={styles.buttonContainer}>
+                            <button
+                                type="submit"
+                                className={styles.submitButton}
+                            >
+                                SIGN IN
+                            </button>
                         </div>
                     </form>
                 </div>
