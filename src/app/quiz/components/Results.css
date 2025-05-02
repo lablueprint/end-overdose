@@ -1,0 +1,130 @@
+.results-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 5vh;
+    background-color: #141E31;
+}
+
+.results-container h1 {
+    color: white;
+    text-align: center;
+    padding-bottom: 20px;
+    font-size: 2rem;
+    margin-top: -20px;
+}
+
+.results-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background-color: white;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.results-card {
+    padding: 10px;
+    margin: 10px;
+}
+
+.results-card p {
+    margin-bottom: 20px;
+    max-width: 80%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    text-overflow: ellipsis;
+    display: inline-block;
+    line-height: 1.5;
+}
+
+.results-card ul {
+    list-style: none;
+    border-radius: 2px;
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+
+
+.option-icon {
+    margin-right: 0px;
+    flex-shrink: 0;
+}
+
+.answer-image {
+    margin-left: auto;
+    padding-right: 10px;
+    transform: translateY(30px);
+}
+
+.answer-item-correct {
+    padding: 4px 8px;
+    border-radius: 10px;
+    border: 2px solid #02B56B;
+    color: #02B56B;
+    background-color: rgba(2, 181, 107, 0.1);
+    /* border: 1px solid #4CAF50;
+    color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.1); */
+    font-size: 14px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 0;
+}
+
+.answer-item-correct span {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    min-width: 0;
+    width: 100%;
+}
+
+.answer-item-incorrect {
+    padding: 4px 8px;
+    border-radius: 10px;
+    border: 2px solid #E17A7A;
+    color: #E17A7A;
+    background-color: rgba(255, 0, 0, 0.1);
+    font-size: 14px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 0;
+}
+
+.answer-item-incorrect span {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    min-width: 0;
+    width: 100%;
+}
+
+.answer-item-neutral {
+    padding: 4px 8px;
+    border-radius: 10px;
+    border: 2px solid black;
+    color: black;
+    font-size: 14px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 0;
+}
+
+.answer-item-neutral span {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    min-width: 0;
+    width: 100%;
+}
