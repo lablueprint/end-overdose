@@ -4,13 +4,11 @@
     background-image: url('../../../public/signin.svg');
     background-size: cover;
     background-position: center bottom;
-    border: 2px solid red; /* Adds a visible red border */
 }
 
 .placeHolderHalf {
     width: 50%;
     min-height: 100%;
-    border: 2px solid green; /* Adds a visible green border */
 }
 
 .loginHalf {
@@ -25,14 +23,12 @@
     padding-bottom: auto;
     padding-left: 50px;
     padding-right: 50px;
-    border: 2px solid purple; /* Adds a visible blue border */
 }
 
 .contentContainer {
     padding: 2rem;
     width: 100%;
     max-width: 500px;
-    border: 1px solid yellow; /* for visualization */
 }
 
 .h1 {
@@ -53,14 +49,12 @@
     padding: 2rem;
     margin-top: 2rem;
     width: 100%;
-    border: 1px solid white;
 }
 
 .form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    border: 1px solid purple;
 }
 
 .inputGroup {
@@ -86,7 +80,6 @@
 
 .input:focus {
     outline: none;
-    border-color: #4a5af8;
 }
 
 /* CHECKBOX STYLING */
