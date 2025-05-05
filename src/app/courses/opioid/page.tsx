@@ -70,13 +70,18 @@ export default function OpioidHome() {
             // }
 
             try {
-                const response =
-                    user.course_completion.opioidCourse.courseProgress;
-                const lessonIndex = Math.round((response / 100) * totalLessons);
+                if (isStudent(user)) {
+                    const response =
+                        user.course_completion.opioidCourse.courseProgress;
 
-                setCourseProgress(response);
-                setLesson(lessonIndex);
-                setHighestReachedLesson(lessonIndex);
+                    const lessonIndex = Math.round(
+                        (response / 100) * totalLessons
+                    );
+
+                    setCourseProgress(response);
+                    setLesson(lessonIndex);
+                    setHighestReachedLesson(lessonIndex);
+                }
             } catch (error) {
                 console.error('Error fetching progress:', error);
             } finally {
