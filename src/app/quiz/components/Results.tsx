@@ -105,9 +105,11 @@ export default function Results({
                                         <li
                                             key={i}
                                             className={
-                                                i === item.correctAnswer
+                                                (answer ? 1 : 0) ===
+                                                item.correctAnswer
                                                     ? 'answer-item-correct'
-                                                    : i === item.selectedAnswer
+                                                    : (answer ? 1 : 0) ===
+                                                        item.selectedAnswer
                                                       ? 'answer-item-incorrect'
                                                       : 'answer-item-neutral'
                                             }
@@ -115,9 +117,10 @@ export default function Results({
                                             <img
                                                 className="option-icon"
                                                 src={
-                                                    i === item.correctAnswer
+                                                    (answer ? 1 : 0) ===
+                                                    item.correctAnswer
                                                         ? `/correct${i + 1}.svg`
-                                                        : i ===
+                                                        : (answer ? 1 : 0) ===
                                                             item.selectedAnswer
                                                           ? `/incorrect${i + 1}.svg`
                                                           : `/resultsOption${i + 1}.svg`
