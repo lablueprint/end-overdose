@@ -39,14 +39,15 @@ const trueFalseQuestions = [
             answer: true,
         },
         {
-            question: 'sljfnj lawsdjf asjd nfjkwehn jknajdsfb a;ekdjf baksdbf aksbd jdksfhjalkshf kwhs dkaff',
+            question:
+                'sljfnj lawsdjf asjd nfjkwehn jknajdsfb a;ekdjf baksdbf aksbd jdksfhjalkshf kwhs dkaff',
             answer: false,
         },
         {
             question: 'LAST QUESTION',
             answer: true,
         },
-    ]
+    ],
 ];
 
 export default trueFalseQuestions;

@@ -27,15 +27,21 @@ interface MissedQuestion {
     isCorrect: boolean;
 }
 
-export default function TrueFalse({ title, description, quizIndex }: TrueFalseProps) {
-    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>([]);
+export default function TrueFalse({
+    title,
+    description,
+    quizIndex,
+}: TrueFalseProps) {
+    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>(
+        []
+    );
     const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
     const [started, setStarted] = useState(false);
     const [completed, setCompleted] = useState(false);
-    
+
     // Get the current quiz
     const currentQuiz = trueFalseQuestions[quizIndex];
-    
+
     const [questionIndex, setQuestionIndex] = useState(0);
     const [currentScore, setCurrentScore] = useState(0);
     const [isQuestionSelected, setIsQuestionSelected] = useState(false);

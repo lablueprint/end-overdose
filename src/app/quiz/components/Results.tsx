@@ -16,9 +16,13 @@ interface ResultsProps {
     isMCQ: boolean;
     quizIndex: number;
 }
-export default function Results({ missedQuestions, isMCQ, quizIndex }: ResultsProps) {
+export default function Results({
+    missedQuestions,
+    isMCQ,
+    quizIndex,
+}: ResultsProps) {
     const currentQuiz = questions[quizIndex];
-    
+
     return (
         <div className="results-container">
             <h1 style={{ color: 'white' }}>Review</h1>
@@ -97,9 +101,11 @@ export default function Results({ missedQuestions, isMCQ, quizIndex }: ResultsPr
                                         <li
                                             key={i}
                                             className={
-                                                i === item.correctAnswer
+                                                (answer ? 1 : 0) ===
+                                                item.correctAnswer
                                                     ? 'answer-item-correct'
-                                                    : i === item.selectedAnswer
+                                                    : (answer ? 1 : 0) ===
+                                                        item.selectedAnswer
                                                       ? 'answer-item-incorrect'
                                                       : 'answer-item-neutral'
                                             }
@@ -107,9 +113,10 @@ export default function Results({ missedQuestions, isMCQ, quizIndex }: ResultsPr
                                             <img
                                                 className="option-icon"
                                                 src={
-                                                    i === item.correctAnswer
+                                                    (answer ? 1 : 0) ===
+                                                    item.correctAnswer
                                                         ? `/correct${i + 1}.svg`
-                                                        : i ===
+                                                        : (answer ? 1 : 0) ===
                                                             item.selectedAnswer
                                                           ? `/incorrect${i + 1}.svg`
                                                           : `/resultsOption${i + 1}.svg`
