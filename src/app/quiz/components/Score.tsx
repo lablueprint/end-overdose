@@ -18,7 +18,9 @@ interface MissedQuestion {
 interface ScoreProps {
     numQuestions: number;
     currentScore: number;
-    isMCQ: boolean;
+    isMCQ?: boolean;
+    isTF?: boolean;
+    isGame?: boolean;
     setCurrentScore: (newCurrentScore: number) => void;
     setCurrentQuestionIndex: (newCurrentQuestionIndex: number) => void;
     setSelectedAnswer: (newSelectedAnswer: number | null) => void;
@@ -28,6 +30,7 @@ interface ScoreProps {
     setIsQuestionSelected: (newIsQuestionSelected: boolean) => void;
     setIsCompleted: (newSetIsCompleted: boolean) => void;
     quizIndex: number;
+    onRetry?: () => void;
 }
 
 export default function Score({
@@ -42,10 +45,11 @@ export default function Score({
     setIsQuestionSelected,
     setIsCompleted,
     isMCQ,
+    isTF,
+    isGame,
     quizIndex,
+    onRetry,
 }: ScoreProps) {
-    const percentage = ((currentScore / numQuestions) * 100).toFixed(0);
-
     // match props for both TF and MCQ, right now some features don't work for TF
     const retakeQuiz = () => {
         setCurrentScore(0);
@@ -92,6 +96,24 @@ export default function Score({
         updateQuiz();
     }, [currentScore, numQuestions, name]);
 
+    // Deduplicate missedQuestions by question (first attempt only)
+    const seen = new Set<string>();
+    const uniqueMissedQuestions = missedQuestions.filter((q) => {
+        if (seen.has(q.question)) return false;
+        seen.add(q.question);
+        return true;
+    });
+
+    // Recalculate score: only first attempts that were correct
+    const firstAttemptScore = uniqueMissedQuestions.filter(
+        (q) => q.isCorrect
+    ).length;
+    const firstAttemptTotal = uniqueMissedQuestions.length;
+    const percentage =
+        firstAttemptTotal > 0
+            ? ((firstAttemptScore / firstAttemptTotal) * 100).toFixed(0)
+            : '0';
+
     return (
         <>
             {1 && (
@@ -107,7 +129,10 @@ export default function Score({
                             width={300}
                             height={200}
                         />
-                        <button className="retry-button" onClick={retakeQuiz}>
+                        <button
+                            className="retry-button"
+                            onClick={isGame ? onRetry : retakeQuiz}
+                        >
                             Retry
                         </button>
                         {currentScore / numQuestions >= 0.8 && ( // if the user scored 80% or higher, display the next lesson button
@@ -121,9 +146,11 @@ export default function Score({
                     </div>
                     <div className="missed-questions-container">
                         <Results
-                            missedQuestions={missedQuestions}
+                            missedQuestions={uniqueMissedQuestions}
                             isMCQ={isMCQ}
+                            isTF={isTF}
                             quizIndex={quizIndex}
+                            isGame={isGame}
                         />
                     </div>
                 </div>

@@ -233,6 +233,7 @@ export default function TrueFalse({
                         setIsCompleted={setCompleted}
                         isMCQ={false}
                         quizIndex={quizIndex}
+                        isTF={true}
                     />
                 </div>
             )}
