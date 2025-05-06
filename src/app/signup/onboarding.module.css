@@ -1,0 +1,127 @@
+.onboardingBg {
+    background-color: #0c1321;
+    width: 100%;
+    height: 100vh;
+    color: white;
+}
+.onboardingContainer {
+    padding: 10% 15%;
+    min-height: 100vh;
+}
+
+.foregroundImg {
+    width: 100%;
+    background-size: cover;
+    position: absolute;
+    bottom: 0;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+
+.progressContainer {
+    text-align: center;
+    padding-bottom: 5%;
+    display: flex;
+    justify-content: flex-start;
+    position: absolute;
+    min-width: 70%;
+    z-index: 2;
+    top: 7%;
+    left: 20.25%;
+}
+.previousArrow {
+    font-size: 300%;
+    width: 8%;
+    transform: translateX(-10px);
+    padding: 0 0;
+    line-height: 10%;
+}
+
+.previousArrow:hover {
+    cursor: pointer;
+}
+.progressBar {
+    width: 90%;
+    color: #c01a18;
+}
+
+.onboardingContent {
+    width: 100%;
+    border: hotpink 1px solid;
+    min-height: 70vh;
+    position: relative;
+    z-index: 2;
+}
+
+.onboardingHeadingContainer {
+    display: flex;
+    width: 100%;
+    min-height: 20vh;
+}
+.onboardingHeading {
+    border: 1px solid green;
+}
+.onboardingText {
+    min-height: 40vh;
+    padding: 5%;
+}
+.onboarding_1 {
+    height: 36vh;
+    justify-content: space-around;
+    padding: 0 25%;
+}
+.onboarding_1 .row {
+    display: flex;
+    justify-content: flex-start;
+}
+.onboarding_1 .icon {
+    width: 20%;
+    height: 7vh;
+    margin-right: 1vw;
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding: 2%;
+    margin: 4% 0;
+}
+.onboarding_1 .label {
+    height: 12vh;
+    padding: 2%;
+    width: 80%;
+}
+.onboarding_1 h3 {
+    text-transform: uppercase;
+}
+.onboarding_1 p {
+    font-size: smaller;
+}
+.onboarding_1 .divider {
+    background-color: white;
+    height: 1px;
+}
+.onboarding_2 {
+    height: 35vh;
+}
+.onboarding_3 {
+    height: 35vh;
+}
+.onboardingCat {
+    width: 15%;
+    padding: 2%;
+    background-image: url('../../../public/onboardingCat.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.onboardingHeading {
+    padding: 3% 5%;
+    width: 85%;
+}
+.continueButton {
+    position: absolute;
+    border: white solid 1px;
+    bottom: 5%;
+    right: 5%;
+}
+
+.continueButton:hover {
+    cursor: pointer;
+}

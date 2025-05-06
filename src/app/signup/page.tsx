@@ -19,6 +19,7 @@ import {
 } from 'firebase/auth';
 import { addAdmin } from '@/app/api/admins/actions';
 import { addStudent } from '@/app/api/students/actions';
+import Onboarding from '@/app/signup/onboarding';
 
 type Inputs = {
     role: string;
@@ -31,8 +32,7 @@ const SignUpPage = () => {
     const router = useRouter();
     const [error, setError] = useState('');
     const [success, setSuccess] = useState<boolean>(false);
-    // DELETE LATER TEMPORARY TOGGLE FOR STUDENT OR ADMIN
-    const [student, setStudent] = useState(false);
+    const [studentSubmitted, setStudentSubmitted] = useState(true);
 
     const roles = ['Student', 'School Admin', 'End Overdose Admin'];
     const roleValues = roles.map((role) => (
@@ -97,18 +97,12 @@ const SignUpPage = () => {
                 email,
                 password
             );
-            const verifySettings =
-                role === 'School Admin'
-                    ? {
-                          url: `${window.location.origin}/login`,
-                          handleCodeInApp: true,
-                      }
-                    : {
-                          url: `${window.location.origin}/onboarding`,
-                          handleCodeInApp: true,
-                      };
+            const verifySettings = {
+                url: `${window.location.origin}/login`,
+                handleCodeInApp: true,
+            };
 
-            // 2) Build your Admin object
+            // 2) Build your Student/Admin object
             if (role === 'Student') {
                 // build your student object
                 const newStudent: Student = {
@@ -134,9 +128,9 @@ const SignUpPage = () => {
                     badges: [],
                     certificates: [],
                 };
+                setStudentSubmitted(true);
                 await addStudent(newStudent, user.uid);
                 setSuccess(true);
-                router.push('/onboarding');
                 return;
             } else {
                 // default to school admin
@@ -151,7 +145,7 @@ const SignUpPage = () => {
             }
 
             // 4) Send email‑verification instead of a magic link:
-            if (role === 'SchoolAdmin') {
+            if (role === 'School Admin') {
                 await sendEmailVerification(user, verifySettings);
                 console.log('Verification email sent');
                 setSuccess(true);
@@ -189,119 +183,141 @@ const SignUpPage = () => {
     }, []);
 
     return (
-        <div className={styles.splitContainer}>
-            <div className={styles.loginHalf}>
-                <div className={styles.contentContainer}>
-                    <div className={styles.bodyContainer}>
-                        <div className={styles.titleTextContainer}>
-                            <h1 className={styles.h1}>CREATE AN ACCOUNT</h1>
-                            <h2 className={styles.h2}>
-                                We're so glad you could join us!
-                            </h2>
-                        </div>
-                        {error && <p style={{ color: 'red' }}>{error}</p>}
-                        {success && (
-                            <p style={{ color: 'green' }}>Signup successful!</p>
-                        )}
-                        <div className={styles.formContainer}>
-                            <form
-                                className={styles.form}
-                                onSubmit={handleSubmit(onSubmit)}
-                            >
-                                <div className={styles.subForm}>
-                                    <label className={styles.h2} htmlFor="role">
-                                        Role
-                                    </label>
-                                    <select
-                                        className={`${styles.input} ${styles.formControl}`}
-                                        id="role"
-                                        {...register('role', {
-                                            required: true,
-                                        })}
-                                    >
-                                        {roleValues}
-                                    </select>
+        <>
+            {!studentSubmitted && (
+                <div className={styles.splitContainer}>
+                    <div className={styles.loginHalf}>
+                        <div className={styles.contentContainer}>
+                            <div className={styles.bodyContainer}>
+                                <div className={styles.titleTextContainer}>
+                                    <h1 className={styles.h1}>
+                                        CREATE AN ACCOUNT
+                                    </h1>
+                                    <h2 className={styles.h2}>
+                                        We're so glad you could join us!
+                                    </h2>
                                 </div>
-                                <div className={styles.subForm}>
-                                    <label
-                                        className={styles.h2}
-                                        htmlFor="school_name"
+                                {error && (
+                                    <p style={{ color: 'red' }}>{error}</p>
+                                )}
+                                {success && (
+                                    <p style={{ color: 'green' }}>
+                                        Signup successful!
+                                    </p>
+                                )}
+                                <div className={styles.formContainer}>
+                                    <form
+                                        className={styles.form}
+                                        onSubmit={handleSubmit(onSubmit)}
                                     >
-                                        School Name
-                                    </label>
-                                    <select
-                                        className={`${styles.input} ${styles.formControl}`}
-                                        id="schoolName"
-                                        name="schoolName"
-                                        onChange={(e) => handleSelectChange(e)}
-                                        required
-                                    >
-                                        <option value="" disabled hidden>
-                                            Select your school…
-                                        </option>
-                                        {schoolValues}
-                                    </select>
+                                        <div className={styles.subForm}>
+                                            <label
+                                                className={styles.h2}
+                                                htmlFor="role"
+                                            >
+                                                Role
+                                            </label>
+                                            <select
+                                                className={`${styles.input} ${styles.formControl}`}
+                                                id="role"
+                                                {...register('role', {
+                                                    required: true,
+                                                })}
+                                            >
+                                                {roleValues}
+                                            </select>
+                                        </div>
+                                        <div className={styles.subForm}>
+                                            <label
+                                                className={styles.h2}
+                                                htmlFor="school_name"
+                                            >
+                                                School Name
+                                            </label>
+                                            <select
+                                                className={`${styles.input} ${styles.formControl}`}
+                                                id="schoolName"
+                                                name="schoolName"
+                                                onChange={(e) =>
+                                                    handleSelectChange(e)
+                                                }
+                                                required
+                                            >
+                                                <option
+                                                    value=""
+                                                    disabled
+                                                    hidden
+                                                >
+                                                    Select your school…
+                                                </option>
+                                                {schoolValues}
+                                            </select>
+                                        </div>
+                                        <div className={styles.subForm}>
+                                            <label
+                                                className={styles.h2}
+                                                htmlFor="email"
+                                            >
+                                                Email address:
+                                            </label>
+                                            <input
+                                                className={`${styles.input} ${styles.formControl}`}
+                                                type="email"
+                                                id="email"
+                                                {...register('email', {
+                                                    required: true,
+                                                })}
+                                            />
+                                        </div>
+                                        <div className={styles.subForm}>
+                                            <label
+                                                className={styles.h2}
+                                                htmlFor="password"
+                                            >
+                                                Password:
+                                            </label>
+                                            <input
+                                                className={`${styles.input} ${styles.formControl}`}
+                                                type="password"
+                                                id="password"
+                                                {...register('password', {
+                                                    required: true,
+                                                })}
+                                            />
+                                        </div>
+                                        <div className={styles.buttonContainer}>
+                                            <div
+                                                className={
+                                                    styles.robotVerPlaceholder
+                                                }
+                                            ></div>
+                                            <button
+                                                className={styles.loginButton}
+                                                type="submit"
+                                            >
+                                                SIGN UP
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div className={styles.subForm}>
-                                    <label
-                                        className={styles.h2}
-                                        htmlFor="email"
-                                    >
-                                        Email address:
-                                    </label>
-                                    <input
-                                        className={`${styles.input} ${styles.formControl}`}
-                                        type="email"
-                                        id="email"
-                                        {...register('email', {
-                                            required: true,
-                                        })}
-                                    />
-                                </div>
-                                <div className={styles.subForm}>
-                                    <label
-                                        className={styles.h2}
-                                        htmlFor="password"
-                                    >
-                                        Password:
-                                    </label>
-                                    <input
-                                        className={`${styles.input} ${styles.formControl}`}
-                                        type="password"
-                                        id="password"
-                                        {...register('password', {
-                                            required: true,
-                                        })}
-                                    />
-                                </div>
-                                <div className={styles.buttonContainer}>
-                                    <div
-                                        className={styles.robotVerPlaceholder}
-                                    ></div>
-                                    <button
-                                        className={styles.loginButton}
-                                        type="submit"
-                                    >
-                                        SIGN UP
-                                    </button>
-                                </div>
-                            </form>
+                            </div>
+                            <div className={styles.navigationContainer}>
+                                <h2 className={styles.h2}>
+                                    {`Already have an account?   `}
+                                    <Link className={styles.link} href="/login">
+                                        Sign In
+                                    </Link>
+                                </h2>
+                            </div>
                         </div>
                     </div>
-                    <div className={styles.navigationContainer}>
-                        <h2 className={styles.h2}>
-                            {`Already have an account?   `}
-                            <Link className={styles.link} href="/login">
-                                Sign In
-                            </Link>
-                        </h2>
+                    <div className={styles.placeHolderHalf}>
+                        <div className={styles.narcat}></div>
                     </div>
                 </div>
-            </div>
-            <div className={styles.placeHolderHalf}>
-                <div className={styles.narcat}></div>
-            </div>
-        </div>
+            )}
+            {studentSubmitted && <Onboarding />}
+        </>
     );
 };
 
