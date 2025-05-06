@@ -14,7 +14,7 @@ export default function Onboarding() {
     const bgMap: Record<number, string> = {
         1: '/cactusForeground.svg',
         2: '/moonForeground.png',
-        3: '',
+        3: '/terrainForeground.svg',
     };
 
     const slideVariants = {
@@ -90,9 +90,50 @@ export default function Onboarding() {
                         <div className={styles.onboardingContent}>
                             <div className={styles.onboardingHeadingContainer}>
                                 <div className={styles.onboardingCat}></div>
-                                <div className={styles.onboardingHeading}>
-                                    Text
-                                </div>
+                                {page === 1 && (
+                                    <div className={styles.onboardingHeading}>
+                                        <div className={styles.title}>
+                                            HOWDY PARTNER
+                                        </div>
+                                        <div className={styles.subheading}>
+                                            We're here to empower you with the
+                                            knowledge and tools to prevent
+                                            overdose and save lives. Through
+                                            interactive lessons, mini-games, and
+                                            videos, you'll learn how to
+                                            recognize and respond to an overdose
+                                            and make a real impact in your
+                                            community.
+                                        </div>
+                                    </div>
+                                )}
+                                {page === 2 && (
+                                    <div className={styles.onboardingHeading}>
+                                        <div className={styles.title}>
+                                            PICK A NAME
+                                        </div>
+                                        <div className={styles.subheading}>
+                                            Before we dive in, let’s give you a
+                                            name! Choose a username from our
+                                            name generator and make it yours.
+                                        </div>
+                                    </div>
+                                )}
+                                {page === 3 && (
+                                    <div className={styles.onboardingHeading}>
+                                        <div className={styles.title}>
+                                            SOOOO MANY NARCATS
+                                        </div>
+                                        <div className={styles.subheading}>
+                                            Welcome! I’m your Narcat: I come in
+                                            various styles, joining you on your
+                                            journey to learn how to end
+                                            overdose. As you complete courses,
+                                            you’ll earn rewards to customize me
+                                            with fun accessories.
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                             <div className={styles.onboardingText}>
                                 {page === 1 && (
@@ -157,16 +198,10 @@ export default function Onboarding() {
                                 )}
                                 {page === 3 && (
                                     <div className={styles.onboarding_3}>
-                                        Third Slide
+                                        <div className={styles.narcat}></div>
                                     </div>
                                 )}
                             </div>
-                            <button
-                                onClick={handleNext}
-                                className={styles.continueButton}
-                            >
-                                Continue
-                            </button>
                         </div>
                     </div>
                     <div
@@ -175,13 +210,16 @@ export default function Onboarding() {
                             backgroundImage: bgMap[page]
                                 ? `url(${bgMap[page]})`
                                 : undefined,
-                            height: `${page == 1 ? '50%' : '110%'}`,
+                            height: `${page == 2 ? '110%' : '50%'}`,
                         }}
                     >
                         {' '}
                     </div>
                 </motion.div>
             </AnimatePresence>
+            <button onClick={handleNext} className={styles.continueButton}>
+                {page === 3 ? "Let's Get Started!" : 'Continue'}
+            </button>
         </div>
     );
 }
