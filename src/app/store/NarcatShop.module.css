@@ -1,0 +1,121 @@
+.shopGrid {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.themeList {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.previewPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #f9fafb;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.previewImageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 1rem;
+  overflow: hidden;
+  background-color: #e5e7eb;
+}
+
+.previewBackground {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.previewCat {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8rem;
+  height: auto;
+}
+
+.purchaseButton {
+  margin-top: 1rem;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.purchaseButton:hover {
+  background-color: #333;
+}
+
+.purchaseButton:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* ThemeCard styles */
+.themeCard {
+  display: flex;
+  background-color: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.themeCard:hover {
+  transform: translateY(-2px);
+}
+
+.selectedCard {
+  outline: 2px solid #3b82f6;
+}
+
+.cardThumbnail {
+  width: 120px;
+  height: 100%;
+  object-fit: cover;
+  background-color: #f3f4f6;
+}
+
+.cardContent {
+  padding: 1rem;
+  flex: 1;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.fishPrice {
+  background: #facc15;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+}
+
+.cardDescription {
+  font-size: 0.875rem;
+  color: #4b5563;
+}

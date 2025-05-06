@@ -7,13 +7,13 @@
     display: flex;
     align-items: center;
     width: 16rem;
-  }
-  
-  .iconContainer {
+}
+
+.iconContainer {
     margin-right: 1rem;
-  }
-  
-  .icon {
+}
+
+.icon {
     width: 2.5rem;
     height: 2.5rem;
     background-color: rgb(243, 244, 246);
@@ -21,24 +21,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .iconSvg {
+}
+
+.iconSvg {
     height: 1.5rem;
     width: 1.5rem;
-  }
-  
-  .contentContainer {
+}
+
+.contentContainer {
     display: flex;
     flex-direction: column;
-  }
-  
-  .title {
+}
+
+.title {
     font-size: 0.875rem;
     color: rgb(107, 114, 128);
-  }
-  
-  .value {
+}
+
+.value {
     font-size: 1.5rem;
     font-weight: 700;
-  }
+}

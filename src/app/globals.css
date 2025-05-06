@@ -23,6 +23,4 @@ body {
 .scrollable-container {
     max-height: 300px; /* Adjust as needed */
     overflow-y: auto;
-  }
-
-
+}

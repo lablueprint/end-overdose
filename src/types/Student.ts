@@ -8,7 +8,7 @@ export type Student = {
     email: string;
     school_name: string;
     nameplate: string;
-    kibble_count: number;
+    fish_count: number;
     course_completion: {
         opioidCourse: {
             courseScore: number; // % of final score >=80 then we do ++passed
@@ -31,7 +31,7 @@ export const StudentJosh: Student = {
     email: 'josh@fusd.net',
     school_name: 'Fremont Unified School District',
     nameplate: 'Josh Doe',
-    kibble_count: 1000,
+    fish_count: 1000,
     course_completion: {
         opioidCourse: {
             courseScore: 50, // half of lessons completed

@@ -8,14 +8,14 @@
 }
 
 .water {
-    height:500px;
+    height: 500px;
     width: 500px;
     background-color: lightblue;
     position: relative;
 }
 
 .gameContainer {
-    height:500px;
+    height: 500px;
     width: 100%;
     background-color: white;
     display: flex;
@@ -128,7 +128,6 @@
     margin-top: 20px;
 }
 
-
 .question {
     display: flex;
     flex-direction: row;
@@ -153,7 +152,7 @@
 
 .choiceButton:hover {
     background-color: black;
-    color: white
+    color: white;
 }
 
 .incorrectText {

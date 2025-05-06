@@ -52,7 +52,6 @@
     color: gray;
 }
 
-
 /*------------------------------------------- Badge Table Container Styles ----------------------------------------------*/
 
 /* Badge Table Container */
@@ -78,7 +77,6 @@
     justify-content: center;
 }
 
-
 /* ------------------------------------------- Confirm Button Styles ----------------------------------------*/
 
 .activeConfirm {
@@ -92,7 +90,7 @@
 /* ------------------------------------------- NamePlate Styles ---------------------------------------------------*/
 
 .selectedNamePlate {
-    color:aquamarine;
+    color: aquamarine;
 }
 
 .namePlateContainer {
@@ -113,7 +111,6 @@
     border-radius: 50%;
     overflow: hidden;
 }
-
 
 /* Profile Select Button Styles */
 
@@ -181,7 +178,7 @@
 .button {
     padding: 5px;
     margin: 5px;
-} 
+}
 
 /* Profile Select Button Container */
 .pageProfileSelectContainer {

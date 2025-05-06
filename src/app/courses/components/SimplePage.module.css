@@ -15,19 +15,19 @@
 
 .button {
     border: 2px solid;
-    width: 10rem; 
+    width: 10rem;
     height: 4rem;
     margin: 2rem 1.25rem;
-    padding: 0.5rem; 
+    padding: 0.5rem;
     border-radius: 0.75rem;
 }
 
 .completeButton {
     border: 2px solid;
-    width: 10rem; 
+    width: 10rem;
     height: 4rem;
     margin: 2rem 1.25rem;
-    padding: 0.5rem; 
+    padding: 0.5rem;
     border-radius: 0.75rem;
     background-color: rgb(220, 220, 220);
 }
