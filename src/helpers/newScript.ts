@@ -1,10 +1,7 @@
-//This is the new script for populating the newStudent Database collection
-
 import axios from 'axios';
 import { faker } from '@faker-js/faker';
 
 // First, let's define the new interface based on the schema
-
 interface Profile {
     unlocked: string[];
     cat: string;
@@ -17,7 +14,7 @@ interface QuizInfo {
     score: number;
 }
 
-//Each individual course has this information
+// Each individual course has this information
 interface CourseCompletion {
     courseProgress: number;
     courseScore: number;
@@ -35,32 +32,67 @@ interface NewStudentData {
     profile: Profile;
     courses_average_score: number;
     all_courses_completed: boolean;
-    courses_completion: CoursesCompletion;
+    courses: CoursesCompletion;
     fish_count: number;
-    certificates: string[];
+    certificates: Record<string, string>; // Record is essentially a dictionary of string -> string
     hasLoggedIn: boolean;
 }
 
-// Updated function to create a random student with the new schema
-const createRandomStudent = (school: string): NewStudentData => {
-    // First and last name for the nameplate
-    const firstName = faker.person.firstName();
-    const lastName = faker.person.lastName();
+// Generate a random date string within the last year
+const generateRandomDate = (): string => {
+    const today = new Date();
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(today.getFullYear() - 1);
 
-    // Available theme options
-    const themeOptions = ['cowboy', 'space', 'pirate', 'ninja']; //DEFAULT IS NARCAT
-
-    // Generate 1-2 random unlocked themes
-    const unlockedThemes = faker.helpers.arrayElements(
-        themeOptions,
-        faker.number.int({ min: 1, max: 2 })
+    const randomDate = new Date(
+        oneYearAgo.getTime() +
+            Math.random() * (today.getTime() - oneYearAgo.getTime())
     );
 
-    // Select one of the unlocked themes for cat and background
-    const selectedTheme = faker.helpers.arrayElement(unlockedThemes);
+    const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+    ];
 
-    // Generate random quizzes (1-3 quizzes)
-    const quizCount = faker.number.int({ min: 1, max: 3 });
+    return `${months[randomDate.getMonth()]} ${randomDate.getDate()} ${randomDate.getFullYear()}`;
+};
+
+// Updated function to create a random student with the new schema
+const createRandomStudent = (school: string): NewStudentData => {
+    // Following the exact order of properties in the interface
+
+    // 1. student_id
+    const student_id = faker.number
+        .int({ min: 100000000, max: 999999999 })
+        .toString();
+
+    // 2. school_name
+    const school_name = school;
+
+    // 3. profile
+    const firstName = faker.person.firstName();
+    const middleName = faker.person.middleName();
+    const lastName = faker.person.lastName();
+
+    const profile: Profile = {
+        unlocked: ['narcat'],
+        cat: 'narcat',
+        background: 'narcat',
+        nameplate: `${firstName} ${middleName} ${lastName}`,
+    };
+
+    // 4. Generate quizzes and calculate scores for courses_average_score
+    const quizCount = 3;
     const quizzes: QuizInfo[] = [];
     let totalScore = 0;
 
@@ -68,50 +100,96 @@ const createRandomStudent = (school: string): NewStudentData => {
         const score = faker.number.int({ min: 0, max: 100 });
         totalScore += score;
         quizzes.push({
-            name: `Quiz ${i + 1}`,
+            name: `opioid ${i + 1}`,
             score: score,
         });
     }
 
-    // Course completion data
-    const courseProgress = faker.number.int({ min: 0, max: 100 });
-    const courseScore = quizCount > 0 ? Math.round(totalScore / quizCount) : 0;
+    const courseProgress = faker.number.int({ min: 0, max: 95 });
+    const courseAverage =
+        quizCount > 0 ? Math.round(totalScore / quizCount) : 0;
 
-    // Certificates based on course completion
-    const certificates: string[] = [];
-    if (courseProgress === 100) {
-        certificates.push('opioid');
-    }
+    // Course average score SAME AS COURSESCORE FOR NOW
+    const courses_average_score = courseAverage;
 
-    // Determine if all courses are completed
+    // 5. all_courses_completed
     const all_courses_completed = courseProgress === 100;
 
+    // 6. courses
+    const courses: CoursesCompletion = {
+        opioidCourse: {
+            courseProgress: courseProgress,
+            courseScore: courseAverage,
+            quizzes: quizzes,
+        },
+    };
+
+    // 7. fish_count
+    const fish_count = faker.number.int({ min: 0, max: 50 });
+
+    // 8. certificates with course -> date mapping
+    const certificates: Record<string, string> = {};
+    certificates['opioid'] = generateRandomDate(); //Giving everyone a certificate regardless for testing purpoeses
+
+    // 9. hasLoggedIn
+    const hasLoggedIn = faker.datatype.boolean();
+
     return {
-        student_id: faker.number
-            .int({ min: 100000000, max: 999999999 })
-            .toString(),
-        school_name: school,
-        profile: {
-            unlocked: unlockedThemes,
-            cat: selectedTheme,
-            background: selectedTheme,
-            nameplate: `${firstName} ${lastName}`,
-        },
-        courses_average_score: courseScore,
-        all_courses_completed: all_courses_completed,
-        courses_completion: {
-            opioidCourse: {
-                courseProgress: courseProgress,
-                courseScore: courseScore,
-                quizzes: quizzes,
-            },
-        },
-        fish_count: faker.number.int({ min: 0, max: 50 }),
-        certificates: certificates,
-        hasLoggedIn: faker.datatype.boolean(),
+        student_id,
+        school_name,
+        profile,
+        courses_average_score,
+        all_courses_completed,
+        courses,
+        fish_count,
+        certificates,
+        hasLoggedIn,
     };
 };
 
-// Test the function
+// Main script to populate students with school distribution
+async function populateStudents() {
+    console.log(`Generating 100 random students`);
+
+    const schools = [
+        { name: 'Palmdale', count: 20 },
+        { name: 'NewHall', count: 30 },
+        { name: 'Garvey', count: 50 },
+    ];
+
+    for (const school of schools) {
+        console.log(`Generating ${school.count} students for ${school.name}`);
+
+        for (let i = 0; i < school.count; i++) {
+            const studentData = createRandomStudent(school.name);
+            try {
+                const response = await axios.post(
+                    'http://localhost:3000/api/students',
+                    studentData
+                );
+                // console.log(`Created student ${i+1} for ${school.name}`);
+            } catch (error) {
+                console.error(
+                    `Error creating student for ${school.name}:`,
+                    error
+                );
+            }
+
+            // Add a small delay to prevent overwhelming the server
+            await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+    }
+}
+
+// For testing purposes
 const testStudent = createRandomStudent('Palmdale');
 console.log(JSON.stringify(testStudent, null, 2));
+
+// Run the script
+// populateStudents()
+//     .then(() => {
+//         console.log('Student population complete!');
+//     })
+//     .catch((error) => {
+//         console.error('Error in student population:', error);
+//     });
