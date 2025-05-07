@@ -181,15 +181,15 @@ async function populateStudents() {
     }
 }
 
-// For testing purposes
-const testStudent = createRandomStudent('Palmdale');
-console.log(JSON.stringify(testStudent, null, 2));
+// FOR TESTING PURPOSES
+// const testStudent = createRandomStudent('Palmdale');
+// console.log(JSON.stringify(testStudent, null, 2));
 
 // Run the script
-// populateStudents()
-//     .then(() => {
-//         console.log('Student population complete!');
-//     })
-//     .catch((error) => {
-//         console.error('Error in student population:', error);
-//     });
+populateStudents()
+    .then(() => {
+        console.log('Student population complete!');
+    })
+    .catch((error) => {
+        console.error('Error in student population:', error);
+    });

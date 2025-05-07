@@ -36,14 +36,12 @@ export async function POST(request: NextRequest) {
 
         // Apply more specific course completion data if provided
         if (requestData.courses?.opioidCourse) {
-            studentJSON.courses.opioidCourse =
-                requestData.courses_completion.opioidCourse;
+            studentJSON.courses.opioidCourse = requestData.courses.opioidCourse;
         }
 
-        // Add quizzes to opioidCourse if they exist in the request
         if (requestData.courses_completion?.opioidCourse?.quizzes) {
             studentJSON.courses.opioidCourse.quizzes =
-                requestData.courses_completion.opioidCourse.quizzes;
+                requestData.courses.opioidCourse.quizzes;
         }
 
         // Create the new document in Firestore
