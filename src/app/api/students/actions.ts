@@ -3,6 +3,7 @@
 import { cache } from 'react';
 import { Student } from '@/types/Student';
 import firebase_app from '@/firebase/config';
+import { auth } from '@/firebase/clientApp'; // Adjusted the path to match the project structure
 import {
     getFirestore,
     collection,
@@ -53,27 +54,20 @@ export const getStudentCount = cache(async () => {
 });
 
 //returns student object from firebase based off studentid parameter
-export const getStudentFromID = cache(
-    async (id: string, updateQuizzes: Quiz[]) => {
-        try {
-            const q = query(studentsCollection, where('student_id', '==', id)); //Find student from ID
-            const snapshot = await getDocs(q);
+export const getStudentFromID = cache(async (id: string) => {
+    try {
+        const q = query(studentsCollection, where('student_id', '==', id)); //Find student from ID
+        const snapshot = await getDocs(q);
 
-            if (!snapshot.empty) {
-                const doc = snapshot.docs[0];
-                await updateDoc(doc.ref, {
-                    quizzes: updateQuizzes,
-                });
-                return { ...(doc.data() as Student) };
-            }
-
-            return { error: 'Student document not found' };
-        } catch (error) {
-            console.error('Error fetching student:', error);
-            throw new Error('Failed to fetch student.');
+        if (!snapshot.empty) {
+            const doc = snapshot.docs[0];
+            return { id: doc.id, ...(doc.data() as Student) };
         }
+    } catch (error) {
+        console.error('Error fetching student:', error);
+        throw new Error('Failed to fetch student.');
     }
-);
+});
 
 //3. AVERAGING STUDENT SCORES/INFORMATION (Using aggregate function)
 export const getSchoolAverage = cache(async (schoolName: string) => {
@@ -114,6 +108,22 @@ export const getSchoolAverage = cache(async (schoolName: string) => {
     } catch (error) {
         console.error('Error calculating school average:', error);
         throw new Error('Failed to calculate school average.');
+    }
+});
+
+//GET ALL THE STUDENTS FROM A PARTICULAR SCHOOL
+export const getSchoolStudents = cache(async (schoolName: string) => {
+    try {
+        const q = query(
+            studentsCollection,
+            where('school_name', '==', schoolName)
+        );
+        const snapshot = await getDocs(q);
+        const students = snapshot.docs.map((doc) => doc.data() as Student);
+        return students;
+    } catch (error) {
+        console.error('Error fetching school students:', error);
+        throw new Error('Failed to fetch school students.');
     }
 });
 
@@ -158,11 +168,11 @@ export const validateUserCredentials = cache(
 export async function addQuiz(updateQuizzes: Quiz[]) {
     try {
         console.log('work');
-        // const user = auth.currentUser;
-        // if (!user) {
-        //     return { error: 'User data not found' };
-        // }
-        const userRef = doc(db, 'students', '12n2OCj3WNa0cM4e2rUh'); // hard coded student id for now
+        const user = auth.currentUser;
+        if (!user) {
+            return { error: 'User data not found' };
+        }
+        const userRef = doc(db, 'students', user.uid); // Use the user's unique ID
         const userDoc = await getDoc(userRef); // DocumentSnapshot
         if (!userDoc.exists()) {
             return { error: 'Student document not found' };
@@ -212,11 +222,18 @@ interface UpdateCourseProgressResponse {
 }
 
 export async function updateCourseProgress(
+    student_id: string,
     courseName: string,
     progress: number
 ): Promise<UpdateCourseProgressResponse> {
     try {
-        const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); //later, replace userId with the actual user's Id
+        const studentWithID = await getStudentFromID(student_id);
+
+        if (!studentWithID) {
+            return { error: 'Student not found' };
+        }
+
+        const userRef = doc(db, 'students', studentWithID.id); // getting actual user's id
         const userDoc = await getDoc(userRef);
 
         if (!userDoc.exists()) {
@@ -237,7 +254,11 @@ export async function updateCourseProgress(
 // Function to fetch course progress from Firestore
 export async function getCourseProgress(courseName: string) {
     try {
-        const userRef = doc(db, 'students', '9eS2jAa6DC0qBNvmdSWO'); // Get the user document reference using the user's ID
+        const user = auth.currentUser;
+        if (!user) {
+            return { error: 'User data not found' };
+        }
+        const userRef = doc(db, 'students', user.uid); // Get the user document reference using the user's ID
         const userDoc = await getDoc(userRef);
 
         if (!userDoc.exists()) {

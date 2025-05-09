@@ -6,16 +6,21 @@ import { Student } from '@/types/Student';
 import { Admin } from '@/types/Admin';
 import './score.css';
 import questions from '../questions.json' assert { type: 'json' };
+import Results from './Results';
 
 interface MissedQuestion {
     question: string;
     correctAnswer: number;
     selectedAnswer: number | null;
+    isCorrect: boolean;
 }
 
 interface ScoreProps {
     numQuestions: number;
     currentScore: number;
+    isMCQ?: boolean;
+    isTF?: boolean;
+    isGame?: boolean;
     setCurrentScore: (newCurrentScore: number) => void;
     setCurrentQuestionIndex: (newCurrentQuestionIndex: number) => void;
     setSelectedAnswer: (newSelectedAnswer: number | null) => void;
@@ -23,6 +28,9 @@ interface ScoreProps {
     missedQuestions: MissedQuestion[];
     setMissedQuestions: (newMissedQuestion: []) => void;
     setIsQuestionSelected: (newIsQuestionSelected: boolean) => void;
+    setIsCompleted: (newSetIsCompleted: boolean) => void;
+    quizIndex: number;
+    onRetry?: () => void;
 }
 
 export default function Score({
@@ -35,9 +43,14 @@ export default function Score({
     missedQuestions,
     setMissedQuestions,
     setIsQuestionSelected,
+    setIsCompleted,
+    isMCQ,
+    isTF,
+    isGame,
+    quizIndex,
+    onRetry,
 }: ScoreProps) {
-    const percentage = ((currentScore / numQuestions) * 100).toFixed(0);
-
+    // match props for both TF and MCQ, right now some features don't work for TF
     const retakeQuiz = () => {
         setCurrentScore(0);
         setCurrentQuestionIndex(0);
@@ -45,13 +58,14 @@ export default function Score({
         setFeedback('');
         setMissedQuestions([]);
         setIsQuestionSelected(false);
+        setIsCompleted(false);
     };
 
     const nextLesson = () => {
         console.log('Next lesson!!', percentage);
     };
     const user = useUserStore((state) => state.user);
-    const name = 'quiz3';
+    const name = `quiz${quizIndex + 1}`;
     function isStudent(user: Student | Admin | null): user is Student {
         return user !== null && 'quizzes' in user;
     }
@@ -80,69 +94,67 @@ export default function Score({
             }
         };
         updateQuiz();
-    }, [currentScore, numQuestions]);
+    }, [currentScore, numQuestions, name]);
+
+    // Deduplicate missedQuestions by question (first attempt only)
+    const seen = new Set<string>();
+    const uniqueMissedQuestions = missedQuestions.filter((q) => {
+        if (seen.has(q.question)) return false;
+        seen.add(q.question);
+        return true;
+    });
+
+    // Recalculate score: only first attempts that were correct
+    const firstAttemptScore = uniqueMissedQuestions.filter(
+        (q) => q.isCorrect
+    ).length;
+    const firstAttemptTotal = uniqueMissedQuestions.length;
+    const percentage =
+        firstAttemptTotal > 0
+            ? ((firstAttemptScore / firstAttemptTotal) * 100).toFixed(0)
+            : '0';
 
     return (
-        <div className="score-container">
-            <div className="score-panel">
-                <p>You Scored</p>
-                <p className="score-number">{percentage}%</p>
-                <button className="score-button" onClick={retakeQuiz}>
-                    Retry
-                </button>
-            </div>
-            <div className="missed-questions-container">
-                {missedQuestions.length !== 0 ? (
-                    <h2>Missed Questions</h2>
-                ) : (
-                    <h2>Perfect!!!</h2>
-                )}
-                <ul>
-                    {missedQuestions.map((item, index) => (
-                        <li key={index} className="question-card">
-                            <p className="question-label">
-                                Question {index + 1}
-                            </p>
-                            <p>{item.question}</p>
-                            <p>
-                                <span className="question-label">
-                                    Correct Answer:
-                                </span>{' '}
-                                {
-                                    //displays the actual text, not index
-                                    questions.find(
-                                        (q) => q.question === item.question
-                                    )?.answers[item.correctAnswer]
-                                }{' '}
-                            </p>
-                            <p>
-                                <span className="question-label">
-                                    Selected Answer:
-                                </span>{' '}
-                                {
-                                    //displays the actual text, not index
-                                    item.selectedAnswer !== null
-                                        ? questions.find(
-                                              (q) =>
-                                                  q.question === item.question
-                                          )?.answers[item.selectedAnswer]
-                                        : 'No answer selected'
-                                }{' '}
-                            </p>
-                        </li>
-                    ))}
-                </ul>
-                {currentScore / numQuestions >= 0.8 && ( // if the user scored 80% or higher, display the next lesson button
-                    <div className="next-lesson-container">
+        <>
+            {1 && (
+                <div className="score-container">
+                    <div className="score-panel">
+                        <p className="score-number">Score: {percentage}%</p>
+                        <img
+                            src={
+                                currentScore / numQuestions >= 0.8
+                                    ? '/passed-test-image.svg'
+                                    : '/failed-test-image.svg'
+                            }
+                            width={300}
+                            height={200}
+                        />
                         <button
-                            className="next-lesson-button"
-                            onClick={nextLesson}
+                            className="retry-button"
+                            onClick={isGame ? onRetry : retakeQuiz}
                         >
-                            Next Lesson
+                            Retry
                         </button>
+                        {currentScore / numQuestions >= 0.8 && ( // if the user scored 80% or higher, display the next lesson button
+                            <button
+                                className="next-button"
+                                onClick={nextLesson}
+                            >
+                                Next Lesson
+                            </button>
+                        )}
                     </div>
-                )}
-            </div>
-        </div>
+                    <div className="missed-questions-container">
+                        <Results
+                            missedQuestions={uniqueMissedQuestions}
+                            isMCQ={isMCQ}
+                            isTF={isTF}
+                            quizIndex={quizIndex}
+                            isGame={isGame}
+                        />
+                    </div>
+                </div>
+            )}
+        </>
     );
 }

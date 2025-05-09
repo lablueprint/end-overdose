@@ -136,7 +136,9 @@ export default function NavBar() {
         await logout();
         router.push('/login');
     };
+    const hideNavBar = path.startsWith('/courses/') && path !== '/courses';
 
+    if (hideNavBar) return null;
     return (
         <nav
             className={`bg-black p-4 shadow-md h-full flex flex-col transition-all duration-300 ${collapsed ? 'w-16' : 'w-55'}`}

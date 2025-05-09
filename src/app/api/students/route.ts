@@ -10,41 +10,43 @@ export async function POST(request: NextRequest) {
         const requestData = await request.json();
         console.log('Request Data:', requestData); // Log request data for debugging
 
+        // Initialize the student object with the new schema structure
         const studentJSON = {
             student_id: requestData.student_id,
-            email: requestData.email || null,
             school_name: requestData.school_name,
-            nameplate: requestData.nameplate,
-            kibble_count: requestData.kibble_count || 0,
-            course_completion: {
+            profile: {
+                unlocked: requestData.profile?.unlocked || ['narcat'], // Default to narcat if not provided
+                cat: requestData.profile?.cat || 'narcat',
+                background: requestData.profile?.background || 'narcat',
+                nameplate: requestData.profile?.nameplate || 'New User',
+            },
+            courses_average_score: requestData.courses_average_score || 0,
+            all_courses_completed: requestData.all_courses_completed || false,
+            courses: {
                 opioidCourse: {
-                    courseScore: 0,
                     courseProgress: 0,
-                },
-                careerCourse: {
                     courseScore: 0,
-                    courseProgress: 0,
+                    quizzes: [],
                 },
             },
-            quizzes: [],
-            badges: [],
+            fish_count: requestData.fish_count || 0,
+            certificates: requestData.certificates || {},
+            hasLoggedIn: requestData.hasLoggedIn || false,
         };
 
-        // Apply any provided data from the request
-        if (requestData.course_completion) {
-            studentJSON.course_completion = requestData.course_completion;
+        // Apply more specific course completion data if provided
+        if (requestData.courses?.opioidCourse) {
+            studentJSON.courses.opioidCourse = requestData.courses.opioidCourse;
         }
 
-        if (requestData.quizzes) {
-            studentJSON.quizzes = requestData.quizzes;
+        if (requestData.courses_completion?.opioidCourse?.quizzes) {
+            studentJSON.courses.opioidCourse.quizzes =
+                requestData.courses.opioidCourse.quizzes;
         }
 
-        if (requestData.badges) {
-            studentJSON.badges = requestData.badges;
-        }
-
+        // Create the new document in Firestore
         const newStudentRef = await addDoc(
-            collection(db, 'students'),
+            collection(db, 'newStudents'), // Changed to 'newStudents' collection
             studentJSON
         );
 

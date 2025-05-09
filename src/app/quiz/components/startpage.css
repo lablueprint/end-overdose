@@ -1,3 +1,6 @@
+
+/* nothing using these styles yet not rly sure what its for */
+
 .start-container {
     display: flex;
     flex-direction: column;
@@ -28,6 +31,6 @@
 }
 
 
-.answers-container button:hover {
+/* .answers-container button:hover {
     background-color: #bebebe;
-}
+} */

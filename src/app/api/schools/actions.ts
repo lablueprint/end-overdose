@@ -50,6 +50,47 @@ export const getSchool = cache(async (schoolName: string) => {
     }
 });
 
+//BETTER SCHOOL INFORMATION
+export const getSchoolData = cache(async (schoolName: string) => {
+    try {
+        const schoolQuery = query(
+            schoolsCollection,
+            where('school_name', '==', schoolName)
+        );
+
+        const snapshot = await getDocs(schoolQuery);
+        if (snapshot.empty) {
+            return null; // No school found with that name
+        }
+
+        // Return just the school data without the ID
+        return snapshot.docs[0].data() as School;
+    } catch (error) {
+        console.error('Error fetching school:', error);
+        throw new Error('Failed to fetch school.');
+    }
+});
+
+export const getSchoolDataByID = cache(async (schoolId: number) => {
+    try {
+        const schoolQuery = query(
+            schoolsCollection,
+            where('school_id', '==', schoolId)
+        );
+
+        const snapshot = await getDocs(schoolQuery);
+        if (snapshot.empty) {
+            return null; // No school found with that name
+        }
+
+        // Return just the school data without the ID
+        return snapshot.docs[0].data() as School;
+    } catch (error) {
+        console.error('Error fetching school:', error);
+        throw new Error('Failed to fetch school.');
+    }
+});
+
 //Return the total number of schools
 export const getSchoolCount = cache(async () => {
     try {

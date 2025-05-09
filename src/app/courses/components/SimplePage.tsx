@@ -3,12 +3,13 @@ import { useState, useEffect } from 'react';
 import styles from './SimplePage.module.css';
 import VideoPage from './VideoPage';
 import { updateCourseProgress } from '@/app/api/students/actions';
+import '@fontsource/roboto-condensed';
 
 interface SimplePageProps {
     pageTitle: string;
     handleNext: () => void;
     lesson: Lesson;
-    courseCompleted: boolean;
+    courseCompleted: boolean
 }
 
 interface Lesson {
@@ -138,12 +139,23 @@ export default function SimplePage({
     };
 
     return (
-        <div>
+        <div
+            style={{
+                fontFamily: 'Roboto Condensed, sans-serif',
+            }}
+        >
             <br />
             <h1 className={styles.title}>{pageTitle}</h1>
             <br />
             {/* <button onClick={handlePrevious}>Previous</button> */}
             {/* {/* <p>{pageContent}</p> */}
+            <h1 className={styles.about}>About</h1>
+            <div className={styles.hrContainer}>
+                <hr className={styles.blackLine} />
+                <hr className={styles.greyLine} />
+            </div>
+            <br></br>
+
             {lesson && OpenContent(lesson)}
             <div className={styles.buttonContainer}>
                 <button
@@ -153,7 +165,7 @@ export default function SimplePage({
         ${courseCompleted ? styles.completeButton : ''} 
         ${allowNextPage ? styles.activeButton : ''}`}
                 >
-                    {courseCompleted ? 'Complete Course' : 'Next Lesson'}
+                    {courseCompleted ? 'Complete Course' : 'Continue'}
                 </button>
             </div>
         </div>

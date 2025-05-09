@@ -7,7 +7,17 @@ import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import styles from './OpioidHome.module.css'; // Import the CSS module
 import { updateCourseProgress } from '@/app/api/students/actions';
-import { getCourseProgress } from '@/app/api/students/actions';
+import '@fontsource/roboto-condensed';
+import '@fontsource/roboto-condensed/300.css';
+import '@fontsource/roboto-condensed/400.css';
+import '@fontsource/roboto-condensed/500.css';
+import '@fontsource/roboto-condensed/600.css';
+import '@fontsource/roboto-condensed/700.css';
+import { isStudent } from '@/types/Student';
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 interface Lesson {
     title: string;
@@ -44,69 +54,91 @@ export default function OpioidHome() {
     const [courseProgress, setCourseProgress] = useState(0);
 
     const totalLessons = lessons.length;
-    // Calculate currentLesson as the integer index of the lesson based on courseProgress
-    const initialLesson = Math.round((courseProgress * totalLessons) / 100);
 
-    const [currentLesson, setLesson] = useState(initialLesson); // Start at the calculated lesson index
+    const [currentLesson, setLesson] = useState(0); // Start at the calculated lesson index
+    const [highestReachedLesson, setHighestReachedLesson] = useState<number>(0); // setting highest reached lesson to maintain progress
+    const [progressLoaded, setProgressLoaded] = useState(false);
     const [showExitModal, setShowExitModal] = useState(false);
     const router = useRouter();
 
-    const fetchOpioidCourseProgress = async () => {
-        try {
-            if (user) {
-                const response = await getCourseProgress('opioidCourse');
-                if (response.progress !== undefined) {
-                    setCourseProgress(response.progress);
-
-                    // Calculate current lesson based on the fetched progress
-                    const lessonIndex = Math.round(
-                        (response.progress / 100) * totalLessons
-                    );
-                    setLesson(lessonIndex); // Set currentLesson based on progress
-                } else {
-                    console.error('Error fetching progress:', response.error);
-                }
-            }
-        } catch (error) {
-            console.error('Error fetching data: ', error);
-        }
-    };
-
+    // TODO: make the isStudent type guard work
     useEffect(() => {
+        const fetchOpioidCourseProgress = async () => {
+            // if (!user || !isStudent(user)) {
+            //     setProgressLoaded(true);
+            //     return;
+            // }
+
+            try {
+                if (isStudent(user)) {
+                    const response =
+                        user.course_completion.opioidCourse.courseProgress;
+
+                    const lessonIndex = Math.round(
+                        (response / 100) * totalLessons
+                    );
+
+                    setCourseProgress(response);
+                    setLesson(lessonIndex);
+                    setHighestReachedLesson(lessonIndex);
+                }
+            } catch (error) {
+                console.error('Error fetching progress:', error);
+            } finally {
+                setProgressLoaded(true);
+            }
+        };
+
         fetchOpioidCourseProgress();
-    }, []);
+    }, [user]);
+
+    if (!progressLoaded) return <div>Loading course...</div>;
 
     const handleChangeLesson = (lessonNumber: number) => {
-        if (user && 'course_completion' in user) {
-            const updatedOpioidCourse = user.course_completion
-                ?.opioidCourse || { courseProgress: 0 };
+        // if (
+        //     lessonNumber > highestReachedLesson &&
+        //     user &&
+        //     'course_completion' in user
+        // ) {
+        //     const updatedOpioidCourse = user.course_completion
+        //         ?.opioidCourse || { courseProgress: 0 };
 
-            useUserStore.getState().setUser({
-                ...user,
-                course_completion: {
-                    ...user.course_completion,
-                    opioidCourse: {
-                        ...updatedOpioidCourse,
-                        courseProgress: (lessonNumber / totalLessons) * 100,
-                    },
-                },
-            });
-        }
+        //     useUserStore.getState().setUser({
+        //         ...user,
+        //         course_completion: {
+        //             ...user.course_completion,
+        //             opioidCourse: {
+        //                 ...updatedOpioidCourse,
+        //                 courseProgress: (lessonNumber / totalLessons) * 100,
+        //             },
+        //         },
+        //     });
+        // }
         setLesson(lessonNumber); // Update the local lesson state
     };
 
-    const handleClick = () => {
+    const returnToCourses = () => {
+        router.push('/courses');
+    };
+    const handleToggleNavBarDisplay = () => {
         setToggle((prevState) => !prevState);
     };
 
     const navBarEntries = lessons.map((lesson, index) => (
-        <div key={index}>
+        <div
+            key={index}
+            style={{
+                fontFamily: 'Roboto Condensed, sans-serif',
+            }}
+        >
             <LessonTile
                 lessonNumber={index}
                 lessonTitle={lesson.title}
                 lessonPath={'lesson1'}
                 lessonCourse={'opioid'}
                 onHandleChangeLesson={handleChangeLesson}
+                selected={index == currentLesson}
+                disabled={index > highestReachedLesson}
             />
         </div>
     ));
@@ -119,22 +151,26 @@ export default function OpioidHome() {
         ) {
             setLesson((prevIndex) => {
                 const nextIndex = prevIndex + 1;
-                const updatedOpioidCourse = user.course_completion
-                    .opioidCourse || {
-                    courseProgress: 0,
-                };
+                if (nextIndex > highestReachedLesson) {
+                    setHighestReachedLesson(nextIndex);
+                    const updatedOpioidCourse = user.course_completion
+                        .opioidCourse || {
+                        courseProgress: 0,
+                    };
 
-                // Update global state with new course progress
-                useUserStore.getState().setUser({
-                    ...user,
-                    course_completion: {
-                        ...user.course_completion,
-                        opioidCourse: {
-                            ...updatedOpioidCourse,
-                            courseProgress: (nextIndex / totalLessons) * 100,
+                    // Update global state with new course progress
+                    useUserStore.getState().setUser({
+                        ...user,
+                        course_completion: {
+                            ...user.course_completion,
+                            opioidCourse: {
+                                ...updatedOpioidCourse,
+                                courseProgress:
+                                    (nextIndex / totalLessons) * 100,
+                            },
                         },
-                    },
-                });
+                    });
+                }
 
                 return nextIndex;
             });
@@ -146,17 +182,15 @@ export default function OpioidHome() {
         setShowExitModal(true);
     };
 
-    // Confirm Exit - Save progress and update global state
+    // save progress to user state and update firebase upon exit
     const confirmExit = async () => {
-        // Save progress to database (Replace later with actual API call)
-        console.log('Saving progress:', currentLesson);
-
         // Ensure the user exists and safely access opioidCourse
         if (user && 'course_completion' in user) {
             const updatedOpioidCourse = user.course_completion.opioidCourse || {
                 courseProgress: 0,
             };
-            const progressPercentage = (currentLesson / totalLessons) * 100;
+            const progressPercentage =
+                (highestReachedLesson / totalLessons) * 100;
             // Update the global user state with the current progress
             useUserStore.getState().setUser({
                 ...user,
@@ -169,7 +203,12 @@ export default function OpioidHome() {
                 },
             });
 
-            await updateCourseProgress('opioidCourse', progressPercentage);
+            // update firebase
+            await updateCourseProgress(
+                user.student_id,
+                'opioidCourse',
+                progressPercentage
+            );
         }
         //redirect to home page or course selection
         window.location.href = '/courses';
@@ -177,44 +216,115 @@ export default function OpioidHome() {
 
     return (
         <div style={{ display: 'flex', width: '100%' }}>
-            <h1
-                onClick={handleClick}
-                style={{
-                    position: 'absolute',
-                    left: '32.5rem',
-                    top: '0.5rem',
-                    fontSize: '30px',
-                    cursor: 'pointer',
-                    rotate: toggle ? '180deg' : '0deg',
-                    transform: `translateX(${toggle ? '21rem' : '0'})`,
-                }}
-            >
-                &larr;
-            </h1>
             <div
                 style={{
-                    flex: toggle ? 0 : 2.8,
+                    flex: toggle ? 0 : 2.1,
                     overflowY: 'auto',
-                    maxHeight: '98vh',
+                    maxHeight: '100vh',
                     transition: 'flex-grow 0.5s ease-in-out',
+                    backgroundColor: toggle ? 'white' : '#0C1321',
+                    padding: toggle ? '30px' : '60px',
+                    fontFamily: 'Roboto Condensed, sans-serif',
                 }}
             >
-                <h1
-                    onClick={handleClick}
-                    style={{
-                        fontWeight: '700',
-                        fontSize: '20px',
-                        cursor: 'pointer',
-                    }}
-                >
-                    Opioid Course
-                </h1>
-                {navBarEntries}
+                {toggle ? (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            left: '13.5rem',
+                            top: '50%',
+                            transform: 'translateY(-50%)', // Center correction
+                            width: '30px',
+                            height: '49px',
+                            flexShrink: '0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            color: toggle ? 'black' : 'white',
+                        }}
+                    >
+                        <ArrowForwardIosIcon
+                            onClick={handleToggleNavBarDisplay}
+                        ></ArrowForwardIosIcon>
+                    </div>
+                ) : (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            left: '37rem',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '30px',
+                            height: '49px',
+                            flexShrink: '0',
+                            backgroundColor: '#0C1321',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            color: toggle ? 'black' : 'white',
+                        }}
+                    >
+                        <ArrowBackIosIcon
+                            onClick={handleToggleNavBarDisplay}
+                        ></ArrowBackIosIcon>
+                    </div>
+                )}
+                {!toggle ? (
+                    <div>
+                        <h1
+                            onClick={returnToCourses}
+                            style={{
+                                fontWeight: '400',
+                                fontSize: '15px',
+                                cursor: 'pointer',
+                                color: 'white',
+                                fontFamily: 'Roboto Condensed, sans-serif',
+                                lineHeight: 'normal',
+                            }}
+                        >
+                            <ArrowBackIcon></ArrowBackIcon>
+                            Back to Courses
+                            <br />
+                            <br />
+                        </h1>
+                        <h1
+                            style={{
+                                fontWeight: '300',
+                                fontSize: '18px',
+                                cursor: 'pointer',
+                                color: 'white',
+                                fontFamily: 'Roboto Condensed, sans-serif',
+                            }}
+                        >
+                            Course Name
+                        </h1>
+                        <h1
+                            style={{
+                                fontWeight: '500',
+                                fontSize: '18px',
+                                cursor: 'pointer',
+                                letterSpacing: '0.72px',
+                                color: 'white',
+                                fontFamily: 'Roboto Condensed, sans-serif',
+                            }}
+                        >
+                            Opioid Course
+                        </h1>
+                        <br />
+
+                        {navBarEntries}
+                    </div>
+                ) : (
+                    ''
+                )}
             </div>
             <div
                 style={{
                     flex: toggle ? 10 : 6,
-                    maxHeight: '98vh',
+                    height: '100vh', //help
                     overflowY: 'auto',
                     padding: '0 10px',
                 }}
@@ -282,3 +392,10 @@ export default function OpioidHome() {
         </div>
     );
 }
+
+// TODO: no delay for continue when revisiting a completed lesson: enable button when timer ends OR if course progress is beyond the index of the current lesson
+// - this logic is handled in the simplepage component so pass lessonCompletion as a prop from this page
+// TODO: make isStudent type guard work
+// TODO: not resetting lesson index after clicking on a previous lesson and (i think fix needed in handleNext after handleChange)
+// - i think updateCourseProgress is being called in SimplePage handleNext - that shouldn't be happening i dont think
+// - also think something fishy like this is happening because when the course is completed the progress is updated to 100 but theres an error saying that could not update course progress from within UpdateCourseProgress

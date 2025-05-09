@@ -1,33 +1,50 @@
 'use client';
-import Link from 'next/link';
-import Course from './components/Course';
-import DailyQuest from './components/DailyQuest';
 import { useUserStore } from '@/store/userStore';
-import StoreItem from './components/StoreItem';
 import styles from './page.module.css';
 import AuthWrap from '@/components/AuthWrap';
-import { getCourseProgress } from '../api/students/actions';
+//import { getCourseProgress } from '../api/students/actions';
 import { useState, useEffect } from 'react';
+import { isStudent } from '@/types/Student';
+import LevelIcon from './components/LevelIcon';
 
 export default function Courses() {
-    const [opioidCourseProgress, setOpioidCourseProgress] = useState(0);
     const [loading, setLoading] = useState(true);
+
     // Course progress data
     const user = useUserStore((state) => state.user);
+    const role = useUserStore((state) => state.role);
+    const opiumLessonNum = 6;
+    const [opioidCourseProgress, setOpioidCourseProgress] = useState(
+        isStudent(user) ? user.course_completion.opioidCourse.courseProgress : 0
+    );
+    const [quizCompletion, setQuizCompletion] = useState(0);
+    const [mapIndex, setMapIndex] = useState(
+        Math.max(
+            0,
+            2 * Math.round((opioidCourseProgress / 100) * opiumLessonNum) - 1
+        ) + quizCompletion
+    );
+
     useEffect(() => {
         const fetchOpioidCourseProgress = async () => {
             try {
-                if (user) {
-                    // Call the API function to get the course progress
-                    const response = await getCourseProgress('opioidCourse');
-                    if (response.progress) {
-                        setOpioidCourseProgress(response.progress);
-                    } else {
-                        console.error(
-                            'Error fetching progress:',
-                            response.error
-                        );
-                    }
+                if (isStudent(user)) {
+                    // short-circuit evaluation, only checking role value if it exists
+                    // checking that the user is a student by checking against admin attributes
+                    setOpioidCourseProgress(
+                        user.course_completion.opioidCourse.courseProgress
+                    );
+                    setMapIndex(
+                        Math.max(
+                            0,
+                            2 *
+                                Math.round(
+                                    (opioidCourseProgress / 100) *
+                                        opiumLessonNum
+                                ) -
+                                1
+                        ) + quizCompletion
+                    );
                 }
             } catch (error) {
                 console.error('Error fetching data: ', error);
@@ -37,7 +54,7 @@ export default function Courses() {
         };
 
         fetchOpioidCourseProgress();
-    }, [user]);
+    }, [user, quizCompletion]);
 
     const coursesData = [
         {
@@ -79,7 +96,36 @@ export default function Courses() {
         },
     ];
 
-    return (
+    const levelPositions = [
+        { top: '38.9%', left: '12.1%' },
+        { top: '41.6%', left: '18.1%' },
+        { top: '55.5%', left: '18.5%' },
+        { top: '53.6%', left: '26.1%' },
+        { top: '45.2%', left: '32.2%' },
+        { top: '52.2%', left: '39.3%' },
+        { top: '45%', left: '47.3%' },
+        { top: '56%', left: '50.7%' },
+        { top: '62%', left: '57.8%' },
+        { top: '51%', left: '62%' },
+        { top: '36.4%', left: '60.9%' },
+        { top: '39.5%', left: '70.2%' },
+        { top: '39%', left: '78.9%' },
+        { top: '49.8%', left: '84.1%' },
+        // Add more as needed...
+    ];
+
+    /*  <LevelIcon type="completed" top={'45.2%'} left={'32.2%'} />
+    <LevelIcon type="completed" top={'52.2%'} left={'39.3%'} />
+    <LevelIcon type="completed" top={'45%'} left={'47.3%'} />
+    <LevelIcon type="completed" top={'56%'} left={'50.7%'} />
+    <LevelIcon type="completed" top={'62%'} left={'57.8%'} />
+    <LevelIcon type="completed" top={'51%'} left={'62%'} />
+    <LevelIcon type="completed" top={'36.4%'} left={'60.9%'} />
+    <LevelIcon type="completed" top={'39.5%'} left={'70.2%'} />
+    <LevelIcon type="completed" top={'39%'} left={'78.9%'} />
+    <LevelIcon type="completed" top={'49.8%'} left={'84.1%'} /> */
+
+    /* return (
         <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
             <div className="flex gap-8">
                 <div className="grid grid-cols-2 gap-4">
@@ -121,6 +167,82 @@ export default function Courses() {
                         />
                     </>
                 ))}
+            </div>
+        </AuthWrap>
+    ); */
+
+    return (
+        <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
+            <div className={styles.header}>
+                <h1>OVERDOSE PREVENTION: KNOWING SIGNS</h1>
+                <p>
+                    Lorem ipsum dolor sit ameet, consecttur adipiscing elit.
+                    Lorem ipsur dolor sit amet, consectetur adipiscing elit.
+                </p>
+                <div
+                    style={{
+                        display: 'flex',
+                        gap: '12px',
+                        justifyContent: 'center',
+                        margin: '1rem 0',
+                    }}
+                >
+                    <button
+                        onClick={() =>
+                            setQuizCompletion((prev) => Math.max(prev - 1, 0))
+                        }
+                    >
+                        Remove Quiz Completion
+                    </button>
+                    <button
+                        onClick={() => setQuizCompletion((prev) => prev + 1)}
+                    >
+                        Add Quiz Completion
+                    </button>
+                </div>
+            </div>
+            <div className={styles.mapContainer}>
+                {' '}
+                <img className={styles.map} src="/planetcourse.svg" alt="Map" />
+                {levelPositions.map((pos, index) => {
+                    if (index < mapIndex) {
+                        return (
+                            <LevelIcon
+                                key={index}
+                                type="completed"
+                                top={pos.top}
+                                left={pos.left}
+                            />
+                        );
+                    } else if (index === mapIndex) {
+                        return (
+                            <LevelIcon
+                                key={index}
+                                type="current"
+                                top={pos.top}
+                                left={pos.left}
+                                href={
+                                    index % 2 === 0
+                                        ? '/courses/opioid'
+                                        : '/quiz'
+                                }
+                            />
+                        );
+                    }
+                    return null; // Don't render anything for future levels
+                })}
+            </div>
+            <div className={styles.footer}>
+                <div className={styles.footerText}>
+                    <p>
+                        {' '}
+                        If this content brings up tough emotions,{' '}
+                        <a className={styles.helpLink}>
+                            {' '}
+                            you are not alone, get support here.{' '}
+                        </a>
+                    </p>{' '}
+                </div>
             </div>
         </AuthWrap>
     );

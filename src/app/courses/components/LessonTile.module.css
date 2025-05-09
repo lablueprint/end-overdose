@@ -1,20 +1,33 @@
 .container {
     position: relative;
     cursor: pointer;
-    background-color: pink;
-    border: 2px solid black;
-    width: 22rem; /* equivalent to w-80 */
-    height: 6rem; /* equivalent to h-64 */
-    margin: 2rem 1.25rem; /* equivalent to m-5 */
-    padding: 1.25rem; /* equivalent to p-5 */
-    border-radius: 0.75rem; /* equivalent to rounded-xl */
+    border-bottom: 1px solid #29354e;
+    background-color: #0c1321;
+    width: 280px;
+    height: 80px;
+    display: 'flex';
+    flex-direction: 'row';
+    align-items: 'center';
+    padding: 1.25rem;
+    display: 'flex';
+    flex-direction: 'row';
+    align-items: 'center';
+    color: white;
+}
+
+.selectedContainer {
+    background-color: #f0f0f0;
+    color: black;
 }
 
 .title {
-    line-height: 2rem; /* equivalent to leading-8 */
-    font-weight: bold; /* equivalent to font-bold */
+    line-height: 2rem;
+    /* equivalent to leading-8 */
+    font-weight: 500;
+    /* equivalent to font-bold */
     font-size: 20px;
 }
+
 .subtitle {
     line-height: 1rem;
     font-size: 12px;
