@@ -5,7 +5,6 @@ import BadgeTable from './Components/BadgeTable';
 import styles from './profile.module.css';
 import AuthWrap from '@/components/AuthWrap';
 import { useUserStore } from '@/store/userStore';
-import { getKibbleFromStudentID } from '@/app/api/students/actions';
 import Image from 'next/image';
 import ColorPickerDialog from './Components/ColorPickerDialogue';
 import BadgeModal from './Components/BadgeModal';
@@ -49,20 +48,20 @@ export default function Home() {
     const [profileChanged, setProfileChanged] = useState(false);
     const user = useUserStore((state) => state.user);
     const role = useUserStore((state) => state.role);
-    if (user && 'student_id' in user) {
-        const kibbleCount = getKibbleFromStudentID(user.student_id);
-    }
-    useEffect(() => {
-        async function fetchKibble() {
-            if (user && 'student_id' in user) {
-                const kibble = await getKibbleFromStudentID(user.student_id);
-                if (kibble !== null) {
-                    setKibbleCount(kibble.kibble_count);
-                }
-            }
-        }
-        fetchKibble();
-    }, [user]);
+    // if (user && 'student_id' in user) {
+    //     const kibbleCount = getKibbleFromStudentID(user.student_id);
+    // }
+    // useEffect(() => {
+    //     async function fetchKibble() {
+    //         if (user && 'student_id' in user) {
+    //             const kibble = await getKibbleFromStudentID(user.student_id);
+    //             if (kibble !== null) {
+    //                 setKibbleCount(kibble.kibble_count);
+    //             }
+    //         }
+    //     }
+    //     fetchKibble();
+    // }, [user]);
     const changeProfilePicture = (newProfileIndex: number) => {
         setSelectedProfilePicture(newProfileIndex);
         setProfileChanged(true);
