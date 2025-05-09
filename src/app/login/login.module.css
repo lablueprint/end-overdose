@@ -45,7 +45,7 @@
 
 .subForm {
     display: flex;
-    flex-direction: column;
+    flex-direction: column;;
 }
 
 .input {
@@ -58,13 +58,13 @@
 }
 
 .form {
-    display: flex;
+    display:flex;
     flex-direction: column;
     gap: 24px;
 }
 
 .bodyContainer {
-    display: flex;
+    display:flex;
     flex-direction: column;
     gap: 40px;
 }
