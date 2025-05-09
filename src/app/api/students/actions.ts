@@ -205,23 +205,6 @@ export const getStudent = cache(async (uid: string) => {
     }
 });
 
-// export async function updateKibbleCount() {
-//     try {
-//         console.log('Success');
-//         const snapshot = await getDocs(studentsCollection);
-//         const updatePromises = snapshot.docs.map(async (studentDoc) => {
-//             const studentRef = doc(db, 'students', studentDoc.id);
-//             const kibbleCount = Math.floor(Math.random() * 1000); // Generate random number between 0-999
-//             await updateDoc(studentRef, { kibble_count: kibbleCount });
-//         });
-
-//         await Promise.all(updatePromises);
-//         console.log('Kibble count updated for all students.');
-//     } catch (error) {
-//         console.error('Error updating kibble count:', error);
-//         throw new Error('Failed to update kibble count.');
-//     }
-// }
 // add a new student to the database
 export async function addStudent(student: Student, docID: string) {
     try {
@@ -298,21 +281,59 @@ export async function getCourseProgress(courseName: string) {
     }
 }
 
-// get kibble count from student id
-export const getKibbleFromStudentID = cache(async (id: string) => {
-    try {
-        const q = query(studentsCollection, where('student_id', '==', id)); // Find student from ID
-        const snapshot = await getDocs(q);
+export async function purchaseTheme(studentId: string, themeKey: string) {
+    const q = query(studentsCollection, where('student_id', '==', studentId));
+    const snapshot = await getDocs(q);
 
+    if (!snapshot.empty) {
+        const docRef = snapshot.docs[0].ref;
+        const data = snapshot.docs[0].data();
+
+        const fish = data.fish_count ?? 0;
+        const profile = data.profile ?? {};
+        const unlocked = profile.unlocked ?? [];
+
+        // Already unlocked
+        if (unlocked.includes(themeKey)) return { error: 'Already owned' };
+        if (fish < 25) return { error: 'Not enough fish' };
+
+        const newUnlocked = [...unlocked, themeKey];
+
+        await updateDoc(docRef, {
+            fish_count: fish - 25,
+            profile: {
+                ...profile,
+                cat: themeKey,
+                background: themeKey,
+                unlocked: newUnlocked,
+            },
+        });
+
+        return {
+            success: true,
+            newFish: fish - 25,
+            newUnlocked,
+        };
+    }
+
+    return { error: 'Student not found' };
+}
+
+// Just get student from student_id (no quiz update)
+export async function getStudentFromID2(studentId: string) {
+    try {
+        const q = query(
+            studentsCollection,
+            where('student_id', '==', studentId)
+        );
+        const snapshot = await getDocs(q);
         if (!snapshot.empty) {
             const doc = snapshot.docs[0];
-            const student = doc.data() as Student;
-            return { kibble_count: student.kibble_count };
+            return { ...(doc.data() as Student) };
         }
-
-        return null;
+        return { error: 'Student not found' };
     } catch (error) {
         console.error('Error fetching student:', error);
         throw new Error('Failed to fetch student.');
     }
-});
+}

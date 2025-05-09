@@ -135,6 +135,7 @@ export default function Home() {
                     onClose={() => setIsBadgeModalOpen(false)}
                 />
             )}
+            {kibbleCount}
         </div>
     );
 }
