@@ -13,7 +13,8 @@ const THEMES = [
         description:
             'With a jetpack made of tuna cans and a helmet he definitely stole from NASA, he zips through wormholes chasing laser pointers across galaxies. With him, no mission is too dangerous... unless it interrupts nap time.',
         catImage: '/cats/space.png',
-        backgroundImage: '/backgrounds/space.png',
+        backgroundImage: '/backgrounds/space-thumbnail.png',
+        previewBackground: '/backgrounds/space.png',
     },
     {
         key: 'cowboy',
@@ -21,7 +22,8 @@ const THEMES = [
         description:
             'This ain’t your average alley cat — he’s the rootin’-tootin’est wrangler west of the litter box. With spurs on his booties and a ten-gallon hat two sizes too big, he rides into town on a robotic Roomba, paws twitchin’ for justice.',
         catImage: '/cats/cowboy.png',
-        backgroundImage: '/backgrounds/cowboy.png',
+        backgroundImage: '/backgrounds/cowboy-thumbnail.png',
+        previewBackground: '/backgrounds/cowboy.png',
     },
     {
         key: 'glinda',
@@ -29,7 +31,8 @@ const THEMES = [
         description:
             'Glinda floats in on a bubble made of glitter and tuna-scented dreams. With a wand made from a bedazzled chopstick and wings she definitely didn’t borrow from the dog’s Halloween costume.',
         catImage: '/cats/glinda.png',
-        backgroundImage: '/backgrounds/glinda.png',
+        backgroundImage: '/backgrounds/glinda-thumbnail.png',
+        previewBackground: '/backgrounds/glinda.png',
     },
 ];
 
@@ -67,43 +70,124 @@ export default function NarcatShop() {
     };
 
     return (
-        <div className={styles.shopGrid}>
-            <div className={styles.themeList}>
-                {THEMES.map((theme) => (
-                    <ThemeCard
-                        key={theme.key}
-                        theme={theme}
-                        isSelected={selected.key === theme.key}
-                        onSelect={() => setSelected(theme)}
-                    />
-                ))}
-            </div>
-            <div className={styles.previewPanel}>
-                <div className={styles.previewImageWrapper}>
-                    <img
-                        src={selected.backgroundImage}
-                        alt="Theme background"
-                        className={styles.previewBackground}
-                    />
-                    <img
-                        src={selected.catImage}
-                        alt="Theme cat"
-                        className={styles.previewCat}
-                    />
-                </div>
-                <p className={styles.fishCounter}>
-                    🐟 Fish: {fishCount ?? 'Loading...'}
-                </p>
-                <button
-                    onClick={handlePurchase}
-                    disabled={unlocked.includes(selected.key)}
-                    className={styles.purchaseButton}
+        <>
+            {/* Fish counter in top right, above everything */}
+            <div
+                style={{
+                    position: 'fixed',
+                    top: '2rem',
+                    right: '3rem',
+                    zIndex: 1000,
+                }}
+            >
+                <p
+                    className={styles.fishCounter}
+                    style={{ fontSize: '1.2rem', fontWeight: 600, margin: 0 }}
                 >
-                    {unlocked.includes(selected.key)
-                        ? 'Owned'
-                        : 'Purchase 25 🐟'}
-                </button>
+                    <img
+                        src="/kibble.png"
+                        alt="Fish"
+                        style={{
+                            height: '1em',
+                            verticalAlign: 'middle',
+                            marginRight: '6px',
+                            display: 'inline-block',
+                        }}
+                    />
+                    <span
+                        style={{
+                            display: 'inline-block',
+                            verticalAlign: 'middle',
+                        }}
+                    >
+                        {fishCount ?? 'Loading...'}
+                    </span>
+                </p>
             </div>
-        </div>
+            <div style={{ position: 'relative', width: '100%' }}>
+                <div className={styles.shopGrid}>
+                    <div className={styles.themeList}>
+                        {THEMES.map((theme) => (
+                            <ThemeCard
+                                key={theme.key}
+                                theme={theme}
+                                isSelected={selected.key === theme.key}
+                                onSelect={() => setSelected(theme)}
+                            />
+                        ))}
+                    </div>
+                    <div
+                        className={styles.previewPanel}
+                        style={{ position: 'relative' }}
+                    >
+                        <div className={styles.previewImageWrapper}>
+                            <img
+                                src={selected.previewBackground}
+                                alt="Theme background"
+                                className={styles.previewBackground}
+                            />
+                            <img
+                                src={selected.catImage}
+                                alt="Theme cat"
+                                className={styles.previewCat}
+                            />
+                        </div>
+                        {/* Price and purchase button row */}
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '1.2rem',
+                                marginTop: '1.5rem',
+                                height: '3rem',
+                            }}
+                        >
+                            {!unlocked.includes(selected.key) && (
+                                <span
+                                    className={styles.fishPrice}
+                                    style={{
+                                        fontSize: '1.1rem',
+                                        padding: '0.5rem 1.2rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        height: '2.5rem',
+                                    }}
+                                >
+                                    <img
+                                        src="/kibble.png"
+                                        alt="Fish"
+                                        style={{
+                                            height: '1.5em',
+                                            verticalAlign: 'middle',
+                                            marginRight: '6px',
+                                            display: 'inline-block',
+                                        }}
+                                    />
+                                    25
+                                </span>
+                            )}
+                            <button
+                                onClick={handlePurchase}
+                                disabled={unlocked.includes(selected.key)}
+                                className={styles.purchaseButton}
+                                style={{
+                                    height: '2.5rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    fontSize: '1.1rem',
+                                    padding: '0 2rem',
+                                    marginTop: '-0.2rem',
+                                }}
+                            >
+                                {unlocked.includes(selected.key)
+                                    ? 'Owned'
+                                    : 'Purchase'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }

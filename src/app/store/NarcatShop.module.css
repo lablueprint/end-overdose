@@ -9,7 +9,9 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2.5rem;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .previewPanel {
@@ -26,11 +28,16 @@
 
 .previewImageWrapper {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 1rem;
+  width: 80%;
+  max-width: 500px;
+  aspect-ratio: 4 / 5;
+  border-radius: 2rem;
   overflow: hidden;
-  background-color: #e5e7eb;
+  background-color: transparent;
+  margin: 0 auto 2rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .previewBackground {
@@ -41,11 +48,13 @@
 
 .previewCat {
   position: absolute;
-  bottom: 1rem;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 8rem;
+  transform: translate(-50%, -50%);
+  width: 65%;
   height: auto;
+  object-fit: contain;
+  z-index: 2;
 }
 
 .purchaseButton {
@@ -73,49 +82,96 @@
 .themeCard {
   display: flex;
   background-color: white;
-  border-radius: 1rem;
+  border-radius: 2rem;
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, background 0.2s;
+  padding: 1.2rem 1.2rem;
+  align-items: center;
+  min-height: 180px;
+  min-width: 700px;
+  max-width: 100%;
 }
 
 .themeCard:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
 }
 
 .selectedCard {
-  outline: 2px solid #3b82f6;
+  background: #f3f4f6;
+  outline: none;
 }
 
-.cardThumbnail {
-  width: 120px;
+.cardImageWrapper {
+  position: relative;
+  width: 220px;
+  height: 200px;
+  background: #f3f4f6;
+  border-radius: 1.5rem;
+  margin-right: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cardBackground {
+  width: 100%;
   height: 100%;
   object-fit: cover;
-  background-color: #f3f4f6;
+  border-radius: 1.5rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.cardCat {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
 .cardContent {
-  padding: 1rem;
+  padding: 0.5rem 0;
   flex: 1;
 }
 
 .cardHeader {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.cardHeader h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 0.01em;
 }
 
 .fishPrice {
-  background: #facc15;
-  padding: 0.25rem 0.5rem;
+  background: #EFEFEF;
+  padding: 0.35rem 0.85rem;
   border-radius: 999px;
-  font-size: 0.875rem;
+  font-size: 1rem;
+  margin-left: auto;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
 }
 
 .cardDescription {
-  font-size: 0.875rem;
+  font-size: 1.05rem;
   color: #4b5563;
+  line-height: 1.5;
+  margin: 0;
 }

@@ -23,6 +23,11 @@ export type Student = {
     quizzes: Quiz[];
     badges: string[];
     certificates: string[];
+    profile?: {
+        unlocked?: string[];
+        cat?: string;
+        background?: string;
+    };
 };
 
 // example:
