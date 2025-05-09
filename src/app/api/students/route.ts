@@ -1,9 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
 import firebase_app from '@/firebase/config';
-import { getFirestore, addDoc, collection } from 'firebase/firestore';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 
 const db = getFirestore(firebase_app);
 
+export async function GET() {
+    console.log('Processing get all students request');
+    try {
+        // Get all documents from the newStudents collection
+        const studentsSnapshot = await getDocs(collection(db, 'newStudents'));
+
+        // Map the documents to include their IDs
+        const students = studentsSnapshot.docs.map((doc) => ({
+            _id: doc.id,
+            ...doc.data(),
+        }));
+
+        console.log(`Retrieved ${students.length} students`);
+
+        // Return the students as JSON
+        return NextResponse.json(students);
+    } catch (error) {
+        console.error('Error fetching students:', error);
+
+        // Return error response
+        return NextResponse.json(
+            {
+                message: 'Failed to fetch students',
+                error: error.message || 'Unknown error',
+            },
+            { status: 500 }
+        );
+    }
+}
+
+// Keep your existing POST handler
 export async function POST(request: NextRequest) {
     console.log('Processing student creation request');
     try {

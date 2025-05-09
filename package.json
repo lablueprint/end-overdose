@@ -9,6 +9,7 @@
         "lint": "next lint",
         "populate-students": "tsx src/helpers/script",
         "populate-new-students": "tsx src/helpers/newScript",
+        "populate-new-schools": "tsx src/helpers/newSchoolsScript",
         "build-service-worker": "npx esbuild auth-service-worker.js --bundle --outfile=public/auth-service-worker.js"
     },
     "dependencies": {
