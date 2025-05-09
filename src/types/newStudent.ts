@@ -23,7 +23,7 @@ interface CoursesCompletion {
     // Could add other courses as needed
 }
 
-export type NewStudentData = {
+export type NewStudent = {
     student_id: string;
     school_name: string;
     profile: Profile;
