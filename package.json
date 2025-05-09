@@ -8,6 +8,7 @@
         "start": "next start",
         "lint": "next lint",
         "populate-students": "tsx src/helpers/script",
+        "populate-new-students": "tsx src/helpers/newScript",
         "build-service-worker": "npx esbuild auth-service-worker.js --bundle --outfile=public/auth-service-worker.js"
     },
     "dependencies": {
