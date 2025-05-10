@@ -6,8 +6,8 @@ import { firebaseConfig } from './config';
 import { getAuth } from 'firebase/auth';
 
 export async function getAuthenticatedAppForUser() {
-    // get the user token from the cookie
-    const token = await getCookie('user-token');
+    // get the admin token from the cookie
+    const token = await getCookie('admin-token');
 
     if (!token) {
         throw new Error('No user token found');
