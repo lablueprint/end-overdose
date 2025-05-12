@@ -8,11 +8,23 @@ import { isStudent } from '@/types/Student';
 import LevelIcon from './components/LevelIcon';
 
 export default function Courses() {
-    const [opioidCourseProgress, setOpioidCourseProgress] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [currentLevel, setCurrentLevel] = useState(2);
+
     // Course progress data
     const user = useUserStore((state) => state.user);
+    const role = useUserStore((state) => state.role);
+    const opiumLessonNum = 6;
+    const [opioidCourseProgress, setOpioidCourseProgress] = useState(
+        isStudent(user) ? user.course_completion.opioidCourse.courseProgress : 0
+    );
+    const [quizCompletion, setQuizCompletion] = useState(0);
+    const [mapIndex, setMapIndex] = useState(
+        Math.max(
+            0,
+            2 * Math.round((opioidCourseProgress / 100) * opiumLessonNum) - 1
+        ) + quizCompletion
+    );
+
     useEffect(() => {
         const fetchOpioidCourseProgress = async () => {
             try {
@@ -21,6 +33,17 @@ export default function Courses() {
                     // checking that the user is a student by checking against admin attributes
                     setOpioidCourseProgress(
                         user.course_completion.opioidCourse.courseProgress
+                    );
+                    setMapIndex(
+                        Math.max(
+                            0,
+                            2 *
+                                Math.round(
+                                    (opioidCourseProgress / 100) *
+                                        opiumLessonNum
+                                ) -
+                                1
+                        ) + quizCompletion
                     );
                 }
             } catch (error) {
@@ -31,7 +54,7 @@ export default function Courses() {
         };
 
         fetchOpioidCourseProgress();
-    }, [user]);
+    }, [user, quizCompletion]);
 
     const coursesData = [
         {
@@ -78,8 +101,29 @@ export default function Courses() {
         { top: '41.6%', left: '18.1%' },
         { top: '55.5%', left: '18.5%' },
         { top: '53.6%', left: '26.1%' },
+        { top: '45.2%', left: '32.2%' },
+        { top: '52.2%', left: '39.3%' },
+        { top: '45%', left: '47.3%' },
+        { top: '56%', left: '50.7%' },
+        { top: '62%', left: '57.8%' },
+        { top: '51%', left: '62%' },
+        { top: '36.4%', left: '60.9%' },
+        { top: '39.5%', left: '70.2%' },
+        { top: '39%', left: '78.9%' },
+        { top: '49.8%', left: '84.1%' },
         // Add more as needed...
     ];
+
+    /*  <LevelIcon type="completed" top={'45.2%'} left={'32.2%'} />
+    <LevelIcon type="completed" top={'52.2%'} left={'39.3%'} />
+    <LevelIcon type="completed" top={'45%'} left={'47.3%'} />
+    <LevelIcon type="completed" top={'56%'} left={'50.7%'} />
+    <LevelIcon type="completed" top={'62%'} left={'57.8%'} />
+    <LevelIcon type="completed" top={'51%'} left={'62%'} />
+    <LevelIcon type="completed" top={'36.4%'} left={'60.9%'} />
+    <LevelIcon type="completed" top={'39.5%'} left={'70.2%'} />
+    <LevelIcon type="completed" top={'39%'} left={'78.9%'} />
+    <LevelIcon type="completed" top={'49.8%'} left={'84.1%'} /> */
 
     /* return (
         <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
@@ -145,13 +189,15 @@ export default function Courses() {
                 >
                     <button
                         onClick={() =>
-                            setCurrentLevel((prev) => Math.max(prev - 1, 0))
+                            setQuizCompletion((prev) => Math.max(prev - 1, 0))
                         }
                     >
-                        ◀️ Previous Level
+                        Remove Quiz Completion
                     </button>
-                    <button onClick={() => setCurrentLevel((prev) => prev + 1)}>
-                        ▶️ Next Level
+                    <button
+                        onClick={() => setQuizCompletion((prev) => prev + 1)}
+                    >
+                        Add Quiz Completion
                     </button>
                 </div>
             </div>
@@ -159,7 +205,7 @@ export default function Courses() {
                 {' '}
                 <img className={styles.map} src="/planetcourse.svg" alt="Map" />
                 {levelPositions.map((pos, index) => {
-                    if (index < currentLevel) {
+                    if (index < mapIndex) {
                         return (
                             <LevelIcon
                                 key={index}
@@ -168,13 +214,18 @@ export default function Courses() {
                                 left={pos.left}
                             />
                         );
-                    } else if (index === currentLevel) {
+                    } else if (index === mapIndex) {
                         return (
                             <LevelIcon
                                 key={index}
                                 type="current"
                                 top={pos.top}
                                 left={pos.left}
+                                href={
+                                    index % 2 === 0
+                                        ? '/courses/opioid'
+                                        : '/quiz'
+                                }
                             />
                         );
                     }

@@ -22,6 +22,13 @@
             "@/*": ["./src/*"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next.config.js", "auth-service-worker.js"],
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        ".next/types/**/*.ts",
+        "next.config.js",
+        "auth-service-worker.js"
+    ],
     "exclude": ["node_modules"]
 }

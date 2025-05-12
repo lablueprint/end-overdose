@@ -18,6 +18,7 @@ import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import Store from '@mui/icons-material/Store';
 
 export default function NavBar() {
     const router = useRouter();
@@ -113,6 +114,11 @@ export default function NavBar() {
                     href: '/quiz',
                     tab: 'Certificates',
                     icon: <WorkspacePremiumIcon />,
+                },
+                {
+                    href: '/store',
+                    tab: 'Store',
+                    icon: <Store />,
                 },
             ]);
         } else {

@@ -1,23 +1,38 @@
 import React from 'react';
+import { useRouter } from 'next/navigation'; // or 'next/router' if using pages directory
 import styles from './LevelIcon.module.css';
 
 interface LevelIconProps {
     type: 'completed' | 'current';
     top: string;
     left: string;
+    href?: string; // Optional because only 'current' icons will navigate
 }
 
-const LevelIcon: React.FC<LevelIconProps> = ({ type, top, left }) => {
+const LevelIcon: React.FC<LevelIconProps> = ({ type, top, left, href }) => {
+    const router = useRouter();
+
     const style: React.CSSProperties = {
         position: 'absolute',
         top,
         left,
+        cursor: type === 'current' ? 'pointer' : 'default',
     };
 
     const className = `${styles.levelIcon} ${type === 'current' ? styles.pulse : ''}`;
 
+    const handleClick = () => {
+        if (type === 'current' && href) {
+            router.push(href);
+        }
+    };
+
     return (
-        <div className={className} style={style}>
+        <div
+            className={className}
+            style={style}
+            onClick={type === 'current' ? handleClick : undefined}
+        >
             {type === 'completed' ? (
                 <svg
                     width="68"

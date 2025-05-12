@@ -1,3 +1,5 @@
+import { Admin } from './Admin';
+
 interface Quiz {
     name: string;
     score: number;
@@ -8,7 +10,7 @@ export type Student = {
     email: string;
     school_name: string;
     nameplate: string;
-    kibble_count: number;
+    fish_count: number;
     course_completion: {
         opioidCourse: {
             courseScore: number; // % of final score >=80 then we do ++passed
@@ -23,6 +25,11 @@ export type Student = {
     quizzes: Quiz[];
     badges: string[];
     certificates: string[];
+    profile?: {
+        unlocked?: string[];
+        cat?: string;
+        background?: string;
+    };
 };
 
 // example:
@@ -31,7 +38,7 @@ export const StudentJosh: Student = {
     email: 'josh@fusd.net',
     school_name: 'Fremont Unified School District',
     nameplate: 'Josh Doe',
-    kibble_count: 1000,
+    fish_count: 1000,
     course_completion: {
         opioidCourse: {
             courseScore: 50, // half of lessons completed
@@ -51,24 +58,28 @@ export const StudentJosh: Student = {
 };
 
 // Type guard function
-export const isStudent = (obj: any): obj is Student => {
+export const isStudent = (obj: Student | Admin | null): obj is Student => {
     return (
-        typeof obj === 'object' &&
-        obj !== null &&
-        typeof obj.student_id === 'string' &&
-        typeof obj.email === 'string' &&
-        typeof obj.school_name === 'string' &&
-        typeof obj.nameplate === 'string' &&
-        typeof obj.kibble_count === 'number' &&
-        typeof obj.course_completion === 'object' &&
-        typeof obj.course_completion.opioidCourse === 'object' &&
-        typeof obj.course_completion.opioidCourse.courseScore === 'number' &&
-        typeof obj.course_completion.opioidCourse.courseProgress === 'number' &&
-        typeof obj.course_completion.careerCourse === 'object' &&
-        typeof obj.course_completion.careerCourse.courseScore === 'number' &&
-        typeof obj.course_completion.careerCourse.courseProgress === 'number' &&
-        Array.isArray(obj.quizzes) && // Assuming `Quiz[]` is an array
-        Array.isArray(obj.badges) &&
-        Array.isArray(obj.certificates)
+        //typeof obj === 'object' &&
+        (obj as Student) !== null
+        /*typeof (obj as Student).student_id === 'string' &&
+        typeof (obj as Student).email === 'string' &&
+        typeof (obj as Student).school_name === 'string' &&
+        typeof (obj as Student).nameplate === 'string' &&
+        typeof (obj as Student).kibble_count === 'number' &&
+        typeof (obj as Student).course_completion === 'object' &&
+        typeof (obj as Student).course_completion.opioidCourse === 'object' &&
+        typeof (obj as Student).course_completion.opioidCourse.courseScore ===
+            'number' &&
+        typeof (obj as Student).course_completion.opioidCourse
+            .courseProgress === 'number' &&
+        typeof (obj as Student).course_completion.careerCourse === 'object' &&
+        typeof (obj as Student).course_completion.careerCourse.courseScore ===
+            'number' &&
+        typeof (obj as Student).course_completion.careerCourse
+            .courseProgress === 'number' &&
+        Array.isArray((obj as Student).quizzes) && // Assuming `Quiz[]` is an array
+        Array.isArray((obj as Student).badges) &&
+        Array.isArray((obj as Student).certificates) */
     );
 };
