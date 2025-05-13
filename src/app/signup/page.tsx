@@ -19,7 +19,7 @@ import {
 } from 'firebase/auth';
 import { addAdmin } from '@/app/api/admins/actions';
 import { addStudent } from '@/app/api/students/actions';
-import Onboarding from '@/app/signup/onboarding';
+import Onboarding from './onboarding';
 
 type Inputs = {
     role: string;
@@ -32,7 +32,7 @@ const SignUpPage = () => {
     const router = useRouter();
     const [error, setError] = useState('');
     const [success, setSuccess] = useState<boolean>(false);
-    const [studentSubmitted, setStudentSubmitted] = useState(true);
+    const [studentSubmitted, setStudentSubmitted] = useState(false);
 
     const roles = ['Student', 'School Admin', 'End Overdose Admin'];
     const roleValues = roles.map((role) => (

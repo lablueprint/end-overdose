@@ -101,7 +101,86 @@
     height: 1px;
 }
 .onboarding_2 {
-    height: 35vh;
+    height: 40vh;
+    padding: 0 5%;
+}
+.onboarding_2 .shuffleContainer {
+    display: flex;
+    justify-content: space-between;
+    min-height: 90%;
+}
+.onboarding_2 .shuffle {
+    max-height: 100%;
+    width: 30%;
+    align-items: center;
+}
+.onboarding_2 .arrow {
+    min-height: 10%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.onboarding_2 .arrow:hover {
+    cursor: pointer;
+}
+.onboarding_2 .upArrow {
+    background-image: url('../../../public/upArrow.png');
+    background-position: cover;
+    background-repeat: no-repeat;
+    min-height: 100%;
+    width: 25%;
+    margin-left: 6%;
+}
+.onboarding_2 .downArrow {
+    background-image: url('../../../public/downArrow.png');
+    background-position: cover;
+    background-repeat: no-repeat;
+    min-height: 100%;
+    width: 25%;
+    margin-left: 6%;
+    margin-top: 2%;
+}
+.onboarding_2 .shuffleBox {
+    padding: 7% 0;
+    max-height: 80%;
+    max-width: 100%;
+    background-color: #ffffff;
+    border-radius: 10%;
+    color: black;
+    text-align: center;
+    line-height: 175%;
+}
+.onboarding_2 .shuffleOptions {
+    min-height: 10%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+}
+.onboarding_2 .shuffleListItems {
+    list-style: none;
+    line-height: 160%;
+}
+.shuffleButton {
+    text-transform: uppercase;
+    border-radius: 7%;
+    font-weight: 600;
+    font-size: 15px;
+    background-color: white;
+    color: black;
+    padding: 1% 2%;
+}
+.onboarding_2 .displayName {
+    border: 1px solid white;
+    padding: 1% 2%;
+    text-transform: uppercase;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 15px;
+    margin-left: 2%;
+    width: 50%;
+    text-align: center;
 }
 .onboarding_3 {
     height: 35vh;

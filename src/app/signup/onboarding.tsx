@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import styles from './onboarding.module.css';
 import { AnimatePresence, motion } from 'framer-motion';
+//import { useUserStore } from '@/store/userStore';
 
 export default function Onboarding() {
     const [page, setPage] = useState(() => {
@@ -15,6 +16,140 @@ export default function Onboarding() {
         1: '/cactusForeground.svg',
         2: '/moonForeground.png',
         3: '/terrainForeground.svg',
+    };
+    //const setNameplate = useUserStore((state) => state.setNameplate);
+
+    const fullList1 = [
+        'Super',
+        'Very',
+        'Extremely',
+        'Incredibly',
+        'Totally',
+        'Mega',
+        'Ultra',
+        'Ridiculously',
+        'Insanely',
+        'Absolutely',
+        'Really',
+    ];
+    const fullList2 = [
+        'Smart',
+        'Gorgeous',
+        'Awesome',
+        'Cool',
+        'Brilliant',
+        'Talented',
+        'Kind',
+        'Funny',
+        'Creative',
+        'Charming',
+    ];
+
+    const fullList3 = [
+        'Cat',
+        'Dog',
+        'Bunny',
+        'Fox',
+        'Panda',
+        'Tiger',
+        'Otter',
+        'Koala',
+        'Dolphin',
+        'Penguin',
+    ];
+    const visibleCount = 7;
+    const defaultCenterIndex = 3;
+
+    function shuffleArray<T>(array: T[]): T[] {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    const [shuffledItems1, setShuffledItems1] = useState(() =>
+        shuffleArray(fullList1)
+    );
+    const [shuffledItems2, setShuffledItems2] = useState(() =>
+        shuffleArray(fullList2)
+    );
+    const [shuffledItems3, setShuffledItems3] = useState(() =>
+        shuffleArray(fullList3)
+    );
+    const [visibleIndex1, setVisibleIndex1] = useState(defaultCenterIndex);
+    const [visibleIndex2, setVisibleIndex2] = useState(defaultCenterIndex);
+    const [visibleIndex3, setVisibleIndex3] = useState(defaultCenterIndex);
+
+    const handleUp1 = () => {
+        setVisibleIndex1((prev) => Math.max(prev - 1, 0));
+    };
+    const handleUp2 = () => {
+        setVisibleIndex2((prev) => Math.max(prev - 1, 0));
+    };
+    const handleUp3 = () => {
+        setVisibleIndex3((prev) => Math.max(prev - 1, 0));
+    };
+
+    const handleDown1 = () => {
+        setVisibleIndex1((prev) => prev + 1);
+    };
+    const handleDown2 = () => {
+        setVisibleIndex2((prev) => prev + 1);
+    };
+    const handleDown3 = () => {
+        setVisibleIndex3((prev) => prev + 1);
+    };
+
+    // Extend list dynamically when scrolling down
+    useEffect(() => {
+        if (visibleIndex1 >= shuffledItems1.length - defaultCenterIndex - 1) {
+            setShuffledItems1((prev) => [...prev, ...shuffleArray(fullList1)]);
+        }
+        if (visibleIndex2 >= shuffledItems2.length - defaultCenterIndex - 1) {
+            setShuffledItems2((prev) => [...prev, ...shuffleArray(fullList2)]);
+        }
+        if (visibleIndex3 >= shuffledItems3.length - defaultCenterIndex - 1) {
+            setShuffledItems3((prev) => [...prev, ...shuffleArray(fullList3)]);
+        }
+    }, [
+        visibleIndex1,
+        shuffledItems1.length,
+        fullList1,
+        visibleIndex2,
+        shuffledItems2.length,
+        fullList2,
+        visibleIndex3,
+        shuffledItems3.length,
+        fullList3,
+    ]);
+
+    // Adjust center index if we're near the top
+    const centerOffset1 =
+        visibleIndex1 < defaultCenterIndex ? visibleIndex1 : defaultCenterIndex;
+    const centerOffset2 =
+        visibleIndex2 < defaultCenterIndex ? visibleIndex2 : defaultCenterIndex;
+    const centerOffset3 =
+        visibleIndex3 < defaultCenterIndex ? visibleIndex3 : defaultCenterIndex;
+
+    const start1 = visibleIndex1 - centerOffset1;
+    const start2 = visibleIndex2 - centerOffset2;
+    const start3 = visibleIndex3 - centerOffset3;
+    const visibleSlice1 = shuffledItems1.slice(start1, start1 + visibleCount);
+    const visibleSlice2 = shuffledItems2.slice(start2, start2 + visibleCount);
+    const visibleSlice3 = shuffledItems3.slice(start3, start3 + visibleCount);
+    const centerItem1 = visibleSlice1[centerOffset1];
+    const centerItem2 = visibleSlice2[centerOffset2];
+    const centerItem3 = visibleSlice3[centerOffset3];
+
+    const handleShuffle = () => {
+        setShuffledItems1(shuffleArray(fullList1));
+        setShuffledItems2(shuffleArray(fullList2));
+        setShuffledItems3(shuffleArray(fullList3));
+        setVisibleIndex1(defaultCenterIndex);
+        setVisibleIndex2(defaultCenterIndex);
+        setVisibleIndex3(defaultCenterIndex);
     };
 
     const slideVariants = {
@@ -193,7 +328,183 @@ export default function Onboarding() {
                                 )}
                                 {page === 2 && (
                                     <div className={styles.onboarding_2}>
-                                        Second Slide
+                                        <div
+                                            className={styles.shuffleContainer}
+                                        >
+                                            <div className={styles.shuffle}>
+                                                <div className={styles.arrow}>
+                                                    <button
+                                                        className={
+                                                            styles.upArrow
+                                                        }
+                                                        onClick={handleUp1}
+                                                    ></button>
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.shuffleBox
+                                                    }
+                                                >
+                                                    {visibleSlice1.map(
+                                                        (item, i) => (
+                                                            <li
+                                                                key={start1 + i}
+                                                                className={
+                                                                    styles.shuffleListItems
+                                                                }
+                                                                style={{
+                                                                    fontSize:
+                                                                        i ===
+                                                                        defaultCenterIndex
+                                                                            ? '20px'
+                                                                            : '15px',
+                                                                    fontWeight:
+                                                                        i ===
+                                                                        defaultCenterIndex
+                                                                            ? 'bold'
+                                                                            : 'normal',
+                                                                    opacity:
+                                                                        i ===
+                                                                        defaultCenterIndex
+                                                                            ? 1
+                                                                            : 0.6,
+                                                                    margin: '0.25rem 0',
+                                                                }}
+                                                            >
+                                                                {item}
+                                                            </li>
+                                                        )
+                                                    )}
+                                                </div>
+                                                <div className={styles.arrow}>
+                                                    <button
+                                                        onClick={handleDown1}
+                                                        className={
+                                                            styles.downArrow
+                                                        }
+                                                    ></button>
+                                                </div>
+                                            </div>
+                                            <div className={styles.shuffle}>
+                                                <div className={styles.arrow}>
+                                                    <button
+                                                        className={
+                                                            styles.upArrow
+                                                        }
+                                                        onClick={handleUp2}
+                                                    ></button>
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.shuffleBox
+                                                    }
+                                                >
+                                                    {visibleSlice2.map(
+                                                        (item, i) => (
+                                                            <li
+                                                                key={start2 + i}
+                                                                className={
+                                                                    styles.shuffleListItems
+                                                                }
+                                                                style={{
+                                                                    fontSize:
+                                                                        i ===
+                                                                        defaultCenterIndex
+                                                                            ? '20px'
+                                                                            : '15px',
+                                                                    fontWeight:
+                                                                        i ===
+                                                                        defaultCenterIndex
+                                                                            ? 'bold'
+                                                                            : 'normal',
+                                                                    opacity:
+                                                                        i ===
+                                                                        defaultCenterIndex
+                                                                            ? 1
+                                                                            : 0.6,
+                                                                    margin: '0.25rem 0',
+                                                                }}
+                                                            >
+                                                                {item}
+                                                            </li>
+                                                        )
+                                                    )}
+                                                </div>
+                                                <div className={styles.arrow}>
+                                                    <button
+                                                        onClick={handleDown2}
+                                                        className={
+                                                            styles.downArrow
+                                                        }
+                                                    ></button>
+                                                </div>
+                                            </div>
+                                            <div className={styles.shuffle}>
+                                                <div className={styles.arrow}>
+                                                    <button
+                                                        className={
+                                                            styles.upArrow
+                                                        }
+                                                        onClick={handleUp3}
+                                                    ></button>
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.shuffleBox
+                                                    }
+                                                >
+                                                    {visibleSlice3.map(
+                                                        (item, i) => (
+                                                            <li
+                                                                key={start3 + i}
+                                                                className={
+                                                                    styles.shuffleListItems
+                                                                }
+                                                                style={{
+                                                                    fontSize:
+                                                                        i ===
+                                                                        defaultCenterIndex
+                                                                            ? '20px'
+                                                                            : '15px',
+                                                                    fontWeight:
+                                                                        i ===
+                                                                        defaultCenterIndex
+                                                                            ? 'bold'
+                                                                            : 'normal',
+                                                                    opacity:
+                                                                        i ===
+                                                                        defaultCenterIndex
+                                                                            ? 1
+                                                                            : 0.6,
+                                                                    margin: '0.25rem 0',
+                                                                }}
+                                                            >
+                                                                {item}
+                                                            </li>
+                                                        )
+                                                    )}
+                                                </div>
+                                                <div className={styles.arrow}>
+                                                    <button
+                                                        onClick={handleDown3}
+                                                        className={
+                                                            styles.downArrow
+                                                        }
+                                                    ></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className={styles.shuffleOptions}>
+                                            <button
+                                                className={styles.shuffleButton}
+                                                onClick={handleShuffle}
+                                            >
+                                                Shuffle
+                                            </button>
+                                            <div className={styles.displayName}>
+                                                {`${centerItem1} ${centerItem2} ${centerItem3}`}
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
                                 {page === 3 && (
