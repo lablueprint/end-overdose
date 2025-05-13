@@ -4,14 +4,14 @@ import styles from './signin.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { validateUserCredentials } from '../api/students/actions';
 import { useState } from 'react';
-export default function SignInPage() {
-    type Inputs = {
-        school: string;
-        role: string;
-        email: string;
-        password: string;
-    };
 
+type Inputs = {
+    school: string;
+    role: string;
+    email: string;
+    password: string;
+};
+export default function SignInPage() {
     const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState<string | null>(null);
 
@@ -131,7 +131,7 @@ export default function SignInPage() {
                                 <option value="">Choose a Role</option>
                                 <option value="student">Student</option>
                                 <option value="eo_admin">EO Admin</option>
-                                <option value="admin">Admin</option>
+                                <option value="admin">School Admin</option>
                             </select>
                         </div>
 

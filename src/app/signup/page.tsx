@@ -25,22 +25,14 @@ const SignUpPage = () => {
     const router = useRouter();
     const [error, setError] = useState('');
     const [success, setSuccess] = useState<boolean>(false);
-    // DELETE LATER TEMPORARY TOGGLE FOR STUDENT OR ADMIN
-    const [student, setStudent] = useState(false);
 
-    const roles = ['School Admin', 'End Overdose Admin'];
+    const roles = ['School Admin', 'EO Admin'];
     const roleValues = roles.map((role) => (
         <option key={role} value={role}>
             {role}
         </option>
     ));
-    //Change selected school from dropdown selection MERGE CONCLICT SO COMMENTED OUT IF DONT NEED DELETE
-    /*const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedSchoolName = e.target.value;
-        if (selectedSchoolName) {
-            setSchoolName(selectedSchoolName);
-        }
-    };*/
+
     const schools = ['UCLA', 'USC', 'UCSD', 'UCI', 'UCB'];
     const schoolValues = schools.map((school) => (
         <option key={school} value={school}>
@@ -61,7 +53,6 @@ const SignUpPage = () => {
         if (!termsAgreed || !newsletter) {
             return;
         }
-
         setError('');
 
         try {
@@ -74,25 +65,12 @@ const SignUpPage = () => {
             );
 
             // 2) Build your Admin object
-            const newAdmin: Admin = {
-                name: {
-                    first: 'Test',
-                    last: 'Test',
-                },
-                email,
-                role: 'school_admin',
-                school_name: 'UCLA',
-                approved: false,
-            };
 
             // 3) Write it into your “admins” collection keyed by uid
-            await addAdmin(newAdmin, user.uid);
 
             // 4) Send email‑verification instead of a magic link:
-            await sendEmailVerification(user);
-            console.log('Verification email sent');
-
-            setSuccess(true);
+            //await sendEmailVerification(user);
+            //console.log('Verification email sent');
 
             // 5) Redirect to login or dashboard
             setTimeout(() => {
@@ -103,21 +81,6 @@ const SignUpPage = () => {
             setError('Something went wrong.');
         }
     };
-
-    /*const response = await signUp(newAdmin, password);
-        const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
-        const response = await signUp(data);
-
-        if (response.error) {
-            setError(response.error);
-            setSuccess(false);
-        } else {
-            setSuccess(true);
-            setError('');
-            setTimeout(() => {
-                router.push('/login');
-            }, 1000);
-        }*/
 
     useEffect(() => {
         const auth = getAuth();
@@ -155,6 +118,7 @@ const SignUpPage = () => {
                                             required: true,
                                         })}
                                     >
+                                        <option value="">Choose a Role</option>
                                         {roleValues}
                                     </select>
                                 </div>
@@ -171,8 +135,8 @@ const SignUpPage = () => {
                                         name="schoolName"
                                         required
                                     >
-                                        <option value="" disabled hidden>
-                                            Select your school…
+                                        <option value="">
+                                            Choose a School
                                         </option>
                                         {schoolValues}
                                     </select>
