@@ -5,9 +5,12 @@ import BadgeTable from './Components/BadgeTable';
 import styles from './profile.module.css';
 import AuthWrap from '@/components/AuthWrap';
 import { useUserStore } from '@/store/userStore';
+import { getStudentFromID2 } from '@/app/api/students/actions';
 import Image from 'next/image';
 import ColorPickerDialog from './Components/ColorPickerDialogue';
 import BadgeModal from './Components/BadgeModal';
+import Certificate from '../certificates/Certificate';
+import { set } from 'react-hook-form';
 /*
  * Notes:
  * Dynamically renders profile banner/picture with cat, color and background.
@@ -22,9 +25,11 @@ export default function Home() {
     const [selectedProfilePicture, setSelectedProfilePicture] = useState(0);
     const [kibbleCount, setKibbleCount] = useState(0);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedColor, setSelectedColor] = useState('#009F5D');
+    const [selectedColor, setSelectedColor] = useState('');
     const [selectedCat, setSelectedCat] = useState('/cat.png');
-    const [selectedBackground, setSelectedBackground] = useState('/fish.png');
+    const [selectedBackground, setSelectedBackground] = useState('');
+    const [nameplate, setNameplate] = useState('');
+    const [unlockedThemes, setUnlockedThemes] = useState<string[]>([]);
 
     const [selectedBadges, setSelectedBadges] = useState([
         'Badge 1',
@@ -48,20 +53,27 @@ export default function Home() {
     const [profileChanged, setProfileChanged] = useState(false);
     const user = useUserStore((state) => state.user);
     const role = useUserStore((state) => state.role);
-    // if (user && 'student_id' in user) {
-    //     const kibbleCount = getKibbleFromStudentID(user.student_id);
-    // }
-    // useEffect(() => {
-    //     async function fetchKibble() {
-    //         if (user && 'student_id' in user) {
-    //             const kibble = await getKibbleFromStudentID(user.student_id);
-    //             if (kibble !== null) {
-    //                 setKibbleCount(kibble.kibble_count);
-    //             }
-    //         }
-    //     }
-    //     fetchKibble();
-    // }, [user]);
+    useEffect(() => {
+        async function fetchThemes() {
+            if (user && 'student_id' in user) {
+                const student = await getStudentFromID2(user.student_id);
+                if ('profile' in student) {
+                    setSelectedBackground(
+                        `/backgrounds/${student.profile.background}-profile.png`
+                    );
+                    setSelectedCat(`/cats/${student.profile.cat}.png`);
+                    setNameplate(student.profile.nameplate);
+                    const unlocked = student.profile.unlocked;
+                    const cleaned = unlocked.filter(
+                        (name: string) => name !== ''
+                    );
+                    setUnlockedThemes(cleaned);
+                }
+            }
+        }
+        fetchThemes();
+    }, [user]);
+
     const changeProfilePicture = (newProfileIndex: number) => {
         setSelectedProfilePicture(newProfileIndex);
         setProfileChanged(true);
@@ -70,6 +82,10 @@ export default function Home() {
     return (
         <div className={styles.profileContainer}>
             <div className={styles.leftSide}>
+                <div className={styles.nameContainer}>
+                    {' '}
+                    <p className={styles.nameTag}> {nameplate} </p>
+                </div>
                 <div
                     className={styles.profilePictureHolder}
                     style={{ backgroundColor: selectedColor }}
@@ -93,17 +109,16 @@ export default function Home() {
                         className={styles.colorButton}
                         onClick={() => setIsDialogOpen(true)}
                     >
-                        X
+                        Edit Profile
                     </button>
                 </div>
-                <div className={styles.nameContainer}>
-                    {' '}
-                    <p className={styles.nameTag}> FirstName LastName</p>
+                <p className={styles.achievementsTag}>CERTIFICATES</p>
+                <div className={styles.scrollWrapper}>
+                    <ul className={styles.horizontalList}>
+                        <Certificate courseName="Opioid Prevention Course" />
+                    </ul>
                 </div>
-                <div>
-                    <p className={styles.achievementsTag}>Achievements</p>
-                </div>
-                <div className={styles.lhsAchievementsContainer}>
+                {/* <div className={styles.lhsAchievementsContainer}>
                     <BadgeTable selectedBadges={selectedBadges} />
                 </div>
                 <div className={styles.viewButtonContainer}>
@@ -113,9 +128,9 @@ export default function Home() {
                     >
                         <p className={styles.viewText}> View All </p>
                     </button>
-                </div>
+                </div> */}
             </div>
-            <div className={styles.rightSide}></div>
+            {/* <div className={styles.rightSide}></div> */}
             <ColorPickerDialog
                 isOpen={isDialogOpen}
                 setIsOpen={setIsDialogOpen}
@@ -125,6 +140,7 @@ export default function Home() {
                 setSelectedCat={setSelectedCat}
                 selectedBackground={selectedBackground}
                 setSelectedBackground={setSelectedBackground}
+                unlockedThemes={unlockedThemes}
             />
             {isBadgeModalOpen && (
                 <BadgeModal
@@ -134,7 +150,7 @@ export default function Home() {
                     onClose={() => setIsBadgeModalOpen(false)}
                 />
             )}
-            {kibbleCount}
+            {/* {kibbleCount} */}
         </div>
     );
 }
