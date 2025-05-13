@@ -18,21 +18,30 @@ import { set } from 'react-hook-form';
 interface TrueFalseProps {
     title: string;
     description: string;
+    quizIndex: number;
 }
 interface MissedQuestion {
     question: string;
     correctAnswer: number;
     selectedAnswer: number | null; // 1 is true, 0 is false
+    isCorrect: boolean;
 }
 
-export default function TrueFalse({ title, description }: TrueFalseProps) {
-    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>( //  array storing missed questions
+export default function TrueFalse({
+    title,
+    description,
+    quizIndex,
+}: TrueFalseProps) {
+    const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>(
         []
     );
     const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
     const [started, setStarted] = useState(false);
     const [completed, setCompleted] = useState(false);
-    const questions = trueFalseQuestions;
+
+    // Get the current quiz
+    const currentQuiz = trueFalseQuestions[quizIndex];
+
     const [questionIndex, setQuestionIndex] = useState(0);
     const [currentScore, setCurrentScore] = useState(0);
     const [isQuestionSelected, setIsQuestionSelected] = useState(false);
@@ -54,11 +63,21 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         if (isQuestionSelected) return;
         setIsQuestionSelected(true);
         fadeOutIndexRef.current = questionIndex;
-        if (questionIndex < questions.length - 1)
+        if (questionIndex < currentQuiz.length - 1)
             setQuestionIndex(questionIndex + 1);
         setSelectedAnswer(answer);
-        const isCorrect = answer === questions[questionIndex].answer;
+        const isCorrect = answer === currentQuiz[questionIndex].answer;
 
+        setMissedQuestions((prevMissed) => [
+            // add missed question to missedQuestions array
+            ...prevMissed,
+            {
+                question: currentQuiz[questionIndex].question,
+                correctAnswer: currentQuiz[questionIndex].answer ? 1 : 0,
+                selectedAnswer: Number(answer),
+                isCorrect: isCorrect,
+            },
+        ]);
         if (isCorrect) {
             setCurrentScore(currentScore + 1);
             setResultMessage('correct');
@@ -66,24 +85,14 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
         } else {
             setResultMessage('incorrect');
             setAnimationProps({ x: -150, y: 50, rotate: -15, opacity: 0 });
-            setMissedQuestions((prevMissed) => [
-                // add missed question to missedQuestions array
-                ...prevMissed,
-                {
-                    question: questions[questionIndex].question,
-                    correctAnswer: questions[questionIndex].answer ? 1 : 0,
-                    selectedAnswer: Number(answer),
-                },
-            ]);
         }
-        console.log('missed questions', missedQuestions);
 
         setTimeout(() => {
             setResultMessage(null);
             setAnimationProps(null);
             setSelectedAnswer(null);
             setTimeout(() => {
-                if (questionIndex < questions.length - 1) {
+                if (questionIndex < currentQuiz.length - 1) {
                     setQuestionIndex(questionIndex + 1);
                     setSelectedAnswer(null);
                 } else {
@@ -126,7 +135,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                         <div
                             className="custom-progress-fill"
                             style={{
-                                width: `${(questionIndex / questions.length) * 100}%`,
+                                width: `${(questionIndex / currentQuiz.length) * 100}%`,
                             }}
                         ></div>
                     </div>
@@ -142,13 +151,13 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                         Determine whether this statement is true or false.
                     </h1>
                     <div>
-                        {questionIndex < questions.length &&
+                        {questionIndex < currentQuiz.length &&
                             (animationProps === null ||
                                 fadeOutIndexRef.current <
-                                    questions.length - 1) && (
+                                    currentQuiz.length - 1) && (
                                 <div className="tf-question-container under">
                                     <h1 className="tf-question-text">
-                                        {questions[questionIndex].question}
+                                        {currentQuiz[questionIndex].question}
                                     </h1>
                                     <div className="image-container">
                                         <img
@@ -187,7 +196,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                             >
                                 <h1 className="tf-question-text">
                                     {
-                                        questions[fadeOutIndexRef.current]
+                                        currentQuiz[fadeOutIndexRef.current]
                                             .question
                                     }
                                 </h1>
@@ -204,7 +213,7 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
             ) : (
                 <div>
                     <Score
-                        numQuestions={questions.length}
+                        numQuestions={currentQuiz.length}
                         currentScore={currentScore}
                         setCurrentScore={setCurrentScore}
                         setCurrentQuestionIndex={setQuestionIndex}
@@ -223,6 +232,8 @@ export default function TrueFalse({ title, description }: TrueFalseProps) {
                         setIsQuestionSelected={setIsQuestionSelected}
                         setIsCompleted={setCompleted}
                         isMCQ={false}
+                        quizIndex={quizIndex}
+                        isTF={true}
                     />
                 </div>
             )}

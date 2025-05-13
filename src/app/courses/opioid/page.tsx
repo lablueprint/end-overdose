@@ -70,13 +70,18 @@ export default function OpioidHome() {
             // }
 
             try {
-                const response =
-                    user.course_completion.opioidCourse.courseProgress;
-                const lessonIndex = Math.round((response / 100) * totalLessons);
+                if (isStudent(user)) {
+                    const response =
+                        user.course_completion.opioidCourse.courseProgress;
 
-                setCourseProgress(response);
-                setLesson(lessonIndex);
-                setHighestReachedLesson(lessonIndex);
+                    const lessonIndex = Math.round(
+                        (response / 100) * totalLessons
+                    );
+
+                    setCourseProgress(response);
+                    setLesson(lessonIndex);
+                    setHighestReachedLesson(lessonIndex);
+                }
             } catch (error) {
                 console.error('Error fetching progress:', error);
             } finally {
@@ -90,25 +95,25 @@ export default function OpioidHome() {
     if (!progressLoaded) return <div>Loading course...</div>;
 
     const handleChangeLesson = (lessonNumber: number) => {
-        if (
-            lessonNumber > highestReachedLesson &&
-            user &&
-            'course_completion' in user
-        ) {
-            const updatedOpioidCourse = user.course_completion
-                ?.opioidCourse || { courseProgress: 0 };
+        // if (
+        //     lessonNumber > highestReachedLesson &&
+        //     user &&
+        //     'course_completion' in user
+        // ) {
+        //     const updatedOpioidCourse = user.course_completion
+        //         ?.opioidCourse || { courseProgress: 0 };
 
-            useUserStore.getState().setUser({
-                ...user,
-                course_completion: {
-                    ...user.course_completion,
-                    opioidCourse: {
-                        ...updatedOpioidCourse,
-                        courseProgress: (lessonNumber / totalLessons) * 100,
-                    },
-                },
-            });
-        }
+        //     useUserStore.getState().setUser({
+        //         ...user,
+        //         course_completion: {
+        //             ...user.course_completion,
+        //             opioidCourse: {
+        //                 ...updatedOpioidCourse,
+        //                 courseProgress: (lessonNumber / totalLessons) * 100,
+        //             },
+        //         },
+        //     });
+        // }
         setLesson(lessonNumber); // Update the local lesson state
     };
 
@@ -148,23 +153,24 @@ export default function OpioidHome() {
                 const nextIndex = prevIndex + 1;
                 if (nextIndex > highestReachedLesson) {
                     setHighestReachedLesson(nextIndex);
-                }
-                const updatedOpioidCourse = user.course_completion
-                    .opioidCourse || {
-                    courseProgress: 0,
-                };
+                    const updatedOpioidCourse = user.course_completion
+                        .opioidCourse || {
+                        courseProgress: 0,
+                    };
 
-                // Update global state with new course progress
-                useUserStore.getState().setUser({
-                    ...user,
-                    course_completion: {
-                        ...user.course_completion,
-                        opioidCourse: {
-                            ...updatedOpioidCourse,
-                            courseProgress: (nextIndex / totalLessons) * 100,
+                    // Update global state with new course progress
+                    useUserStore.getState().setUser({
+                        ...user,
+                        course_completion: {
+                            ...user.course_completion,
+                            opioidCourse: {
+                                ...updatedOpioidCourse,
+                                courseProgress:
+                                    (nextIndex / totalLessons) * 100,
+                            },
                         },
-                    },
-                });
+                    });
+                }
 
                 return nextIndex;
             });

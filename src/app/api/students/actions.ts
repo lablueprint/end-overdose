@@ -15,6 +15,7 @@ import {
     setDoc,
     where,
 } from 'firebase/firestore';
+import { NewStudent } from '@/types/newStudent';
 
 interface Quiz {
     name: string;
@@ -23,7 +24,7 @@ interface Quiz {
 
 //1. SET UP THE DATABASE TO BE REFERENCED IN THE API
 const db = getFirestore(firebase_app);
-const studentsCollection = collection(db, 'students');
+const studentsCollection = collection(db, 'newStudents');
 
 //CREATE SERVER ACTIONS
 
@@ -131,28 +132,32 @@ export const getSchoolStudents = cache(async (schoolName: string) => {
 
 //takes in school, username, password and checks that username and password are in school's student id map
 export const validateUserCredentials = cache(
-    async (
-        schoolName: string,
-        studentID: string,
-        optionalPassword: string = ''
-    ) => {
+    async (schoolName: string, studentID: string, password: string) => {
         try {
-            const schoolRef = collection(db, 'schools');
+            const schoolRef = collection(db, 'joyce');
 
             // Query to find the document where school name matches and user credentials exist
             const q = query(
                 schoolRef,
-                where('name', '==', schoolName),
-                where(`school_ids.${studentID}`, '==', optionalPassword) // Accessing nested map
+                where('school_name', '==', schoolName),
+                where(
+                    `student_ids.${studentID}.student_password`,
+                    '==',
+                    password
+                ) // Accessing nested map
             );
 
             const querySnapshot = await getDocs(q);
 
             if (!querySnapshot.empty) {
-                // console.log('Valid username and password found!');
-                return { success: true }; // Credentials are valid
+                const schoolDoc = querySnapshot.docs[0];
+                const schoolData = schoolDoc.data();
+                const firebase_id =
+                    schoolData.student_ids[studentID].firebase_id; // Extract firebase_id
+                // console.log('firebase_id: ', firebase_id);
+                return { firebase_id, success: true }; // Credentials are valid
             } else {
-                // console.log('Invalid credentials or school not found.');
+                // console.log('No matching document found');
                 return { success: false }; // No match found
             }
         } catch (error) {
@@ -195,7 +200,7 @@ export const getStudent = cache(async (uid: string) => {
         const studentDoc = await getDoc(studentDocRef);
 
         if (studentDoc.exists()) {
-            return { id: studentDoc.id, ...(studentDoc.data() as Student) };
+            return { id: studentDoc.id, ...(studentDoc.data() as NewStudent) };
         }
 
         return null;
@@ -205,25 +210,8 @@ export const getStudent = cache(async (uid: string) => {
     }
 });
 
-// export async function updateKibbleCount() {
-//     try {
-//         console.log('Success');
-//         const snapshot = await getDocs(studentsCollection);
-//         const updatePromises = snapshot.docs.map(async (studentDoc) => {
-//             const studentRef = doc(db, 'students', studentDoc.id);
-//             const kibbleCount = Math.floor(Math.random() * 1000); // Generate random number between 0-999
-//             await updateDoc(studentRef, { kibble_count: kibbleCount });
-//         });
-
-//         await Promise.all(updatePromises);
-//         console.log('Kibble count updated for all students.');
-//     } catch (error) {
-//         console.error('Error updating kibble count:', error);
-//         throw new Error('Failed to update kibble count.');
-//     }
-// }
 // add a new student to the database
-export async function addStudent(student: Student, docID: string) {
+export async function addStudent(student: NewStudent, docID: string) {
     try {
         // add to database
         await setDoc(doc(studentsCollection, docID), student);
@@ -298,21 +286,59 @@ export async function getCourseProgress(courseName: string) {
     }
 }
 
-// get kibble count from student id
-export const getKibbleFromStudentID = cache(async (id: string) => {
-    try {
-        const q = query(studentsCollection, where('student_id', '==', id)); // Find student from ID
-        const snapshot = await getDocs(q);
+export async function purchaseTheme(studentId: string, themeKey: string) {
+    const q = query(studentsCollection, where('student_id', '==', studentId));
+    const snapshot = await getDocs(q);
 
+    if (!snapshot.empty) {
+        const docRef = snapshot.docs[0].ref;
+        const data = snapshot.docs[0].data();
+
+        const fish = data.fish_count ?? 0;
+        const profile = data.profile ?? {};
+        const unlocked = profile.unlocked ?? [];
+
+        // Already unlocked
+        if (unlocked.includes(themeKey)) return { error: 'Already owned' };
+        if (fish < 25) return { error: 'Not enough fish' };
+
+        const newUnlocked = [...unlocked, themeKey];
+
+        await updateDoc(docRef, {
+            fish_count: fish - 25,
+            profile: {
+                ...profile,
+                cat: themeKey,
+                background: themeKey,
+                unlocked: newUnlocked,
+            },
+        });
+
+        return {
+            success: true,
+            newFish: fish - 25,
+            newUnlocked,
+        };
+    }
+
+    return { error: 'Student not found' };
+}
+
+// Just get student from student_id (no quiz update)
+export async function getStudentFromID2(studentId: string) {
+    try {
+        const q = query(
+            studentsCollection,
+            where('student_id', '==', studentId)
+        );
+        const snapshot = await getDocs(q);
         if (!snapshot.empty) {
             const doc = snapshot.docs[0];
-            const student = doc.data() as Student;
-            return { kibble_count: student.kibble_count };
+            return { ...(doc.data() as Student) };
         }
-
-        return null;
+        return { error: 'Student not found' };
     } catch (error) {
         console.error('Error fetching student:', error);
         throw new Error('Failed to fetch student.');
     }
-});
+}

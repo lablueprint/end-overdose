@@ -8,6 +8,8 @@
         "start": "next start",
         "lint": "next lint",
         "populate-students": "tsx src/helpers/script",
+        "populate-new-students": "tsx src/helpers/newScript",
+        "populate-new-schools": "tsx src/helpers/newSchoolsScript",
         "build-service-worker": "npx esbuild auth-service-worker.js --bundle --outfile=public/auth-service-worker.js"
     },
     "dependencies": {
@@ -35,6 +37,7 @@
         "react-slot-machine": "^1.0.0",
         "react-virtualized-auto-sizer": "^1.0.24",
         "react-window": "^1.8.10",
+        "recharts": "^2.15.3",
         "ts-node": "^10.9.2",
         "zustand": "^5.0.2"
     },
