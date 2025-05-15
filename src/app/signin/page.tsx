@@ -16,6 +16,8 @@ export default function SignInPage() {
     const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState<string | null>(null);
     const user = useUserStore((state) => state.user);
+    const setUid = useUserStore((state) => state.setUID);
+    const setUser = useUserStore((state) => state.setUser);
 
     console.log(user);
 
@@ -39,12 +41,17 @@ export default function SignInPage() {
                     error: 'Wrong student ID or password.',
                 };
             }
-            await signInStudent({
+            const result = await signInStudent({
                 firebase_id,
                 username: email,
                 password,
                 school,
             });
+            setUid(firebase_id);
+            if (result.result) {
+                setUser(result.result.user);
+            }
+
             // redirect to dashboard
             window.location.href = '/';
         } else {

@@ -1,3 +1,5 @@
+import { Admin } from './Admin';
+
 // First, let's define the new interface based on the schema
 interface Profile {
     unlocked: string[];
@@ -33,4 +35,10 @@ export type NewStudent = {
     fish_count: number;
     certificates: Record<string, string>; // Record is essentially a dictionary of string -> string
     hasLoggedIn: boolean;
+};
+
+export const isStudent = (
+    obj: NewStudent | Admin | null
+): obj is NewStudent => {
+    return (obj as NewStudent) !== null;
 };
