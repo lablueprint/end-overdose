@@ -146,70 +146,123 @@ export default function Courses() {
                         </p>
                     </div>
                 </div>
+
                 <div className={styles.flex}>
                     <div className={styles.flexLeft}>
+                        <h2 className={styles.subtitle}>My Courses</h2>
                         <Tabs>
-                            <TabList>
-                                <Tab>Title 1</Tab>
-                                <Tab>Title 2</Tab>
+                            <TabList
+                                className={styles.tabList}
+                                activeTabClassName="selected"
+                            >
+                                <Tab>All Courses</Tab>
+                                <Tab>Incomplete</Tab>
+                                <Tab>Complete</Tab>
                             </TabList>
 
                             <TabPanel>
-                                <h2>Any content 1</h2>
+                                <div className={styles.courseCard}>
+                                    <img
+                                        className={styles.cardImage}
+                                        src="/course1.svg"
+                                    ></img>
+                                    <div className={styles.cardTextContainer}>
+                                        <h2 className={styles.cardSubtitle}>
+                                            Recognizing Signs
+                                        </h2>
+                                        <p className={styles.cardBodyText}>
+                                            This course teaches you how to
+                                            recognize the signs of an overdose
+                                            and how to help save a life.
+                                        </p>
+                                        <p className={styles.cardLabel}>
+                                            Due{' '}
+                                            <span className={styles.red}>
+                                                February 12
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div className={styles.cardInfoContainer}>
+                                        <div className={styles.tagInProgress}>
+                                            <div
+                                                className={
+                                                    styles.tagInProgressIndicator
+                                                }
+                                            ></div>
+                                            <p>In Progress</p>
+                                        </div>
+                                        <div className={styles.button}>
+                                            <p>Start</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={styles.courseCard}>
+                                    <img
+                                        className={styles.cardImage}
+                                        src="/course2.svg"
+                                    ></img>
+                                    <div className={styles.cardTextContainer}>
+                                        <h2 className={styles.cardSubtitle}>
+                                            Symptoms of an Overdose
+                                        </h2>
+                                        <p className={styles.cardBodyText}>
+                                            This course teaches you how to
+                                            recognize the signs of an overdose
+                                            and how to help save a life.
+                                        </p>
+                                        <p className={styles.cardLabel}>
+                                            Due{' '}
+                                            <span className={styles.red}>
+                                                February 20
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div className={styles.cardInfoContainer}>
+                                        <div className={styles.tagCompleted}>
+                                            <div
+                                                className={
+                                                    styles.tagCompletedIndicator
+                                                }
+                                            ></div>
+                                            <p>Completed</p>
+                                        </div>
+                                        <div className={styles.button}>
+                                            <p>Review</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </TabPanel>
-                            <TabPanel>
-                                <h2>Any content 2</h2>
-                            </TabPanel>
+                            <TabPanel></TabPanel>
                         </Tabs>
-                        <div className={styles.card}>
-                            <img src="/course1.svg"></img>
-                            <div className={styles.cardTextContainer}>
-                                <h2 className={styles.cardTitle}>
-                                    Recognizing Signs
-                                </h2>
-                                <p className={styles.cardBodyText}>
-                                    This course teaches you how to recognize the
-                                    signs of an overdose and how to help save a
-                                    lifefdfadf.
-                                </p>
-                            </div>
-
-                            <div>
-                                <p>Due February 12</p>
-                            </div>
-                        </div>
                     </div>
                     <div className={styles.flexRight}>
-                        <div className={styles.card}>
-                            <div className={styles.cardHeading}>
-                                <p className={styles.cardHeadingText}>
+                        <div className={styles.sideCard}>
+                            <div className={styles.sideCardHeading}>
+                                <p className={styles.sideCardHeadingText}>
                                     About Us
                                 </p>
                             </div>
-                            <p className={styles.cardBodyText}>
+                            <p className={styles.sideCardBodyText}>
                                 We are a non-profit organization working to end
                                 drug-related overdose deaths through education,
                                 medical intervention, and public awareness.
                             </p>
-                            <div className={styles.cardLink}>
-                                <img src="/external-link.svg"></img>
-                                <p>Visit our site</p>
-                            </div>
+                            <p className={styles.cardLink}>Visit our site</p>
                         </div>
-                        <div className={styles.card}>
-                            <div className={styles.cardHeading}>
-                                <p className={styles.cardHeadingText}>
+                        <div className={styles.sideCard}>
+                            <div className={styles.sideCardHeading}>
+                                <p className={styles.sideCardHeadingText}>
                                     Resources
                                 </p>
                             </div>
-                            <p className={styles.cardBodyText}>
-                                We are a non-profit organization working to end
-                                drug-related overdose deaths through education,
-                                medical intervention, and public awareness.
+                            <p className={styles.sideCardBodyText}>
+                                If you or someone you know is struggling,
+                                support is available. Call SAMHSA’s free,
+                                confidential helpline anytime for help with
+                                mental health or substance use.
                             </p>
                             <div className={styles.cardLink}>
-                                <img src="/external-link.svg"></img>
-                                <p>Visit our site</p>
+                                <p>Get Support</p>
                             </div>
                         </div>
                     </div>

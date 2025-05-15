@@ -4,13 +4,15 @@
 }
 
 .header {
-    font-size: 5rem;
+    font-size: 3rem;
     position: absolute;
-    max-width: 18ch;
+    max-width: 15ch;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 .hero {
-    transform:translateY(20em);
+    transform:translateY(12em);
     position: relative;
 }
 
@@ -23,6 +25,7 @@
     right: 2em;
     bottom: 0;
     width: 40%;
+    max-width: 40em;
 }
 
 .text {
@@ -35,7 +38,10 @@
 
 .heading {
     color: #D7D7D7;
-    font-size: 3rem;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 0.25em;
 }
 
 .body {
@@ -46,8 +52,8 @@
 
 .flex {
     display: flex;
-    transform: translateY(25em);
-    gap: 4em;
+    transform: translateY(16em);
+    gap: 2em;
 }
 
 .flexLeft {
@@ -55,11 +61,27 @@
 }
 
 .flexRight {
-    width: calc(30% - 4em);
+    width: calc(30% - 2em);
 
 }
 
-.card {
+.subtitle {
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 0.5em;
+}
+
+.courseCard {
+    width: 100%;
+    box-shadow: 0px 2px 8px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 2em;
+    display: flex;
+}
+
+.sideCard {
     width: 100%;
     box-shadow: 0px 2px 8px 2px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
@@ -67,21 +89,39 @@
     margin-bottom: 2em;
 }
 
-.cardHeading {
+.sideCardHeading {
     width: 100%;
     background-color: #C15A58;
-    height: 4em;
-    color: #D7D7D7;
+    height: 3.25em;
+
     position: relative;
 }
 
-.cardHeadingText {
+.sideCardHeadingText {
     position: absolute;
     top: 50%;
-    left: 2.5%;
+    left: 5%;
     transform: translateY(-50%);
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
+    color: #FFF;
+    text-transform: uppercase;
+}
+
+.sideCardBodyText {
+    width: 90%;
+    margin: 1em auto;
+}
+
+.cardLink {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    text-align: center;
+    margin: 1.5em 0;
+}
+
+.cardImage {
+    margin: 1em;
 }
 
 .cardTitle {
@@ -93,12 +133,114 @@
     font-size: 1.5rem;
 }
 
-.cardBodyText {
+.cardTextContainer {
     width: 95%;
-    margin: 1em auto;
+    margin: 1em 0 0 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
 }
 
-.cardLink {
+.cardSubtitle {
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+}
+
+.cardBodyText {
+    max-width: 40ch;
+}
+
+.cardLabel {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.red {
+    color: #C01A18;
+}
+
+.cardInfoContainer {
+    width: 17em;
+    margin: 1em;
     display: flex;
-    margin: 0 auto;
+    flex-direction: column;
+    align-items: end;
+    justify-content: space-between;
+}
+
+.tagInProgress,
+.tagCompleted {
+    position: relative;
+    width: fit-content;
+    block-size: fit-content;
+}
+
+.tagInProgressIndicator,
+.tagCompletedIndicator {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 99em;
+    position: absolute;
+    left: 0.5em;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.tagInProgressIndicator {
+    background-color: #C68D1A;
+}
+
+.tagCompletedIndicator {
+    background-color: #02B56B;
+}
+
+.tagInProgress p,
+.tagCompleted p {
+    text-transform: uppercase;
+    border-radius: 99em;
+    padding: 0.5em 1em 0.5em 2em;
+    font-size: 0.75rem;
+}
+
+.tagInProgress p {
+    background-color: #F7DEA9;
+    color: #C68D1A;
+}
+
+.tagCompleted p {
+    background-color: #02b56a3f;
+    color: #02B56B;
+}
+
+.button {
+    position: relative;
+    width: fit-content;
+    block-size: fit-content;
+}
+
+.button p {
+    text-transform: uppercase;
+    background-color: #000;
+    border-radius: 0.5em;
+    padding: 0.5em 1em;
+    font-size: 1rem;
+    color: #FFF;
+}
+
+.tabList {
+    border: none !important;
+    margin-bottom: 2em;
+}
+
+.tabList li {
+    color: #929292;
+}
+
+.tabList .selected {
+    color: #C01A18;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px solid #C01A18;
 }

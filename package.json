@@ -24,6 +24,7 @@
         "@mui/material-nextjs": "^6.1.8",
         "@types/axios": "^0.9.36",
         "axios": "^1.8.1",
+        "feather-icons": "^4.29.2",
         "firebase": "^11.0.2",
         "framer-motion": "^12.4.0",
         "html-to-image": "^1.11.13",
