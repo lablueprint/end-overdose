@@ -17,12 +17,12 @@ export default function Courses() {
     const [opioidCourseProgress, setOpioidCourseProgress] = useState(
         isStudent(user) ? user.courses.opioidCourse.courseProgress : 0
     );
-    const [quizCompletion, setQuizCompletion] = useState(0);
+    const [quizzesCompleted, setQuizzesCompleted] = useState(
+        isStudent(user) ? user.courses.opioidCourse.quizzes.length : 0
+    );
     const [mapIndex, setMapIndex] = useState(
-        Math.max(
-            0,
-            2 * Math.round((opioidCourseProgress / 100) * opiumLessonNum) - 1
-        ) + quizCompletion
+        Math.round((opioidCourseProgress / 100) * opiumLessonNum) +
+            quizzesCompleted
     );
 
     useEffect(() => {
@@ -35,15 +35,9 @@ export default function Courses() {
                         user.courses.opioidCourse.courseProgress
                     );
                     setMapIndex(
-                        Math.max(
-                            0,
-                            2 *
-                                Math.round(
-                                    (opioidCourseProgress / 100) *
-                                        opiumLessonNum
-                                ) -
-                                1
-                        ) + quizCompletion
+                        Math.round(
+                            (opioidCourseProgress / 100) * opiumLessonNum
+                        ) + quizzesCompleted
                     );
                 }
             } catch (error) {
@@ -54,7 +48,12 @@ export default function Courses() {
         };
 
         fetchOpioidCourseProgress();
-    }, [user, quizCompletion]);
+        console.log(
+            'lessons completed: ' +
+                Math.round((opioidCourseProgress / 100) * opiumLessonNum)
+        );
+        console.log('quizzes completed ' + quizzesCompleted);
+    }, [user, quizzesCompleted]);
 
     /**   const coursesData = [
         {
@@ -186,20 +185,7 @@ export default function Courses() {
                         justifyContent: 'center',
                         margin: '1rem 0',
                     }}
-                >
-                    <button
-                        onClick={() =>
-                            setQuizCompletion((prev) => Math.max(prev - 1, 0))
-                        }
-                    >
-                        Remove Quiz Completion
-                    </button>
-                    <button
-                        onClick={() => setQuizCompletion((prev) => prev + 1)}
-                    >
-                        Add Quiz Completion
-                    </button>
-                </div>
+                ></div>
             </div>
             <div className={styles.mapContainer}>
                 {' '}
