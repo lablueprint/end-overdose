@@ -75,15 +75,15 @@
     font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
-    width: 100%;  /* Full width */
+    width: 100%; /* Full width */
 }
 
 .feedback.correct {
-    color: green;  /* Correct answer color */
+    color: green; /* Correct answer color */
 }
 
 .feedback.wrong {
-    color: red;  /* Wrong answer color */
+    color: red; /* Wrong answer color */
 }
 
 .dialog-container {
@@ -95,16 +95,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem;  
-    
+    padding: 1rem;
 }
 
 .dialog-panel {
     max-width: 32rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    background-color: #ffffff; 
-    padding: 3rem; 
+    background-color: #ffffff;
+    padding: 3rem;
     border-radius: 5px;
 }
 
@@ -175,10 +174,30 @@
     transform: scale(1.1); 
 }
 .feedback-image {
-    animation: fadeIn 0.3s ease-in-out forwards, fadeOut 0.3s ease-in-out forwards 0.3s;
+    animation:
+        fadeIn 0.3s ease-in-out forwards,
+        fadeOut 0.3s ease-in-out forwards 0.3s;
 }
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-@keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
 
 .cat-image-container {
     top: -50px;
@@ -201,9 +220,9 @@
 }
 
 .tf-question-container {
+    background-color: #161c2e;
     display: flex;
     flex-direction: column; 
-    background-color: #161C2E;
     border-radius: 10px;
     position: relative;
     color: white;
@@ -248,17 +267,17 @@ button:disabled {
 }
 
 .bg-green {
-    background-color: #3E7829;
+    background-color: #3e7829;
     padding: 5px 30px;
 }
 
 .bg-red {
-    background-color: #B51515;
+    background-color: #b51515;
     padding: 5px 30px;
 }
 
 .bg-light {
-    background-color: #F0EEF7;
+    background-color: #f0eef7;
     color: black;
     padding: 5px 30px;
 }

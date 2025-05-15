@@ -1,6 +1,9 @@
 import styles from './SchoolsTable.module.css';
+import { useRouter } from 'next/navigation';
 
 export default function SchoolsTable({ schools }) {
+    const router = useRouter();
+
     return (
         <div className={styles.tableContainer}>
             <table className={styles.table}>
@@ -33,7 +36,14 @@ export default function SchoolsTable({ schools }) {
                                 {school.average_score}
                             </td>
                             <td className={styles.tableCell}>
-                                <button className={styles.viewButton}>
+                                <button
+                                    className={styles.viewButton}
+                                    onClick={() =>
+                                        router.push(
+                                            `eo-admin/${school.school_id}`
+                                        )
+                                    }
+                                >
                                     View Stats
                                 </button>
                             </td>
