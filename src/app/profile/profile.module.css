@@ -291,7 +291,7 @@
     height: 40px;
     /* background: transparent; Fully transparent background */
     background-color: rgb(255, 255, 255, .6);
-    border: black 2px solid; /* Black border */
+    /* border: black 2px solid; Black border */
     color: black; /* Text color */
     border-radius: 5px; /* Optional: Slight rounding */
     font-size: 18px;
@@ -333,41 +333,26 @@
     align-items: center;
   }
   
-  /* Close Button */
-  .closeButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-  }
-  
-  .closeButton:hover {
-    color: red;
-  }
+
   
   /* Main Content Layout */
   .dialogContent {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     width: 100%;
+    overflow: hidden;
   }
 
   .leftDialog {
     height: 100%;
     width: 50%;
-    padding: 20px;
+    padding: 10px;
   }
 
   .rightDialog {
     height: 100%;
     width: 50%;
-    padding: 20px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -379,7 +364,6 @@
     width: 100%;
     height: 100%;
     aspect-ratio: 1 / 1;
-    border: 2px solid black;
     border-radius: 10px;
     position: relative;
   }
@@ -460,30 +444,41 @@
   /**********/
 
   .gridLabel {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   margin-bottom: 10px;
   color: #333;
 }
 
-.backgroundGrid {
+/* .backgroundGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-}
+} */
 
 .imageSquare {
-  width: 40px;
-  height: 40px;
-  border: none;
+  width: 100px;
+  height: 100px;
   padding: 0;
-  border-radius: 5px;
   overflow: hidden;
   cursor: pointer;
   background-color: transparent;
   display: flex;
+  border-radius: 15px;
   align-items: center;
   justify-content: center;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.imageSquare:hover {
+  transform: scale(1.05);
+}
+
+/* whenever it’s the one the user has picked… */
+.imageSquareSelected {
+  border-color: #000;               /* black instead of blue */
+  box-shadow: 0 0 0 2px rgba(0, 0, 0);  
 }
 
 .dialog {
@@ -499,16 +494,16 @@
     overflow: hidden;
   }
   
-  .dialogContent {
+  /* .dialogContent {
     display: flex;
     flex-direction: row;
     width: 100%;
     height: 100%;
     max-height: 80vh;
     overflow: hidden;
-  }
+  } */
   
-  .leftDialog {
+  /* .leftDialog {
     height: 100%;
     width: 50%;
     display: flex;
@@ -516,14 +511,14 @@
     align-items: center;
     padding: 1rem;
     overflow: hidden;
-  }
+  } */
   
-  .rightDialog {
+  /* .rightDialog {
     height: 100%;
     width: 50%;
     padding: 1rem;
     overflow-y: auto;
-  }
+  } */
   
   .colorPreview {
     position: relative;
@@ -548,21 +543,21 @@
   .backgroundGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    column-gap: 55px;
+    row-gap: 1rem;
+    padding-bottom: 2rem;
+
   }
   
   .colorSquare,
   .catButton,
   .backgroundButton {
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 0.5rem;
+    width: 100px;
+    height: 100px;
     cursor: pointer;
     padding: 0;
-    border: 2px solid black; /* Light gray border */
     box-sizing: border-box;
+    border-radius: 10px;
   }
 
   /****************************
@@ -595,25 +590,57 @@
   
   .closeButton {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: transparent;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 40px;
+    background: black;
+    color: white;
     border: none;
-    font-size: 1.25rem;
+    font-size: 16px;
+    border-radius: 8px;
     cursor: pointer;
-    z-index: 10;
+    transition: transform 0.2s ease, color 0.2s ease; /* ← smooth animation */
+  }
+  
+  .closeButton:hover {
+    transform: translateX(-50%) scale(1.05);
+  }
+
+  .introText {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding-left: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 1rem;
+    margin-top: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .description {
+    text-align: left;
+    font-size: 1rem;
+    width: 100%;
+    color: grey;
+    padding-left: 1rem;
+    padding-bottom: 0.75rem;
   }
   
   /* === Dialog Content Layout === */
-  .dialogContent {
+  /* .dialogContent {
     display: flex;
     flex-direction: row;
     width: 100%;
     height: 100%;
     max-height: 80vh;
     overflow: hidden;
-    gap: 1rem;
-  }
+    gap: 0rem;
+  } */
   
   /* === Left Panel (Preview Area) === */
   .leftDialog {
@@ -622,13 +649,13 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    padding-bottom: 100px;
   }
   
   .colorPreview {
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
-    border-radius: 1rem;
     overflow: hidden;
     background-color: #f0f0f0;
   }
@@ -663,14 +690,13 @@
   .colorSquare {
     width: 100%;
     aspect-ratio: 1 / 1;
-    border: 2px solid #ccc;
     border-radius: 0.5rem;
     cursor: pointer;
     box-sizing: border-box;
   }
   
   /* === Cat Image Grid === */
-  .catGrid {
+  /* .catGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
     gap: 0.5rem;
@@ -682,32 +708,30 @@
     width: 100%;
     aspect-ratio: 1 / 1;
     background: transparent;
-    border: 2px solid #ccc;
     border-radius: 0.5rem;
     cursor: pointer;
     padding: 0;
     box-sizing: border-box;
   }
-  
+   */
   /* === Background Grid === */
-  .backgroundGrid {
+  /* .backgroundGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 0.5rem;
     width: 100%;
     padding: 0.25rem;
-  }
+  } */
   
-  .backgroundButton {
+  /* .backgroundButton {
     width: 100%;
     aspect-ratio: 1 / 1;
     background: transparent;
-    border: 2px solid #ccc;
-    border-radius: 0.5rem;
+    border-radius: 20rem;
     cursor: pointer;
     padding: 0;
     box-sizing: border-box;
-  }
+  } */
   
   .backgroundImage {
     position: absolute;

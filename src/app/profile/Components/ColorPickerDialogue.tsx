@@ -67,20 +67,20 @@ export default function ColorPickerDialog({
 
     return (
         <Transition show={isOpen} as={Fragment}>
+            <div className={styles.introText}>Edit Profile</div>
             <Dialog
                 as="div"
                 className={styles.dialogContainer}
                 onClose={() => setIsOpen(false)}
             >
                 <div className={styles.dialog}>
+                    <div className={styles.introText}>EDIT PROFILE</div>
                     {/* Close Button */}
-                    <button
-                        className={styles.closeButton}
-                        onClick={() => setIsOpen(false)}
-                    >
-                        X
-                    </button>
-
+                    <div className={styles.description}>
+                        {' '}
+                        Personalize your Narcat&apos;s look with fun outfits and
+                        backgrounds that match your vibe!
+                    </div>
                     <div className={styles.dialogContent}>
                         {/* Left Side: Large Preview */}
                         <div className={styles.leftDialog}>
@@ -140,13 +140,19 @@ export default function ColorPickerDialog({
                                 {/* BACKGROUNDS */}
                                 <div>
                                     <h3 className={styles.gridLabel}>
-                                        Backgrounds
+                                        BACKGROUNDS
                                     </h3>
                                     <div className={styles.backgroundGrid}>
                                         {backgrounds.map((bg, index) => (
                                             <button
                                                 key={index}
-                                                className={styles.imageSquare}
+                                                className={[
+                                                    styles.imageSquare,
+                                                    bg === selectedBackground &&
+                                                        styles.imageSquareSelected,
+                                                ]
+                                                    .filter(Boolean)
+                                                    .join(' ')}
                                                 onClick={async () => {
                                                     setSelectedBackground(bg);
                                                     await handleChangeBackground(
@@ -155,10 +161,13 @@ export default function ColorPickerDialog({
                                                 }}
                                             >
                                                 <Image
-                                                    src={bg}
+                                                    src={bg.replace(
+                                                        /-profile(\.\w+)$/,
+                                                        '-thumbnail$1'
+                                                    )}
                                                     alt={`Background ${index}`}
-                                                    width={40}
-                                                    height={40}
+                                                    width={100}
+                                                    height={100}
                                                     className={
                                                         styles.backgroundButton
                                                     }
@@ -170,12 +179,20 @@ export default function ColorPickerDialog({
 
                                 {/* CATS */}
                                 <div>
-                                    <h3 className={styles.gridLabel}>Cats</h3>
+                                    <h3 className={styles.gridLabel}>
+                                        NARCAT AVATARS
+                                    </h3>
                                     <div className={styles.catGrid}>
                                         {cats.map((cat, index) => (
                                             <button
                                                 key={index}
-                                                className={styles.imageSquare}
+                                                className={[
+                                                    styles.imageSquare,
+                                                    cat === selectedCat &&
+                                                        styles.imageSquareSelected,
+                                                ]
+                                                    .filter(Boolean)
+                                                    .join(' ')}
                                                 onClick={async () => {
                                                     setSelectedCat(cat);
                                                     await handleChangeCat(cat);
@@ -184,8 +201,8 @@ export default function ColorPickerDialog({
                                                 <Image
                                                     src={cat}
                                                     alt={`Cat ${index}`}
-                                                    width={40}
-                                                    height={40}
+                                                    width={100}
+                                                    height={100}
                                                     className={styles.catButton}
                                                 />
                                             </button>
@@ -194,6 +211,13 @@ export default function ColorPickerDialog({
                                 </div>
                             </div>
                         </div>
+                        {/* Close Button */}
+                        <button
+                            className={styles.closeButton}
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Save
+                        </button>
                     </div>
                 </div>
             </Dialog>
