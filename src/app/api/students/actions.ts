@@ -14,6 +14,9 @@ import {
     query,
     setDoc,
     where,
+    addDoc,
+    deleteDoc,
+    deleteField,
 } from 'firebase/firestore';
 import { getSchoolData } from '@/app/api/schools/actions'; // Make sure this import is correct
 // import { studentsCollection } from './firebase'; // Adjust import as needed
@@ -383,5 +386,54 @@ export async function getStudentFromID2(studentId: string) {
     } catch (error) {
         console.error('Error fetching student:', error);
         throw new Error('Failed to fetch student.');
+    }
+}
+
+// Create a student (called in api/schools to add student to school)
+export async function createStudent(studentId: string, schoolId: string) {
+    try {
+        const schoolDocRef = doc(db, 'newSchools', schoolId);
+        const schoolDoc = await getDoc(schoolDocRef);
+
+        if (!schoolDoc.exists()) {
+            return { error: 'School not found' };
+        }
+
+        const schoolData = schoolDoc.data();
+        const schoolName = schoolData.school_name;
+
+        const newStudent: NewStudent = {
+            student_id: studentId,
+            school_name: schoolName,
+            profile: {
+                unlocked: ['narcat'],
+                cat: 'narcat',
+                background: 'narcat',
+                nameplate: '',
+            },
+            courses_average_score: 0,
+            all_courses_completed: false,
+            courses: {
+                opioidCourse: {
+                    courseProgress: 0,
+                    courseScore: 0,
+                    quizzes: [],
+                },
+            },
+            fish_count: 0,
+            certificates: {},
+            hasLoggedIn: false,
+        };
+
+        //add to Firestore with auto-generated id
+        const newDocRef = await addDoc(
+            collection(db, 'newStudents'),
+            newStudent
+        );
+
+        return { success: true, firebase_id: newDocRef.id };
+    } catch (error) {
+        console.error('Error creating student:', error);
+        return { error: 'Failed to create student' };
     }
 }
