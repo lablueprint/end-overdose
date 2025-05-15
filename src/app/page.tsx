@@ -1,66 +1,180 @@
 'use client';
-import React, { useState } from 'react';
-import './home.css';
+import { useUserStore } from '@/store/userStore';
+import styles from './page.module.css';
+import AuthWrap from '@/components/AuthWrap';
+import { useState, useEffect } from 'react';
+import { isStudent } from '@/types/Student';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
-function Home() {
-    const [currentPage, setCurrentPage] = useState(0);
-    const pages = [
-        { title: 'Welcome to End Overdose!' },
-        { title: 'Title 2' },
-        { title: 'Title 3' },
-        { title: 'Title 4' },
-    ];
+export default function Home() {
+    const [opioidCourseProgress, setOpioidCourseProgress] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [currentLevel, setCurrentLevel] = useState(2);
+    // Course progress data
+    const user = useUserStore((state) => state.user);
+    useEffect(() => {
+        const fetchOpioidCourseProgress = async () => {
+            try {
+                if (isStudent(user)) {
+                    // short-circuit evaluation, only checking role value if it exists
+                    // checking that the user is a student by checking against admin attributes
+                    setOpioidCourseProgress(
+                        user.course_completion.opioidCourse.courseProgress
+                    );
+                }
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const handleNext = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, pages.length - 1));
-    };
-
-    const handlePrev = () => {
-        setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
-    };
-
-    const handleArrowNavigation = (direction: string) => {
-        if (direction === 'next') {
-            handleNext();
-        } else {
-            handlePrev();
-        }
-    };
+        fetchOpioidCourseProgress();
+    }, [user]);
 
     return (
-        <div className="onboarding-container">
-            <h1 className="onboarding-title">{pages[currentPage].title}</h1>
-            <div className="onboarding-placeholder-container">
-                <button
-                    className="arrow-button left-arrow"
-                    onClick={() => handleArrowNavigation('prev')}
-                    disabled={currentPage === 0}
-                    aria-label="Previous"
-                >
-                    &#9664;
-                </button>
-                <div className="onboarding-placeholder">
-                    Onboarding Placeholder
+        <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
+            <div className={styles.container}>
+                <div className={styles.header}>
+                    <h1>Welcome back, Mackenzie!</h1>
                 </div>
-                <button
-                    className="arrow-button right-arrow"
-                    onClick={() => handleArrowNavigation('next')}
-                    disabled={currentPage === pages.length - 1}
-                    aria-label="Next"
-                >
-                    &#9654;
-                </button>
+                <div className={styles.hero}>
+                    <img className={styles.banner} src="/banner.svg" />
+                    <img className={styles.narcat} src="/narcat.svg" />
+                    <div className={styles.text}>
+                        <h2 className={styles.heading}>Narcat enters space!</h2>
+                        <p className={styles.body}>
+                            Follow Narcat through space and learn to recognize
+                            the signs of an overdose—one planet at a time!
+                        </p>
+                    </div>
+                </div>
+
+                <div className={styles.flex}>
+                    <div className={styles.flexLeft}>
+                        <h2 className={styles.subtitle}>My Courses</h2>
+                        <Tabs>
+                            <TabList
+                                className={styles.tabList}
+                                activeTabClassName="selected"
+                            >
+                                <Tab>All Courses</Tab>
+                                <Tab>Incomplete</Tab>
+                                <Tab>Complete</Tab>
+                            </TabList>
+
+                            <TabPanel>
+                                <div className={styles.courseCard}>
+                                    <img
+                                        className={styles.cardImage}
+                                        src="/course1.svg"
+                                    ></img>
+                                    <div className={styles.cardTextContainer}>
+                                        <h2 className={styles.cardSubtitle}>
+                                            Recognizing Signs
+                                        </h2>
+                                        <p className={styles.cardBodyText}>
+                                            This course teaches you how to
+                                            recognize the signs of an overdose
+                                            and how to help save a life.
+                                        </p>
+                                        <p className={styles.cardLabel}>
+                                            Due{' '}
+                                            <span className={styles.red}>
+                                                February 12
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div className={styles.cardInfoContainer}>
+                                        <div className={styles.tagInProgress}>
+                                            <div
+                                                className={
+                                                    styles.tagInProgressIndicator
+                                                }
+                                            ></div>
+                                            <p>In Progress</p>
+                                        </div>
+                                        <a
+                                            href="/courses"
+                                            className={styles.button}
+                                        >
+                                            <p>Start</p>
+                                        </a>
+                                    </div>
+                                </div>
+                                {/* <div className={styles.courseCard}>
+                                    <img
+                                        className={styles.cardImage}
+                                        src="/course2.svg"
+                                    ></img>
+                                    <div className={styles.cardTextContainer}>
+                                        <h2 className={styles.cardSubtitle}>
+                                            Symptoms of an Overdose
+                                        </h2>
+                                        <p className={styles.cardBodyText}>
+                                            This course teaches you how to
+                                            recognize the signs of an overdose
+                                            and how to help save a life.
+                                        </p>
+                                        <p className={styles.cardLabel}>
+                                            Due{' '}
+                                            <span className={styles.red}>
+                                                February 20
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div className={styles.cardInfoContainer}>
+                                        <div className={styles.tagCompleted}>
+                                            <div
+                                                className={
+                                                    styles.tagCompletedIndicator
+                                                }
+                                            ></div>
+                                            <p>Completed</p>
+                                        </div>
+                                        <div className={styles.button}>
+                                            <p>Review</p>
+                                        </div>
+                                    </div>
+                                </div> */}
+                            </TabPanel>
+                            <TabPanel></TabPanel>
+                        </Tabs>
+                    </div>
+                    <div className={styles.flexRight}>
+                        <div className={styles.sideCard}>
+                            <div className={styles.sideCardHeading}>
+                                <p className={styles.sideCardHeadingText}>
+                                    About Us
+                                </p>
+                            </div>
+                            <p className={styles.sideCardBodyText}>
+                                We are a non-profit organization working to end
+                                drug-related overdose deaths through education,
+                                medical intervention, and public awareness.
+                            </p>
+                            <p className={styles.cardLink}>Visit our site</p>
+                        </div>
+                        <div className={styles.sideCard}>
+                            <div className={styles.sideCardHeading}>
+                                <p className={styles.sideCardHeadingText}>
+                                    Resources
+                                </p>
+                            </div>
+                            <p className={styles.sideCardBodyText}>
+                                If you or someone you know is struggling,
+                                support is available. Call SAMHSA’s free,
+                                confidential helpline anytime for help with
+                                mental health or substance use.
+                            </p>
+                            <div className={styles.cardLink}>
+                                <p>Get Support</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className="onboarding-pagination">
-                {pages.map((_, index) => (
-                    <span
-                        key={index}
-                        className={`dot ${index === currentPage ? 'active' : ''}`}
-                    />
-                ))}
-            </div>
-        </div>
+        </AuthWrap>
     );
 }
-
-export default Home;
