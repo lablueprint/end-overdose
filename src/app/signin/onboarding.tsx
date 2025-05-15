@@ -192,7 +192,7 @@ export default function Onboarding() {
                 console.log('Nameplate Final:', namePlateFinal);
                 setTimeout(() => {
                     window.location.href = '/';
-                }, 100);
+                }, 1000);
                 //window.location.href = '/';
             } catch (err) {
                 console.error('Update failed:', err);
