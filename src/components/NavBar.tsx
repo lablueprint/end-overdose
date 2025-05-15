@@ -134,8 +134,7 @@ export default function NavBar() {
     if (hideNavBar) return null;
     return (
         <nav
-            className={`bg-black min-h-screen w-64 p-4 shadow-md flex flex-col justify-start transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}
-        >
+            className={`bg-black p-4 shadow-md h-full flex flex-col transition-all duration-300 ${collapsed ? 'w-16' : 'w-55'}`}>
             <div className="flex-none mb-6 flex items-center">
                 <div
                     className={

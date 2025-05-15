@@ -39,7 +39,7 @@ export default async function RootLayout({
                     <div className="w-1/8 flex-shrink-0 bg-black text-white">
                         <NavBar />
                     </div>
-                    <div className="flex-1 overflow-auto">
+                    <div className="flex-1">
                         <InitAuthState>{children}</InitAuthState>
                     </div>
                 </div>
