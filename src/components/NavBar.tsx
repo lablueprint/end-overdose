@@ -1,10 +1,8 @@
 'use client';
-import styles from './NavBar.css';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Student } from '@/types/Student';
 import { logout } from '@/firebase/auth';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
@@ -13,8 +11,7 @@ import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-import HomeIcon from '@mui/icons-material/Home';
-import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import BookIcon from '@mui/icons-material/MenuBook';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -102,18 +99,13 @@ export default function NavBar() {
             setTabs([
                 {
                     href: '/courses',
-                    tab: 'Learn',
-                    icon: <HomeIcon />,
+                    tab: 'Courses',
+                    icon: <BookIcon />,
                 },
                 {
                     href: '/profile',
                     tab: 'Profile',
                     icon: <PermIdentityIcon />,
-                },
-                {
-                    href: '/quiz',
-                    tab: 'Certificates',
-                    icon: <WorkspacePremiumIcon />,
                 },
                 {
                     href: '/store',
@@ -142,7 +134,7 @@ export default function NavBar() {
     if (hideNavBar) return null;
     return (
         <nav
-            className={`bg-black p-4 shadow-md h-full flex flex-col transition-all duration-300 ${collapsed ? 'w-16' : 'w-55'}`}
+            className={`bg-black min-h-screen w-64 p-4 shadow-md flex flex-col justify-start transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}
         >
             <div className="flex-none mb-6 flex items-center">
                 <div

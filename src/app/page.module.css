@@ -1,18 +1,18 @@
 .container {
     width: 90%;
-    margin: 6em auto 0 auto;
+    margin: 1.2em auto 0 auto;
 }
 
 .header {
-    font-size: 3rem;
-    position: absolute;
+    font-size: 1.9rem;
+    /* position: absolute; */
     max-width: 15ch;
     text-transform: uppercase;
     font-weight: bold;
 }
 
 .hero {
-    transform:translateY(12em);
+    transform:translateY(1.3rem);
     position: relative;
 }
 
@@ -24,7 +24,7 @@
     position: absolute;
     right: 2em;
     bottom: 0;
-    width: 40%;
+    width: 27%;
     max-width: 40em;
 }
 
@@ -38,10 +38,10 @@
 
 .heading {
     color: #D7D7D7;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     text-transform: uppercase;
-    margin-bottom: 0.25em;
+    margin-bottom: 0.2em;
 }
 
 .body {
@@ -52,7 +52,7 @@
 
 .flex {
     display: flex;
-    transform: translateY(16em);
+    transform: translateY(3.2em);
     gap: 2em;
 }
 
@@ -86,13 +86,13 @@
     box-shadow: 0px 2px 8px 2px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     overflow: hidden;
-    margin-bottom: 2em;
+    margin-bottom: 1.2em;
 }
 
 .sideCardHeading {
     width: 100%;
     background-color: #C15A58;
-    height: 3.25em;
+    height: 2.5em;
 
     position: relative;
 }
@@ -103,21 +103,22 @@
     left: 5%;
     transform: translateY(-50%);
     font-weight: bold;
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: #FFF;
     text-transform: uppercase;
 }
 
 .sideCardBodyText {
     width: 90%;
-    margin: 1em auto;
+    margin: 0.5em auto;
+    font-size: 0.9rem;
 }
 
 .cardLink {
     text-transform: uppercase;
     font-size: 0.75rem;
     text-align: center;
-    margin: 1.5em 0;
+    margin: 1em 0;
 }
 
 .cardImage {
