@@ -60,6 +60,7 @@ export default function OpioidHome() {
     const [progressLoaded, setProgressLoaded] = useState(false);
     const [showExitModal, setShowExitModal] = useState(false);
     const router = useRouter();
+    console.log(user);
 
     // TODO: make the isStudent type guard work
     useEffect(() => {
@@ -142,40 +143,53 @@ export default function OpioidHome() {
         </div>
     ));
 
-    const handleNextLesson = () => {
+    const handleNextLesson = async () => {
         if (
             currentLesson < totalLessons &&
             user &&
-            'course_completion' in user &&
+            'courses' in user &&
             isStudent(user)
         ) {
-            setLesson((prevIndex) => {
-                const nextIndex = prevIndex + 1;
-                if (nextIndex > highestReachedLesson) {
-                    setHighestReachedLesson(nextIndex);
-                    const updatedOpioidCourse = user.courses.opioidCourse || {
-                        courseProgress: 0,
-                    };
+            const nextIndex = currentLesson + 1;
 
-                    // Update global state with new course progress
-                    useUserStore.getState().setUser({
-                        ...user,
-                        courses: {
-                            ...user.courses,
-                            opioidCourse: {
-                                ...updatedOpioidCourse,
-                                courseProgress:
-                                    (nextIndex / totalLessons) * 100,
-                            },
+            if (nextIndex > highestReachedLesson) {
+                setHighestReachedLesson(nextIndex);
+
+                const updatedOpioidCourse = user.courses.opioidCourse || {
+                    courseProgress: 0,
+                    courseScore: 0,
+                    quizzes: [],
+                };
+
+                const progress = (nextIndex / totalLessons) * 100;
+
+                // Update Zustand store
+                useUserStore.getState().setUser({
+                    ...user,
+                    courses: {
+                        ...user.courses,
+                        opioidCourse: {
+                            ...updatedOpioidCourse,
+                            courseProgress: progress,
                         },
-                    });
-                }
+                    },
+                });
 
-                console.log('continue');
-                return nextIndex;
-            });
+                // Sync with Firebase
+                await updateCourseProgress(
+                    user.student_id,
+                    'opioidCourse',
+                    progress
+                );
+            }
+
+            // update local lesson state
+            setLesson(nextIndex);
+
+            window.location.href = '/quiz';
         }
     };
+
     const lessonData = lessons[currentLesson] as Lesson;
 
     const handleExitClick = () => {

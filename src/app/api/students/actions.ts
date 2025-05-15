@@ -275,7 +275,7 @@ export async function updateCourseProgress(
             return { error: 'Student not found' };
         }
 
-        const userRef = doc(db, 'students', studentWithID.id); // getting actual user's id
+        const userRef = doc(db, 'newStudents', studentWithID.id); // getting actual user's id
         const userDoc = await getDoc(userRef);
 
         if (!userDoc.exists()) {
@@ -283,7 +283,7 @@ export async function updateCourseProgress(
         }
 
         await updateDoc(userRef, {
-            [`course_completion.${courseName}.courseProgress`]: progress, // Update the courseProgress field
+            [`courses.${courseName}.courseProgress`]: progress, // Update the courseProgress field
         });
 
         return { success: true };
