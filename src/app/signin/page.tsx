@@ -4,8 +4,9 @@ import styles from './signin.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { validateUserCredentials } from '../api/students/actions';
 import { useState, useEffect } from 'react';
-import { useUserStore } from '@/store/userStore';
 import { getSchoolNames } from '@/app/api/generalData/actions';
+import { setCookie } from '@/firebase/cookies';
+import { useUserStore } from '@/store/userStore';
 
 type Inputs = {
     school: string;
@@ -17,6 +18,7 @@ export default function SignInPage() {
     const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState<string | null>(null);
     const [schools, setSchools] = useState<string[]>([]);
+    const { setUser, setRole, setUID, setProgress } = useUserStore();
 
     // Fetch schools using the server action
     useEffect(() => {
@@ -60,12 +62,21 @@ export default function SignInPage() {
                     error: 'Wrong student ID or password.',
                 };
             }
-            await signInStudent({
+            const result = await signInStudent({
                 firebase_id,
                 username: email,
                 password,
                 school,
             });
+            // set the user in the store
+            if (result.result) {
+                // set the cookie
+                setCookie('student-token', JSON.stringify({ firebase_id, username: email, password, school }));
+                setUser(result.result?.user);
+                setRole(role);
+                setUID(firebase_id);
+                // setProgress(0);
+            }
             // redirect to dashboard
             window.location.href = '/';
         } else {
