@@ -11,6 +11,7 @@ import {
     sendEmailVerification,
 } from 'firebase/auth';
 import { addAdmin } from '@/app/api/admins/actions';
+import { getSchoolNames } from '@/app/api2/generalData/actions';
 
 type Inputs = {
     role: string;
@@ -25,6 +26,7 @@ const SignUpPage = () => {
     const router = useRouter();
     const [error, setError] = useState('');
     const [success, setSuccess] = useState<boolean>(false);
+    const [schools, setSchools] = useState<string[]>([]);
 
     const roles = ['School Admin', 'EO Admin'];
     const roleValues = roles.map((role) => (
@@ -33,7 +35,22 @@ const SignUpPage = () => {
         </option>
     ));
 
-    const schools = ['UCLA', 'USC', 'UCSD', 'UCI', 'UCB'];
+    // Fetch schools using the server action
+    useEffect(() => {
+        const fetchSchools = async () => {
+            try {
+                const schoolList = await getSchoolNames();
+                setSchools(schoolList);
+            } catch (error) {
+                console.error('Error fetching schools:', error);
+                setError('Failed to load schools. Please try again later.');
+            }
+        };
+
+        fetchSchools();
+    }, []);
+
+    // Create school options from fetched data
     const schoolValues = schools.map((school) => (
         <option key={school} value={school}>
             {school}
