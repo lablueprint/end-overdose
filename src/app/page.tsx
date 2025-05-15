@@ -39,7 +39,10 @@ export default function Home() {
                 <div className={styles.header}>
                     <h1>
                         Welcome back,{' '}
-                        {isStudent(user) ? user.profile.nameplate : 'User'}!
+                        {isStudent(user) && user.profile?.nameplate
+                            ? user.profile.nameplate
+                            : 'User'}
+                        !
                     </h1>
                 </div>
                 <div className={styles.hero}>
