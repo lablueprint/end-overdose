@@ -321,7 +321,7 @@
   }
   
   /* Dialog Box */
-  .dialog {
+  .dialogContainer > .dialog {
     position: relative;
     width: 60%;
     height: 60%;
@@ -336,7 +336,7 @@
 
   
   /* Main Content Layout */
-  .dialogContent {
+  .dialogContainer > .dialog .dialogContent {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -481,7 +481,7 @@
   box-shadow: 0 0 0 2px rgba(0, 0, 0);  
 }
 
-.dialog {
+/* .dialog {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -492,7 +492,7 @@
     background-color: white;
     border-radius: 1rem;
     overflow: hidden;
-  }
+  } */
   
   /* .dialogContent {
     display: flex;
@@ -542,9 +542,8 @@
   .catGrid,
   .backgroundGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-    column-gap: 55px;
-    row-gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    row-gap: 2rem;
     padding-bottom: 2rem;
 
   }
@@ -573,7 +572,7 @@
     background-color: rgba(0, 0, 0, 0.5);
   }
   
-  .dialog {
+  /* .dialog {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -586,7 +585,7 @@
     overflow: hidden;
     position: relative;
     padding: 1rem;
-  }
+  } */
   
   .closeButton {
     position: absolute;
