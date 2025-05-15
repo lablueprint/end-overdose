@@ -36,7 +36,7 @@ export default function NavBar() {
     }
 
     const [tabs, setTabs] = useState<Tab[]>([]);
-    console.log('role:', role);
+    // console.log('role:', role);
 
     // Toggle sidebar collapse state
     const toggleSidebar = () => {
