@@ -3,7 +3,8 @@ import { signInStudent, signInAdmin } from '@/firebase/auth';
 import styles from './signin.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { validateUserCredentials } from '../api/students/actions';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getSchoolNames } from '@/app/api2/generalData/actions';
 
 type Inputs = {
     school: string;
@@ -14,6 +15,29 @@ type Inputs = {
 export default function SignInPage() {
     const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState<string | null>(null);
+    const [schools, setSchools] = useState<string[]>([]);
+
+    // Fetch schools using the server action
+    useEffect(() => {
+        const fetchSchools = async () => {
+            try {
+                const schoolList = await getSchoolNames();
+                setSchools(schoolList);
+            } catch (error) {
+                console.error('Error fetching schools:', error);
+                setError('Failed to load schools. Please try again later.');
+            }
+        };
+
+        fetchSchools();
+    }, []);
+
+    // Create school options from fetched data
+    const schoolValues = schools.map((school) => (
+        <option key={school} value={school}>
+            {school}
+        </option>
+    ));
 
     //This is an anonymous function
     const onSubmit: SubmitHandler<Inputs> = async ({
@@ -102,23 +126,6 @@ export default function SignInPage() {
                         className={styles.form}
                         onSubmit={handleSubmit(onSubmit)}
                     >
-                        {error && <p className={styles.error}>{error}</p>}
-                        <div className={styles.inputGroup}>
-                            <label className={styles.label} htmlFor="school">
-                                Select your School
-                            </label>
-                            <select
-                                id="school"
-                                className={styles.input}
-                                {...register('school', { required: true })}
-                            >
-                                <option value="">Choose a School</option>
-                                <option value="UCLA">UCLA</option>
-                                <option value="USC">USC</option>
-                                <option value="UCB">UCB</option>
-                            </select>
-                        </div>
-
                         <div className={styles.inputGroup}>
                             <label className={styles.label} htmlFor="role">
                                 Select your Role
@@ -132,6 +139,21 @@ export default function SignInPage() {
                                 <option value="student">Student</option>
                                 <option value="eo_admin">EO Admin</option>
                                 <option value="admin">School Admin</option>
+                            </select>
+                        </div>
+                        
+                        {error && <p className={styles.error}>{error}</p>}
+                        <div className={styles.inputGroup}>
+                            <label className={styles.label} htmlFor="school">
+                                Select your School
+                            </label>
+                            <select
+                                id="school"
+                                className={styles.input}
+                                {...register('school', { required: true })}
+                            >
+                                <option value="">Choose a School</option>
+                                {schoolValues}
                             </select>
                         </div>
 

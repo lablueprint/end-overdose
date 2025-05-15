@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import styles from './signup.module.css';
 import { useState, useEffect } from 'react';
-import { Admin } from '@/types/Admin';
 import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
@@ -10,30 +9,23 @@ import {
     createUserWithEmailAndPassword,
     sendEmailVerification,
 } from 'firebase/auth';
-import { addAdmin } from '@/app/api/admins/actions';
 import { getSchoolNames } from '@/app/api2/generalData/actions';
 
 type Inputs = {
     role: string;
     email: string;
     password: string;
-    school_name: string;
+    school: string;
     termsAgreed: boolean;
     newsletter: boolean;
 };
 
-const SignUpPage = () => {
+export default function SignUpPage() {
     const router = useRouter();
+    const { register, handleSubmit } = useForm<Inputs>();
     const [error, setError] = useState('');
     const [success, setSuccess] = useState<boolean>(false);
     const [schools, setSchools] = useState<string[]>([]);
-
-    const roles = ['School Admin', 'EO Admin'];
-    const roleValues = roles.map((role) => (
-        <option key={role} value={role}>
-            {role}
-        </option>
-    ));
 
     // Fetch schools using the server action
     useEffect(() => {
@@ -57,12 +49,11 @@ const SignUpPage = () => {
         </option>
     ));
 
-    const { register, handleSubmit } = useForm<Inputs>();
     const onSubmit: SubmitHandler<Inputs> = async ({
         email,
         password,
         role,
-        school_name,
+        school,
         termsAgreed,
         newsletter,
     }) => {
@@ -136,20 +127,22 @@ const SignUpPage = () => {
                                         })}
                                     >
                                         <option value="">Choose a Role</option>
-                                        {roleValues}
+                                        <option value="eo_admin">EO Admin</option>
+                                        <option value="admin">School Admin</option>
                                     </select>
                                 </div>
+
                                 <div className={styles.subForm}>
                                     <label
                                         className={styles.h2}
-                                        htmlFor="school_name"
+                                        htmlFor="school"
                                     >
                                         School Name
                                     </label>
                                     <select
                                         className={`${styles.input} ${styles.formControl}`}
-                                        id="schoolName"
-                                        name="schoolName"
+                                        id="school"
+                                        name="school"
                                         required
                                     >
                                         <option value="">
@@ -158,6 +151,7 @@ const SignUpPage = () => {
                                         {schoolValues}
                                     </select>
                                 </div>
+
                                 <div className={styles.subForm}>
                                     <label
                                         className={styles.h2}
@@ -174,6 +168,7 @@ const SignUpPage = () => {
                                         })}
                                     />
                                 </div>
+
                                 <div className={styles.subForm}>
                                     <label
                                         className={styles.h2}
@@ -239,6 +234,7 @@ const SignUpPage = () => {
                                         </label>
                                     </div>
                                 </div>
+
                                 <div className={styles.buttonContainer}>
                                     <button
                                         className={styles.loginButton}
@@ -253,7 +249,7 @@ const SignUpPage = () => {
                                                 className={styles.link}
                                                 href="/signin"
                                             >
-                                                Sign In
+                                                SIGN IN
                                             </Link>
                                         </h2>
                                     </div>
@@ -269,5 +265,3 @@ const SignUpPage = () => {
         </div>
     );
 };
-
-export default SignUpPage;
