@@ -291,7 +291,7 @@
     height: 40px;
     /* background: transparent; Fully transparent background */
     background-color: rgb(255, 255, 255, .6);
-    /* border: black 2px solid; Black border */
+    border: black 1px solid;
     color: black; /* Text color */
     border-radius: 5px; /* Optional: Slight rounding */
     font-size: 18px;
