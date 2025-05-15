@@ -37,7 +37,10 @@ export default function Home() {
         <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <h1>Welcome back, Mackenzie!</h1>
+                    <h1>
+                        Welcome back,{' '}
+                        {isStudent(user) ? user.profile.nameplate : 'User'}!
+                    </h1>
                 </div>
                 <div className={styles.hero}>
                     <img className={styles.banner} src="/banner.svg" />

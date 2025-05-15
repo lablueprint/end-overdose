@@ -27,6 +27,10 @@ export default function NavBar() {
     const setUser = useUserStore((state) => state.setUser);
     const setRole = useUserStore((state) => state.setRole);
     const setUID = useUserStore((state) => state.setUID);
+    const schoolSlug = useUserStore((state) => {
+        const user = state.user;
+        return user && 'school_id' in user ? user.school_id : undefined;
+    });
     interface Tab {
         href: string;
         tab: string;
@@ -53,46 +57,21 @@ export default function NavBar() {
             setTabs([
                 {
                     href: '/eo-admin',
-                    tab: 'Dashboard',
-                    icon: <GridViewIcon />,
-                },
-                {
-                    href: '/eo-admin',
-                    tab: 'Courses',
-                    icon: <CollectionsBookmarkIcon />,
-                },
-                {
-                    href: '/eo-admin',
-                    tab: 'Schools',
-                    icon: <SchoolOutlinedIcon />,
-                },
-                {
-                    href: '/eo-admin',
-                    tab: 'Reports',
+                    tab: 'Statistics',
                     icon: <QueryStatsIcon />,
                 },
             ]);
         } else if (role === 'school_admin') {
             setTabs([
                 {
-                    href: '/admin',
-                    tab: 'Dashboard',
-                    icon: <GridViewIcon />,
-                },
-                {
-                    href: '/courses',
-                    tab: 'Courses',
-                    icon: <CollectionsBookmarkIcon />,
-                },
-                {
-                    href: '/schools',
-                    tab: 'Schools',
-                    icon: <SchoolOutlinedIcon />,
-                },
-                {
-                    href: '/reports',
-                    tab: 'Reports',
+                    href: `/school-dashboard/${schoolSlug}`,
+                    tab: 'Statistics',
                     icon: <QueryStatsIcon />,
+                },
+                {
+                    href: '/eo-admin',
+                    tab: 'Student',
+                    icon: <SchoolOutlinedIcon />,
                 },
             ]);
         } else if (role === 'student') {

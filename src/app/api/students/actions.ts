@@ -175,7 +175,15 @@ export const getSchoolStudents = cache(async (schoolId: string) => {
 export const validateUserCredentials = cache(
     async (schoolName: string, studentID: string, password: string) => {
         try {
-            const schoolRef = collection(db, 'joyce');
+            console.log(
+                'Validating user credentials for school:',
+                schoolName,
+                'studentID:',
+                studentID,
+                'password:',
+                password
+            );
+            const schoolRef = collection(db, 'newSchools');
 
             // Query to find the document where school name matches and user credentials exist
             const q = query(
@@ -194,8 +202,7 @@ export const validateUserCredentials = cache(
                 const schoolDoc = querySnapshot.docs[0];
                 const schoolData = schoolDoc.data();
                 const firebase_id =
-                    schoolData.student_ids[studentID].firebase_id; // Extract firebase_id
-                // console.log('firebase_id: ', firebase_id);
+                    schoolData.student_ids[studentID].student_firebase_id; // Extract firebase_id
                 return { firebase_id, success: true }; // Credentials are valid
             } else {
                 // console.log('No matching document found');

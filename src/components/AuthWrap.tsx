@@ -21,6 +21,7 @@ export default function AuthWrap({
     useEffect(() => {
         if (!loading) {
             console.log('User:', user);
+            console.log('Role:', role);
             if (user == null) {
                 // user is not signed in
                 router.push('/signin');

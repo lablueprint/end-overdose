@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import styles from './signup.module.css';
 import { useState, useEffect } from 'react';
-import { Admin } from '@/types/Admin';
 import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
@@ -10,114 +9,115 @@ import {
     createUserWithEmailAndPassword,
     sendEmailVerification,
 } from 'firebase/auth';
-import { addAdmin } from '@/app/api/admins/actions';
+import { getSchoolNames } from '@/app/api/generalData/actions';
+import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
+import { addSchoolAdmin } from '@/app/api/admins/actions';
+import { NewEOAdmin } from '@/types/newEOAdmin';
+
 
 type Inputs = {
     role: string;
     email: string;
     password: string;
-    school_name: string;
+    school: string;
     termsAgreed: boolean;
     newsletter: boolean;
 };
 
-const SignUpPage = () => {
+export default function SignUpPage() {
     const router = useRouter();
+    const { register, handleSubmit } = useForm<Inputs>();
     const [error, setError] = useState('');
     const [success, setSuccess] = useState<boolean>(false);
-    // DELETE LATER TEMPORARY TOGGLE FOR STUDENT OR ADMIN
-    const [student, setStudent] = useState(false);
+    const [schools, setSchools] = useState<string[]>([]);
 
-    const roles = ['School Admin', 'End Overdose Admin'];
-    const roleValues = roles.map((role) => (
-        <option key={role} value={role}>
-            {role}
-        </option>
-    ));
-    //Change selected school from dropdown selection MERGE CONCLICT SO COMMENTED OUT IF DONT NEED DELETE
-    /*const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedSchoolName = e.target.value;
-        if (selectedSchoolName) {
-            setSchoolName(selectedSchoolName);
-        }
-    };*/
-    const schools = ['UCLA', 'USC', 'UCSD', 'UCI', 'UCB'];
+    // Fetch schools using the server action
+    useEffect(() => {
+        const fetchSchools = async () => {
+            try {
+                const schoolList = await getSchoolNames();
+                setSchools(schoolList);
+            } catch (error) {
+                console.error('Error fetching schools:', error);
+                setError('Failed to load schools. Please try again later.');
+            }
+        };
+
+        fetchSchools();
+    }, []);
+
+    // Create school options from fetched data
     const schoolValues = schools.map((school) => (
         <option key={school} value={school}>
             {school}
         </option>
     ));
 
-    const { register, handleSubmit } = useForm<Inputs>();
     const onSubmit: SubmitHandler<Inputs> = async ({
         email,
         password,
         role,
-        school_name,
+        school,
         termsAgreed,
         newsletter,
     }) => {
-        //1. Check if valid
-        if (!termsAgreed || !newsletter) {
-            return;
+        //1. Needs to agree to terms of service
+        if (!termsAgreed) {
+            setError('Need to Agree to Terms of Serivice');
+            return
+        }
+        
+        //2. The rest of the boxed need to be filled 
+        if (!email || !password || !role || !school) {
+            setError('Need to fill out all the fields')
+            return
         }
 
-        setError('');
-
         try {
-            const auth = getAuth();
+
             // 1) Create the user in Firebase Auth with email & password
+            const auth = getAuth();
             const { user } = await createUserWithEmailAndPassword(
                 auth,
                 email,
                 password
             );
 
-            // 2) Build your Admin object
-            const newAdmin: Admin = {
-                name: {
-                    first: 'Test',
-                    last: 'Test',
-                },
-                email,
-                role: 'school_admin',
-                school_name: 'UCLA',
+            if (role == "admin") { //school admin
+                // 2) Build your Admin object
+                const newSchoolAdmin: NewSchoolAdmin = {
                 approved: false,
-            };
+                email: email,
+                school_id: "",
+                }
 
-            // 3) Write it into your “admins” collection keyed by uid
-            await addAdmin(newAdmin, user.uid);
+                // 3) Write it into your “newSchoolAdmins” collection
+                await addSchoolAdmin(newSchoolAdmin, user.uid);
+            }
+            else if (role == "eo_admin") {
+                const newEOAdmin: NewEOAdmin = {
+                    email: email,
+                }
+                // setError("IN EO ADMIN")
+            }
+            else {
+                setError("ERROR")
+            }
 
             // 4) Send email‑verification instead of a magic link:
             await sendEmailVerification(user);
             console.log('Verification email sent');
 
-            setSuccess(true);
-
             // 5) Redirect to login or dashboard
             setTimeout(() => {
-                router.push('/login');
+                router.push('/signin');
             }, 1000);
+            
         } catch (err) {
             console.error(err);
             setError('Something went wrong.');
         }
     };
-
-    /*const response = await signUp(newAdmin, password);
-        const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
-        const response = await signUp(data);
-
-        if (response.error) {
-            setError(response.error);
-            setSuccess(false);
-        } else {
-            setSuccess(true);
-            setError('');
-            setTimeout(() => {
-                router.push('/login');
-            }, 1000);
-        }*/
 
     useEffect(() => {
         const auth = getAuth();
@@ -146,7 +146,7 @@ const SignUpPage = () => {
                             >
                                 <div className={styles.subForm}>
                                     <label className={styles.h2} htmlFor="role">
-                                        Role
+                                        Select your Role
                                     </label>
                                     <select
                                         className={`${styles.input} ${styles.formControl}`}
@@ -155,28 +155,31 @@ const SignUpPage = () => {
                                             required: true,
                                         })}
                                     >
-                                        {roleValues}
+                                        <option value="">Choose a Role</option>
+                                        <option value="eo_admin">EO Admin</option>
+                                        <option value="admin">School Admin</option>
                                     </select>
                                 </div>
+
                                 <div className={styles.subForm}>
                                     <label
                                         className={styles.h2}
-                                        htmlFor="school_name"
+                                        htmlFor="school"
                                     >
-                                        School Name
+                                        Select your School
                                     </label>
                                     <select
                                         className={`${styles.input} ${styles.formControl}`}
-                                        id="schoolName"
-                                        name="schoolName"
-                                        required
+                                        id="school"
+                                        {...register('school', { required: true })}
                                     >
-                                        <option value="" disabled hidden>
-                                            Select your school…
+                                        <option value="">
+                                            Choose a School
                                         </option>
                                         {schoolValues}
                                     </select>
                                 </div>
+
                                 <div className={styles.subForm}>
                                     <label
                                         className={styles.h2}
@@ -193,6 +196,7 @@ const SignUpPage = () => {
                                         })}
                                     />
                                 </div>
+
                                 <div className={styles.subForm}>
                                     <label
                                         className={styles.h2}
@@ -258,6 +262,7 @@ const SignUpPage = () => {
                                         </label>
                                     </div>
                                 </div>
+
                                 <div className={styles.buttonContainer}>
                                     <button
                                         className={styles.loginButton}
@@ -272,7 +277,7 @@ const SignUpPage = () => {
                                                 className={styles.link}
                                                 href="/signin"
                                             >
-                                                Sign In
+                                                SIGN IN
                                             </Link>
                                         </h2>
                                     </div>
@@ -288,5 +293,3 @@ const SignUpPage = () => {
         </div>
     );
 };
-
-export default SignUpPage;
