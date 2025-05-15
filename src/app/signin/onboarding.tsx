@@ -190,7 +190,10 @@ export default function Onboarding() {
                 await updateHasLoggedIn(uid);
                 await updateNameplate(uid, namePlateFinal);
                 console.log('Nameplate Final:', namePlateFinal);
-                window.location.href = '/';
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 100);
+                //window.location.href = '/';
             } catch (err) {
                 console.error('Update failed:', err);
             }
