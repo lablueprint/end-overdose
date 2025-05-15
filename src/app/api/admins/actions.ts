@@ -17,6 +17,8 @@ import {
     updateDoc,
 } from 'firebase/firestore';
 import { getAuthenticatedAppForUser } from '@/firebase/serverApp';
+import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
+
 
 const db = getFirestore(firebase_app);
 const adminsCollection = collection(db, 'admins');
@@ -199,5 +201,30 @@ export async function getAdmin(id: string) {
     } catch (error) {
         console.error('Error fetching admin:', error);
         throw new Error('Failed to fetch admin.');
+    }
+}
+
+//NEW STUFF HERE
+
+//NEW DB
+const schoolAdminsCollections = collection(db, 'newSchoolAdmin')
+
+export async function addSchoolAdmin(schoolAdmin: NewSchoolAdmin, userId: string) {
+    try {
+        // Firebase Authentication
+        const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        const auth_db = getFirestore(firebaseServerApp);
+
+        //ADD SCHOOL ADMIN STUFF
+        const schoolAdminsCollection = collection(auth_db, 'newSchoolAdmin');
+
+        // add to database
+        await setDoc(doc(schoolAdminsCollection, userId), schoolAdmin);
+
+        // revalidate data
+        revalidatePath('');
+    } catch (error) {
+        console.error('Error adding admin:', error);
+        throw new Error('Failed to add admin.');
     }
 }

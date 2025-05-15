@@ -9,7 +9,10 @@ import {
     createUserWithEmailAndPassword,
     sendEmailVerification,
 } from 'firebase/auth';
-import { getSchoolNames } from '@/app/api2/generalData/actions';
+import { getSchoolNames } from '@/app/api/generalData/actions';
+import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
+import { addSchoolAdmin } from '@/app/api/admins/actions';
+
 
 type Inputs = {
     role: string;
@@ -57,33 +60,55 @@ export default function SignUpPage() {
         termsAgreed,
         newsletter,
     }) => {
-        //1. Check if valid
-        if (!termsAgreed || !newsletter) {
-            return;
+        //1. Needs to agree to terms of service
+        if (!termsAgreed) {
+            setError('Need to Agree to Terms of Serivice');
+            return
         }
-        setError('');
+        
+        //2. The rest of the boxed need to be filled 
+        if (!email || !password || !role || !school) {
+            setError('Need to fill out all the fields')
+            return
+        }
 
         try {
-            const auth = getAuth();
+
             // 1) Create the user in Firebase Auth with email & password
+            const auth = getAuth();
             const { user } = await createUserWithEmailAndPassword(
                 auth,
                 email,
                 password
             );
 
-            // 2) Build your Admin object
+            if (role == "admin") { //school admin
+                // 2) Build your Admin object
+                const newSchoolAdmin: NewSchoolAdmin = {
+                approved: false,
+                email: email,
+                school_id: "",
+                }
 
-            // 3) Write it into your “admins” collection keyed by uid
+                // 3) Write it into your “newSchoolAdmins” collection
+                await addSchoolAdmin(newSchoolAdmin, user.uid);
+            }
+            else if (role == "eo_admin") {
+                setError("IN EO ADMIN")
+            }
+            else {
+                setError("ERROR")
+            }
 
             // 4) Send email‑verification instead of a magic link:
-            //await sendEmailVerification(user);
-            //console.log('Verification email sent');
+            await sendEmailVerification(user);
+            console.log('Verification email sent');
 
             // 5) Redirect to login or dashboard
             setTimeout(() => {
-                router.push('/login');
+                router.push('/signin');
             }, 1000);
+            
         } catch (err) {
             console.error(err);
             setError('Something went wrong.');
@@ -117,7 +142,7 @@ export default function SignUpPage() {
                             >
                                 <div className={styles.subForm}>
                                     <label className={styles.h2} htmlFor="role">
-                                        Role
+                                        Select your Role
                                     </label>
                                     <select
                                         className={`${styles.input} ${styles.formControl}`}
@@ -137,13 +162,12 @@ export default function SignUpPage() {
                                         className={styles.h2}
                                         htmlFor="school"
                                     >
-                                        School Name
+                                        Select your School
                                     </label>
                                     <select
                                         className={`${styles.input} ${styles.formControl}`}
                                         id="school"
-                                        name="school"
-                                        required
+                                        {...register('school', { required: true })}
                                     >
                                         <option value="">
                                             Choose a School

@@ -4,7 +4,7 @@ import styles from './signin.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { validateUserCredentials } from '../api/students/actions';
 import { useState, useEffect } from 'react';
-import { getSchoolNames } from '@/app/api2/generalData/actions';
+import { getSchoolNames } from '@/app/api/generalData/actions';
 
 type Inputs = {
     school: string;
@@ -141,7 +141,7 @@ export default function SignInPage() {
                                 <option value="admin">School Admin</option>
                             </select>
                         </div>
-                        
+
                         {error && <p className={styles.error}>{error}</p>}
                         <div className={styles.inputGroup}>
                             <label className={styles.label} htmlFor="school">
