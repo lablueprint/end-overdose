@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import styles from './onboarding.module.css';
 import { AnimatePresence, motion } from 'framer-motion';
-//import { useUserStore } from '@/store/userStore';
+import { updateHasLoggedIn, updateNameplate } from '../api/students/actions';
+import { useUserStore } from '@/store/userStore';
 
 export default function Onboarding() {
     const [page, setPage] = useState(() => {
@@ -17,7 +18,7 @@ export default function Onboarding() {
         2: '/moonForeground.png',
         3: '/terrainForeground.svg',
     };
-    //const setNameplate = useUserStore((state) => state.setNameplate);
+    const uid = useUserStore((state) => state.uid);
 
     const fullList1 = [
         'Super',
@@ -142,6 +143,7 @@ export default function Onboarding() {
     const centerItem1 = visibleSlice1[centerOffset1];
     const centerItem2 = visibleSlice2[centerOffset2];
     const centerItem3 = visibleSlice3[centerOffset3];
+    const namePlateFinal = `${centerItem1} ${centerItem2} ${centerItem3}`;
 
     const handleShuffle = () => {
         setShuffledItems1(shuffleArray(fullList1));
@@ -179,10 +181,22 @@ export default function Onboarding() {
         sessionStorage.setItem('onboardingPage', String(page));
     }, [page]);
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (page < 3) {
             setPage((p) => p + 1);
             setDirection(1);
+        } else {
+            try {
+                await updateHasLoggedIn(uid);
+                await updateNameplate(uid, namePlateFinal);
+                console.log('Nameplate Final:', namePlateFinal);
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 100);
+                //window.location.href = '/';
+            } catch (err) {
+                console.error('Update failed:', err);
+            }
         }
     };
 

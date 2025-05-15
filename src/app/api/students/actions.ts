@@ -21,6 +21,7 @@ import {
 } from 'firebase/firestore';
 import { getSchoolData } from '@/app/api/schools/actions'; // Make sure this import is correct
 // import { studentsCollection } from './firebase'; // Adjust import as needed
+import { documentId } from 'firebase/firestore';
 
 interface Quiz {
     name: string;
@@ -389,6 +390,71 @@ export async function getStudentFromID2(studentId: string) {
     }
 }
 
+// check if student has logged in for onboarding
+
+export async function checkHasLoggedIn(firebase_id: string) {
+    try {
+        const q = query(
+            studentsCollection,
+            where(documentId(), '==', firebase_id)
+        );
+        const snapshot = await getDocs(q);
+        if (!snapshot.empty) {
+            const doc = snapshot.docs[0];
+            const data = doc.data();
+            return !!data.hasLoggedIn;
+        }
+        console.log('if statement not running');
+        return { error: 'Student not found' };
+    } catch (error) {
+        console.error('Error fetching student:', error);
+        throw new Error('Failed to fetch student.');
+    }
+}
+
+//update hasLoggedIn set it True
+
+export async function updateHasLoggedIn(firebase_id: string) {
+    try {
+        const docRef = doc(studentsCollection, firebase_id);
+        await updateDoc(docRef, {
+            hasLoggedIn: true,
+        });
+
+        return { success: true }; // <- make sure this matches the expected type
+    } catch (error) {
+        console.error('Error updating hasLoggedIn:', error);
+        return { success: false, error: 'Failed to update hasLoggedIn' }; // or however your type is structured
+    }
+}
+
+//upudate Nameplate
+
+export async function updateNameplate(firebase_id: string, nameplate: string) {
+    try {
+        const docRef = doc(studentsCollection, firebase_id);
+        const snapshot = await getDoc(docRef);
+
+        if (!snapshot.exists()) {
+            return { success: false, error: 'Student not found' };
+        }
+
+        const data = snapshot.data();
+        const profile = data.profile ?? {};
+        await updateDoc(docRef, {
+            profile: {
+                ...profile,
+                nameplate: nameplate,
+            },
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating nameplate:', error);
+        return { success: false, error: 'Failed to update nameplate' };
+    }
+}
+
 export async function changeBackground(
     studentId: string,
     newBackgroundKey: string
@@ -403,13 +469,13 @@ export async function changeBackground(
         const profile = data.profile ?? {};
         const background = profile.background ?? '';
 
+        console.log('Background changed to:', newBackgroundKey);
         await updateDoc(docRef, {
             profile: {
                 ...profile,
                 background: newBackgroundKey,
             },
         });
-        console.log('Background changed to:', newBackgroundKey);
         return {
             background,
         };
