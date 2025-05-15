@@ -19,7 +19,7 @@ export async function handleUserCreation(
             quizzes: [],
             nameplate: '',
             badges: [],
-            kibble_count: 0,
+            fish_count: 0,
             course_completion: {
                 opioidCourse: { courseScore: 0, courseProgress: 0 },
                 careerCourse: { courseScore: 0, courseProgress: 0 },

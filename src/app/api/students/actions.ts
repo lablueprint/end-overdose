@@ -15,6 +15,8 @@ import {
     setDoc,
     where,
 } from 'firebase/firestore';
+import { getSchoolData } from '@/app/api/schools/actions'; // Make sure this import is correct
+// import { studentsCollection } from './firebase'; // Adjust import as needed
 
 interface Quiz {
     name: string;
@@ -111,15 +113,50 @@ export const getSchoolAverage = cache(async (schoolName: string) => {
     }
 });
 
-//GET ALL THE STUDENTS FROM A PARTICULAR SCHOOL
-export const getSchoolStudents = cache(async (schoolName: string) => {
+//GET ALL THE STUDENTS FROM A PARTICULAR SCHOOL (by student_firebase_id)
+export const getSchoolStudents = cache(async (schoolId: string) => {
     try {
-        const q = query(
-            studentsCollection,
-            where('school_name', '==', schoolName)
-        );
-        const snapshot = await getDocs(q);
-        const students = snapshot.docs.map((doc) => doc.data() as Student);
+        const school = await getSchoolData(schoolId);
+        console.log('Fetched school:', school);
+
+        if (!school || !school.student_ids) {
+            console.log('No school or student_ids found');
+            return [];
+        }
+
+        const firebaseIds = Object.values(school.student_ids)
+            .map((entry: any) => entry.student_firebase_id)
+            .filter(Boolean);
+
+        console.log('Resolved Firebase IDs:', firebaseIds);
+
+        if (firebaseIds.length === 0) return [];
+
+        const students: any[] = [];
+        const chunkSize = 10;
+
+        for (let i = 0; i < firebaseIds.length; i += chunkSize) {
+            const chunk = firebaseIds.slice(i, i + chunkSize);
+
+            const chunkDocs = await Promise.all(
+                chunk.map(async (id) => {
+                    const docRef = doc(studentsCollection, id);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        return docSnap.data();
+                    }
+                    return null;
+                })
+            );
+
+            const validStudents = chunkDocs.filter(Boolean); // filter out nulls
+            console.log(
+                `Fetched ${validStudents.length} students for chunk`,
+                chunk
+            );
+            students.push(...validStudents);
+        }
+
         return students;
     } catch (error) {
         console.error('Error fetching school students:', error);
