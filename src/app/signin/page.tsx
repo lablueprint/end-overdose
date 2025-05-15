@@ -1,37 +1,62 @@
 'use client';
-import Link from 'next/link';
+import { signInStudent, signInAdmin } from '@/firebase/auth';
 import styles from './signin.module.css';
-import { useState, useEffect } from 'react';
-import { Admin } from '@/types/Admin';
-import { signUp } from '@/firebase/auth';
-import { useRouter } from 'next/navigation';
-import { School } from '@/types/School';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import {
-    getAuth,
-    sendSignInLinkToEmail,
-    createUserWithEmailAndPassword,
-    sendEmailVerification,
-    setPersistence,
-    browserSessionPersistence,
-} from 'firebase/auth';
+import { validateUserCredentials } from '../api/students/actions';
+import { useState } from 'react';
+import { useUserStore } from '@/store/userStore';
 export default function SignInPage() {
-    const { register, handleSubmit } = useForm();
+    type Inputs = {
+        school: string;
+        role: string;
+        email: string;
+        password: string;
+    };
+
+    const { register, handleSubmit, watch } = useForm<Inputs>();
+    const [error, setError] = useState<string | null>(null);
+    const user = useUserStore((state) => state.user);
+
+    console.log(user);
 
     //This is an anonymous function
-    const onSubmit = (data) => {
-        console.log('Form submitted:', data);
-        //Function starts here
-        const { email, password, termsAgreed, newsletter } = data;
-
-        console.log('Email:', email);
-        console.log('Password:', password);
-        console.log('Agreed to Terms:', termsAgreed);
-        console.log('Subscribed to Newsletter:', newsletter);
-
-        //1. Check if valid
-        if (!termsAgreed || !newsletter) {
-            return;
+    const onSubmit: SubmitHandler<Inputs> = async ({
+        school,
+        role,
+        email,
+        password,
+    }) => {
+        if (role == 'student') {
+            const { firebase_id, success } = await validateUserCredentials(
+                school,
+                email,
+                password
+            );
+            if (!success) {
+                setError('Wrong student ID or password.');
+                return {
+                    result: null,
+                    error: 'Wrong student ID or password.',
+                };
+            }
+            await signInStudent({
+                firebase_id,
+                username: email,
+                password,
+                school,
+            });
+            // redirect to dashboard
+            window.location.href = '/';
+        } else {
+            const result = await signInAdmin({ email, password });
+            if (result.error) {
+                // console.error('Error signing in:', result.error);
+                setError('Wrong email or password.');
+                return {
+                    result: null,
+                    error: 'Wrong email or password.',
+                };
+            }
         }
     };
 
@@ -71,7 +96,9 @@ export default function SignInPage() {
             <div className={styles.loginHalf}>
                 <div className={styles.contentContainer}>
                     <h1 className={styles.h1}>SIGN IN</h1>
-                    <h2 className={styles.h2}>We're so glad you're back!</h2>
+                    <h2 className={styles.h2}>
+                        We&#39;re so glad you&#39;re back!
+                    </h2>
                 </div>
 
                 <div className={styles.formContainer}>
@@ -79,6 +106,23 @@ export default function SignInPage() {
                         className={styles.form}
                         onSubmit={handleSubmit(onSubmit)}
                     >
+                        {error && <p className={styles.error}>{error}</p>}
+                        <div className={styles.inputGroup}>
+                            <label className={styles.label} htmlFor="school">
+                                Select your School
+                            </label>
+                            <select
+                                id="school"
+                                className={styles.input}
+                                {...register('school', { required: true })}
+                            >
+                                <option value="">Choose a School</option>
+                                <option value="UCLA">UCLA</option>
+                                <option value="USC">USC</option>
+                                <option value="UCB">UCB</option>
+                            </select>
+                        </div>
+
                         <div className={styles.inputGroup}>
                             <label className={styles.label} htmlFor="role">
                                 Select your Role
@@ -97,11 +141,17 @@ export default function SignInPage() {
 
                         <div className={styles.inputGroup}>
                             <label className={styles.label} htmlFor="email">
-                                Email address
+                                {watch('role') === 'student'
+                                    ? 'Username'
+                                    : 'Email address'}
                             </label>
                             <input
                                 className={styles.input}
-                                type="email"
+                                type={
+                                    watch('role') === 'student'
+                                        ? 'text'
+                                        : 'email'
+                                }
                                 id="email"
                                 {...register('email', { required: true })}
                             />
@@ -117,52 +167,6 @@ export default function SignInPage() {
                                 id="password"
                                 {...register('password', { required: true })}
                             />
-                        </div>
-
-                        <div className={styles.checkboxContainer}>
-                            <div className={styles.checkboxGroup}>
-                                <input
-                                    type="checkbox"
-                                    id="termsAgreed"
-                                    className={styles.checkbox}
-                                    {...register('termsAgreed', {
-                                        required: true,
-                                    })}
-                                />
-                                <label
-                                    htmlFor="termsAgreed"
-                                    className={styles.checkboxLabel}
-                                >
-                                    Agree to our{' '}
-                                    <Link href="/terms" className={styles.link}>
-                                        Terms of use
-                                    </Link>{' '}
-                                    and{' '}
-                                    <Link
-                                        href="/privacy"
-                                        className={styles.link}
-                                    >
-                                        Privacy Policy
-                                    </Link>
-                                </label>
-                            </div>
-
-                            <div className={styles.checkboxGroup}>
-                                <input
-                                    type="checkbox"
-                                    id="newsletter"
-                                    className={styles.checkbox}
-                                    {...register('newsletter', {
-                                        required: true,
-                                    })}
-                                />
-                                <label
-                                    htmlFor="newsletter"
-                                    className={styles.checkboxLabel}
-                                >
-                                    Subscribe to our monthly newsletter
-                                </label>
-                            </div>
                         </div>
 
                         <div className={styles.buttonContainer}>

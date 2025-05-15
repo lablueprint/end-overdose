@@ -68,6 +68,11 @@
     color: #aaaaaa;
 }
 
+.error {
+    font-size: 0.9rem;
+    color: #ff4d4d;
+}
+
 .input {
     width: 100%;
     padding: 0.75rem 1rem;

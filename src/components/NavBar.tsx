@@ -37,7 +37,7 @@ export default function NavBar() {
     }
 
     const [tabs, setTabs] = useState<Tab[]>([]);
-    console.log('role:', role);
+    // console.log('role:', role);
 
     // Toggle sidebar collapse state
     const toggleSidebar = () => {
@@ -135,7 +135,7 @@ export default function NavBar() {
         setRole('');
         setUID('');
         await logout();
-        router.push('/login');
+        router.push('/signin');
     };
     const hideNavBar = path.startsWith('/courses/') && path !== '/courses';
 
@@ -159,7 +159,7 @@ export default function NavBar() {
                     >
                         {collapsed ? <MenuOpenIcon /> : <MenuIcon />}
                     </button>
-                    <Link href={user ? '/' : '/login'}>
+                    <Link href={user ? '/' : '/signin'}>
                         <Image
                             src="/logo.png"
                             alt="logo"
