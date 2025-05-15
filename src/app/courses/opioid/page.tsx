@@ -71,8 +71,7 @@ export default function OpioidHome() {
 
             try {
                 if (isStudent(user)) {
-                    const response =
-                        user.course_completion.opioidCourse.courseProgress;
+                    const response = user.courses.opioidCourse.courseProgress;
 
                     const lessonIndex = Math.round(
                         (response / 100) * totalLessons
@@ -172,6 +171,7 @@ export default function OpioidHome() {
                     });
                 }
 
+                console.log('continue');
                 return nextIndex;
             });
         }
@@ -213,7 +213,7 @@ export default function OpioidHome() {
             );
         }
         //redirect to home page or course selection
-        window.location.href = '/quiz';
+        window.location.href = '/courses';
     };
 
     return (
