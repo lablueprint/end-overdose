@@ -15,7 +15,12 @@ import {
     query,
     setDoc,
     where,
+    addDoc,
+    deleteDoc,
+    deleteField,
 } from 'firebase/firestore';
+import { getSchoolData } from '@/app/api/schools/actions'; // Make sure this import is correct
+// import { studentsCollection } from './firebase'; // Adjust import as needed
 import { NewStudent } from '@/types/newStudent';
 
 interface Quiz {
@@ -113,15 +118,50 @@ export const getSchoolAverage = cache(async (schoolName: string) => {
     }
 });
 
-//GET ALL THE STUDENTS FROM A PARTICULAR SCHOOL
-export const getSchoolStudents = cache(async (schoolName: string) => {
+//GET ALL THE STUDENTS FROM A PARTICULAR SCHOOL (by student_firebase_id)
+export const getSchoolStudents = cache(async (schoolId: string) => {
     try {
-        const q = query(
-            studentsCollection,
-            where('school_name', '==', schoolName)
-        );
-        const snapshot = await getDocs(q);
-        const students = snapshot.docs.map((doc) => doc.data() as Student);
+        const school = await getSchoolData(schoolId);
+        console.log('Fetched school:', school);
+
+        if (!school || !school.student_ids) {
+            console.log('No school or student_ids found');
+            return [];
+        }
+
+        const firebaseIds = Object.values(school.student_ids)
+            .map((entry: any) => entry.student_firebase_id)
+            .filter(Boolean);
+
+        console.log('Resolved Firebase IDs:', firebaseIds);
+
+        if (firebaseIds.length === 0) return [];
+
+        const students: any[] = [];
+        const chunkSize = 10;
+
+        for (let i = 0; i < firebaseIds.length; i += chunkSize) {
+            const chunk = firebaseIds.slice(i, i + chunkSize);
+
+            const chunkDocs = await Promise.all(
+                chunk.map(async (id) => {
+                    const docRef = doc(studentsCollection, id);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        return docSnap.data();
+                    }
+                    return null;
+                })
+            );
+
+            const validStudents = chunkDocs.filter(Boolean); // filter out nulls
+            console.log(
+                `Fetched ${validStudents.length} students for chunk`,
+                chunk
+            );
+            students.push(...validStudents);
+        }
+
         return students;
     } catch (error) {
         console.error('Error fetching school students:', error);
@@ -171,26 +211,32 @@ export const validateUserCredentials = cache(
 //5. ADDING FEATURES TO STUDENTS
 
 // Add a quiz to the database
-export async function addQuiz(updateQuizzes: Quiz[]) {
+export async function addQuiz(userId: string, updateQuizzes: Quiz[]) {
+    console.log(updateQuizzes);
     try {
-        console.log('work');
-        const user = auth.currentUser;
-        if (!user) {
-            return { error: 'User data not found' };
+        const studentWithID = await getStudentFromID(userId);
+
+        if (!studentWithID) {
+            console.log('studentissue');
+            return { error: 'Student not found' };
         }
-        const userRef = doc(db, 'students', user.uid); // Use the user's unique ID
-        const userDoc = await getDoc(userRef); // DocumentSnapshot
+
+        const userRef = doc(db, 'newStudents', studentWithID.id); // getting actual user's id
+        const userDoc = await getDoc(userRef);
+
         if (!userDoc.exists()) {
+            console.log('userdoc error');
             return { error: 'Student document not found' };
         }
-        console.log('update quizzes: ', updateQuizzes);
+
         await updateDoc(userRef, {
-            quizzes: updateQuizzes,
+            'courses.opioidCourse.quizzes': updateQuizzes,
         });
+
         return { success: true };
     } catch (error) {
         console.error(error);
-        throw new Error('Failed to log in admin.');
+        return { error: 'Failed to update quizzes' };
     }
 }
 
@@ -239,7 +285,7 @@ export async function updateCourseProgress(
             return { error: 'Student not found' };
         }
 
-        const userRef = doc(db, 'students', studentWithID.id); // getting actual user's id
+        const userRef = doc(db, 'newStudents', studentWithID.id); // getting actual user's id
         const userDoc = await getDoc(userRef);
 
         if (!userDoc.exists()) {
@@ -247,7 +293,7 @@ export async function updateCourseProgress(
         }
 
         await updateDoc(userRef, {
-            [`course_completion.${courseName}.courseProgress`]: progress, // Update the courseProgress field
+            [`courses.${courseName}.courseProgress`]: progress, // Update the courseProgress field
         });
 
         return { success: true };
@@ -392,5 +438,51 @@ export async function changeCat(studentId: string, newCatKey: string) {
         return {
             cat,
         };
+// Create a student (called in api/schools to add student to school)
+export async function createStudent(studentId: string, schoolId: string) {
+    try {
+        const schoolDocRef = doc(db, 'newSchools', schoolId);
+        const schoolDoc = await getDoc(schoolDocRef);
+
+        if (!schoolDoc.exists()) {
+            return { error: 'School not found' };
+        }
+
+        const schoolData = schoolDoc.data();
+        const schoolName = schoolData.school_name;
+
+        const newStudent: NewStudent = {
+            student_id: studentId,
+            school_name: schoolName,
+            profile: {
+                unlocked: ['narcat'],
+                cat: 'narcat',
+                background: 'narcat',
+                nameplate: '',
+            },
+            courses_average_score: 0,
+            all_courses_completed: false,
+            courses: {
+                opioidCourse: {
+                    courseProgress: 0,
+                    courseScore: 0,
+                    quizzes: [],
+                },
+            },
+            fish_count: 0,
+            certificates: {},
+            hasLoggedIn: false,
+        };
+
+        //add to Firestore with auto-generated id
+        const newDocRef = await addDoc(
+            collection(db, 'newStudents'),
+            newStudent
+        );
+
+        return { success: true, firebase_id: newDocRef.id };
+    } catch (error) {
+        console.error('Error creating student:', error);
+        return { error: 'Failed to create student' };
     }
 }

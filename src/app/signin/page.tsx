@@ -4,6 +4,7 @@ import styles from './signin.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { validateUserCredentials } from '../api/students/actions';
 import { useState } from 'react';
+import { useUserStore } from '@/store/userStore';
 export default function SignInPage() {
     type Inputs = {
         school: string;
@@ -14,6 +15,11 @@ export default function SignInPage() {
 
     const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState<string | null>(null);
+    const user = useUserStore((state) => state.user);
+    const setUid = useUserStore((state) => state.setUID);
+    const setUser = useUserStore((state) => state.setUser);
+
+    console.log(user);
 
     //This is an anonymous function
     const onSubmit: SubmitHandler<Inputs> = async ({
@@ -35,12 +41,17 @@ export default function SignInPage() {
                     error: 'Wrong student ID or password.',
                 };
             }
-            await signInStudent({
+            const result = await signInStudent({
                 firebase_id,
                 username: email,
                 password,
                 school,
             });
+            setUid(firebase_id);
+            if (result.result) {
+                setUser(result.result.user);
+            }
+
             // redirect to dashboard
             window.location.href = '/';
         } else {
