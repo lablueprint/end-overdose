@@ -8,6 +8,7 @@ import { useUserStore } from '@/store/userStore';
 import { getStudentFromID2 } from '@/app/api/students/actions';
 import Image from 'next/image';
 import ColorPickerDialog from './Components/ColorPickerDialogue';
+import CertificatePreview from './Components/CertificatePreview';
 import BadgeModal from './Components/BadgeModal';
 import Certificate from '../certificates/Certificate';
 import { set } from 'react-hook-form';
@@ -21,7 +22,9 @@ export default function Home() {
     const [selectedBackground, setSelectedBackground] = useState('');
     const [nameplate, setNameplate] = useState('');
     const [unlockedThemes, setUnlockedThemes] = useState<string[]>([]);
-
+    const [certificatesMap, setCertificatesMap] = useState<
+        Record<string, string>
+    >({});
     const user = useUserStore((state) => state.user);
 
     useEffect(() => {
@@ -38,6 +41,7 @@ export default function Home() {
                         (n: string) => n
                     );
                     setUnlockedThemes(cleaned);
+                    setCertificatesMap(student.certificates);
                 }
             }
         }
@@ -50,9 +54,14 @@ export default function Home() {
             <div className={styles.profileContainer}>
                 <div className={styles.leftSide}>
                     <div className={styles.nameContainer}>
+                        <Image
+                            src='/paw.svg'
+                            alt="paw"
+                            width={100}
+                            height={100}
+                        />
                         <p className={styles.nameTag}>{nameplate}</p>
                     </div>
-
                     <div
                         className={styles.profilePictureHolder}
                         style={{ backgroundColor: selectedColor }}
@@ -82,9 +91,19 @@ export default function Home() {
                     </div>
 
                     <p className={styles.achievementsTag}>CERTIFICATES</p>
-                    <div className={styles.scrollWrapper}>
-                        <ul className={styles.horizontalList}>
-                            <Certificate courseName="Opioid Prevention Course" />
+                    <div className="w-full overflow-x-auto overflow-y-hidden">
+                        <ul className="flex flex-nowrap space-x-4 p-4">
+                            {Object.entries(certificatesMap).map(
+                                ([title, date]) => (
+                                    <li key={title} className="flex-shrink-0">
+                                        <CertificatePreview
+                                            title={(`${title} course`).toUpperCase()}
+                                            date={date}
+                                            name={nameplate.toUpperCase()}
+                                        />
+                                    </li>
+                                )
+                            )}
                         </ul>
                     </div>
                 </div>
