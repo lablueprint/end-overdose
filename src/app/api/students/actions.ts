@@ -2,6 +2,7 @@
 
 import { cache } from 'react';
 import { Student } from '@/types/Student';
+import { NewStudent } from '@/types/newStudent';
 import firebase_app from '@/firebase/config';
 import { auth } from '@/firebase/clientApp'; // Adjusted the path to match the project structure
 import {
@@ -380,7 +381,7 @@ export async function getStudentFromID2(studentId: string) {
         const snapshot = await getDocs(q);
         if (!snapshot.empty) {
             const doc = snapshot.docs[0];
-            return { ...(doc.data() as Student) };
+            return { ...(doc.data() as NewStudent) };
         }
         return { error: 'Student not found' };
     } catch (error) {
@@ -389,6 +390,54 @@ export async function getStudentFromID2(studentId: string) {
     }
 }
 
+export async function changeBackground(
+    studentId: string,
+    newBackgroundKey: string
+) {
+    const q = query(studentsCollection, where('student_id', '==', studentId));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+        const docRef = snapshot.docs[0].ref;
+        const data = snapshot.docs[0].data();
+
+        const profile = data.profile ?? {};
+        const background = profile.background ?? '';
+
+        await updateDoc(docRef, {
+            profile: {
+                ...profile,
+                background: newBackgroundKey,
+            },
+        });
+        console.log('Background changed to:', newBackgroundKey);
+        return {
+            background,
+        };
+    }
+}
+
+export async function changeCat(studentId: string, newCatKey: string) {
+    const q = query(studentsCollection, where('student_id', '==', studentId));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+        const docRef = snapshot.docs[0].ref;
+        const data = snapshot.docs[0].data();
+
+        const profile = data.profile ?? {};
+        const cat = profile.cat ?? '';
+
+        await updateDoc(docRef, {
+            profile: {
+                ...profile,
+                cat: newCatKey,
+            },
+        });
+        console.log('Background changed to:', newCatKey);
+        return {
+            cat,
+        };
 // Create a student (called in api/schools to add student to school)
 export async function createStudent(studentId: string, schoolId: string) {
     try {

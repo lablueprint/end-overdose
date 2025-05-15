@@ -1,121 +1,115 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import BadgeTable from './Components/BadgeTable';
 import styles from './profile.module.css';
 import AuthWrap from '@/components/AuthWrap';
 import { useUserStore } from '@/store/userStore';
+import { getStudentFromID2 } from '@/app/api/students/actions';
 import Image from 'next/image';
 import ColorPickerDialog from './Components/ColorPickerDialogue';
+import CertificatePreview from './Components/CertificatePreview';
 import BadgeModal from './Components/BadgeModal';
-/*
- * Notes:
- * Dynamically renders profile banner/picture with cat, color and background.
- *
- * TODO:
- * Profile picture,
- * need to store color, cat, background, inventory, kibble, and badgesEarned in database.
- */
+import Certificate from '../certificates/Certificate';
+import { set } from 'react-hook-form';
 
 export default function Home() {
-    const [userRole, setUserRole] = useState('administrator');
-    const [selectedProfilePicture, setSelectedProfilePicture] = useState(0);
-    const [kibbleCount, setKibbleCount] = useState(0);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedColor, setSelectedColor] = useState('#009F5D');
-    const [selectedCat, setSelectedCat] = useState('/cat.png');
-    const [selectedBackground, setSelectedBackground] = useState('/fish.png');
-
-    const [selectedBadges, setSelectedBadges] = useState([
-        'Badge 1',
-        'Badge 2',
-        'Badge 3',
-    ]);
-    const [badgesEarned, setBadgesEarned] = useState([
-        'Badge 1',
-        'Badge 2',
-        'Badge 3',
-        'Badge 4',
-        'Badge 5',
-        'Badge 6',
-        'Badge 7',
-        'Badge 8',
-        'Badge 9',
-    ]);
     const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
 
-    // const [name, setName] = useState('FirstName LastName');
-    const [profileChanged, setProfileChanged] = useState(false);
+    const [selectedColor, setSelectedColor] = useState('');
+    const [selectedCat, setSelectedCat] = useState('/cat.png');
+    const [selectedBackground, setSelectedBackground] = useState('');
+    const [nameplate, setNameplate] = useState('');
+    const [unlockedThemes, setUnlockedThemes] = useState<string[]>([]);
+    const [certificatesMap, setCertificatesMap] = useState<
+        Record<string, string>
+    >({});
     const user = useUserStore((state) => state.user);
-    const role = useUserStore((state) => state.role);
-    // if (user && 'student_id' in user) {
-    //     const kibbleCount = getKibbleFromStudentID(user.student_id);
-    // }
-    // useEffect(() => {
-    //     async function fetchKibble() {
-    //         if (user && 'student_id' in user) {
-    //             const kibble = await getKibbleFromStudentID(user.student_id);
-    //             if (kibble !== null) {
-    //                 setKibbleCount(kibble.kibble_count);
-    //             }
-    //         }
-    //     }
-    //     fetchKibble();
-    // }, [user]);
-    const changeProfilePicture = (newProfileIndex: number) => {
-        setSelectedProfilePicture(newProfileIndex);
-        setProfileChanged(true);
-    };
+
+    useEffect(() => {
+        async function fetchThemes() {
+            if (user && 'student_id' in user) {
+                const student = await getStudentFromID2(user.student_id);
+                if ('profile' in student) {
+                    setSelectedBackground(
+                        `/backgrounds/${student.profile.background}-profile.png`
+                    );
+                    setSelectedCat(`/cats/${student.profile.cat}.png`);
+                    setNameplate(student.profile.nameplate);
+                    const cleaned = student.profile.unlocked.filter(
+                        (n: string) => n
+                    );
+                    setUnlockedThemes(cleaned);
+                    setCertificatesMap(student.certificates);
+                }
+            }
+        }
+        fetchThemes();
+    }, [user]);
 
     return (
-        <div className={styles.profileContainer}>
-            <div className={styles.leftSide}>
-                <div
-                    className={styles.profilePictureHolder}
-                    style={{ backgroundColor: selectedColor }}
-                >
-                    <Image
-                        src={selectedBackground}
-                        alt="Background"
-                        fill
-                        className={styles.backgroundImage}
-                    />
-                    <Image
-                        src={selectedCat}
-                        alt="Overlay"
-                        width={100}
-                        height={100}
-                        sizes="(max-width: 768px) 33vw, 100px"
-                        priority
-                        className={styles.overlayImage}
-                    />
-                    <button
-                        className={styles.colorButton}
-                        onClick={() => setIsDialogOpen(true)}
+        <>
+            {/* ——————— Main Profile Layout ——————— */}
+            <div className={styles.profileContainer}>
+                <div className={styles.leftSide}>
+                    <div className={styles.nameContainer}>
+                        <Image
+                            src='/paw.svg'
+                            alt="paw"
+                            width={100}
+                            height={100}
+                        />
+                        <p className={styles.nameTag}>{nameplate}</p>
+                    </div>
+                    <div
+                        className={styles.profilePictureHolder}
+                        style={{ backgroundColor: selectedColor }}
                     >
-                        X
-                    </button>
-                </div>
-                <div className={styles.nameContainer}>
-                    {' '}
-                    <p className={styles.nameTag}> FirstName LastName</p>
-                </div>
-                <div>
-                    <p className={styles.achievementsTag}>Achievements</p>
-                </div>
-                <div className={styles.lhsAchievementsContainer}>
-                    <BadgeTable selectedBadges={selectedBadges} />
-                </div>
-                <div className={styles.viewButtonContainer}>
-                    <button
-                        className={styles.viewButton}
-                        onClick={() => setIsBadgeModalOpen(true)}
-                    >
-                        <p className={styles.viewText}> View All </p>
-                    </button>
+                        <Image
+                            src={selectedBackground}
+                            alt="Background"
+                            fill
+                            className={styles.backgroundImage}
+                        />
+                        <Image
+                            src={selectedCat}
+                            alt="Overlay"
+                            width={100}
+                            height={100}
+                            sizes="(max-width: 768px) 33vw, 100px"
+                            priority
+                            className={styles.overlayImage}
+                        />
+
+                        <button
+                            className={styles.colorButton}
+                            onClick={() => setIsDialogOpen(true)}
+                        >
+                            Edit Profile
+                        </button>
+                    </div>
+
+                    <p className={styles.achievementsTag}>CERTIFICATES</p>
+                    <div className="w-full overflow-x-auto overflow-y-hidden">
+                        <ul className="flex flex-nowrap space-x-4 p-4">
+                            {Object.entries(certificatesMap).map(
+                                ([title, date]) => (
+                                    <li key={title} className="flex-shrink-0">
+                                        <CertificatePreview
+                                            title={(`${title} course`).toUpperCase()}
+                                            date={date}
+                                            name={nameplate.toUpperCase()}
+                                        />
+                                    </li>
+                                )
+                            )}
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div className={styles.rightSide}></div>
+
+            {/* ——————— Color Picker Modal ——————— */}
             <ColorPickerDialog
                 isOpen={isDialogOpen}
                 setIsOpen={setIsDialogOpen}
@@ -125,20 +119,18 @@ export default function Home() {
                 setSelectedCat={setSelectedCat}
                 selectedBackground={selectedBackground}
                 setSelectedBackground={setSelectedBackground}
+                unlockedThemes={unlockedThemes}
             />
+
+            {/* ——————— Badge Modal ——————— */}
             {isBadgeModalOpen && (
                 <BadgeModal
-                    selectedBadges={selectedBadges}
-                    setSelectedBadges={setSelectedBadges}
-                    badgesEarned={badgesEarned}
+                    selectedBadges={[]}
+                    setSelectedBadges={() => {}}
+                    badgesEarned={[]}
                     onClose={() => setIsBadgeModalOpen(false)}
                 />
             )}
-            {kibbleCount}
-        </div>
+        </>
     );
 }
-
-export type WrapperProps = {
-    mainApp: React.ElementType;
-};
