@@ -22,8 +22,10 @@ export default function InitAuthState({
 }: {
     children: React.ReactNode;
 }) {
-    const { setUser, setLoading, setRole, setUID, user } = useUserStore();
+    const { setUser, setLoading, setRole, setUID, user, uid } = useUserStore();
     const auth = getAuth();
+
+    console.log('InitAuthState:', user, uid);
 
     // check for saved student in local storage
     const fetchStudent = async () => {
@@ -78,34 +80,34 @@ export default function InitAuthState({
                 // The client SDK will parse the code from the link for you.
                 signInWithEmailLink(auth, email, window.location.href)
                     .then((result) => {
-                    // Clear email from storage
-                    const newAdmin: Admin = {
-                        name: {
-                            // MAKE SURE TO IMPORT FIRST AND LAST NAME
-                            first: 'Test',
-                            last: 'Test',
-                        },
-                        email,
-                        role: 'school_admin',
-                        school_name: 'UCLA', // ALSO MAKE SURE TO IMPORT
-                        approved: false,
-                    };
-                    if (auth.currentUser?.uid) {
-                        addAdmin(newAdmin, auth.currentUser?.uid);
-                    }
-                    window.localStorage.removeItem('emailForSignIn');
-                    // You can access the new user by importing getAdditionalUserInfo
-                    // and calling it with result:
-                    // getAdditionalUserInfo(result)
-                    // You can access the user's profile via:
-                    // getAdditionalUserInfo(result)?.profile
-                    // You can check if the user is new or existing:
-                    // getAdditionalUserInfo(result)?.isNewUser
-                })
-                .catch((error) => {
-                    // Some error occurred, you can inspect the code: error.code
-                    // Common errors could be invalid email and invalid or expired OTPs.
-                });
+                        // Clear email from storage
+                        const newAdmin: Admin = {
+                            name: {
+                                // MAKE SURE TO IMPORT FIRST AND LAST NAME
+                                first: 'Test',
+                                last: 'Test',
+                            },
+                            email,
+                            role: 'school_admin',
+                            school_name: 'UCLA', // ALSO MAKE SURE TO IMPORT
+                            approved: false,
+                        };
+                        if (auth.currentUser?.uid) {
+                            addAdmin(newAdmin, auth.currentUser?.uid);
+                        }
+                        window.localStorage.removeItem('emailForSignIn');
+                        // You can access the new user by importing getAdditionalUserInfo
+                        // and calling it with result:
+                        // getAdditionalUserInfo(result)
+                        // You can access the user's profile via:
+                        // getAdditionalUserInfo(result)?.profile
+                        // You can check if the user is new or existing:
+                        // getAdditionalUserInfo(result)?.isNewUser
+                    })
+                    .catch((error) => {
+                        // Some error occurred, you can inspect the code: error.code
+                        // Common errors could be invalid email and invalid or expired OTPs.
+                    });
             }
         }
 
@@ -126,7 +128,7 @@ export default function InitAuthState({
                 }
             } else {
                 const hi = await fetchStudent();
-                if (hi == false){
+                if (hi == false) {
                     setCookie('admin-token', '');
                     setUser(null);
                 }

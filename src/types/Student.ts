@@ -1,4 +1,6 @@
 import { Admin } from './Admin';
+import { NewEOAdmin } from './newEOAdmin';
+import { NewSchoolAdmin } from './newSchoolAdmin';
 import { NewStudent } from './newStudent';
 
 interface Quiz {
@@ -59,7 +61,9 @@ export const StudentJosh: Student = {
 };
 
 // Type guard function
-export const isStudent = (obj: NewStudent | Admin | null): obj is NewStudent => {
+export const isStudent = (
+    obj: NewStudent | NewEOAdmin | NewSchoolAdmin | null
+): obj is NewStudent => {
     return (
         //typeof obj === 'object' &&
         (obj as NewStudent) !== null

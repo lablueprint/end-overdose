@@ -5,7 +5,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import {
     validateUserCredentials,
     checkHasLoggedIn,
-    updateHasLoggedIn,
 } from '../api/students/actions';
 import { useState, useEffect } from 'react';
 import { getSchoolNames } from '@/app/api/generalData/actions';
@@ -23,7 +22,7 @@ export default function SignInPage() {
     const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState<string | null>(null);
     const [schools, setSchools] = useState<string[]>([]);
-    const { setUser, setRole, setUID, setProgress } = useUserStore();
+    const { setUser, setRole, setUID } = useUserStore();
 
     // Fetch schools using the server action
     useEffect(() => {
@@ -48,10 +47,8 @@ export default function SignInPage() {
     ));
     const user = useUserStore((state) => state.user);
     const [showOnboarding, setShowOnboarding] = useState(false);
-    const setUid = useUserStore((state) => state.setUID);
-    const setUser = useUserStore((state) => state.setUser);
 
-    console.log(user);
+    // console.log(user);
 
     //This is an anonymous function
     const onSubmit: SubmitHandler<Inputs> = async ({
@@ -83,12 +80,27 @@ export default function SignInPage() {
             // set the user in the store
             if (result.result) {
                 // set the cookie
-                setCookie('student-token', JSON.stringify({ firebase_id, username: email, password, school }));
+                setCookie(
+                    'student-token',
+                    JSON.stringify({
+                        firebase_id,
+                        username: email,
+                        password,
+                        school,
+                    })
+                );
                 setUser(result.result.user);
                 setRole(role);
                 setUID(firebase_id);
                 // setProgress(0);
+                const hasLoggedIn = await checkHasLoggedIn(firebase_id);
+                if (!hasLoggedIn) {
+                    setShowOnboarding(true);
+                    return;
+                }
             }
+            // redirect to dashboard
+            window.location.href = '/';
         } else {
             const result = await signInAdmin({ email, password });
             if (result.error) {
@@ -99,9 +111,9 @@ export default function SignInPage() {
                     error: 'Wrong email or password.',
                 };
             }
+            // redirect to dashboard
+            window.location.href = '/';
         }
-        // redirect to dashboard
-        window.location.href = '/';
     };
 
     /*UNDERSTANDING HOW THE FORM WORKS
@@ -154,6 +166,23 @@ export default function SignInPage() {
                         >
                             {error && <p className={styles.error}>{error}</p>}
                             <div className={styles.inputGroup}>
+                                <label className={styles.label} htmlFor="role">
+                                    Select your Role
+                                </label>
+                                <select
+                                    id="role"
+                                    className={styles.input}
+                                    {...register('role', { required: true })}
+                                >
+                                    <option value="">Choose a Role</option>
+                                    <option value="student">Student</option>
+                                    <option value="eo_admin">EO Admin</option>
+                                    <option value="admin">School Admin</option>
+                                </select>
+                            </div>
+
+                            {error && <p className={styles.error}>{error}</p>}
+                            <div className={styles.inputGroup}>
                                 <label
                                     className={styles.label}
                                     htmlFor="school"
@@ -166,25 +195,7 @@ export default function SignInPage() {
                                     {...register('school', { required: true })}
                                 >
                                     <option value="">Choose a School</option>
-                                    <option value="UCLA">UCLA</option>
-                                    <option value="USC">USC</option>
-                                    <option value="UCB">UCB</option>
-                                </select>
-                            </div>
-
-                            <div className={styles.inputGroup}>
-                                <label className={styles.label} htmlFor="role">
-                                    Select your Role
-                                </label>
-                                <select
-                                    id="role"
-                                    className={styles.input}
-                                    {...register('role', { required: true })}
-                                >
-                                    <option value="">Choose a Role</option>
-                                    <option value="student">Student</option>
-                                    <option value="eo_admin">EO Admin</option>
-                                    <option value="admin">Admin</option>
+                                    {schoolValues}
                                 </select>
                             </div>
 

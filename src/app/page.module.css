@@ -1,18 +1,18 @@
 .container {
     width: 90%;
-    margin: 1.2em auto 0 auto;
+    margin: 3em auto 0 auto;
 }
 
 .header {
     font-size: 1.8rem;
     /* position: absolute; */
-    max-width: 15ch;
+    /* max-width: 15ch; */
     text-transform: uppercase;
     font-weight: bold;
 }
 
 .hero {
-    transform:translateY(1rem);
+    transform:translateY(1.3rem);
     position: relative;
 }
 
@@ -52,7 +52,7 @@
 
 .flex {
     display: flex;
-    transform: translateY(2.8em);
+    transform: translateY(3em);
     gap: 2em;
 }
 
