@@ -21,11 +21,7 @@ import {
 } from 'firebase/firestore';
 import { getSchoolData } from '@/app/api/schools/actions'; // Make sure this import is correct
 // import { studentsCollection } from './firebase'; // Adjust import as needed
-<<<<<<< HEAD
-import { NewStudent } from '@/types/newStudent';
 import { documentId } from 'firebase/firestore';
-=======
->>>>>>> main
 
 interface Quiz {
     name: string;
@@ -458,7 +454,7 @@ export async function updateNameplate(firebase_id: string, nameplate: string) {
         return { success: false, error: 'Failed to update nameplate' };
     }
 }
-        
+
 export async function changeBackground(
     studentId: string,
     newBackgroundKey: string
@@ -473,7 +469,6 @@ export async function changeBackground(
         const profile = data.profile ?? {};
         const background = profile.background ?? '';
 
-        
         console.log('Background changed to:', newBackgroundKey);
         await updateDoc(docRef, {
             profile: {
@@ -487,8 +482,6 @@ export async function changeBackground(
     }
 }
 
-
-                
 export async function changeCat(studentId: string, newCatKey: string) {
     const q = query(studentsCollection, where('student_id', '==', studentId));
     const snapshot = await getDocs(q);
@@ -510,7 +503,6 @@ export async function changeCat(studentId: string, newCatKey: string) {
         return {
             cat,
         };
-
     }
 }
 // Create a student (called in api/schools to add student to school)
