@@ -21,7 +21,6 @@ import {
 } from 'firebase/firestore';
 import { getSchoolData } from '@/app/api/schools/actions'; // Make sure this import is correct
 // import { studentsCollection } from './firebase'; // Adjust import as needed
-import { NewStudent } from '@/types/newStudent';
 
 interface Quiz {
     name: string;
@@ -438,6 +437,8 @@ export async function changeCat(studentId: string, newCatKey: string) {
         return {
             cat,
         };
+    }
+}
 // Create a student (called in api/schools to add student to school)
 export async function createStudent(studentId: string, schoolId: string) {
     try {
