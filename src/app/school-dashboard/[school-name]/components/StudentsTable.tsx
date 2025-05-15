@@ -48,8 +48,7 @@ const StudentsTable = ({ students }: { students: Student[] }) => {
                 <tbody>
                     {students.map((student, index) => {
                         // Get the course data
-                        const opioidCourse =
-                            student.course_completion.opioidCourse;
+                        const opioidCourse = student.courses.opioidCourse;
 
                         // Calculate average grade from both courses
                         const scores = [];

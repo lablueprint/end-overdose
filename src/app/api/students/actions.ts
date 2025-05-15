@@ -25,7 +25,7 @@ interface Quiz {
 
 //1. SET UP THE DATABASE TO BE REFERENCED IN THE API
 const db = getFirestore(firebase_app);
-const studentsCollection = collection(db, 'students');
+const studentsCollection = collection(db, 'newStudents');
 
 //CREATE SERVER ACTIONS
 

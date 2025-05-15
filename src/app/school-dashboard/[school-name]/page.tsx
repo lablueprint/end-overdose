@@ -18,7 +18,7 @@ interface Student {
     school_name: string;
     nameplate: string;
     fish_count: number;
-    course_completion: {
+    courses: {
         opioidCourse: {
             courseScore: number;
             courseProgress: number;
