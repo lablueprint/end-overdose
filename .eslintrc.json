@@ -11,7 +11,6 @@
     "rules": {
         "@typescript-eslint/no-unused-vars": "warn",
         "prettier/prettier": ["error", { "endOfLine": "auto" }]
-
     },
     "env": {
         "browser": true,

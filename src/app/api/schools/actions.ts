@@ -16,11 +16,11 @@ import {
 } from 'firebase/firestore';
 
 //SERVER ACTIONS
-import { getSchoolAverage } from '@/app/api/students/actions';
+import { getSchoolAverage, createStudent } from '@/app/api/students/actions';
 
 //1. SETUP THE DATABASE CONNECTION
 const db = getFirestore(firebase_app);
-const schoolsCollection = collection(db, 'schools');
+const schoolsCollection = collection(db, 'newSchools');
 
 //SERVER ACTIONS DEFINED BELOW
 
@@ -51,11 +51,31 @@ export const getSchool = cache(async (schoolName: string) => {
 });
 
 //BETTER SCHOOL INFORMATION
-export const getSchoolData = cache(async (schoolName: string) => {
+export const getSchoolData = cache(async (schoolId: string) => {
     try {
         const schoolQuery = query(
             schoolsCollection,
-            where('school_name', '==', schoolName)
+            where('school_id', '==', schoolId)
+        );
+
+        const snapshot = await getDocs(schoolQuery);
+        if (snapshot.empty) {
+            return null; // No school found with that name
+        }
+
+        // Return just the school data without the ID
+        return snapshot.docs[0].data() as School;
+    } catch (error) {
+        console.error('Error fetching school:', error);
+        throw new Error('Failed to fetch school.');
+    }
+});
+
+export const getSchoolDataByID = cache(async (schoolId: number) => {
+    try {
+        const schoolQuery = query(
+            schoolsCollection,
+            where('school_id', '==', schoolId)
         );
 
         const snapshot = await getDocs(schoolQuery);
@@ -196,5 +216,55 @@ export const addIdPasswordPair = async (
         revalidatePath('/');
     } catch (error) {
         console.error('Error toggling course inclusion:', error);
+    }
+};
+
+// Function to generate a random 7-character password
+const generateRandomPassword = (): string => {
+    const chars =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let password = '';
+    for (let i = 0; i < 7; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return password;
+};
+
+// Create a student and add them to the school
+export const createStudentAndAddToSchool = async (
+    studentId: string,
+    adminUID: string
+) => {
+    try {
+        const adminDocRef = doc(db, 'newSchoolAdmin', adminUID);
+        const adminSnap = await getDoc(adminDocRef);
+        if (!adminSnap.exists()) throw new Error('Admin not found');
+        const schoolId = adminSnap.data().school_id;
+
+        const { success, firebase_id } = await createStudent(
+            studentId,
+            schoolId
+        );
+        if (!success || !firebase_id)
+            throw new Error('Student creation failed');
+
+        const studentPassword = generateRandomPassword();
+
+        const schoolDocRef = doc(db, 'newSchools', schoolId);
+        await updateDoc(schoolDocRef, {
+            [`student_ids.${studentId}`]: {
+                student_firebase_id: firebase_id,
+                student_password: studentPassword,
+            },
+        });
+
+        return {
+            success: true,
+            firebase_id,
+            student_password: studentPassword,
+        };
+    } catch (error) {
+        console.error('Error creating and linking student:', error);
+        return { error: 'Failed to create student and update school record' };
     }
 };

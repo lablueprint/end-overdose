@@ -27,10 +27,12 @@ export type Line = {
 export type Choice = {
     text: string;
     nextScene: string;
+    nextDialogue?: Line[];
 };
 
 export type Action = {
-    type: string;
+    type: 'decision';
+    question: string;
     choices: Array<Choice>;
 };
 
