@@ -13,7 +13,7 @@ import '@fontsource/roboto-condensed/400.css';
 import '@fontsource/roboto-condensed/500.css';
 import '@fontsource/roboto-condensed/600.css';
 import '@fontsource/roboto-condensed/700.css';
-import { isStudent } from '@/types/Student';
+import { isStudent } from '@/types/newStudent';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -147,22 +147,22 @@ export default function OpioidHome() {
         if (
             currentLesson < totalLessons &&
             user &&
-            'course_completion' in user
+            'course_completion' in user &&
+            isStudent(user)
         ) {
             setLesson((prevIndex) => {
                 const nextIndex = prevIndex + 1;
                 if (nextIndex > highestReachedLesson) {
                     setHighestReachedLesson(nextIndex);
-                    const updatedOpioidCourse = user.course_completion
-                        .opioidCourse || {
+                    const updatedOpioidCourse = user.courses.opioidCourse || {
                         courseProgress: 0,
                     };
 
                     // Update global state with new course progress
                     useUserStore.getState().setUser({
                         ...user,
-                        course_completion: {
-                            ...user.course_completion,
+                        courses: {
+                            ...user.courses,
                             opioidCourse: {
                                 ...updatedOpioidCourse,
                                 courseProgress:
@@ -185,33 +185,35 @@ export default function OpioidHome() {
     // save progress to user state and update firebase upon exit
     const confirmExit = async () => {
         // Ensure the user exists and safely access opioidCourse
-        if (user && 'course_completion' in user) {
-            const updatedOpioidCourse = user.course_completion.opioidCourse || {
-                courseProgress: 0,
+        if (
+            user &&
+            isStudent(user) &&
+            user.courses &&
+            user.courses.opioidCourse
+        ) {
+            const updatedOpioidCourse = {
+                ...user.courses.opioidCourse,
+                courseProgress: (highestReachedLesson / totalLessons) * 100,
             };
-            const progressPercentage =
-                (highestReachedLesson / totalLessons) * 100;
-            // Update the global user state with the current progress
+
+            // Update global state (Zustand or similar)
             useUserStore.getState().setUser({
                 ...user,
-                course_completion: {
-                    ...user.course_completion,
-                    opioidCourse: {
-                        ...updatedOpioidCourse,
-                        courseProgress: progressPercentage,
-                    },
+                courses: {
+                    ...user.courses,
+                    opioidCourse: updatedOpioidCourse,
                 },
             });
 
-            // update firebase
+            // Sync with Firebase (or backend)
             await updateCourseProgress(
                 user.student_id,
                 'opioidCourse',
-                progressPercentage
+                updatedOpioidCourse.courseProgress
             );
         }
         //redirect to home page or course selection
-        window.location.href = '/courses';
+        window.location.href = '/quiz';
     };
 
     return (

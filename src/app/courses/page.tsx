@@ -4,7 +4,7 @@ import styles from './page.module.css';
 import AuthWrap from '@/components/AuthWrap';
 //import { getCourseProgress } from '../api/students/actions';
 import { useState, useEffect } from 'react';
-import { isStudent } from '@/types/Student';
+import { isStudent } from '@/types/newStudent';
 import LevelIcon from './components/LevelIcon';
 
 export default function Courses() {
@@ -15,7 +15,7 @@ export default function Courses() {
     const role = useUserStore((state) => state.role);
     const opiumLessonNum = 6;
     const [opioidCourseProgress, setOpioidCourseProgress] = useState(
-        isStudent(user) ? user.course_completion.opioidCourse.courseProgress : 0
+        isStudent(user) ? user.courses.opioidCourse.courseProgress : 0
     );
     const [quizCompletion, setQuizCompletion] = useState(0);
     const [mapIndex, setMapIndex] = useState(
@@ -32,7 +32,7 @@ export default function Courses() {
                     // short-circuit evaluation, only checking role value if it exists
                     // checking that the user is a student by checking against admin attributes
                     setOpioidCourseProgress(
-                        user.course_completion.opioidCourse.courseProgress
+                        user.courses.opioidCourse.courseProgress
                     );
                     setMapIndex(
                         Math.max(
@@ -56,23 +56,23 @@ export default function Courses() {
         fetchOpioidCourseProgress();
     }, [user, quizCompletion]);
 
-    const coursesData = [
+    /**   const coursesData = [
         {
             title: 'Opioid Overdose',
             path: 'opioid',
-            progress: `${user && 'course_completion' in user ? user.course_completion.opioidCourse.courseProgress : 0}`,
+            progress: `${user && 'course_completion' in user ? user.courses.opioidCourse.courseProgress : 0}`,
         },
         {
             title: 'Career Training',
             path: 'career',
-            progress: `${user && 'course_completion' in user ? user.course_completion.careerCourse.courseProgress : 0}`,
+            progress: `${user && 'courses' in user ? user.courses.careerCourse.courseProgress : 0}`,
         },
         //hardcoded right now, change later
         { title: 'Mental Health', path: 'mental-health', progress: 25 },
         { title: 'First Aid', path: 'first-aid', progress: 60 },
         // { title: 'Life Skills', path: 'life-skills', progress: 15 },
         // { title: 'Stress Management', path: 'stress', progress: 30 },
-    ];
+    ]; */
     // Daily quest data
     const dailyQuestData = {
         questPath: 'daily-quest-1',
