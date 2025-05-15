@@ -41,14 +41,15 @@
 }
 
 .studentColumn {
-  width: 120px;
+  width: 250px;
   font-weight: 500;
   color: #334155;
+  text-align: left;
 }
 
 .gradeColumn {
-  width: 100px;
-  text-align: center;
+  width: 580px;
+  text-align: left;
   font-weight: 600;
   color: #334155;
 }
@@ -105,4 +106,25 @@
   font-weight: 600;
   font-size: 1.1rem;
   color: #dc2626;
+}
+
+.statusCircle {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.statusPass {
+  background: #02B56B;
+}
+
+.statusFail {
+  background: #E17A7A;
+}
+
+.statusInProgress {
+  background: #C68D1A;
 }

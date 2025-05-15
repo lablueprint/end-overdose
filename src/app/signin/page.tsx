@@ -4,6 +4,7 @@ import styles from './signin.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { validateUserCredentials } from '../api/students/actions';
 import { useState } from 'react';
+import { useUserStore } from '@/store/userStore';
 export default function SignInPage() {
     type Inputs = {
         school: string;
@@ -14,6 +15,9 @@ export default function SignInPage() {
 
     const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState<string | null>(null);
+    const user = useUserStore((state) => state.user);
+
+    console.log(user);
 
     //This is an anonymous function
     const onSubmit: SubmitHandler<Inputs> = async ({
