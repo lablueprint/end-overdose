@@ -4,6 +4,7 @@ import styles from './signin.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { validateUserCredentials } from '../api/students/actions';
 import { useState, useEffect } from 'react';
+import { useUserStore } from '@/store/userStore';
 import { getSchoolNames } from '@/app/api/generalData/actions';
 
 type Inputs = {
