@@ -20,7 +20,7 @@ import { getSchoolAverage } from '@/app/api/students/actions';
 
 //1. SETUP THE DATABASE CONNECTION
 const db = getFirestore(firebase_app);
-const schoolsCollection = collection(db, 'schools');
+const schoolsCollection = collection(db, 'newSchools');
 
 //SERVER ACTIONS DEFINED BELOW
 
@@ -51,11 +51,11 @@ export const getSchool = cache(async (schoolName: string) => {
 });
 
 //BETTER SCHOOL INFORMATION
-export const getSchoolData = cache(async (schoolName: string) => {
+export const getSchoolData = cache(async (schoolId: string) => {
     try {
         const schoolQuery = query(
             schoolsCollection,
-            where('school_name', '==', schoolName)
+            where('school_id', '==', schoolId)
         );
 
         const snapshot = await getDocs(schoolQuery);

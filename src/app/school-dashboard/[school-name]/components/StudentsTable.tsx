@@ -10,7 +10,7 @@ interface Student {
     email: string;
     school_name: string;
     nameplate: string;
-    kibble_count: number;
+    fish_count: number;
     course_completion: {
         opioidCourse: {
             courseScore: number;
@@ -27,18 +27,11 @@ interface Student {
 }
 
 const StudentsTable = ({ students }: { students: Student[] }) => {
-    // Helper function to determine course status
-    const getCourseStatus = (score: number) => {
-        if (score >= 70) return styles.pass;
-        if (score > 0) return styles.fail;
-        return styles.inProgress;
-    };
-
-    // Helper function to get status text
-    const getStatusText = (score: number) => {
-        if (score >= 70) return 'Pass';
-        if (score > 0 && score < 70) return 'Fail';
-        return 'In Progress';
+    // Helper function to get status circle class
+    const getStatusCircleClass = (score: number) => {
+        if (score >= 70) return `${styles.statusCircle} ${styles.statusPass}`;
+        if (score > 0) return `${styles.statusCircle} ${styles.statusFail}`;
+        return `${styles.statusCircle} ${styles.statusInProgress}`;
     };
 
     return (
@@ -50,23 +43,17 @@ const StudentsTable = ({ students }: { students: Student[] }) => {
                         <th className={styles.studentColumn}>Student</th>
                         <th className={styles.gradeColumn}>Avg. Grade</th>
                         <th className={styles.courseColumn}>Opioid Course</th>
-                        <th className={styles.courseColumn}>Career Course</th>
                     </tr>
                 </thead>
                 <tbody>
                     {students.map((student, index) => {
                         // Get the course data
-                        const opioidCourse =
-                            student.course_completion.opioidCourse;
-                        const careerCourse =
-                            student.course_completion.careerCourse;
+                        const opioidCourse = student.courses.opioidCourse;
 
                         // Calculate average grade from both courses
                         const scores = [];
                         if (opioidCourse.courseScore > 0)
                             scores.push(opioidCourse.courseScore);
-                        if (careerCourse.courseScore > 0)
-                            scores.push(careerCourse.courseScore);
 
                         const avgGrade =
                             scores.length > 0
@@ -87,31 +74,17 @@ const StudentsTable = ({ students }: { students: Student[] }) => {
                                     {student.student_id}
                                 </td>
                                 <td className={styles.gradeColumn}>
-                                    {avgGrade}%
+                                    {avgGrade > 0 ? `${avgGrade}%` : '-'}
                                 </td>
-                                <td
-                                    className={getCourseStatus(
-                                        opioidCourse.courseScore
-                                    )}
-                                >
-                                    <div>
-                                        {getStatusText(
+                                <td className={styles.courseColumn}>
+                                    <span
+                                        className={getStatusCircleClass(
                                             opioidCourse.courseScore
                                         )}
-                                    </div>
-                                    <div>{opioidCourse.courseScore}%</div>
-                                </td>
-                                <td
-                                    className={getCourseStatus(
-                                        careerCourse.courseScore
-                                    )}
-                                >
-                                    <div>
-                                        {getStatusText(
-                                            careerCourse.courseScore
-                                        )}
-                                    </div>
-                                    <div>{careerCourse.courseScore}%</div>
+                                    ></span>
+                                    {opioidCourse.courseScore > 0
+                                        ? `${opioidCourse.courseScore}%`
+                                        : '-'}
                                 </td>
                             </tr>
                         );
