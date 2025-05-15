@@ -22,6 +22,8 @@ export default function SignInPage() {
     const [error, setError] = useState<string | null>(null);
     const user = useUserStore((state) => state.user);
     const [showOnboarding, setShowOnboarding] = useState(false);
+    const setUid = useUserStore((state) => state.setUID);
+    const setUser = useUserStore((state) => state.setUser);
 
     console.log(user);
 
@@ -46,7 +48,6 @@ export default function SignInPage() {
                     error: 'Wrong student ID or password.',
                 };
             }
-            console.log('about to check has logged in');
             const hasLoggedIn = await checkHasLoggedIn(firebase_id);
             console.log(hasLoggedIn);
 
@@ -67,6 +68,19 @@ export default function SignInPage() {
                 });
                 setShowOnboarding(true);
             }
+            /*const result = await signInStudent({
+                firebase_id,
+                username: email,
+                password,
+                school,
+            });
+            setUid(firebase_id);
+            if (result.result) {
+                setUser(result.result.user);
+            }
+
+            // redirect to dashboard
+            window.location.href = '/'; */ // OLD CHANGES
         } else {
             const result = await signInAdmin({ email, password });
             if (result.error) {
