@@ -3,18 +3,12 @@ import Link from 'next/link';
 import styles from './signup.module.css';
 import { useState, useEffect } from 'react';
 import { Admin } from '@/types/Admin';
-import { signUp } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
-import { School } from '@/types/School';
-import { WolfPackAlphaUniversity, UCLA } from '@/types/School';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
     getAuth,
-    sendSignInLinkToEmail,
     createUserWithEmailAndPassword,
     sendEmailVerification,
-    setPersistence,
-    browserSessionPersistence,
 } from 'firebase/auth';
 import { addAdmin } from '@/app/api/admins/actions';
 
@@ -23,6 +17,8 @@ type Inputs = {
     email: string;
     password: string;
     school_name: string;
+    termsAgreed: boolean;
+    newsletter: boolean;
 };
 
 const SignUpPage = () => {
@@ -32,32 +28,12 @@ const SignUpPage = () => {
     // DELETE LATER TEMPORARY TOGGLE FOR STUDENT OR ADMIN
     const [student, setStudent] = useState(false);
 
-    const roles = ['Student', 'School Admin', 'End Overdose Admin'];
+    const roles = ['School Admin', 'End Overdose Admin'];
     const roleValues = roles.map((role) => (
         <option key={role} value={role}>
             {role}
         </option>
     ));
-
-    const actionCodeSettings = {
-        // URL you want to redirect back to. The domain (www.example.com) for this
-        // URL must be in the authorized domains list in the Firebase Console.
-        url: `${window.location.origin}/login`,
-        // This must be true.
-        handleCodeInApp: true,
-        //links specificlaly for IOS or android
-        //iOS: {
-        //bundleId: 'com.example.ios',
-        //},
-        //android: {
-        //packageName: 'com.example.android',
-        //installApp: true,
-        //minimumVersion: '12',
-        //},
-        // The domain must be configured in Firebase Hosting and owned by the project.
-        linkDomain: 'end-overdose-bcbd0.firebaseapp.com',
-    };
-
     //Change selected school from dropdown selection MERGE CONCLICT SO COMMENTED OUT IF DONT NEED DELETE
     /*const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedSchoolName = e.target.value;
@@ -73,18 +49,19 @@ const SignUpPage = () => {
     ));
 
     const { register, handleSubmit } = useForm<Inputs>();
-
-    // Check if passwords match
-    // if (password !== confirmPassword) {
-    //     setError('Passwords do not match.');
-    //     return;
-    // }
     const onSubmit: SubmitHandler<Inputs> = async ({
         email,
         password,
         role,
         school_name,
+        termsAgreed,
+        newsletter,
     }) => {
+        //1. Check if valid
+        if (!termsAgreed || !newsletter) {
+            return;
+        }
+
         setError('');
 
         try {
@@ -121,9 +98,9 @@ const SignUpPage = () => {
             setTimeout(() => {
                 router.push('/login');
             }, 1000);
-        } catch (err: any) {
+        } catch (err) {
             console.error(err);
-            setError(err.message || 'Something went wrong.');
+            setError('Something went wrong.');
         }
     };
 
@@ -155,7 +132,7 @@ const SignUpPage = () => {
                         <div className={styles.titleTextContainer}>
                             <h1 className={styles.h1}>CREATE AN ACCOUNT</h1>
                             <h2 className={styles.h2}>
-                                We're so glad you could join us!
+                                We&apos;re so glad you could join us!
                             </h2>
                         </div>
                         {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -192,7 +169,6 @@ const SignUpPage = () => {
                                         className={`${styles.input} ${styles.formControl}`}
                                         id="schoolName"
                                         name="schoolName"
-                                        onChange={(e) => handleSelectChange(e)}
                                         required
                                     >
                                         <option value="" disabled hidden>
@@ -233,27 +209,76 @@ const SignUpPage = () => {
                                         })}
                                     />
                                 </div>
+
+                                <div className={styles.checkboxContainer}>
+                                    <div className={styles.checkboxGroup}>
+                                        <input
+                                            type="checkbox"
+                                            id="termsAgreed"
+                                            className={styles.checkbox}
+                                            {...register('termsAgreed', {
+                                                required: true,
+                                            })}
+                                        />
+                                        <label
+                                            htmlFor="termsAgreed"
+                                            className={styles.checkboxLabel}
+                                        >
+                                            Agree to our{' '}
+                                            <Link
+                                                href="/terms"
+                                                className={styles.link}
+                                            >
+                                                Terms of use
+                                            </Link>{' '}
+                                            and{' '}
+                                            <Link
+                                                href="/privacy"
+                                                className={styles.link}
+                                            >
+                                                Privacy Policy
+                                            </Link>
+                                        </label>
+                                    </div>
+
+                                    <div className={styles.checkboxGroup}>
+                                        <input
+                                            type="checkbox"
+                                            id="newsletter"
+                                            className={styles.checkbox}
+                                            {...register('newsletter', {
+                                                required: true,
+                                            })}
+                                        />
+                                        <label
+                                            htmlFor="newsletter"
+                                            className={styles.checkboxLabel}
+                                        >
+                                            Subscribe to our monthly newsletter
+                                        </label>
+                                    </div>
+                                </div>
                                 <div className={styles.buttonContainer}>
-                                    <div
-                                        className={styles.robotVerPlaceholder}
-                                    ></div>
                                     <button
                                         className={styles.loginButton}
                                         type="submit"
                                     >
                                         SIGN UP
                                     </button>
+                                    <div className={styles.navigationContainer}>
+                                        <h2 className={styles.h2}>
+                                            {`Already have an account?   `}
+                                            <Link
+                                                className={styles.link}
+                                                href="/signin"
+                                            >
+                                                Sign In
+                                            </Link>
+                                        </h2>
+                                    </div>
                                 </div>
                             </form>
                         </div>
-                    </div>
-                    <div className={styles.navigationContainer}>
-                        <h2 className={styles.h2}>
-                            {`Already have an account?   `}
-                            <Link className={styles.link} href="/login">
-                                Sign In
-                            </Link>
-                        </h2>
                     </div>
                 </div>
             </div>

@@ -3,11 +3,7 @@
 import { cache } from 'react';
 import { revalidatePath } from 'next/cache';
 import { Admin } from '@/types/Admin';
-import { School } from '@/types/School';
 import firebase_app from '@/firebase/config';
-import { getAuth } from 'firebase/auth';
-import signIn from '@/firebase/auth/signIn';
-import signUp from '@/firebase/auth/signUp';
 import {
     getFirestore,
     collection,

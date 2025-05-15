@@ -1,8 +1,8 @@
 'use server';
-import { addStudent, getStudent } from '@/app/api/students/actions';
+import { addStudent } from '@/app/api/students/actions';
 import { addAdmin, getAdmin } from '@/app/api/admins/actions';
-import { Student } from '@/types/Student';
 import { Admin } from '@/types/Admin';
+import { NewStudent } from '@/types/newStudent';
 
 export async function handleUserCreation(
     role: string,
@@ -13,19 +13,29 @@ export async function handleUserCreation(
     uid: string
 ) {
     if (role === 'Student') {
-        const newStudent: Student = {
-            ...rest,
+        const student: NewStudent = {
             student_id: '',
-            quizzes: [],
-            nameplate: '',
-            badges: [],
-            fish_count: 0,
-            course_completion: {
-                opioidCourse: { courseScore: 0, courseProgress: 0 },
-                careerCourse: { courseScore: 0, courseProgress: 0 },
+            school_name: rest.school_name,
+            profile: {
+                unlocked: [],
+                cat: '',
+                background: '',
+                nameplate: '',
             },
+            courses_average_score: 0,
+            all_courses_completed: false,
+            courses: {
+                opioidCourse: {
+                    courseScore: 0,
+                    courseProgress: 0,
+                    quizzes: [],
+                },
+            },
+            fish_count: 0,
+            certificates: {},
+            hasLoggedIn: false,
         };
-        await addStudent(newStudent, uid);
+        await addStudent(student, uid);
     } else {
         const newAdmin: Admin = {
             ...rest,
@@ -37,27 +47,5 @@ export async function handleUserCreation(
             role: role === 'EO Admin' ? 'eo_admin' : 'school_admin',
         };
         await addAdmin(newAdmin, uid);
-    }
-}
-
-export async function getUserInfo(role: string, uid: string) {
-    if (role === 'Student') {
-        const studentDoc = await getStudent(uid);
-        if (!studentDoc) {
-            throw new Error('Student not found');
-        }
-        return { docId: studentDoc.id, user: studentDoc as Student };
-    } else {
-        const adminDoc = await getAdmin(uid);
-        if (!adminDoc) {
-            throw new Error('Admin not found');
-        }
-        if (!adminDoc.approved) {
-            return {
-                result: null,
-                error: 'Admin not approved yet.',
-            };
-        }
-        return { docId: adminDoc.id, user: adminDoc as Admin };
     }
 }

@@ -17,6 +17,7 @@ import {
 } from 'firebase/firestore';
 import { getSchoolData } from '@/app/api/schools/actions'; // Make sure this import is correct
 // import { studentsCollection } from './firebase'; // Adjust import as needed
+import { NewStudent } from '@/types/newStudent';
 
 interface Quiz {
     name: string;
@@ -168,28 +169,32 @@ export const getSchoolStudents = cache(async (schoolId: string) => {
 
 //takes in school, username, password and checks that username and password are in school's student id map
 export const validateUserCredentials = cache(
-    async (
-        schoolName: string,
-        studentID: string,
-        optionalPassword: string = ''
-    ) => {
+    async (schoolName: string, studentID: string, password: string) => {
         try {
-            const schoolRef = collection(db, 'schools');
+            const schoolRef = collection(db, 'joyce');
 
             // Query to find the document where school name matches and user credentials exist
             const q = query(
                 schoolRef,
-                where('name', '==', schoolName),
-                where(`school_ids.${studentID}`, '==', optionalPassword) // Accessing nested map
+                where('school_name', '==', schoolName),
+                where(
+                    `student_ids.${studentID}.student_password`,
+                    '==',
+                    password
+                ) // Accessing nested map
             );
 
             const querySnapshot = await getDocs(q);
 
             if (!querySnapshot.empty) {
-                // console.log('Valid username and password found!');
-                return { success: true }; // Credentials are valid
+                const schoolDoc = querySnapshot.docs[0];
+                const schoolData = schoolDoc.data();
+                const firebase_id =
+                    schoolData.student_ids[studentID].firebase_id; // Extract firebase_id
+                // console.log('firebase_id: ', firebase_id);
+                return { firebase_id, success: true }; // Credentials are valid
             } else {
-                // console.log('Invalid credentials or school not found.');
+                // console.log('No matching document found');
                 return { success: false }; // No match found
             }
         } catch (error) {
@@ -232,7 +237,7 @@ export const getStudent = cache(async (uid: string) => {
         const studentDoc = await getDoc(studentDocRef);
 
         if (studentDoc.exists()) {
-            return { id: studentDoc.id, ...(studentDoc.data() as Student) };
+            return { id: studentDoc.id, ...(studentDoc.data() as NewStudent) };
         }
 
         return null;
@@ -243,7 +248,7 @@ export const getStudent = cache(async (uid: string) => {
 });
 
 // add a new student to the database
-export async function addStudent(student: Student, docID: string) {
+export async function addStudent(student: NewStudent, docID: string) {
     try {
         // add to database
         await setDoc(doc(studentsCollection, docID), student);

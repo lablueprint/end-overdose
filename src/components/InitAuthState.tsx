@@ -9,14 +9,15 @@ import {
     getAdminFromEmail,
     getAdmin,
 } from '@/app/api/admins/actions';
-import { getStudent } from '@/app/api/students/actions';
-import { setCookie } from '@/firebase/cookies';
+import { getStudent, validateUserCredentials } from '@/app/api/students/actions';
+import { getCookie, setCookie } from '@/firebase/cookies';
 import { Admin } from '@/types/Admin';
 import {
     getAuth,
     isSignInWithEmailLink,
     signInWithEmailLink,
 } from 'firebase/auth';
+import { NewStudent } from '@/types/newStudent';
 
 export default function InitAuthState({
     children,
@@ -25,9 +26,48 @@ export default function InitAuthState({
 }) {
     const { setUser, setLoading, setRole, setUID } = useUserStore();
 
+    // check for saved student in local storage
+    const fetchStudent = async () => {
+        const savedStudent = await getCookie('student-token');
+        // student is logged in
+        if (savedStudent && savedStudent.value !== '') {
+            // check if the token username password is valid
+            const tokenData = JSON.parse(savedStudent.value);
+            console.log('Token Data:', tokenData);
+            const result = await validateUserCredentials(
+                tokenData.school,
+                tokenData.username,
+                tokenData.password
+            );
+            if (!result.success) {
+                // console.log('Invalid token');
+                setUser(null);
+                setLoading(false);
+                return;
+            }
+            // console.log('Valid token');
+            // if the token is valid, get the student data
+            const studentDoc = await getStudent(result.firebase_id);
+            if (studentDoc) {
+                setUser(studentDoc);
+                setUID(result.firebase_id);
+                setRole('student');
+                setLoading(false);
+            } else {
+                setUser(null);
+                setLoading(false);
+            }
+        } else {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         setLoading(true);
         // Confirm the link is a sign-in with email link.
+
+        fetchStudent();
+
         const auth = getAuth();
         if (isSignInWithEmailLink(auth, window.location.href)) {
             // Additional state parameters can also be passed via URL.
@@ -83,38 +123,31 @@ export default function InitAuthState({
         const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
             console.log('Auth State Changed:', authUser);
 
-            // user is signed in
+            // admin is signed in
             if (authUser) {
                 const token = await getIdToken(authUser);
-                setCookie('user-token', token);
+                setCookie('admin-token', token);
 
-                const student = await getStudent(authUser.uid);
-
-                if (student) {
-                    setUser(student);
+                const admin = await getAdmin(authUser.uid);
+                if (admin) {
+                    setUser(admin);
                     setUID(authUser.uid);
-                    setRole('student');
-                } else {
-                    const admin = await getAdmin(authUser.uid);
-                    if (admin) {
-                        setUser(admin);
-                        setUID(authUser.uid);
-                        if ('role' in admin) {
-                            setRole(admin.role);
-                        } else {
-                            setRole('');
-                        }
+                    if ('role' in admin) {
+                        setRole(admin.role);
                     } else {
-                        setUser(null);
                         setRole('');
-                        setUID('');
                     }
+                } else {
+                    setUser(null);
+                    setRole('');
+                    setUID('');
                 }
             }
-            // user is logged out
+
+            // admin is logged out
             else {
                 // clear the user token cookie
-                setCookie('user-token', '');
+                setCookie('admin-token', '');
                 setUser(null);
             }
 

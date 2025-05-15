@@ -9,6 +9,7 @@
         "lint": "next lint",
         "populate-students": "tsx src/helpers/script",
         "populate-new-students": "tsx src/helpers/newScript",
+        "populate-new-schools": "tsx src/helpers/newSchoolsScript",
         "build-service-worker": "npx esbuild auth-service-worker.js --bundle --outfile=public/auth-service-worker.js"
     },
     "dependencies": {
@@ -24,7 +25,7 @@
         "@types/axios": "^0.9.36",
         "axios": "^1.8.1",
         "firebase": "^11.0.2",
-        "framer-motion": "^12.4.0",
+        "framer-motion": "^12.9.4",
         "html-to-image": "^1.11.13",
         "html2canvas": "^1.4.1",
         "motion": "^12.4.0",
