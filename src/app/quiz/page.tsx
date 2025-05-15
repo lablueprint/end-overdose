@@ -1,21 +1,20 @@
 'use client';
-import Link from 'next/link';
 import AuthWrap from '@/components/AuthWrap';
+import CurrentQuiz from './components/CurrentQuiz';
+import { useUserStore } from '@/store/userStore';
+import { isStudent } from '@/types/newStudent';
+import { useState } from 'react';
 
 export default function Quiz() {
+    const user = useUserStore((state) => state.user);
+    const [quizIndex, setQuizIndex] = useState(
+        isStudent(user) ? user.courses.opioidCourse.quizzes.length : 0
+    );
+
     return (
         <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
             <div>
-                <h1> Quizzes </h1>
-                <li>
-                    <Link href="/quiz/mcq">Multiple Choice</Link>
-                </li>
-                <li>
-                    <Link href="/quiz/true-false">True/False</Link>
-                </li>
-                <li>
-                    <Link href="/game">Scenario Game</Link>
-                </li>
+                <CurrentQuiz quiz={quizIndex} />
             </div>
         </AuthWrap>
     );

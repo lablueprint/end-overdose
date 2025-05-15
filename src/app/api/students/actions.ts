@@ -2,6 +2,7 @@
 
 import { cache } from 'react';
 import { Student } from '@/types/Student';
+import { NewStudent } from '@/types/newStudent';
 import firebase_app from '@/firebase/config';
 import { auth } from '@/firebase/clientApp'; // Adjusted the path to match the project structure
 import {
@@ -15,10 +16,12 @@ import {
     setDoc,
     where,
     addDoc,
+    deleteDoc,
+    deleteField,
 } from 'firebase/firestore';
 import { getSchoolData } from '@/app/api/schools/actions'; // Make sure this import is correct
 // import { studentsCollection } from './firebase'; // Adjust import as needed
-import { NewStudent } from '@/types/newStudent';
+import { documentId } from 'firebase/firestore';
 
 interface Quiz {
     name: string;
@@ -215,26 +218,32 @@ export const validateUserCredentials = cache(
 //5. ADDING FEATURES TO STUDENTS
 
 // Add a quiz to the database
-export async function addQuiz(updateQuizzes: Quiz[]) {
+export async function addQuiz(userId: string, updateQuizzes: Quiz[]) {
+    console.log(updateQuizzes);
     try {
-        console.log('work');
-        const user = auth.currentUser;
-        if (!user) {
-            return { error: 'User data not found' };
+        const studentWithID = await getStudentFromID(userId);
+
+        if (!studentWithID) {
+            console.log('studentissue');
+            return { error: 'Student not found' };
         }
-        const userRef = doc(db, 'students', user.uid); // Use the user's unique ID
-        const userDoc = await getDoc(userRef); // DocumentSnapshot
+
+        const userRef = doc(db, 'newStudents', studentWithID.id); // getting actual user's id
+        const userDoc = await getDoc(userRef);
+
         if (!userDoc.exists()) {
+            console.log('userdoc error');
             return { error: 'Student document not found' };
         }
-        console.log('update quizzes: ', updateQuizzes);
+
         await updateDoc(userRef, {
-            quizzes: updateQuizzes,
+            'courses.opioidCourse.quizzes': updateQuizzes,
         });
+
         return { success: true };
     } catch (error) {
         console.error(error);
-        throw new Error('Failed to log in admin.');
+        return { error: 'Failed to update quizzes' };
     }
 }
 
@@ -283,7 +292,7 @@ export async function updateCourseProgress(
             return { error: 'Student not found' };
         }
 
-        const userRef = doc(db, 'students', studentWithID.id); // getting actual user's id
+        const userRef = doc(db, 'newStudents', studentWithID.id); // getting actual user's id
         const userDoc = await getDoc(userRef);
 
         if (!userDoc.exists()) {
@@ -291,7 +300,7 @@ export async function updateCourseProgress(
         }
 
         await updateDoc(userRef, {
-            [`course_completion.${courseName}.courseProgress`]: progress, // Update the courseProgress field
+            [`courses.${courseName}.courseProgress`]: progress, // Update the courseProgress field
         });
 
         return { success: true };
@@ -379,7 +388,7 @@ export async function getStudentFromID2(studentId: string) {
         const snapshot = await getDocs(q);
         if (!snapshot.empty) {
             const doc = snapshot.docs[0];
-            return { ...(doc.data() as Student) };
+            return { ...(doc.data() as NewStudent) };
         }
         return { error: 'Student not found' };
     } catch (error) {
@@ -388,6 +397,121 @@ export async function getStudentFromID2(studentId: string) {
     }
 }
 
+// check if student has logged in for onboarding
+
+export async function checkHasLoggedIn(firebase_id: string) {
+    try {
+        const q = query(
+            studentsCollection,
+            where(documentId(), '==', firebase_id)
+        );
+        const snapshot = await getDocs(q);
+        if (!snapshot.empty) {
+            const doc = snapshot.docs[0];
+            const data = doc.data();
+            return !!data.hasLoggedIn;
+        }
+        console.log('if statement not running');
+        return { error: 'Student not found' };
+    } catch (error) {
+        console.error('Error fetching student:', error);
+        throw new Error('Failed to fetch student.');
+    }
+}
+
+//update hasLoggedIn set it True
+
+export async function updateHasLoggedIn(firebase_id: string) {
+    try {
+        const docRef = doc(studentsCollection, firebase_id);
+        await updateDoc(docRef, {
+            hasLoggedIn: true,
+        });
+
+        return { success: true }; // <- make sure this matches the expected type
+    } catch (error) {
+        console.error('Error updating hasLoggedIn:', error);
+        return { success: false, error: 'Failed to update hasLoggedIn' }; // or however your type is structured
+    }
+}
+
+//upudate Nameplate
+
+export async function updateNameplate(firebase_id: string, nameplate: string) {
+    try {
+        const docRef = doc(studentsCollection, firebase_id);
+        const snapshot = await getDoc(docRef);
+
+        if (!snapshot.exists()) {
+            return { success: false, error: 'Student not found' };
+        }
+
+        const data = snapshot.data();
+        const profile = data.profile ?? {};
+        await updateDoc(docRef, {
+            profile: {
+                ...profile,
+                nameplate: nameplate,
+            },
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating nameplate:', error);
+        return { success: false, error: 'Failed to update nameplate' };
+    }
+}
+
+export async function changeBackground(
+    studentId: string,
+    newBackgroundKey: string
+) {
+    const q = query(studentsCollection, where('student_id', '==', studentId));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+        const docRef = snapshot.docs[0].ref;
+        const data = snapshot.docs[0].data();
+
+        const profile = data.profile ?? {};
+        const background = profile.background ?? '';
+
+        console.log('Background changed to:', newBackgroundKey);
+        await updateDoc(docRef, {
+            profile: {
+                ...profile,
+                background: newBackgroundKey,
+            },
+        });
+        return {
+            background,
+        };
+    }
+}
+
+export async function changeCat(studentId: string, newCatKey: string) {
+    const q = query(studentsCollection, where('student_id', '==', studentId));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+        const docRef = snapshot.docs[0].ref;
+        const data = snapshot.docs[0].data();
+
+        const profile = data.profile ?? {};
+        const cat = profile.cat ?? '';
+
+        await updateDoc(docRef, {
+            profile: {
+                ...profile,
+                cat: newCatKey,
+            },
+        });
+        console.log('Background changed to:', newCatKey);
+        return {
+            cat,
+        };
+    }
+}
 // Create a student (called in api/schools to add student to school)
 export async function createStudent(studentId: string, schoolId: string) {
     try {

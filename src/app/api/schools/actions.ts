@@ -13,6 +13,9 @@ import {
     query,
     where,
     updateDoc,
+    deleteDoc,
+    deleteField,
+    addDoc,
 } from 'firebase/firestore';
 
 //SERVER ACTIONS
@@ -233,10 +236,10 @@ const generateRandomPassword = (): string => {
 // Create a student and add them to the school
 export const createStudentAndAddToSchool = async (
     studentId: string,
-    adminUID: string
+    adminId: string
 ) => {
     try {
-        const adminDocRef = doc(db, 'newSchoolAdmin', adminUID);
+        const adminDocRef = doc(db, 'newSchoolAdmin', adminId);
         const adminSnap = await getDoc(adminDocRef);
         if (!adminSnap.exists()) throw new Error('Admin not found');
         const schoolId = adminSnap.data().school_id;
@@ -268,3 +271,111 @@ export const createStudentAndAddToSchool = async (
         return { error: 'Failed to create student and update school record' };
     }
 };
+
+// Deletes a student from Firestore and their reference in the school's student_ids
+export async function deleteStudentFromSchool(
+    schoolId: string,
+    studentId: string
+) {
+    try {
+        const schoolQuery = query(
+            collection(db, 'newSchools'),
+            where('school_id', '==', schoolId)
+        );
+        const snapshot = await getDocs(schoolQuery);
+        if (snapshot.empty) throw new Error('School not found');
+
+        const schoolDocRef = snapshot.docs[0].ref;
+        const schoolData = snapshot.docs[0].data();
+
+        const studentEntry = schoolData.student_ids?.[studentId];
+        if (!studentEntry) throw new Error('Student not found in school');
+
+        const studentFirebaseId = studentEntry.student_firebase_id;
+
+        // 1. Delete the student document from newStudents
+        const newStudentsCollection = collection(db, 'newStudents');
+        const studentDocRef = doc(newStudentsCollection, studentFirebaseId);
+        await deleteDoc(studentDocRef);
+
+        // 2. Remove the student entry from student_ids in the school document
+        await updateDoc(schoolDocRef, {
+            [`student_ids.${studentId}`]: deleteField(),
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error deleting student:', error);
+        return { error: 'Failed to delete student from school.' };
+    }
+}
+
+// Creates a new school document with initialized fields
+export async function createNewSchool(schoolName: string) {
+    try {
+        //create the base school document
+        const newSchoolData = {
+            school_name: schoolName,
+            enrolled_students: 0,
+            average_performances: {
+                opioidCourse: 0,
+                //add more course keys if needed
+            },
+            students_completed: 0,
+            students_in_progress: 0,
+            student_ids: {},
+        };
+
+        const schoolDocRef = await addDoc(
+            collection(db, 'newSchools'),
+            newSchoolData
+        );
+        const schoolId = schoolDocRef.id;
+
+        //immediately update that doc to include its FIREBASE ID as `school_id`
+        await updateDoc(schoolDocRef, { school_id: schoolId });
+
+        return {
+            success: true,
+            school_id: schoolId,
+        };
+    } catch (error) {
+        console.error('Error creating new school:', error);
+        return { error: 'Failed to create new school.' };
+    }
+}
+
+// Return statistics (average of all course performance averages, 
+// number of enrolled/completed/in-progress students) for a particular school given its (Firebase doc) ID
+export const getSchoolStats = cache(async (schoolId: string) => {
+    try {
+        const schoolDocRef = doc(db, 'newSchools', schoolId);
+        const schoolSnapshot = await getDoc(schoolDocRef);
+
+        if (!schoolSnapshot.exists()) {
+            console.error('School doc not found');
+        }
+
+        const data = schoolSnapshot.data();
+
+        const performances = data.average_performances;
+        const values = Object.values(performances);
+        const numericValues = values.filter(
+            (val): val is number => typeof val === 'number'
+        );
+
+        const averageScore = numericValues.length
+            ? numericValues.reduce((sum, val) => sum + val, 0) /
+              numericValues.length
+            : null;
+
+        return {
+            enrolled_students: data.enrolled_students ?? 0,
+            average_score: averageScore,
+            students_in_progress: data.students_in_progress ?? 0,
+            students_completed: data.students_completed ?? 0,
+        };
+    } catch (error) {
+        console.error('Error fetching school stats:', error);
+    }
+});

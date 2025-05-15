@@ -2,11 +2,16 @@
 import { signInStudent, signInAdmin } from '@/firebase/auth';
 import styles from './signin.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { validateUserCredentials } from '../api/students/actions';
+import {
+    validateUserCredentials,
+    checkHasLoggedIn,
+    updateHasLoggedIn,
+} from '../api/students/actions';
 import { useState, useEffect } from 'react';
 import { getSchoolNames } from '@/app/api/generalData/actions';
 import { setCookie } from '@/firebase/cookies';
 import { useUserStore } from '@/store/userStore';
+import Onboarding from './onboarding';
 
 type Inputs = {
     school: string;
@@ -41,6 +46,12 @@ export default function SignInPage() {
             {school}
         </option>
     ));
+    const user = useUserStore((state) => state.user);
+    const [showOnboarding, setShowOnboarding] = useState(false);
+    const setUid = useUserStore((state) => state.setUID);
+    const setUser = useUserStore((state) => state.setUser);
+
+    console.log(user);
 
     //This is an anonymous function
     const onSubmit: SubmitHandler<Inputs> = async ({
@@ -55,6 +66,7 @@ export default function SignInPage() {
                 email,
                 password
             );
+            console.log(firebase_id);
             if (!success) {
                 setError('Wrong student ID or password.');
                 return {
@@ -124,93 +136,106 @@ export default function SignInPage() {
     */
 
     return (
-        <div className={styles.splitContainer}>
-            <div className={styles.loginHalf}>
-                <div className={styles.contentContainer}>
-                    <h1 className={styles.h1}>SIGN IN</h1>
-                    <h2 className={styles.h2}>
-                        We&#39;re so glad you&#39;re back!
-                    </h2>
+        <>
+            {showOnboarding && <Onboarding />}
+            <div className={styles.splitContainer}>
+                <div className={styles.loginHalf}>
+                    <div className={styles.contentContainer}>
+                        <h1 className={styles.h1}>SIGN IN</h1>
+                        <h2 className={styles.h2}>
+                            We&#39;re so glad you&#39;re back!
+                        </h2>
+                    </div>
+
+                    <div className={styles.formContainer}>
+                        <form
+                            className={styles.form}
+                            onSubmit={handleSubmit(onSubmit)}
+                        >
+                            {error && <p className={styles.error}>{error}</p>}
+                            <div className={styles.inputGroup}>
+                                <label
+                                    className={styles.label}
+                                    htmlFor="school"
+                                >
+                                    Select your School
+                                </label>
+                                <select
+                                    id="school"
+                                    className={styles.input}
+                                    {...register('school', { required: true })}
+                                >
+                                    <option value="">Choose a School</option>
+                                    <option value="UCLA">UCLA</option>
+                                    <option value="USC">USC</option>
+                                    <option value="UCB">UCB</option>
+                                </select>
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label className={styles.label} htmlFor="role">
+                                    Select your Role
+                                </label>
+                                <select
+                                    id="role"
+                                    className={styles.input}
+                                    {...register('role', { required: true })}
+                                >
+                                    <option value="">Choose a Role</option>
+                                    <option value="student">Student</option>
+                                    <option value="eo_admin">EO Admin</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label className={styles.label} htmlFor="email">
+                                    {watch('role') === 'student'
+                                        ? 'Username'
+                                        : 'Email address'}
+                                </label>
+                                <input
+                                    className={styles.input}
+                                    type={
+                                        watch('role') === 'student'
+                                            ? 'text'
+                                            : 'email'
+                                    }
+                                    id="email"
+                                    {...register('email', { required: true })}
+                                />
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label
+                                    className={styles.label}
+                                    htmlFor="password"
+                                >
+                                    Password
+                                </label>
+                                <input
+                                    className={styles.input}
+                                    type="password"
+                                    id="password"
+                                    {...register('password', {
+                                        required: true,
+                                    })}
+                                />
+                            </div>
+
+                            <div className={styles.buttonContainer}>
+                                <button
+                                    type="submit"
+                                    className={styles.submitButton}
+                                >
+                                    SIGN IN
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
-                <div className={styles.formContainer}>
-                    <form
-                        className={styles.form}
-                        onSubmit={handleSubmit(onSubmit)}
-                    >
-                        <div className={styles.inputGroup}>
-                            <label className={styles.label} htmlFor="role">
-                                Select your Role
-                            </label>
-                            <select
-                                id="role"
-                                className={styles.input}
-                                {...register('role', { required: true })}
-                            >
-                                <option value="">Choose a Role</option>
-                                <option value="student">Student</option>
-                                <option value="eo_admin">EO Admin</option>
-                                <option value="admin">School Admin</option>
-                            </select>
-                        </div>
-
-                        {error && <p className={styles.error}>{error}</p>}
-                        <div className={styles.inputGroup}>
-                            <label className={styles.label} htmlFor="school">
-                                Select your School
-                            </label>
-                            <select
-                                id="school"
-                                className={styles.input}
-                                {...register('school', { required: true })}
-                            >
-                                <option value="">Choose a School</option>
-                                {schoolValues}
-                            </select>
-                        </div>
-
-                        <div className={styles.inputGroup}>
-                            <label className={styles.label} htmlFor="email">
-                                {watch('role') === 'student'
-                                    ? 'Username'
-                                    : 'Email address'}
-                            </label>
-                            <input
-                                className={styles.input}
-                                type={
-                                    watch('role') === 'student'
-                                        ? 'text'
-                                        : 'email'
-                                }
-                                id="email"
-                                {...register('email', { required: true })}
-                            />
-                        </div>
-
-                        <div className={styles.inputGroup}>
-                            <label className={styles.label} htmlFor="password">
-                                Password
-                            </label>
-                            <input
-                                className={styles.input}
-                                type="password"
-                                id="password"
-                                {...register('password', { required: true })}
-                            />
-                        </div>
-
-                        <div className={styles.buttonContainer}>
-                            <button
-                                type="submit"
-                                className={styles.submitButton}
-                            >
-                                SIGN IN
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                <div className={styles.placeHolderHalf}></div>
             </div>
-            <div className={styles.placeHolderHalf}></div>
-        </div>
+        </>
     );
 }

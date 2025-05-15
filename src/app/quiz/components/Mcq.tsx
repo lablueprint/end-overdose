@@ -19,9 +19,15 @@ interface McqProps {
     title: string;
     description: string;
     quizIndex: number; // Add quizIndex prop to select which quiz to display
+    quizName: number;
 }
 
-export default function Mcq({ title, description, quizIndex }: McqProps) {
+export default function Mcq({
+    title,
+    description,
+    quizIndex,
+    quizName,
+}: McqProps) {
     const [hasStarted, setHasStarted] = useState(false);
     const handleStart = () => {
         setHasStarted(true);
@@ -147,6 +153,7 @@ export default function Mcq({ title, description, quizIndex }: McqProps) {
                         setIsCompleted={setCompleted}
                         isMCQ={true}
                         quizIndex={quizIndex} // Pass quiz index to Score component
+                        quizName={quizName}
                     />
                 </div>
             )}
