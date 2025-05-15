@@ -78,7 +78,7 @@ export async function signUp(data: {
     }
 }
 
-type SignInResult = { id: string; user: Admin | NewStudent };
+type SignInResult = { id: string; user: Admin | NewStudent | null };
 
 // sign in for students
 export async function signInStudent(data: {

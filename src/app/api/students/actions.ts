@@ -207,26 +207,32 @@ export const validateUserCredentials = cache(
 //5. ADDING FEATURES TO STUDENTS
 
 // Add a quiz to the database
-export async function addQuiz(updateQuizzes: Quiz[]) {
+export async function addQuiz(userId: string, updateQuizzes: Quiz[]) {
+    console.log(updateQuizzes);
     try {
-        console.log('work');
-        const user = auth.currentUser;
-        if (!user) {
-            return { error: 'User data not found' };
+        const studentWithID = await getStudentFromID(userId);
+
+        if (!studentWithID) {
+            console.log('studentissue');
+            return { error: 'Student not found' };
         }
-        const userRef = doc(db, 'students', user.uid); // Use the user's unique ID
-        const userDoc = await getDoc(userRef); // DocumentSnapshot
+
+        const userRef = doc(db, 'newStudents', studentWithID.id); // getting actual user's id
+        const userDoc = await getDoc(userRef);
+
         if (!userDoc.exists()) {
+            console.log('userdoc error');
             return { error: 'Student document not found' };
         }
-        console.log('update quizzes: ', updateQuizzes);
+
         await updateDoc(userRef, {
-            quizzes: updateQuizzes,
+            'courses.opioidCourse.quizzes': updateQuizzes,
         });
+
         return { success: true };
     } catch (error) {
         console.error(error);
-        throw new Error('Failed to log in admin.');
+        return { error: 'Failed to update quizzes' };
     }
 }
 

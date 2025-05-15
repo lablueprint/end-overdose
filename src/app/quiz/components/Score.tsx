@@ -2,11 +2,12 @@
 import { addQuiz } from '@/app/api/students/actions';
 import { useState, useEffect } from 'react';
 import { useUserStore } from '@/store/userStore';
-import { Student } from '@/types/Student';
+import { newStudent } from '@/types/newStudent';
 import { Admin } from '@/types/Admin';
 import './score.css';
 import questions from '../questions.json' assert { type: 'json' };
 import Results from './Results';
+import { isStudent } from '@/types/newStudent';
 
 interface MissedQuestion {
     question: string;
@@ -30,6 +31,7 @@ interface ScoreProps {
     setIsQuestionSelected: (newIsQuestionSelected: boolean) => void;
     setIsCompleted: (newSetIsCompleted: boolean) => void;
     quizIndex: number;
+    quizName: number;
     onRetry?: () => void;
 }
 
@@ -48,6 +50,7 @@ export default function Score({
     isTF,
     isGame,
     quizIndex,
+    quizName,
     onRetry,
 }: ScoreProps) {
     // match props for both TF and MCQ, right now some features don't work for TF
@@ -62,19 +65,16 @@ export default function Score({
     };
 
     const nextLesson = () => {
-        console.log('Next lesson!!', percentage);
+        window.location.href = '/courses/opioid';
     };
     const user = useUserStore((state) => state.user);
-    const name = `quiz${quizIndex + 1}`;
-    function isStudent(user: Student | Admin | null): user is Student {
-        return user !== null && 'quizzes' in user;
-    }
+    const name = `quiz${quizName + 1}`;
     useEffect(() => {
         const updateQuiz = async () => {
             try {
                 const newScore = (currentScore / numQuestions) * 100; // calculate the percentage
                 if (isStudent(user)) {
-                    const quizzes = user?.quizzes;
+                    const quizzes = user?.courses.opioidCourse.quizzes;
                     const updateQuizzes = quizzes.some(
                         (quiz) => quiz.name === name // if name already exists, update the score
                     )
@@ -84,10 +84,20 @@ export default function Score({
                                   : quiz
                           )
                         : [...quizzes, { name: name, score: newScore }]; // otherwise add a new quiz
-                    addQuiz(updateQuizzes);
+                    console.log('quizzes: ' + updateQuizzes);
+                    addQuiz(user.student_id, updateQuizzes);
                     useUserStore
                         .getState() // update the user store with the new quiz
-                        .setUser({ ...user, quizzes: updateQuizzes });
+                        .setUser({
+                            ...user,
+                            courses: {
+                                ...user.courses,
+                                opioidCourse: {
+                                    ...user.courses.opioidCourse,
+                                    quizzes: updateQuizzes,
+                                },
+                            },
+                        });
                 }
             } catch (error) {
                 console.error('Error adding quiz', error);

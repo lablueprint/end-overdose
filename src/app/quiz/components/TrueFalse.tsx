@@ -19,6 +19,7 @@ interface TrueFalseProps {
     title: string;
     description: string;
     quizIndex: number;
+    quizName: number;
 }
 interface MissedQuestion {
     question: string;
@@ -31,6 +32,7 @@ export default function TrueFalse({
     title,
     description,
     quizIndex,
+    quizName,
 }: TrueFalseProps) {
     const [missedQuestions, setMissedQuestions] = useState<MissedQuestion[]>(
         []
@@ -233,6 +235,7 @@ export default function TrueFalse({
                         setIsCompleted={setCompleted}
                         isMCQ={false}
                         quizIndex={quizIndex}
+                        quizName={quizName}
                         isTF={true}
                     />
                 </div>
