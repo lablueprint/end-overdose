@@ -18,6 +18,9 @@ import {
 } from 'firebase/firestore';
 import { getAuthenticatedAppForUser } from '@/firebase/serverApp';
 import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
+import { NewEOAdmin } from '@/types/newEOAdmin';
+import { role } from '@/store/userStore';
+import { NewStudent } from '@/types/newStudent';
 
 
 const db = getFirestore(firebase_app);
@@ -207,7 +210,28 @@ export async function getAdmin(id: string) {
 //NEW STUFF HERE
 
 //NEW DB
+const eoAdminsCollection = collection(db, 'newEOAdmin');
 const schoolAdminsCollections = collection(db, 'newSchoolAdmin')
+
+export async function addEoAdmin(eoAdmin: NewEOAdmin, userId: string) {
+    try {
+        // Firebase Authentication
+        const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        const auth_db = getFirestore(firebaseServerApp);
+
+        // Add EO Admin to the database
+        const eoAdminsCollection = collection(auth_db, 'newEOAdmin');
+
+        // Add to database
+        await setDoc(doc(eoAdminsCollection, userId), eoAdmin);
+
+        // Revalidate data
+        revalidatePath('');
+    } catch (error) {
+        console.error('Error adding EO admin:', error);
+        throw new Error('Failed to add EO admin.');
+    }
+}
 
 export async function addSchoolAdmin(schoolAdmin: NewSchoolAdmin, userId: string) {
     try {
@@ -226,5 +250,46 @@ export async function addSchoolAdmin(schoolAdmin: NewSchoolAdmin, userId: string
     } catch (error) {
         console.error('Error adding admin:', error);
         throw new Error('Failed to add admin.');
+    }
+}
+
+export async function getSchoolAdmin(id: string) {
+    try {
+        const schoolAdminDocRef = doc(schoolAdminsCollections, id);
+        const schoolAdminDoc = await getDoc(schoolAdminDocRef);
+
+        if (schoolAdminDoc.exists()) {
+            return { id: schoolAdminDoc.id, ...(schoolAdminDoc.data() as NewSchoolAdmin) };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching school admin:', error);
+        throw new Error('Failed to fetch school admin.');
+    }
+}
+
+export async function getSchoolorEOAdmin(id: string) {
+    try {
+        // Check in the 'eoadmins' collection
+        const EOAdminDocRef = doc(eoAdminsCollection, id);
+        const EOAdminDoc = await getDoc(EOAdminDocRef);
+
+        if (EOAdminDoc.exists()) {
+            return {result: { id: EOAdminDoc.id, ...(EOAdminDoc.data() as NewEOAdmin) }, role: 'eo_admin'};
+        }
+
+        // Check in the 'newSchoolAdmin' collection
+        const schoolAdminDocRef = doc(schoolAdminsCollections, id);
+        const schoolAdminDoc = await getDoc(schoolAdminDocRef);
+
+        if (schoolAdminDoc.exists()) {
+            return { result: {id: schoolAdminDoc.id, ...(schoolAdminDoc.data() as NewSchoolAdmin)}, role: 'school_admin' };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        throw new Error('Failed to fetch admin.');
     }
 }

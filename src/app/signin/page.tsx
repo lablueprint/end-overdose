@@ -72,13 +72,11 @@ export default function SignInPage() {
             if (result.result) {
                 // set the cookie
                 setCookie('student-token', JSON.stringify({ firebase_id, username: email, password, school }));
-                setUser(result.result?.user);
+                setUser(result.result.user);
                 setRole(role);
                 setUID(firebase_id);
                 // setProgress(0);
             }
-            // redirect to dashboard
-            window.location.href = '/';
         } else {
             const result = await signInAdmin({ email, password });
             if (result.error) {
@@ -90,6 +88,8 @@ export default function SignInPage() {
                 };
             }
         }
+        // redirect to dashboard
+        window.location.href = '/';
     };
 
     /*UNDERSTANDING HOW THE FORM WORKS

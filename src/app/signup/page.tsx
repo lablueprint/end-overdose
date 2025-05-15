@@ -12,6 +12,7 @@ import {
 import { getSchoolNames } from '@/app/api/generalData/actions';
 import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
 import { addSchoolAdmin } from '@/app/api/admins/actions';
+import { NewEOAdmin } from '@/types/newEOAdmin';
 
 
 type Inputs = {
@@ -94,7 +95,10 @@ export default function SignUpPage() {
                 await addSchoolAdmin(newSchoolAdmin, user.uid);
             }
             else if (role == "eo_admin") {
-                setError("IN EO ADMIN")
+                const newEOAdmin: NewEOAdmin = {
+                    email: email,
+                }
+                // setError("IN EO ADMIN")
             }
             else {
                 setError("ERROR")

@@ -1,4 +1,5 @@
 import { Admin } from './Admin';
+import { NewStudent } from './newStudent';
 
 interface Quiz {
     name: string;
@@ -58,10 +59,10 @@ export const StudentJosh: Student = {
 };
 
 // Type guard function
-export const isStudent = (obj: Student | Admin | null): obj is Student => {
+export const isStudent = (obj: NewStudent | Admin | null): obj is NewStudent => {
     return (
         //typeof obj === 'object' &&
-        (obj as Student) !== null
+        (obj as NewStudent) !== null
         /*typeof (obj as Student).student_id === 'string' &&
         typeof (obj as Student).email === 'string' &&
         typeof (obj as Student).school_name === 'string' &&

@@ -5,14 +5,16 @@ import {
     NextOrObserver,
     User,
     deleteUser,
+    getIdToken,
 } from 'firebase/auth';
 import { auth } from './clientApp';
-import { Admin } from '@/types/Admin';
 import { handleUserCreation } from './auth_helpers';
 import { setCookie } from './cookies';
 import { NewStudent } from '@/types/newStudent';
-import { getAdmin } from '@/app/api/admins/actions';
+import { getSchoolorEOAdmin } from '@/app/api/admins/actions';
 import { getStudent } from '@/app/api/students/actions';
+import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
+import { NewEOAdmin } from '@/types/newEOAdmin';
 
 export async function onAuthStateChanged(cb: NextOrObserver<User>) {
     return _onAuthStateChanged(auth, cb);
@@ -78,7 +80,7 @@ export async function signUp(data: {
     }
 }
 
-type SignInResult = { id: string; user: Admin | NewStudent };
+type SignInResult = { id: string; user: NewSchoolAdmin | NewEOAdmin | NewStudent };
 
 // sign in for students
 export async function signInStudent(data: {
@@ -123,12 +125,20 @@ export async function signInAdmin(data: {
         }
 
         // get the user from firebase admins collection
-        const doc = await getAdmin(result.user.uid);
-        if (!doc || !doc.id) {
+        const doc = await getSchoolorEOAdmin(result.user.uid);
+        if (!doc || !doc.result.id) {
             throw new Error('Admin not found');
         }
+
+        // set the cookie
+        if (!auth.currentUser) {
+            throw new Error('Auth Error');
+        }
+        const token = await getIdToken(auth.currentUser);
+        setCookie('admin-token', token);
+        
         return {
-            result: { id: doc.id ?? '', user: doc },
+            result: { id: doc.result.id ?? '', user: doc.result },
             error: null,
         };
     } catch (error) {
