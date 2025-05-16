@@ -119,6 +119,7 @@
     font-size: 0.75rem;
     text-align: center;
     margin: 1em 0;
+    display: block;
 }
 
 .cardImage {
@@ -171,14 +172,16 @@
 }
 
 .tagInProgress,
-.tagCompleted {
+.tagCompleted,
+.tagNotStarted {
     position: relative;
     width: fit-content;
     block-size: fit-content;
 }
 
 .tagInProgressIndicator,
-.tagCompletedIndicator {
+.tagCompletedIndicator,
+.tagNotStartedIndicator {
     width: 0.5em;
     height: 0.5em;
     border-radius: 99em;
@@ -196,8 +199,13 @@
     background-color: #02B56B;
 }
 
+.tagNotStartedIndicator {
+    background-color: #D92D20;
+}
+
 .tagInProgress p,
-.tagCompleted p {
+.tagCompleted p,
+.tagNotStarted p {
     text-transform: uppercase;
     border-radius: 99em;
     padding: 0.5em 1em 0.5em 2em;
@@ -212,6 +220,11 @@
 .tagCompleted p {
     background-color: #02b56a3f;
     color: #02B56B;
+}
+
+.tagNotStarted p {
+    background-color: #F4BABA;
+    color: #D92D20;
 }
 
 .button {
