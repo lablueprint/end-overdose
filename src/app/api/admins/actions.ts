@@ -208,18 +208,18 @@ export async function getAdmin(id: string) {
 
 //NEW STUFF HERE
 
-//NEW DB
+//EO ADMIN STUFF
 const eoAdminsCollection = collection(db, 'newEOAdmin');
 const schoolAdminsCollections = collection(db, 'newSchoolAdmin');
 
-export async function addEoAdmin(eoAdmin: NewEOAdmin, userId: string) {
+export async function addEOAdmin(eoAdmin: NewEOAdmin, userId: string) {
     try {
         // Firebase Authentication
-        const { firebaseServerApp } = await getAuthenticatedAppForUser();
-        const auth_db = getFirestore(firebaseServerApp);
+        // const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        // const auth_db = getFirestore(firebaseServerApp);
 
         // Add EO Admin to the database
-        const eoAdminsCollection = collection(auth_db, 'newEOAdmin');
+        // const eoAdminsCollection = collection(auth_db, 'newEOAdmin');
 
         // Add to database
         await setDoc(doc(eoAdminsCollection, userId), eoAdmin);
@@ -232,20 +232,21 @@ export async function addEoAdmin(eoAdmin: NewEOAdmin, userId: string) {
     }
 }
 
+//SCHOOL ADMIN STUFF
 export async function addSchoolAdmin(
     schoolAdmin: NewSchoolAdmin,
     userId: string
 ) {
     try {
         // Firebase Authentication
-        const { firebaseServerApp } = await getAuthenticatedAppForUser();
-        const auth_db = getFirestore(firebaseServerApp);
+        // const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        // const auth_db = getFirestore(firebaseServerApp);
 
         //ADD SCHOOL ADMIN STUFF
-        const schoolAdminsCollection = collection(auth_db, 'newSchoolAdmin');
+        // const schoolAdminsCollection = collection(auth_db, 'newSchoolAdmin');
 
         // add to database
-        await setDoc(doc(schoolAdminsCollection, userId), schoolAdmin);
+        await setDoc(doc(schoolAdminsCollections, userId), schoolAdmin);
 
         // revalidate data
         revalidatePath('');

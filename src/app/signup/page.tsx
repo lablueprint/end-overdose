@@ -13,6 +13,7 @@ import { getSchoolNames } from '@/app/api/generalData/actions';
 import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
 import { addSchoolAdmin } from '@/app/api/admins/actions';
 import { NewEOAdmin } from '@/types/newEOAdmin';
+import { addEOAdmin } from '@/app/api/admins/actions';
 
 
 type Inputs = {
@@ -68,12 +69,19 @@ export default function SignUpPage() {
         }
         
         //2. The rest of the boxed need to be filled 
-        if (!email || !password || !role || !school) {
+        if (!email || !password || !role) {
             setError('Need to fill out all the fields')
             return
         }
 
         try {
+            //SCHOOL ADMIN NEEDS TO SELECT A SCHOOL
+            if (role == "admin") {
+                if (!school) {
+                    setError('Need to select a school');
+                    return
+                }
+            }
 
             // 1) Create the user in Firebase Auth with email & password
             const auth = getAuth();
@@ -83,24 +91,25 @@ export default function SignUpPage() {
                 password
             );
 
+            console.log(user.uid);
             if (role == "admin") { //school admin
-                // 2) Build your Admin object
                 const newSchoolAdmin: NewSchoolAdmin = {
                 approved: false,
                 email: email,
                 school_id: "",
                 }
-
-                // 3) Write it into your “newSchoolAdmins” collection
+                
                 await addSchoolAdmin(newSchoolAdmin, user.uid);
             }
             else if (role == "eo_admin") {
                 const newEOAdmin: NewEOAdmin = {
                     email: email,
                 }
-                // setError("IN EO ADMIN")
+                
+                console.log(newEOAdmin);
+                await addEOAdmin(newEOAdmin, user.uid);
             }
-            else {
+            else { //SHOULDN'T GET HERE
                 setError("ERROR")
             }
 
@@ -171,7 +180,7 @@ export default function SignUpPage() {
                                     <select
                                         className={`${styles.input} ${styles.formControl}`}
                                         id="school"
-                                        {...register('school', { required: true })}
+                                        {...register('school', {})} //schools is not required
                                     >
                                         <option value="">
                                             Choose a School
@@ -250,9 +259,7 @@ export default function SignUpPage() {
                                             type="checkbox"
                                             id="newsletter"
                                             className={styles.checkbox}
-                                            {...register('newsletter', {
-                                                required: true,
-                                            })}
+                                            {...register('newsletter', {})}
                                         />
                                         <label
                                             htmlFor="newsletter"

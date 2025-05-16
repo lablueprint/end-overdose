@@ -123,6 +123,7 @@ export async function signInAdmin(data: {
             data.email,
             data.password
         );
+        
         if (!result.user.email) {
             throw new Error('Admin email is null.');
         }
