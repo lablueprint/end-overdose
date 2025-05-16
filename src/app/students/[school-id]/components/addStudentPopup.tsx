@@ -63,10 +63,11 @@ export default function AddStudentPopup({
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <div className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left shadow-xl transition-all relative">
-                                <Dialog.Title className="text-xl font-bold text-gray-900 mb-4">
+                            <div className="w-full max-w-3xl transform overflow-hidden rounded-lg bg-white p-6 text-left shadow-xl transition-all relative">
+                                <Dialog.Title className="text-xl font-extrabold text-gray-900 mb-4">
                                     ADD NEW STUDENTS
                                 </Dialog.Title>
+                                <hr className="border-t border-gray-300 mb-4" />
 
                                 <button
                                     onClick={closeModal}
@@ -77,10 +78,10 @@ export default function AddStudentPopup({
 
                                 <form onSubmit={handleSubmit}>
                                     <div className="mb-6">
-                                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                        <label className="block text-med font-bold text-gray-700 mb-2">
                                             STUDENT IDS
                                         </label>
-                                        <p className="text-xs text-gray-500 mb-2">
+                                        <p className="text-sm text-gray-500 mb-8">
                                             Put your student’s native School ID
                                         </p>
                                         <input

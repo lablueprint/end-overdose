@@ -64,9 +64,7 @@ const StudentsTable = ({
                                 {student.student_id}
                             </td>
                             <td className={styles.gradeColumn}>
-                                {
-                                    studentIDs[student.student_id]
-                                }
+                                {studentIDs[student.student_id]}
                             </td>
                             <td className={styles.courseColumn}>
                                 <button

@@ -107,7 +107,7 @@ export default function SchoolDashboard() {
 
             {/* Statistics Rectangle */}
             <div
-                className="bg-gray-100 rounded-2xl shadow-md flex justify-center items-center px-6 py-6 mb-10"
+                className="bg-gray-100 rounded-2xl shadow-md flex flex-col items-center text-center space-y-2 px-6 py-6 mb-10"
                 style={{ minHeight: '110px' }}
             >
                 <button
