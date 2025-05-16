@@ -16,6 +16,7 @@ import {
     deleteDoc,
     deleteField,
     addDoc,
+    setDoc,
 } from 'firebase/firestore';
 
 //SERVER ACTIONS
@@ -305,6 +306,43 @@ export async function deleteStudentFromSchool(
     }
 }
 
+//Adds a school name to the general data document
+const GENERAL_DATA_DOC_ID = 'VGfQpeUMbnOfqAU0VlTW';
+
+export async function addSchoolNameToGeneralData(
+    schoolName: string,
+    schoolId: string
+) {
+    try {
+        const generalDataRef = doc(db, 'generalData', GENERAL_DATA_DOC_ID);
+        const generalDataSnap = await getDoc(generalDataRef);
+
+        if (!generalDataSnap.exists()) {
+            console.error('General data doc does not exist!!!');
+            return { error: 'General data document not found.' };
+        }
+
+        console.log('Updating general data with:', {
+            [schoolName]: schoolId,
+        });
+
+        await setDoc(
+            generalDataRef,
+            {
+                school_names: {
+                    [schoolName]: schoolId,
+                },
+            },
+            { merge: true }
+        );
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating general data:', error);
+        return { error: 'Failed to update general data.' };
+    }
+}
+
 // Creates a new school document with initialized fields
 export async function createNewSchool(schoolName: string) {
     try {
@@ -329,6 +367,8 @@ export async function createNewSchool(schoolName: string) {
 
         //immediately update that doc to include its FIREBASE ID as `school_id`
         await updateDoc(schoolDocRef, { school_id: schoolId });
+
+        await addSchoolNameToGeneralData(schoolName, schoolId);
 
         return {
             success: true,
