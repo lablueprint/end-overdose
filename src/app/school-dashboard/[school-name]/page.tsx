@@ -4,8 +4,9 @@ import { useParams } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { useEffect, useState } from 'react';
 import { getSchoolStudents } from '@/app/api/students/actions';
+import { NewStudent } from '@/types/newStudent';
 import { getSchoolData } from '@/app/api/schools/actions';
-import StudentsTable from './components/StudentsTable';
+import StudentsTable from '../components/StudentsTable';
 
 interface Quiz {
     name: string;
@@ -48,7 +49,7 @@ export default function SchoolDashboard() {
     const params = useParams();
     const schoolId = params['school-name'] as string;
 
-    const [students, setStudents] = useState<Student[]>([]);
+    const [students, setStudents] = useState<NewStudent[]>([]);
     const [school, setSchool] = useState<School | null>();
     const [loading, setLoading] = useState(true);
 
