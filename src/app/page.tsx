@@ -10,7 +10,6 @@ import 'react-tabs/style/react-tabs.css';
 export default function Home() {
     const [opioidCourseProgress, setOpioidCourseProgress] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [currentLevel, setCurrentLevel] = useState(2);
     // Course progress data
     const user = useUserStore((state) => state.user);
     useEffect(() => {

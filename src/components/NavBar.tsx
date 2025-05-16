@@ -6,8 +6,6 @@ import { usePathname } from 'next/navigation';
 import { logout } from '@/firebase/auth';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
-import GridViewIcon from '@mui/icons-material/GridView';
-import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
@@ -57,8 +55,13 @@ export default function NavBar() {
             setTabs([
                 {
                     href: '/eo-admin',
-                    tab: 'Statistics',
-                    icon: <QueryStatsIcon />,
+                    tab: 'Dashboard',
+                    icon: <BookIcon />,
+                },
+                {
+                    href: '/admin',
+                    tab: 'Schools',
+                    icon: <PermIdentityIcon />,
                 },
             ]);
         } else if (role === 'school_admin') {
@@ -69,8 +72,8 @@ export default function NavBar() {
                     icon: <QueryStatsIcon />,
                 },
                 {
-                    href: '/eo-admin',
-                    tab: 'Student',
+                    href: `/students/${schoolSlug}`,
+                    tab: 'Students',
                     icon: <SchoolOutlinedIcon />,
                 },
             ]);
@@ -113,7 +116,8 @@ export default function NavBar() {
     if (hideNavBar) return null;
     return (
         <nav
-            className={`bg-black p-4 shadow-md h-full flex flex-col transition-all duration-300 ${collapsed ? 'w-16' : 'w-55'}`}>
+            className={`bg-black p-4 shadow-md h-full flex flex-col transition-all duration-300 ${collapsed ? 'w-16' : 'w-55'}`}
+        >
             <div className="flex-none mb-6 flex items-center">
                 <div
                     className={
