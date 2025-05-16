@@ -140,7 +140,7 @@ export default function SchoolDashboard() {
                             Avg. Performance
                         </div>
                         <div className="text-2xl font-bold">
-                         {stats?.average_score !== null ? `${stats?.average_score.toFixed(1)}%` : '-'}
+                         {stats?.average_score !== null ? `${Math.round(stats?.average_score)}%` : '-'}
                         </div>
                     </div>
                 </div>
