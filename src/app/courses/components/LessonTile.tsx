@@ -28,7 +28,7 @@ export default function LessonTileProps({
     return (
         <div
             className={`${styles.container} ${selected ? styles.selectedContainer : ''}`}
-            onClick={() => onHandleChangeLesson(lessonNumber)}
+            onClick={disabled ? () => {}  : () => onHandleChangeLesson(lessonNumber)}
             style={{
                 display: 'flex',
                 flexDirection: 'row',
