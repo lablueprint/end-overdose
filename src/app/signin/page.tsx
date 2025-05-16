@@ -11,6 +11,9 @@ import { getSchoolNames } from '@/app/api/generalData/actions';
 import { setCookie } from '@/firebase/cookies';
 import { useUserStore } from '@/store/userStore';
 import Onboarding from './onboarding';
+import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
+import { NewEOAdmin } from '@/types/newEOAdmin';
+import { NewStudent } from '@/types/newStudent';
 
 type Inputs = {
     school: string;
@@ -111,8 +114,21 @@ export default function SignInPage() {
                     error: 'Wrong email or password.',
                 };
             }
-            // redirect to dashboard
-            window.location.href = '/';
+
+            if (result.result) {
+                const user = result.result.user;
+                const isSchoolAdmin = (
+                    user: NewSchoolAdmin | NewEOAdmin | NewStudent
+                ): user is NewSchoolAdmin => user && 'school_id' in user;
+
+                if (user) {
+                    if (isSchoolAdmin(user)) {
+                        window.location.href = `/school-dashboard/${user.school_id}`;
+                    } else {
+                        window.location.href = '/eo-admin';
+                    }
+                }
+            }
         }
     };
 

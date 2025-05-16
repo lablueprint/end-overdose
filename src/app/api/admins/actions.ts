@@ -22,7 +22,6 @@ import { NewEOAdmin } from '@/types/newEOAdmin';
 import { role } from '@/store/userStore';
 import { NewStudent } from '@/types/newStudent';
 
-
 const db = getFirestore(firebase_app);
 const adminsCollection = collection(db, 'admins');
 const schoolsCollection = collection(db, 'schools');
@@ -211,7 +210,7 @@ export async function getAdmin(id: string) {
 
 //NEW DB
 const eoAdminsCollection = collection(db, 'newEOAdmin');
-const schoolAdminsCollections = collection(db, 'newSchoolAdmin')
+const schoolAdminsCollections = collection(db, 'newSchoolAdmin');
 
 export async function addEoAdmin(eoAdmin: NewEOAdmin, userId: string) {
     try {
@@ -233,7 +232,10 @@ export async function addEoAdmin(eoAdmin: NewEOAdmin, userId: string) {
     }
 }
 
-export async function addSchoolAdmin(schoolAdmin: NewSchoolAdmin, userId: string) {
+export async function addSchoolAdmin(
+    schoolAdmin: NewSchoolAdmin,
+    userId: string
+) {
     try {
         // Firebase Authentication
         const { firebaseServerApp } = await getAuthenticatedAppForUser();
@@ -259,7 +261,10 @@ export async function getSchoolAdmin(id: string) {
         const schoolAdminDoc = await getDoc(schoolAdminDocRef);
 
         if (schoolAdminDoc.exists()) {
-            return { id: schoolAdminDoc.id, ...(schoolAdminDoc.data() as NewSchoolAdmin) };
+            return {
+                id: schoolAdminDoc.id,
+                ...(schoolAdminDoc.data() as NewSchoolAdmin),
+            };
         }
 
         return null;
@@ -276,7 +281,13 @@ export async function getSchoolorEOAdmin(id: string) {
         const EOAdminDoc = await getDoc(EOAdminDocRef);
 
         if (EOAdminDoc.exists()) {
-            return {result: { id: EOAdminDoc.id, ...(EOAdminDoc.data() as NewEOAdmin) }, role: 'eo_admin'};
+            return {
+                result: {
+                    id: EOAdminDoc.id,
+                    ...(EOAdminDoc.data() as NewEOAdmin),
+                },
+                role: 'eo_admin',
+            };
         }
 
         // Check in the 'newSchoolAdmin' collection
@@ -284,7 +295,13 @@ export async function getSchoolorEOAdmin(id: string) {
         const schoolAdminDoc = await getDoc(schoolAdminDocRef);
 
         if (schoolAdminDoc.exists()) {
-            return { result: {id: schoolAdminDoc.id, ...(schoolAdminDoc.data() as NewSchoolAdmin)}, role: 'school_admin' };
+            return {
+                result: {
+                    id: schoolAdminDoc.id,
+                    ...(schoolAdminDoc.data() as NewSchoolAdmin),
+                },
+                role: 'school_admin',
+            };
         }
 
         return null;

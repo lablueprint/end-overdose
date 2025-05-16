@@ -80,7 +80,10 @@ export async function signUp(data: {
     }
 }
 
-type SignInResult = { id: string; user: NewSchoolAdmin | NewEOAdmin | NewStudent };
+type SignInResult = {
+    id: string;
+    user: NewSchoolAdmin | NewEOAdmin | NewStudent;
+};
 
 // sign in for students
 export async function signInStudent(data: {
@@ -136,7 +139,7 @@ export async function signInAdmin(data: {
         }
         const token = await getIdToken(auth.currentUser);
         setCookie('admin-token', token);
-        
+
         return {
             result: { id: doc.result.id ?? '', user: doc.result },
             error: null,
