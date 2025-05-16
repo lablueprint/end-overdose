@@ -1,45 +1,45 @@
 [  [
     {
-        "question": "How are you?",
-        "answers": ["spectacular", "bad", "good", "ok"],
-        "correctAnswer": 0
+        "question": "What is fentanyl most commonly used for in medical settings?",
+        "answers": ["Treating mild headaches", "Helping people sleep", "Pain relief during surgery or for severe pain", "Cough and cold treatment"],
+        "correctAnswer": 2
     },
     {
-        "question": "Best matcha spot?",
-        "answers": ["damo", "stereoscope", "junbi", "community goods"],
+        "question": "Why is illegally manufactured fentanyl especially dangerous?",
+        "answers": ["It is always mixed with vitamins", "Its strength is not regulated", "It is more colorful and easier to ingest", "It is less effective than medical fentanyl"],
         "correctAnswer": 1
     },
     {
-        "question": "What is the best pet?",
-        "answers": ["monkey", "alligator", "dog", "cat"],
+        "question": "How strong is fentanyl compared to morphine?",
+        "answers": ["About the same strength", "5 times stronger", "10 times stronger", "50-100 times stronger"],
         "correctAnswer": 3
     },
     {
-        "question": "What is the best project team?",
-        "answers": ["End Overdose", "UW", "Teapot"],
-        "correctAnswer": 0
+        "question": "What are fentanyl analogs?",
+        "answers": ["Fake versions of over-the-counter painkillers", "Less dangerous versions of heroin", "Slihglty different chemical versions of fentanyl that may be stronger than medical grade fentanyl"],
+        "correctAnswer": 2
     }
 ],
     [
         {
-            "question": "QUIZ 2",
-            "answers": ["End Overdose", "UW", "Teapot"],
-            "correctAnswer": 0
+            "question": "What does naloxone do during an opioid overdose?",
+            "answers": ["Speeds up the heart rate", "Helps a person fall asleep", "Reverses the overdose by restoring breathing", "Replaces the need to call 911"],
+            "correctAnswer": 2
         },
         {
-            "question": "What is the best project team?",
-            "answers": ["End Overdose", "UW", "Teapot"],
-            "correctAnswer": 0
+            "question": "Why might more than one dose of naloxone be needed?",
+            "answers": ["It's only effective on people under 18", "It only works once a day", "The person might be allergic to the first dose", "The first dose may not fully restore breathing after 2-3 minutes"],
+            "correctAnswer": 3
         },
         {
-            "question": "What is the best project team?",
-            "answers": ["End Overdose", "UW", "Teapot"],
-            "correctAnswer": 0
+            "question": "Which of the following is true about naloxone?",
+            "answers": ["It is only available as an injection", "All forms of naloxone work differently", "It comes in both nasal spray and injection forms", "It takes hours to work"],
+            "correctAnswer": 2
         },
         {
-            "question": "What is the best project team?",
-            "answers": ["End Overdose", "UW", "Teapot"],
-            "correctAnswer": 0
+            "question": "Why is it important to call 911, even after giving naloxone?",
+            "answers": ["Naloxone's effects are temporary and the person could overdose again", "The person may need help falling asleep", "Naloxone's effects are temporary and the person could overdose again", "Paramedics need to collect the naloxone"],
+            "correctAnswer": 2
         }
     ]
 ]

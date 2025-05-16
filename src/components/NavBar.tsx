@@ -3,17 +3,13 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Student } from '@/types/Student';
 import { logout } from '@/firebase/auth';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
-import GridViewIcon from '@mui/icons-material/GridView';
-import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-import HomeIcon from '@mui/icons-material/Home';
-import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import BookIcon from '@mui/icons-material/MenuBook';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -29,6 +25,10 @@ export default function NavBar() {
     const setUser = useUserStore((state) => state.setUser);
     const setRole = useUserStore((state) => state.setRole);
     const setUID = useUserStore((state) => state.setUID);
+    const schoolSlug = useUserStore((state) => {
+        const user = state.user;
+        return user && 'school_id' in user ? user.school_id : undefined;
+    });
     interface Tab {
         href: string;
         tab: string;
@@ -36,7 +36,7 @@ export default function NavBar() {
     }
 
     const [tabs, setTabs] = useState<Tab[]>([]);
-    console.log('role:', role);
+    // console.log('role:', role);
 
     // Toggle sidebar collapse state
     const toggleSidebar = () => {
@@ -56,63 +56,38 @@ export default function NavBar() {
                 {
                     href: '/eo-admin',
                     tab: 'Dashboard',
-                    icon: <GridViewIcon />,
+                    icon: <BookIcon />,
                 },
                 {
-                    href: '/eo-admin',
-                    tab: 'Courses',
-                    icon: <CollectionsBookmarkIcon />,
-                },
-                {
-                    href: '/eo-admin',
+                    href: '/admin',
                     tab: 'Schools',
-                    icon: <SchoolOutlinedIcon />,
-                },
-                {
-                    href: '/eo-admin',
-                    tab: 'Reports',
-                    icon: <QueryStatsIcon />,
+                    icon: <PermIdentityIcon />,
                 },
             ]);
         } else if (role === 'school_admin') {
             setTabs([
                 {
-                    href: '/admin',
-                    tab: 'Dashboard',
-                    icon: <GridViewIcon />,
-                },
-                {
-                    href: '/courses',
-                    tab: 'Courses',
-                    icon: <CollectionsBookmarkIcon />,
-                },
-                {
-                    href: '/schools',
-                    tab: 'Schools',
-                    icon: <SchoolOutlinedIcon />,
-                },
-                {
-                    href: '/reports',
-                    tab: 'Reports',
+                    href: `/school-dashboard/${schoolSlug}`,
+                    tab: 'Statistics',
                     icon: <QueryStatsIcon />,
+                },
+                {
+                    href: `/students/${schoolSlug}`,
+                    tab: 'Students',
+                    icon: <SchoolOutlinedIcon />,
                 },
             ]);
         } else if (role === 'student') {
             setTabs([
                 {
                     href: '/courses',
-                    tab: 'Learn',
-                    icon: <HomeIcon />,
+                    tab: 'Courses',
+                    icon: <BookIcon />,
                 },
                 {
                     href: '/profile',
                     tab: 'Profile',
                     icon: <PermIdentityIcon />,
-                },
-                {
-                    href: '/quiz',
-                    tab: 'Certificates',
-                    icon: <WorkspacePremiumIcon />,
                 },
                 {
                     href: '/store',

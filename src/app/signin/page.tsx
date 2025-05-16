@@ -2,18 +2,56 @@
 import { signInStudent, signInAdmin } from '@/firebase/auth';
 import styles from './signin.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { validateUserCredentials } from '../api/students/actions';
-import { useState } from 'react';
-export default function SignInPage() {
-    type Inputs = {
-        school: string;
-        role: string;
-        email: string;
-        password: string;
-    };
+import {
+    validateUserCredentials,
+    checkHasLoggedIn,
+} from '../api/students/actions';
+import { useState, useEffect } from 'react';
+import { getSchoolNames } from '@/app/api/generalData/actions';
+import { setCookie } from '@/firebase/cookies';
+import { useUserStore } from '@/store/userStore';
+import Onboarding from './onboarding';
+import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
+import { NewEOAdmin } from '@/types/newEOAdmin';
+import { NewStudent } from '@/types/newStudent';
 
+type Inputs = {
+    school: string;
+    role: string;
+    email: string;
+    password: string;
+};
+export default function SignInPage() {
     const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState<string | null>(null);
+    const [schools, setSchools] = useState<string[]>([]);
+    const { setUser, setRole, setUID } = useUserStore();
+
+    // Fetch schools using the server action
+    useEffect(() => {
+        const fetchSchools = async () => {
+            try {
+                const schoolList = await getSchoolNames();
+                setSchools(schoolList);
+            } catch (error) {
+                console.error('Error fetching schools:', error);
+                setError('Failed to load schools. Please try again later.');
+            }
+        };
+
+        fetchSchools();
+    }, []);
+
+    // Create school options from fetched data
+    const schoolValues = schools.map((school) => (
+        <option key={school} value={school}>
+            {school}
+        </option>
+    ));
+    const user = useUserStore((state) => state.user);
+    const [showOnboarding, setShowOnboarding] = useState(false);
+
+    // console.log(user);
 
     //This is an anonymous function
     const onSubmit: SubmitHandler<Inputs> = async ({
@@ -28,6 +66,7 @@ export default function SignInPage() {
                 email,
                 password
             );
+            console.log(firebase_id);
             if (!success) {
                 setError('Wrong student ID or password.');
                 return {
@@ -35,12 +74,34 @@ export default function SignInPage() {
                     error: 'Wrong student ID or password.',
                 };
             }
-            await signInStudent({
+            const result = await signInStudent({
                 firebase_id,
                 username: email,
                 password,
                 school,
             });
+            // set the user in the store
+            if (result.result) {
+                // set the cookie
+                setCookie(
+                    'student-token',
+                    JSON.stringify({
+                        firebase_id,
+                        username: email,
+                        password,
+                        school,
+                    })
+                );
+                setUser(result.result.user);
+                setRole(role);
+                setUID(firebase_id);
+                // setProgress(0);
+                const hasLoggedIn = await checkHasLoggedIn(firebase_id);
+                if (!hasLoggedIn) {
+                    setShowOnboarding(true);
+                    return;
+                }
+            }
             // redirect to dashboard
             window.location.href = '/';
         } else {
@@ -52,6 +113,21 @@ export default function SignInPage() {
                     result: null,
                     error: 'Wrong email or password.',
                 };
+            }
+
+            if (result.result) {
+                const user = result.result.user;
+                const isSchoolAdmin = (
+                    user: NewSchoolAdmin | NewEOAdmin | NewStudent
+                ): user is NewSchoolAdmin => user && 'school_id' in user;
+
+                if (user) {
+                    if (isSchoolAdmin(user)) {
+                        window.location.href = `/school-dashboard/${user.school_id}`;
+                    } else {
+                        window.location.href = '/eo-admin';
+                    }
+                }
             }
         }
     };
@@ -88,95 +164,105 @@ export default function SignInPage() {
     */
 
     return (
-        <div className={styles.splitContainer}>
-            <div className={styles.loginHalf}>
-                <div className={styles.contentContainer}>
-                    <h1 className={styles.h1}>SIGN IN</h1>
-                    <h2 className={styles.h2}>
-                        We&#39;re so glad you&#39;re back!
-                    </h2>
+        <>
+            {showOnboarding && <Onboarding />}
+            <div className={styles.splitContainer}>
+                <div className={styles.loginHalf}>
+                    <div className={styles.contentContainer}>
+                        <h1 className={styles.h1}>SIGN IN</h1>
+                        <h2 className={styles.h2}>
+                            We&#39;re so glad you&#39;re back!
+                        </h2>
+                    </div>
+
+                    <div className={styles.formContainer}>
+                        <form
+                            className={styles.form}
+                            onSubmit={handleSubmit(onSubmit)}
+                        >
+                            {error && <p className={styles.error}>{error}</p>}
+                            <div className={styles.inputGroup}>
+                                <label className={styles.label} htmlFor="role">
+                                    Select your Role
+                                </label>
+                                <select
+                                    id="role"
+                                    className={styles.input}
+                                    {...register('role', { required: true })}
+                                >
+                                    <option value="">Choose a Role</option>
+                                    <option value="student">Student</option>
+                                    <option value="eo_admin">EO Admin</option>
+                                    <option value="admin">School Admin</option>
+                                </select>
+                            </div>
+
+                            {error && <p className={styles.error}>{error}</p>}
+                            <div className={styles.inputGroup}>
+                                <label
+                                    className={styles.label}
+                                    htmlFor="school"
+                                >
+                                    Select your School
+                                </label>
+                                <select
+                                    id="school"
+                                    className={styles.input}
+                                    {...register('school', { required: true })}
+                                >
+                                    <option value="">Choose a School</option>
+                                    {schoolValues}
+                                </select>
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label className={styles.label} htmlFor="email">
+                                    {watch('role') === 'student'
+                                        ? 'Username'
+                                        : 'Email address'}
+                                </label>
+                                <input
+                                    className={styles.input}
+                                    type={
+                                        watch('role') === 'student'
+                                            ? 'text'
+                                            : 'email'
+                                    }
+                                    id="email"
+                                    {...register('email', { required: true })}
+                                />
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label
+                                    className={styles.label}
+                                    htmlFor="password"
+                                >
+                                    Password
+                                </label>
+                                <input
+                                    className={styles.input}
+                                    type="password"
+                                    id="password"
+                                    {...register('password', {
+                                        required: true,
+                                    })}
+                                />
+                            </div>
+
+                            <div className={styles.buttonContainer}>
+                                <button
+                                    type="submit"
+                                    className={styles.submitButton}
+                                >
+                                    SIGN IN
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
-                <div className={styles.formContainer}>
-                    <form
-                        className={styles.form}
-                        onSubmit={handleSubmit(onSubmit)}
-                    >
-                        {error && <p className={styles.error}>{error}</p>}
-                        <div className={styles.inputGroup}>
-                            <label className={styles.label} htmlFor="school">
-                                Select your School
-                            </label>
-                            <select
-                                id="school"
-                                className={styles.input}
-                                {...register('school', { required: true })}
-                            >
-                                <option value="">Choose a School</option>
-                                <option value="UCLA">UCLA</option>
-                                <option value="USC">USC</option>
-                                <option value="UCB">UCB</option>
-                            </select>
-                        </div>
-
-                        <div className={styles.inputGroup}>
-                            <label className={styles.label} htmlFor="role">
-                                Select your Role
-                            </label>
-                            <select
-                                id="role"
-                                className={styles.input}
-                                {...register('role', { required: true })}
-                            >
-                                <option value="">Choose a Role</option>
-                                <option value="student">Student</option>
-                                <option value="eo_admin">EO Admin</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
-
-                        <div className={styles.inputGroup}>
-                            <label className={styles.label} htmlFor="email">
-                                {watch('role') === 'student'
-                                    ? 'Username'
-                                    : 'Email address'}
-                            </label>
-                            <input
-                                className={styles.input}
-                                type={
-                                    watch('role') === 'student'
-                                        ? 'text'
-                                        : 'email'
-                                }
-                                id="email"
-                                {...register('email', { required: true })}
-                            />
-                        </div>
-
-                        <div className={styles.inputGroup}>
-                            <label className={styles.label} htmlFor="password">
-                                Password
-                            </label>
-                            <input
-                                className={styles.input}
-                                type="password"
-                                id="password"
-                                {...register('password', { required: true })}
-                            />
-                        </div>
-
-                        <div className={styles.buttonContainer}>
-                            <button
-                                type="submit"
-                                className={styles.submitButton}
-                            >
-                                SIGN IN
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                <div className={styles.placeHolderHalf}></div>
             </div>
-            <div className={styles.placeHolderHalf}></div>
-        </div>
+        </>
     );
 }

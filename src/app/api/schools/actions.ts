@@ -237,14 +237,9 @@ const generateRandomPassword = (): string => {
 // Create a student and add them to the school
 export const createStudentAndAddToSchool = async (
     studentId: string,
-    adminId: string
+    schoolId: string
 ) => {
     try {
-        const adminDocRef = doc(db, 'newSchoolAdmin', adminId);
-        const adminSnap = await getDoc(adminDocRef);
-        if (!adminSnap.exists()) throw new Error('Admin not found');
-        const schoolId = adminSnap.data().school_id;
-
         const { success, firebase_id } = await createStudent(
             studentId,
             schoolId
@@ -384,3 +379,38 @@ export async function createNewSchool(schoolName: string) {
         return { error: 'Failed to create new school.' };
     }
 }
+
+// Return statistics (average of all course performance averages,
+// number of enrolled/completed/in-progress students) for a particular school given its (Firebase doc) ID
+export const getSchoolStats = cache(async (schoolId: string) => {
+    try {
+        const schoolDocRef = doc(db, 'newSchools', schoolId);
+        const schoolSnapshot = await getDoc(schoolDocRef);
+
+        if (!schoolSnapshot.exists()) {
+            console.error('School doc not found');
+        }
+
+        const data = schoolSnapshot.data();
+
+        const performances = data.average_performances;
+        const values = Object.values(performances);
+        const numericValues = values.filter(
+            (val): val is number => typeof val === 'number'
+        );
+
+        const averageScore = numericValues.length
+            ? numericValues.reduce((sum, val) => sum + val, 0) /
+              numericValues.length
+            : null;
+
+        return {
+            enrolled_students: data.enrolled_students ?? 0,
+            average_score: averageScore,
+            students_in_progress: data.students_in_progress ?? 0,
+            students_completed: data.students_completed ?? 0,
+        };
+    } catch (error) {
+        console.error('Error fetching school stats:', error);
+    }
+});

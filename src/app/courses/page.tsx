@@ -4,7 +4,7 @@ import styles from './page.module.css';
 import AuthWrap from '@/components/AuthWrap';
 //import { getCourseProgress } from '../api/students/actions';
 import { useState, useEffect } from 'react';
-import { isStudent } from '@/types/Student';
+import { isStudent } from '@/types/newStudent';
 import LevelIcon from './components/LevelIcon';
 
 export default function Courses() {
@@ -15,14 +15,14 @@ export default function Courses() {
     const role = useUserStore((state) => state.role);
     const opiumLessonNum = 6;
     const [opioidCourseProgress, setOpioidCourseProgress] = useState(
-        isStudent(user) ? user.course_completion.opioidCourse.courseProgress : 0
+        isStudent(user) ? user.courses.opioidCourse.courseProgress : 0
     );
-    const [quizCompletion, setQuizCompletion] = useState(0);
+    const [quizzesCompleted, setQuizzesCompleted] = useState(
+        isStudent(user) ? user.courses.opioidCourse.quizzes.length : 0
+    );
     const [mapIndex, setMapIndex] = useState(
-        Math.max(
-            0,
-            2 * Math.round((opioidCourseProgress / 100) * opiumLessonNum) - 1
-        ) + quizCompletion
+        Math.round((opioidCourseProgress / 100) * opiumLessonNum) +
+            quizzesCompleted
     );
 
     useEffect(() => {
@@ -32,18 +32,12 @@ export default function Courses() {
                     // short-circuit evaluation, only checking role value if it exists
                     // checking that the user is a student by checking against admin attributes
                     setOpioidCourseProgress(
-                        user.course_completion.opioidCourse.courseProgress
+                        user.courses.opioidCourse.courseProgress
                     );
                     setMapIndex(
-                        Math.max(
-                            0,
-                            2 *
-                                Math.round(
-                                    (opioidCourseProgress / 100) *
-                                        opiumLessonNum
-                                ) -
-                                1
-                        ) + quizCompletion
+                        Math.round(
+                            (opioidCourseProgress / 100) * opiumLessonNum
+                        ) + quizzesCompleted
                     );
                 }
             } catch (error) {
@@ -54,25 +48,30 @@ export default function Courses() {
         };
 
         fetchOpioidCourseProgress();
-    }, [user, quizCompletion]);
+        console.log(
+            'lessons completed: ' +
+                Math.round((opioidCourseProgress / 100) * opiumLessonNum)
+        );
+        console.log('quizzes completed ' + quizzesCompleted);
+    }, [user, quizzesCompleted]);
 
-    const coursesData = [
+    /**   const coursesData = [
         {
             title: 'Opioid Overdose',
             path: 'opioid',
-            progress: `${user && 'course_completion' in user ? user.course_completion.opioidCourse.courseProgress : 0}`,
+            progress: `${user && 'course_completion' in user ? user.courses.opioidCourse.courseProgress : 0}`,
         },
         {
             title: 'Career Training',
             path: 'career',
-            progress: `${user && 'course_completion' in user ? user.course_completion.careerCourse.courseProgress : 0}`,
+            progress: `${user && 'courses' in user ? user.courses.careerCourse.courseProgress : 0}`,
         },
         //hardcoded right now, change later
         { title: 'Mental Health', path: 'mental-health', progress: 25 },
         { title: 'First Aid', path: 'first-aid', progress: 60 },
         // { title: 'Life Skills', path: 'life-skills', progress: 15 },
         // { title: 'Stress Management', path: 'stress', progress: 30 },
-    ];
+    ]; */
     // Daily quest data
     const dailyQuestData = {
         questPath: 'daily-quest-1',
@@ -186,20 +185,7 @@ export default function Courses() {
                         justifyContent: 'center',
                         margin: '1rem 0',
                     }}
-                >
-                    <button
-                        onClick={() =>
-                            setQuizCompletion((prev) => Math.max(prev - 1, 0))
-                        }
-                    >
-                        Remove Quiz Completion
-                    </button>
-                    <button
-                        onClick={() => setQuizCompletion((prev) => prev + 1)}
-                    >
-                        Add Quiz Completion
-                    </button>
-                </div>
+                ></div>
             </div>
             <div className={styles.mapContainer}>
                 {' '}
