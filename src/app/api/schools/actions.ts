@@ -75,7 +75,7 @@ export const getSchoolData = cache(async (schoolId: string) => {
     }
 });
 
-export const getSchoolDataByID = cache(async (schoolId: number) => {
+export const getSchoolDataByID = cache(async (schoolId: string) => {
     try {
         const schoolQuery = query(
             schoolsCollection,
