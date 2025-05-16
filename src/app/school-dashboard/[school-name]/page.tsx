@@ -4,8 +4,9 @@ import { useParams } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { useEffect, useState } from 'react';
 import { getSchoolStudents } from '@/app/api/students/actions';
-import { getSchoolData } from '@/app/api/schools/actions';
+import { getSchoolData, getSchoolStats } from '@/app/api/schools/actions';
 import StudentsTable from './components/StudentsTable';
+import { NewSchool } from '@/types/newSchool';
 
 interface Quiz {
     name: string;
@@ -33,33 +34,33 @@ interface Student {
     certificates: string[];
 }
 
-interface School {
-    school_name: string;
-    school_id: number;
-    school_email: string;
-    student_ids: Map<string, string>;
-    student_count: number;
-    course_ids: Array<string>;
-    joined_date?: string;
-}
-
 export default function SchoolDashboard() {
     const { user } = useUserStore();
     const params = useParams();
     const schoolId = params['school-name'] as string;
 
     const [students, setStudents] = useState<Student[]>([]);
-    const [school, setSchool] = useState<School | null>();
     const [loading, setLoading] = useState(true);
+    const [stats, setStats] = useState<{
+        enrolled_students: number;
+        average_score: number | null;
+        students_in_progress: number;
+        students_completed: number;
+    } | null>(null);
+    const [schoolName, setSchoolName] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const schoolStudents = await getSchoolStudents(schoolId);
-                const schoolData = await getSchoolData(schoolId);
-                setSchool(schoolData);
+                const [schoolStudents, schoolData, schoolStats] = await Promise.all([
+                    getSchoolStudents(schoolId),
+                    getSchoolData(user?.school_id),
+                    getSchoolStats(schoolId),
+                ]);
                 setStudents(schoolStudents);
+                setStats(schoolStats);
+                setSchoolName(schoolData?.school_name);
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
@@ -84,7 +85,7 @@ export default function SchoolDashboard() {
                 <div className="flex flex-col">
                     <div className="flex items-baseline gap-4">
                         <h1 className="text-3xl font-bold uppercase">
-                            {school?.school_name || 'SCHOOL NAME'}
+                            {schoolName || 'SCHOOL NAME'}
                         </h1>
                     </div>
                     <div className="mt-1 text-gray-600 flex items-center gap-2">
@@ -93,10 +94,10 @@ export default function SchoolDashboard() {
                         </span>
                         <span className="mx-1 text-gray-400">•</span>
                         <a
-                            href={`mailto:${school?.school_email || 'school@email.com'}`}
+                            href={`mailto:${user?.email || 'school@email.com'}`}
                             className="text-gray-400 underline"
                         >
-                            {school?.school_email || 'school@email.com'}
+                            {user?.email || 'school@email.com'}
                         </a>
                     </div>
                 </div>
@@ -119,7 +120,7 @@ export default function SchoolDashboard() {
                             Enrolled Students
                         </div>
                         <div className="text-2xl font-bold">
-                            {enrolledStudents}
+                            {stats?.enrolled_students}
                         </div>
                     </div>
                 </div>
@@ -139,7 +140,7 @@ export default function SchoolDashboard() {
                             Avg. Performance
                         </div>
                         <div className="text-2xl font-bold">
-                            {avgPerformance}
+                         {stats?.average_score !== null ? `${stats?.average_score.toFixed(1)}%` : '-'}
                         </div>
                     </div>
                 </div>
@@ -159,7 +160,7 @@ export default function SchoolDashboard() {
                             All Courses Completed
                         </div>
                         <div className="text-2xl font-bold">
-                            {completedCount}
+                            {stats?.students_completed}
                         </div>
                     </div>
                 </div>
@@ -179,7 +180,7 @@ export default function SchoolDashboard() {
                             Students In Progress
                         </div>
                         <div className="text-2xl font-bold">
-                            {inProgressCount}
+                            {stats?.students_in_progress}
                         </div>
                     </div>
                 </div>
@@ -195,3 +196,7 @@ export default function SchoolDashboard() {
         </div>
     );
 }
+
+
+// TODO:
+// Get and display admin name (to replace hard-coded Josie Bruin); it's not in Zustand user state
