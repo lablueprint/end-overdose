@@ -236,14 +236,9 @@ const generateRandomPassword = (): string => {
 // Create a student and add them to the school
 export const createStudentAndAddToSchool = async (
     studentId: string,
-    adminId: string
+    schoolId: string
 ) => {
     try {
-        const adminDocRef = doc(db, 'newSchoolAdmin', adminId);
-        const adminSnap = await getDoc(adminDocRef);
-        if (!adminSnap.exists()) throw new Error('Admin not found');
-        const schoolId = adminSnap.data().school_id;
-
         const { success, firebase_id } = await createStudent(
             studentId,
             schoolId
@@ -345,7 +340,7 @@ export async function createNewSchool(schoolName: string) {
     }
 }
 
-// Return statistics (average of all course performance averages, 
+// Return statistics (average of all course performance averages,
 // number of enrolled/completed/in-progress students) for a particular school given its (Firebase doc) ID
 export const getSchoolStats = cache(async (schoolId: string) => {
     try {
