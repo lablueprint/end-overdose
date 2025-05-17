@@ -21,6 +21,7 @@ import {
 
 //SERVER ACTIONS
 import { getSchoolAverage, createStudent } from '@/app/api/students/actions';
+import { NewStudent } from '@/types/newStudent';
 
 //1. SETUP THE DATABASE CONNECTION
 const db = getFirestore(firebase_app);
@@ -412,5 +413,33 @@ export const getSchoolStats = cache(async (schoolId: string) => {
         };
     } catch (error) {
         console.error('Error fetching school stats:', error);
+    }
+});
+
+export const getSchoolStudentIds = cache(async (schoolId: string) => {
+    try {
+        const schoolDocRef = doc(db, 'newSchools', schoolId);
+        const schoolSnapshot = await getDoc(schoolDocRef);
+
+        if (!schoolSnapshot.exists()) {
+            console.error('School doc not found');
+        }
+
+        const data = schoolSnapshot.data();
+
+        if (data) {
+            const student_ids = data.student_ids;
+            const result = Object.keys(student_ids).reduce(
+                (acc: Record<string, string>, key: string) => {
+                    acc[key] = student_ids[key].student_password; // Set the value for each key to the student password
+                    return acc;
+                },
+                {}
+            );
+
+            return result;
+        }
+    } catch (error) {
+        console.error('Error fetching school student ids', error);
     }
 });
