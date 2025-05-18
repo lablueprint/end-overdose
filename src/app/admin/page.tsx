@@ -82,29 +82,93 @@ export default function AdminPage() {
     };
 
     return (
-        <div className={styles.container}>
-            <div className={styles.scrollArea}>
-                {error && (
-                    <div style={{ color: 'red', marginBottom: 16 }}>
-                        {error}
-                    </div>
-                )}
-                {loading ? (
-                    <div>Loading...</div>
-                ) : (
-                    <>
-                        {/* Pending School Request Section */}
-                        {pendingAdmins.length > 0 && (
-                            <div style={{ marginBottom: 40 }}>
-                                <h2 className={styles.subTitle}>
-                                    PENDING SCHOOL REQUEST
-                                </h2>
+        <div className='h-full max-h-screen overflow-auto pb-8'>
+            <div className={styles.container}>
+                <div className={styles.scrollArea}>
+                    {error && (
+                        <div style={{ color: 'red', marginBottom: 16 }}>
+                            {error}
+                        </div>
+                    )}
+                    {loading ? (
+                        <div>Loading...</div>
+                    ) : (
+                        <>
+                            {/* Pending School Request Section */}
+                            {pendingAdmins.length > 0 && (
+                                <div style={{ marginBottom: 40 }}>
+                                    <h2 className={styles.subTitle}>
+                                        PENDING SCHOOL REQUEST
+                                    </h2>
+                                    <p className={styles.description}>
+                                        Review the list of pending schools and
+                                        decide whether to approve or deny each one
+                                        based on the submitted details. Use the
+                                        action buttons provided to manage which
+                                        schools are added to the database.
+                                    </p>
+                                    <table className={styles.table}>
+                                        <thead>
+                                            <tr>
+                                                <th> </th>
+                                                <th>School Name</th>
+                                                <th>Email</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {pendingAdmins.map((admin, idx) => (
+                                                <tr key={admin.email}>
+                                                    <td>{idx + 1}</td>
+                                                    <td>
+                                                        {schoolNames[
+                                                            admin.school_id
+                                                        ] || admin.school_id}
+                                                    </td>
+                                                    <td>{admin.email}</td>
+                                                    <td>
+                                                        <button
+                                                            className={
+                                                                styles.buttonApprove
+                                                            }
+                                                            onClick={() =>
+                                                                handleApprove(
+                                                                    admin.email
+                                                                )
+                                                            }
+                                                        >
+                                                            APPROVE
+                                                        </button>
+                                                        <button
+                                                            className={
+                                                                styles.buttonDeny
+                                                            }
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    admin.email
+                                                                )
+                                                            }
+                                                        >
+                                                            DENY
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+
+                            {/* Approved Schools Section */}
+                            <div>
+                                <h2 className={styles.subTitle}>SCHOOLS</h2>
                                 <p className={styles.description}>
-                                    Review the list of pending schools and
-                                    decide whether to approve or deny each one
-                                    based on the submitted details. Use the
-                                    action buttons provided to manage which
-                                    schools are added to the database.
+                                    This table lists each school currently in the
+                                    database, along with its name and the point of
+                                    contact&apos;s email address. It also includes a
+                                    delete option, allowing administrators to remove
+                                    schools as needed for accurate and up-to-date
+                                    record keeping.
                                 </p>
                                 <table className={styles.table}>
                                     <thead>
@@ -116,31 +180,18 @@ export default function AdminPage() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {pendingAdmins.map((admin, idx) => (
+                                        {approvedAdmins.map((admin, idx) => (
                                             <tr key={admin.email}>
                                                 <td>{idx + 1}</td>
                                                 <td>
-                                                    {schoolNames[
-                                                        admin.school_id
-                                                    ] || admin.school_id}
+                                                    {schoolNames[admin.school_id] ||
+                                                        admin.school_id}
                                                 </td>
                                                 <td>{admin.email}</td>
                                                 <td>
                                                     <button
                                                         className={
-                                                            styles.buttonApprove
-                                                        }
-                                                        onClick={() =>
-                                                            handleApprove(
-                                                                admin.email
-                                                            )
-                                                        }
-                                                    >
-                                                        APPROVE
-                                                    </button>
-                                                    <button
-                                                        className={
-                                                            styles.buttonDeny
+                                                            styles.buttonDelete
                                                         }
                                                         onClick={() =>
                                                             handleDelete(
@@ -148,7 +199,7 @@ export default function AdminPage() {
                                                             )
                                                         }
                                                     >
-                                                        DENY
+                                                        DELETE
                                                     </button>
                                                 </td>
                                             </tr>
@@ -156,58 +207,9 @@ export default function AdminPage() {
                                     </tbody>
                                 </table>
                             </div>
-                        )}
-
-                        {/* Approved Schools Section */}
-                        <div>
-                            <h2 className={styles.subTitle}>SCHOOLS</h2>
-                            <p className={styles.description}>
-                                This table lists each school currently in the
-                                database, along with its name and the point of
-                                contact&apos;s email address. It also includes a
-                                delete option, allowing administrators to remove
-                                schools as needed for accurate and up-to-date
-                                record keeping.
-                            </p>
-                            <table className={styles.table}>
-                                <thead>
-                                    <tr>
-                                        <th> </th>
-                                        <th>School Name</th>
-                                        <th>Email</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {approvedAdmins.map((admin, idx) => (
-                                        <tr key={admin.email}>
-                                            <td>{idx + 1}</td>
-                                            <td>
-                                                {schoolNames[admin.school_id] ||
-                                                    admin.school_id}
-                                            </td>
-                                            <td>{admin.email}</td>
-                                            <td>
-                                                <button
-                                                    className={
-                                                        styles.buttonDelete
-                                                    }
-                                                    onClick={() =>
-                                                        handleDelete(
-                                                            admin.email
-                                                        )
-                                                    }
-                                                >
-                                                    DELETE
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </>
-                )}
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );
