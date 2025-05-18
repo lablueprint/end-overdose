@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { getSchoolStudents } from '@/app/api/students/actions';
 import { NewStudent } from '@/types/newStudent';
 import { getSchoolData } from '@/app/api/schools/actions';
@@ -54,6 +54,12 @@ export default function SchoolDashboard() {
     const [school, setSchool] = useState<School | null>();
     const [loading, setLoading] = useState(true);
     const [showComponent, setShowComponent] = useState(false);
+    const [refreshCounter, setRefreshCounter] = useState(0);
+
+    const refreshData = useCallback(() => {
+        // Increment the counter to trigger the useEffect
+        setRefreshCounter((prev) => prev + 1)
+    }, [])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -73,16 +79,15 @@ export default function SchoolDashboard() {
         if (schoolId) {
             fetchData();
         }
-    }, [schoolId, user]);
+    }, [schoolId, user, refreshCounter]);
 
-    // Hardcoded values for statistics
-    const avgPerformance = '98%';
-    const completedCount = 130;
-    const inProgressCount = 20;
-    const enrolledStudents = 150;
+    // Function to handle successful student addition
+    const handleStudentAdded = () => {
+        refreshData()
+    }
 
     return (
-        <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="max-w-6xl mx-auto px-4 py-6 h-full max-h-screen overflow-auto pb-8">
             <div className="mb-8 mt-8">
                 <div className="flex flex-col">
                     <div className="flex items-baseline gap-4">
@@ -91,10 +96,6 @@ export default function SchoolDashboard() {
                         </h1>
                     </div>
                     <div className="mt-1 text-gray-600 flex items-center gap-2">
-                        <span className="font-semibold text-black text-base">
-                            Josie Bruin
-                        </span>
-                        <span className="mx-1 text-gray-400">•</span>
                         <a
                             href={`mailto:${school?.school_email || 'school@email.com'}`}
                             className="text-gray-400 underline"
@@ -130,6 +131,7 @@ export default function SchoolDashboard() {
                     isOpen={showComponent}
                     setIsOpen={setShowComponent}
                     user={user && 'approved' in user ? user : null}
+                    onStudentAdded={handleStudentAdded}
                 />
             )}
             {loading ? (

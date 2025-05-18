@@ -164,7 +164,7 @@ export default function SignInPage() {
     */
 
     return (
-        <>
+        <div className="bg-[#0C1321]">
             {showOnboarding && <Onboarding />}
             <div className={styles.splitContainer}>
                 <div className={styles.loginHalf}>
@@ -263,6 +263,6 @@ export default function SignInPage() {
                 </div>
                 <div className={styles.placeHolderHalf}></div>
             </div>
-        </>
+        </div>
     );
 }
