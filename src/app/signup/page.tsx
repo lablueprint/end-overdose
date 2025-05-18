@@ -14,6 +14,7 @@ import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
 import { addSchoolAdmin } from '@/app/api/admins/actions';
 import { NewEOAdmin } from '@/types/newEOAdmin';
 import { addEOAdmin } from '@/app/api/admins/actions';
+import { Eye, EyeOff } from "lucide-react";
 
 type Inputs = {
     role: string;
@@ -26,10 +27,17 @@ type Inputs = {
 
 export default function SignUpPage() {
     const router = useRouter();
-    const { register, handleSubmit } = useForm<Inputs>();
+    const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false)
     const [success, setSuccess] = useState<boolean>(false);
     const [schools, setSchools] = useState<string[]>([]);
+
+    const selectedRole = watch('role');
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword)
+    }
 
     // Fetch schools using the server action
     useEffect(() => {
@@ -174,7 +182,7 @@ export default function SignUpPage() {
                                         </select>
                                     </div>
 
-                                    <div className={styles.subForm}>
+                                    {selectedRole !== "eo_admin" && (<div className={styles.subForm}>
                                         <label
                                             className={styles.h2}
                                             htmlFor="school"
@@ -184,14 +192,14 @@ export default function SignUpPage() {
                                         <select
                                             className={`${styles.input} ${styles.formControl}`}
                                             id="school"
-                                            {...register('school', { required: true })}
+                                            {...register('school', { required: selectedRole !== "eo_admin" })}
                                         >
                                             <option value="">
                                                 Choose a School
                                             </option>
                                             {schoolValues}
                                         </select>
-                                    </div>
+                                    </div>)}
 
                                     <div className={styles.subForm}>
                                         <label
@@ -217,14 +225,27 @@ export default function SignUpPage() {
                                         >
                                             Password:
                                         </label>
-                                        <input
-                                            className={`${styles.input} ${styles.formControl}`}
-                                            type="password"
-                                            id="password"
-                                            {...register('password', {
-                                                required: true,
-                                            })}
-                                        />
+                                        <div className="relative">
+                                            <input
+                                                className={styles.input}
+                                                type={showPassword ? "text" : "password"}
+                                                id="password"
+                                                {...register("password", {
+                                                    required: true,
+                                                })}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={togglePasswordVisibility}
+                                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white focus:outline-none"
+                                            >
+                                                {showPassword ? (
+                                                    <Eye className="h-5 w-5" aria-hidden="true" />
+                                                ) : (
+                                                    <EyeOff className="h-5 w-5" aria-hidden="true" />
+                                                )}
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div className={styles.checkboxContainer}>
@@ -276,24 +297,22 @@ export default function SignUpPage() {
                                         </div>
                                     </div>
 
+                                    <div className="flex justify-start mt-1">
+                                        <p className="text-gray-400 text-sm">
+                                            Already have an account?{" "}
+                                            <Link href="/signin" className="text-white font-semibold hover:underline">
+                                                Sign In
+                                            </Link>
+                                        </p>
+                                    </div>
+
                                     <div className={styles.buttonContainer}>
                                         <button
-                                            className={styles.loginButton}
+                                            className={styles.submitButton}
                                             type="submit"
                                         >
                                             SIGN UP
                                         </button>
-                                        <div className={styles.navigationContainer}>
-                                            <h2 className={styles.h2}>
-                                                {`Already have an account?   `}
-                                                <Link
-                                                    className={styles.link}
-                                                    href="/signin"
-                                                >
-                                                    SIGN IN
-                                                </Link>
-                                            </h2>
-                                        </div>
                                     </div>
                                 </form>
                             </div>

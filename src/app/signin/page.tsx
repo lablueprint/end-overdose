@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { signInStudent, signInAdmin } from '@/firebase/auth';
 import styles from './signin.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -14,6 +15,7 @@ import Onboarding from './onboarding';
 import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
 import { NewEOAdmin } from '@/types/newEOAdmin';
 import { NewStudent } from '@/types/newStudent';
+import { Eye, EyeOff } from "lucide-react";
 
 type Inputs = {
     school: string;
@@ -26,6 +28,8 @@ export default function SignInPage() {
     const [error, setError] = useState<string | null>(null);
     const [schools, setSchools] = useState<string[]>([]);
     const { setUser, setRole, setUID } = useUserStore();
+
+    const selectedRole = watch('role');
 
     // Fetch schools using the server action
     useEffect(() => {
@@ -50,6 +54,11 @@ export default function SignInPage() {
     ));
     const user = useUserStore((state) => state.user);
     const [showOnboarding, setShowOnboarding] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword)
+    }
 
     // console.log(user);
 
@@ -198,7 +207,7 @@ export default function SignInPage() {
                             </div>
 
                             {error && <p className={styles.error}>{error}</p>}
-                            <div className={styles.inputGroup}>
+                            {selectedRole !== "eo_admin" && (<div className={styles.inputGroup}>
                                 <label
                                     className={styles.label}
                                     htmlFor="school"
@@ -208,23 +217,23 @@ export default function SignInPage() {
                                 <select
                                     id="school"
                                     className={styles.input}
-                                    {...register('school', { required: true })}
+                                    {...register('school', { required: selectedRole !== "eo_admin" })}
                                 >
                                     <option value="">Choose a School</option>
                                     {schoolValues}
                                 </select>
-                            </div>
+                            </div>)}
 
                             <div className={styles.inputGroup}>
                                 <label className={styles.label} htmlFor="email">
-                                    {watch('role') === 'student'
+                                    {selectedRole === 'student'
                                         ? 'Username'
                                         : 'Email address'}
                                 </label>
                                 <input
                                     className={styles.input}
                                     type={
-                                        watch('role') === 'student'
+                                        selectedRole === 'student'
                                             ? 'text'
                                             : 'email'
                                     }
@@ -240,14 +249,39 @@ export default function SignInPage() {
                                 >
                                     Password
                                 </label>
-                                <input
-                                    className={styles.input}
-                                    type="password"
-                                    id="password"
-                                    {...register('password', {
-                                        required: true,
-                                    })}
-                                />
+                                <div className="relative">
+                                    <input
+                                        className={styles.input}
+                                        type={showPassword ? "text" : "password"}
+                                        id="password"
+                                        {...register("password", {
+                                            required: true,
+                                        })}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={togglePasswordVisibility}
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white focus:outline-none"
+                                    >
+                                        {showPassword ? (
+                                            <Eye className="h-5 w-5" aria-hidden="true" />
+                                        ) : (
+                                            <EyeOff className="h-5 w-5" aria-hidden="true" />
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="mt-1">
+                                <p className="text-gray-400 text-sm">
+                                    Don't have an account?{" "}
+                                    <Link
+                                        href="/signup"
+                                        className="text-white font-semibold hover:text-gray-200 hover:underline transition-colors"
+                                    >
+                                        Create Account
+                                    </Link>
+                                </p>
                             </div>
 
                             <div className={styles.buttonContainer}>
@@ -258,6 +292,7 @@ export default function SignInPage() {
                                     SIGN IN
                                 </button>
                             </div>
+
                         </form>
                     </div>
                 </div>
