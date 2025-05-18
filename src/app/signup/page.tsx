@@ -13,7 +13,8 @@ import { getSchoolNames } from '@/app/api/generalData/actions';
 import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
 import { addSchoolAdmin } from '@/app/api/admins/actions';
 import { NewEOAdmin } from '@/types/newEOAdmin';
-
+import { addEOAdmin } from '@/app/api/admins/actions';
+import { Eye, EyeOff } from "lucide-react";
 
 type Inputs = {
     role: string;
@@ -26,10 +27,17 @@ type Inputs = {
 
 export default function SignUpPage() {
     const router = useRouter();
-    const { register, handleSubmit } = useForm<Inputs>();
+    const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false)
     const [success, setSuccess] = useState<boolean>(false);
     const [schools, setSchools] = useState<string[]>([]);
+
+    const selectedRole = watch('role');
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword)
+    }
 
     // Fetch schools using the server action
     useEffect(() => {
@@ -64,18 +72,25 @@ export default function SignUpPage() {
         //1. Needs to agree to terms of service
         if (!termsAgreed) {
             setError('Need to Agree to Terms of Serivice');
-            return
+            return;
         }
 
-        //2. The rest of the boxed need to be filled 
-        if (!email || !password || !role || !school) {
-            setError('Need to fill out all the fields')
-            return
+        //2. The rest of the boxed need to be filled
+        if (!email || !password || !role) {
+            setError('Need to fill out all the fields');
+            return;
         }
 
         try {
+            //ERROR CHECK: SCHOOL ADMIN NEEDS TO SELECT A SCHOOL
+            if (role == 'admin') {
+                if (!school) {
+                    setError('Need to select a school');
+                    return;
+                }
+            }
 
-            // 1) Create the user in Firebase Auth with email & password
+            // 3 Create the user in Firebase Auth with email & password
             const auth = getAuth();
             const { user } = await createUserWithEmailAndPassword(
                 auth,
@@ -83,25 +98,31 @@ export default function SignUpPage() {
                 password
             );
 
-            if (role == "admin") { //school admin
-                // 2) Build your Admin object
+            console.log(user.uid);
+            if (role == 'admin') {
+                //school admin
                 const newSchoolAdmin: NewSchoolAdmin = {
                     approved: false,
                     email: email,
-                    school_id: "",
+                    school_id: '',
+                };
+
+                await addSchoolAdmin(newSchoolAdmin, user.uid);
+            } else if (role == 'eo_admin') {
+                //ERROR CHECK: If user is EO admin then email must end in @endoverdose.net
+                if (!email.endsWith('@endoverdose.net')) {
+                    setError('Email must end in @endoverdose.net');
                 }
 
-                // 3) Write it into your “newSchoolAdmins” collection
-                await addSchoolAdmin(newSchoolAdmin, user.uid);
-            }
-            else if (role == "eo_admin") {
                 const newEOAdmin: NewEOAdmin = {
                     email: email,
-                }
-                // setError("IN EO ADMIN")
-            }
-            else {
-                setError("ERROR")
+                };
+
+                console.log(newEOAdmin);
+                await addEOAdmin(newEOAdmin, user.uid);
+            } else {
+                //SHOULDN'T GET HERE
+                setError('ERROR');
             }
 
             // 4) Send email‑verification instead of a magic link:
@@ -112,7 +133,6 @@ export default function SignUpPage() {
             setTimeout(() => {
                 router.push('/signin');
             }, 1000);
-
         } catch (err) {
             console.error(err);
             setError('Something went wrong.');
@@ -162,7 +182,7 @@ export default function SignUpPage() {
                                         </select>
                                     </div>
 
-                                    <div className={styles.subForm}>
+                                    {selectedRole !== "eo_admin" && (<div className={styles.subForm}>
                                         <label
                                             className={styles.h2}
                                             htmlFor="school"
@@ -172,14 +192,14 @@ export default function SignUpPage() {
                                         <select
                                             className={`${styles.input} ${styles.formControl}`}
                                             id="school"
-                                            {...register('school', { required: true })}
+                                            {...register('school', { required: selectedRole !== "eo_admin" })}
                                         >
                                             <option value="">
                                                 Choose a School
                                             </option>
                                             {schoolValues}
                                         </select>
-                                    </div>
+                                    </div>)}
 
                                     <div className={styles.subForm}>
                                         <label
@@ -205,14 +225,27 @@ export default function SignUpPage() {
                                         >
                                             Password:
                                         </label>
-                                        <input
-                                            className={`${styles.input} ${styles.formControl}`}
-                                            type="password"
-                                            id="password"
-                                            {...register('password', {
-                                                required: true,
-                                            })}
-                                        />
+                                        <div className="relative">
+                                            <input
+                                                className={styles.input}
+                                                type={showPassword ? "text" : "password"}
+                                                id="password"
+                                                {...register("password", {
+                                                    required: true,
+                                                })}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={togglePasswordVisibility}
+                                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white focus:outline-none"
+                                            >
+                                                {showPassword ? (
+                                                    <Eye className="h-5 w-5" aria-hidden="true" />
+                                                ) : (
+                                                    <EyeOff className="h-5 w-5" aria-hidden="true" />
+                                                )}
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div className={styles.checkboxContainer}>
@@ -264,24 +297,22 @@ export default function SignUpPage() {
                                         </div>
                                     </div>
 
+                                    <div className="flex justify-start mt-1">
+                                        <p className="text-gray-400 text-sm">
+                                            Already have an account?{" "}
+                                            <Link href="/signin" className="text-white font-semibold hover:underline">
+                                                Sign In
+                                            </Link>
+                                        </p>
+                                    </div>
+
                                     <div className={styles.buttonContainer}>
                                         <button
-                                            className={styles.loginButton}
+                                            className={styles.submitButton}
                                             type="submit"
                                         >
                                             SIGN UP
                                         </button>
-                                        <div className={styles.navigationContainer}>
-                                            <h2 className={styles.h2}>
-                                                {`Already have an account?   `}
-                                                <Link
-                                                    className={styles.link}
-                                                    href="/signin"
-                                                >
-                                                    SIGN IN
-                                                </Link>
-                                            </h2>
-                                        </div>
                                     </div>
                                 </form>
                             </div>
@@ -294,4 +325,4 @@ export default function SignUpPage() {
             </div>
         </div>
     );
-};
+}
