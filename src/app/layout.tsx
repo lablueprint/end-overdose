@@ -36,7 +36,7 @@ export default async function RootLayout({
         <html lang="en">
             <body className={inter.className}>
                 <div className="flex min-h-screen">
-                    <div className="w-1/8 flex-shrink-0 bg-black text-white">
+                    <div className="flex-shrink-0 transition-all duration-500 ease-in-out bg-[#0C1321] text-white">
                         <NavBar />
                     </div>
                     <div className="flex-1">

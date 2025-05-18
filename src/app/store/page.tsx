@@ -70,7 +70,7 @@ export default function NarcatShop() {
     };
 
     return (
-        <>
+        <div className="h-full max-h-screen overflow-auto pb-8">
             {/* Fish counter in top right, above everything */}
             <div
                 style={{
@@ -188,6 +188,6 @@ export default function NarcatShop() {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

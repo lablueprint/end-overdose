@@ -10,12 +10,14 @@ interface AddStudentPopupProps {
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
     user: NewSchoolAdmin | null;
+    onStudentAdded?: () => void;
 }
 
 export default function AddStudentPopup({
     isOpen,
     setIsOpen,
     user,
+    onStudentAdded,
 }: AddStudentPopupProps) {
     const [inputValue, setInputValue] = useState('');
 
@@ -29,6 +31,9 @@ export default function AddStudentPopup({
         setInputValue('');
         if (user?.school_id) {
             createStudentAndAddToSchool(inputValue, user.school_id);
+            if (onStudentAdded) {
+                onStudentAdded();
+            }
         } else {
             console.error('School ID is undefined');
         }
@@ -65,7 +70,7 @@ export default function AddStudentPopup({
                         >
                             <div className="w-full max-w-3xl transform overflow-hidden rounded-lg bg-white p-6 text-left shadow-xl transition-all relative">
                                 <Dialog.Title className="text-xl font-extrabold text-gray-900 mb-4">
-                                    ADD NEW STUDENTS
+                                    ADD NEW STUDENT
                                 </Dialog.Title>
                                 <hr className="border-t border-gray-300 mb-4" />
 
@@ -79,10 +84,10 @@ export default function AddStudentPopup({
                                 <form onSubmit={handleSubmit}>
                                     <div className="mb-6">
                                         <label className="block text-med font-bold text-gray-700 mb-2">
-                                            STUDENT IDS
+                                            STUDENT ID
                                         </label>
                                         <p className="text-sm text-gray-500 mb-8">
-                                            Put your student’s native School ID
+                                            Put your student's native School ID
                                         </p>
                                         <input
                                             type="text"
@@ -90,7 +95,7 @@ export default function AddStudentPopup({
                                             onChange={(e) =>
                                                 setInputValue(e.target.value)
                                             }
-                                            placeholder="Enter Student Ids"
+                                            placeholder="Enter Student Id"
                                             className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>

@@ -35,37 +35,29 @@ export default function CertificatePreview({
   };
 
   return (
-    <div className="w-64 h-80 aspect-square bg-white rounded-lg shadow-md flex flex-col p-4">
-      {/* ONLY this wrapper is now snapshotted */}
-      <div
-        ref={overlayRef}
-        className="relative flex-shrink-0 mb-4 overflow-hidden"
-      >
-        <img
-          src="/certificate.png"
-          alt="Certificate"
-          className="w-full h-auto object-contain rounded"
-        />
+    <div className="w-64 h-64 bg-white rounded-lg shadow-md flex flex-col p-3">
+      {/* Certificate image wrapper - reduced height */}
+      <div ref={overlayRef} className="relative flex-shrink-0 h-32 mb-2 overflow-hidden">
+        <img src="/certificate.png" alt="Certificate" className="w-full h-full object-contain rounded" />
 
-        <span className="absolute top-2 left-1/2 -translate-x-1/2 text-black text-xs font-medium text-center px-2 py-1 rounded whitespace-nowrap translate-y-[37px]">
+        <span className="absolute top-2 left-1/2 -translate-x-1/2 text-black text-[10px] font-medium text-center px-1 py-0.5 rounded whitespace-nowrap translate-y-[36px]">
           {title}
         </span>
-        <span className="absolute top-2 left-1/2 -translate-x-1/2 text-black text-xs font-medium text-center px-2 py-1 rounded whitespace-nowrap translate-y-[63px]">
+        <span className="absolute top-2 left-1/2 -translate-x-1/2 text-black text-[10px] font-medium text-center px-1 py-0.5 rounded whitespace-nowrap translate-y-[58px]">
           {name}
         </span>
       </div>
 
-      {/* rest of your card, untouched */}
-      <h3 className="text-2xl font-bold text-center whitespace-normal break-words">
+      <h3 className="text-lg font-bold text-center whitespace-normal break-words line-clamp-2 h-12 overflow-hidden">
         {title}
       </h3>
-      <p className="text-sm text-gray-600 mt-1 whitespace-normal break-words text-center">
-        Received:{' '}
-        <span className="text-red-500 font-medium">{date}</span>
+
+      <p className="text-xs text-gray-600 mb-3 whitespace-normal break-words text-center">
+        Received: <span className="text-[#C01A18] font-medium">{date}</span>
       </p>
-      <div className="mt-1" />
+
       <button
-        className="self-center mt-2 bg-black text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition-colors duration-200 ease-in-out"
+        className="self-center mt-auto mb-1 bg-black text-white py-1.5 px-5 rounded-lg hover:bg-gray-800 transition-colors duration-200 ease-in-out text-sm"
         onClick={handleDownload}
       >
         Download
