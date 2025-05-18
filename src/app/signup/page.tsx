@@ -15,7 +15,6 @@ import { addSchoolAdmin } from '@/app/api/admins/actions';
 import { NewEOAdmin } from '@/types/newEOAdmin';
 import { addEOAdmin } from '@/app/api/admins/actions';
 
-
 type Inputs = {
     role: string;
     email: string;
@@ -65,25 +64,25 @@ export default function SignUpPage() {
         //1. Needs to agree to terms of service
         if (!termsAgreed) {
             setError('Need to Agree to Terms of Serivice');
-            return
+            return;
         }
-        
-        //2. The rest of the boxed need to be filled 
+
+        //2. The rest of the boxed need to be filled
         if (!email || !password || !role) {
-            setError('Need to fill out all the fields')
-            return
+            setError('Need to fill out all the fields');
+            return;
         }
 
         try {
-            //SCHOOL ADMIN NEEDS TO SELECT A SCHOOL
-            if (role == "admin") {
+            //ERROR CHECK: SCHOOL ADMIN NEEDS TO SELECT A SCHOOL
+            if (role == 'admin') {
                 if (!school) {
                     setError('Need to select a school');
-                    return
+                    return;
                 }
             }
 
-            // 1) Create the user in Firebase Auth with email & password
+            // 3 Create the user in Firebase Auth with email & password
             const auth = getAuth();
             const { user } = await createUserWithEmailAndPassword(
                 auth,
@@ -92,25 +91,30 @@ export default function SignUpPage() {
             );
 
             console.log(user.uid);
-            if (role == "admin") { //school admin
+            if (role == 'admin') {
+                //school admin
                 const newSchoolAdmin: NewSchoolAdmin = {
-                approved: false,
-                email: email,
-                school_id: "",
-                }
-                
+                    approved: false,
+                    email: email,
+                    school_id: '',
+                };
+
                 await addSchoolAdmin(newSchoolAdmin, user.uid);
-            }
-            else if (role == "eo_admin") {
+            } else if (role == 'eo_admin') {
+                //ERROR CHECK: If user is EO admin then email must end in @endoverdose.net
+                if (!email.endsWith('@endoverdose.net')) {
+                    setError('Email must end in @endoverdose.net');
+                }
+
                 const newEOAdmin: NewEOAdmin = {
                     email: email,
-                }
-                
+                };
+
                 console.log(newEOAdmin);
                 await addEOAdmin(newEOAdmin, user.uid);
-            }
-            else { //SHOULDN'T GET HERE
-                setError("ERROR")
+            } else {
+                //SHOULDN'T GET HERE
+                setError('ERROR');
             }
 
             // 4) Send email‑verification instead of a magic link:
@@ -121,7 +125,6 @@ export default function SignUpPage() {
             setTimeout(() => {
                 router.push('/signin');
             }, 1000);
-            
         } catch (err) {
             console.error(err);
             setError('Something went wrong.');
@@ -165,8 +168,12 @@ export default function SignUpPage() {
                                         })}
                                     >
                                         <option value="">Choose a Role</option>
-                                        <option value="eo_admin">EO Admin</option>
-                                        <option value="admin">School Admin</option>
+                                        <option value="eo_admin">
+                                            EO Admin
+                                        </option>
+                                        <option value="admin">
+                                            School Admin
+                                        </option>
                                     </select>
                                 </div>
 
@@ -299,4 +306,4 @@ export default function SignUpPage() {
             </div>
         </div>
     );
-};
+}
