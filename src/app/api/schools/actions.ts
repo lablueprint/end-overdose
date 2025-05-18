@@ -17,6 +17,7 @@ import {
     deleteField,
     addDoc,
     setDoc,
+    increment,
 } from 'firebase/firestore';
 
 //SERVER ACTIONS
@@ -231,6 +232,8 @@ export const createStudentAndAddToSchool = async (
                 student_firebase_id: firebase_id,
                 student_password: studentPassword,
             },
+            enrolled_students: increment(1),
+            students_in_progress: increment(1),
         });
 
         return {
@@ -273,6 +276,7 @@ export async function deleteStudentFromSchool(
         // 2. Remove the student entry from student_ids in the school document
         await updateDoc(schoolDocRef, {
             [`student_ids.${studentId}`]: deleteField(),
+            enrolled_students: increment(-1),
         });
 
         return { success: true };
