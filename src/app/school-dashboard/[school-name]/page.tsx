@@ -81,7 +81,7 @@ export default function SchoolDashboard() {
     const enrolledStudents = 150;
 
     return (
-        <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="max-w-6xl mx-auto px-4 py-6 h-full max-h-screen overflow-auto pb-8">
             <div className="mb-8 mt-8">
                 <div className="flex flex-col">
                     <div className="flex items-baseline gap-4">
@@ -90,10 +90,6 @@ export default function SchoolDashboard() {
                         </h1>
                     </div>
                     <div className="mt-1 text-gray-600 flex items-center gap-2">
-                        <span className="font-semibold text-black text-base">
-                            Josie Bruin
-                        </span>
-                        <span className="mx-1 text-gray-400">•</span>
                         <a
                             href={`mailto:${user?.email || 'school@email.com'}`}
                             className="text-gray-400 underline"
@@ -141,7 +137,7 @@ export default function SchoolDashboard() {
                             Avg. Performance
                         </div>
                         <div className="text-2xl font-bold">
-                         {stats?.average_score !== null ? `${Math.round(stats?.average_score)}%` : '-'}
+                            {stats?.average_score !== null ? `${Math.round(stats?.average_score)}%` : '-'}
                         </div>
                     </div>
                 </div>

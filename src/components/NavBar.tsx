@@ -39,6 +39,7 @@ export default function NavBar() {
 
     const [selectedBackground, setSelectedBackground] = useState('');
     const [selectedCat, setSelectedCat] = useState('');
+    const [homePage, setHomePage] = useState('');
     // console.log('role:', role);
 
     // Toggle sidebar collapse state
@@ -67,6 +68,7 @@ export default function NavBar() {
                     icon: <PermIdentityIcon />,
                 },
             ]);
+            setHomePage('/eo-admin');
         } else if (role === 'school_admin') {
             setTabs([
                 {
@@ -80,6 +82,7 @@ export default function NavBar() {
                     icon: <SchoolOutlinedIcon />,
                 },
             ]);
+            setHomePage(`/school-dashboard/${schoolSlug}`);
         } else if (role === 'student') {
             setTabs([
                 {
@@ -104,6 +107,7 @@ export default function NavBar() {
                 );
                 setSelectedCat(`/cats/${user.profile.cat}.png`);
             }
+            setHomePage('/');
         } else {
             // Clear tabs for unknown roles
             setTabs([]);
@@ -136,6 +140,7 @@ export default function NavBar() {
         router.push('/signin');
     };
     const hideNavBar = path.startsWith('/courses/') && path !== '/courses';
+    const isAdmin = role === 'eo_admin' || role === 'school_admin';
 
     if (hideNavBar || !user) return null;
     return (
@@ -154,7 +159,7 @@ export default function NavBar() {
             )}
 
             <div className={`mb-10 mt-4 ${collapsed ? "flex justify-center" : "ml-2 flex relative"}`}>
-                <Link href="/">
+                <Link href={homePage}>
                     {collapsed ? (
                         <div className="flex justify-center items-center">
                             <Image src="/smallLogo.svg" alt="EO" width={30} height={20} className="object-contain" />
@@ -164,7 +169,7 @@ export default function NavBar() {
                     )}
                 </Link>
 
-                {!collapsed && (
+                {!collapsed && !isAdmin && (
                     <button
                         onClick={toggleCollapse}
                         className="text-white hover:bg-gray-800 rounded-full p-1 absolute right-0"
