@@ -19,18 +19,19 @@ import {
 import { getAuthenticatedAppForUser } from '@/firebase/serverApp';
 import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
 import { NewEOAdmin } from '@/types/newEOAdmin';
-import { role } from '@/store/userStore';
-import { NewStudent } from '@/types/newStudent';
 
 const db = getFirestore(firebase_app);
-const adminsCollection = collection(db, 'admins');
+const adminsCollection = collection(db, 'newSchoolAdmin');
 const schoolsCollection = collection(db, 'schools');
 
 // get all admins from the database
 export const getAdmins = cache(async () => {
     try {
         const snapshot = await getDocs(adminsCollection);
-        const admins = snapshot.docs.map((doc) => doc.data() as Admin);
+        const admins = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
 
         return admins;
     } catch (error) {
@@ -62,9 +63,6 @@ export async function addAdmin(admin: Admin, userId: string) {
 export async function deleteAdmin(adminEmail: string) {
     try {
         // authenticate the user calling this endpoint
-        const { firebaseServerApp } = await getAuthenticatedAppForUser();
-        const auth_db = getFirestore(firebaseServerApp);
-        const adminsCollection = collection(auth_db, 'admins');
 
         // query admin by email field
         const adminQuery = query(
@@ -74,6 +72,10 @@ export async function deleteAdmin(adminEmail: string) {
 
         // delete from the firebase
         const querySnapshot = await getDocs(adminQuery);
+
+        if (querySnapshot.empty) {
+            throw new Error('Admin not found');
+        }
         const docId = querySnapshot.docs[0].id;
         await deleteDoc(doc(adminsCollection, docId));
 

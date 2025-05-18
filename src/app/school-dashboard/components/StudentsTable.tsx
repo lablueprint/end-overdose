@@ -1,32 +1,12 @@
 import styles from './StudentsTable.module.css';
+import { NewStudent } from '@/types/newStudent';
 
 interface Quiz {
     name: string;
     score: number;
 }
 
-interface Student {
-    student_id: string;
-    email: string;
-    school_name: string;
-    nameplate: string;
-    fish_count: number;
-    course_completion: {
-        opioidCourse: {
-            courseScore: number;
-            courseProgress: number;
-        };
-        careerCourse: {
-            courseScore: number;
-            courseProgress: number;
-        };
-    };
-    quizzes: Quiz[];
-    badges: string[];
-    certificates: string[];
-}
-
-const StudentsTable = ({ students }: { students: Student[] }) => {
+const StudentsTable = ({ students }: { students: NewStudent[] }) => {
     // Helper function to get status circle class
     const getStatusCircleClass = (score: number) => {
         if (score >= 70) return `${styles.statusCircle} ${styles.statusPass}`;

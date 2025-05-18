@@ -16,10 +16,12 @@ import {
     deleteDoc,
     deleteField,
     addDoc,
+    setDoc,
 } from 'firebase/firestore';
 
 //SERVER ACTIONS
 import { getSchoolAverage, createStudent } from '@/app/api/students/actions';
+import { NewStudent } from '@/types/newStudent';
 
 //1. SETUP THE DATABASE CONNECTION
 const db = getFirestore(firebase_app);
@@ -74,7 +76,7 @@ export const getSchoolData = cache(async (schoolId: string) => {
     }
 });
 
-export const getSchoolDataByID = cache(async (schoolId: number) => {
+export const getSchoolDataByID = cache(async (schoolId: string) => {
     try {
         const schoolQuery = query(
             schoolsCollection,
@@ -305,6 +307,43 @@ export async function deleteStudentFromSchool(
     }
 }
 
+//Adds a school name to the general data document
+const GENERAL_DATA_DOC_ID = 'VGfQpeUMbnOfqAU0VlTW';
+
+export async function addSchoolNameToGeneralData(
+    schoolName: string,
+    schoolId: string
+) {
+    try {
+        const generalDataRef = doc(db, 'generalData', GENERAL_DATA_DOC_ID);
+        const generalDataSnap = await getDoc(generalDataRef);
+
+        if (!generalDataSnap.exists()) {
+            console.error('General data doc does not exist!!!');
+            return { error: 'General data document not found.' };
+        }
+
+        console.log('Updating general data with:', {
+            [schoolName]: schoolId,
+        });
+
+        await setDoc(
+            generalDataRef,
+            {
+                school_names: {
+                    [schoolName]: schoolId,
+                },
+            },
+            { merge: true }
+        );
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating general data:', error);
+        return { error: 'Failed to update general data.' };
+    }
+}
+
 // Creates a new school document with initialized fields
 export async function createNewSchool(schoolName: string) {
     try {
@@ -329,6 +368,8 @@ export async function createNewSchool(schoolName: string) {
 
         //immediately update that doc to include its FIREBASE ID as `school_id`
         await updateDoc(schoolDocRef, { school_id: schoolId });
+
+        await addSchoolNameToGeneralData(schoolName, schoolId);
 
         return {
             success: true,
@@ -372,5 +413,33 @@ export const getSchoolStats = cache(async (schoolId: string) => {
         };
     } catch (error) {
         console.error('Error fetching school stats:', error);
+    }
+});
+
+export const getSchoolStudentIds = cache(async (schoolId: string) => {
+    try {
+        const schoolDocRef = doc(db, 'newSchools', schoolId);
+        const schoolSnapshot = await getDoc(schoolDocRef);
+
+        if (!schoolSnapshot.exists()) {
+            console.error('School doc not found');
+        }
+
+        const data = schoolSnapshot.data();
+
+        if (data) {
+            const student_ids = data.student_ids;
+            const result = Object.keys(student_ids).reduce(
+                (acc: Record<string, string>, key: string) => {
+                    acc[key] = student_ids[key].student_password; // Set the value for each key to the student password
+                    return acc;
+                },
+                {}
+            );
+
+            return result;
+        }
+    } catch (error) {
+        console.error('Error fetching school student ids', error);
     }
 });
