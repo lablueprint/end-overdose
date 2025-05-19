@@ -382,7 +382,7 @@ export const getSchoolStats = cache(async (schoolId: string) => {
 
             const averageScore = numericValues.length
                 ? numericValues.reduce((sum, val) => sum + val, 0) /
-                numericValues.length
+                  numericValues.length
                 : null;
 
             return {

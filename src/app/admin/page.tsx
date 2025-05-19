@@ -1,15 +1,16 @@
 'use client';
 import { useState, useEffect } from 'react';
-import styles from './Dashboard.module.css';
 import {
     getAdmins,
     updateAdminApproval,
     deleteAdmin,
 } from '../api/admins/actions';
 import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
+import { ArrowUpDown } from 'lucide-react';
 import { getSchoolDataByID } from '../api/schools/actions';
 
 type SchoolAdminWithId = NewSchoolAdmin & { id: string };
+type SortDirection = 'asc' | 'desc' | null;
 
 export default function AdminPage() {
     const [admins, setAdmins] = useState<SchoolAdminWithId[]>([]);
@@ -18,6 +19,10 @@ export default function AdminPage() {
     const [schoolNames, setSchoolNames] = useState<{ [id: string]: string }>(
         {}
     );
+    const [pendingSortDirection, setPendingSortDirection] =
+        useState<SortDirection>(null);
+    const [approvedSortDirection, setApprovedSortDirection] =
+        useState<SortDirection>(null);
 
     //fetch all newSchoolAdmin entries on mount
     useEffect(() => {
@@ -61,11 +66,57 @@ export default function AdminPage() {
         };
 
         fetchNames();
-    }, [admins]);
+    }, [admins, schoolNames]);
 
     //split admins into pending and approved
     const pendingAdmins = admins.filter((a) => !a.approved);
     const approvedAdmins = admins.filter((a) => a.approved);
+
+    // sort pending admins by school name
+    const sortedPendingAdmins = [...pendingAdmins].sort((a, b) => {
+        if (!pendingSortDirection) return 0;
+
+        const schoolNameA = schoolNames[a.school_id] || a.school_id;
+        const schoolNameB = schoolNames[b.school_id] || b.school_id;
+
+        if (pendingSortDirection === 'asc') {
+            return schoolNameA.localeCompare(schoolNameB);
+        } else {
+            return schoolNameB.localeCompare(schoolNameA);
+        }
+    });
+
+    // sort approved admins by school name
+    const sortedApprovedAdmins = [...approvedAdmins].sort((a, b) => {
+        if (!approvedSortDirection) return 0;
+
+        const schoolNameA = schoolNames[a.school_id] || a.school_id;
+        const schoolNameB = schoolNames[b.school_id] || b.school_id;
+
+        if (approvedSortDirection === 'asc') {
+            return schoolNameA.localeCompare(schoolNameB);
+        } else {
+            return schoolNameB.localeCompare(schoolNameA);
+        }
+    });
+
+    // toggle sort direction for pending admins
+    const togglePendingSort = () => {
+        setPendingSortDirection((prev) => {
+            if (prev === null) return 'asc';
+            if (prev === 'asc') return 'desc';
+            return null;
+        });
+    };
+
+    // toggle sort direction for approved admins
+    const toggleApprovedSort = () => {
+        setApprovedSortDirection((prev) => {
+            if (prev === null) return 'asc';
+            if (prev === 'asc') return 'desc';
+            return null;
+        });
+    };
 
     //approve admin
     const handleApprove = async (email: string) => {
@@ -82,55 +133,75 @@ export default function AdminPage() {
     };
 
     return (
-        <div className='h-full max-h-screen overflow-auto pb-8'>
-            <div className={styles.container}>
-                <div className={styles.scrollArea}>
+        <div className="h-full max-h-screen overflow-auto pb-8 px-8">
+            <div className="container mx-auto">
+                <div className="mt-8">
                     {error && (
-                        <div style={{ color: 'red', marginBottom: 16 }}>
+                        <div className="text-red-500 mb-4 p-4 bg-red-50 rounded-lg">
                             {error}
                         </div>
                     )}
+
                     {loading ? (
-                        <div>Loading...</div>
+                        <div className="flex justify-center items-center h-64">
+                            <div className="text-gray-500">Loading...</div>
+                        </div>
                     ) : (
                         <>
                             {/* Pending School Request Section */}
                             {pendingAdmins.length > 0 && (
-                                <div style={{ marginBottom: 40 }}>
-                                    <h2 className={styles.subTitle}>
+                                <div className="mb-12">
+                                    <h2 className="text-2xl font-bold mb-2">
                                         PENDING SCHOOL REQUEST
                                     </h2>
-                                    <p className={styles.description}>
+                                    <p className="text-[#343A3A] mb-6">
                                         Review the list of pending schools and
-                                        decide whether to approve or deny each one
-                                        based on the submitted details. Use the
-                                        action buttons provided to manage which
-                                        schools are added to the database.
+                                        decide whether to approve or deny each
+                                        one based on the submitted details. Use
+                                        the action buttons provided to manage
+                                        which schools are added to the database.
                                     </p>
-                                    <table className={styles.table}>
-                                        <thead>
-                                            <tr>
-                                                <th> </th>
-                                                <th>School Name</th>
-                                                <th>Email</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {pendingAdmins.map((admin, idx) => (
-                                                <tr key={admin.email}>
-                                                    <td>{idx + 1}</td>
-                                                    <td>
+
+                                    <div className="overflow-hidden rounded-lg">
+                                        {/* Header */}
+                                        <div className="grid grid-cols-12 bg-gray-100 py-4 px-6">
+                                            <div className="col-span-1"></div>
+                                            <div className="col-span-4 flex items-center">
+                                                <button
+                                                    className="flex items-center text-left font-medium text-gray-900"
+                                                    onClick={togglePendingSort}
+                                                >
+                                                    School Name{' '}
+                                                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                                                </button>
+                                            </div>
+                                            <div className="col-span-4 text-left font-medium text-gray-900">
+                                                Email
+                                            </div>
+                                            <div className="col-span-3"></div>
+                                        </div>
+
+                                        {/* Rows */}
+                                        {sortedPendingAdmins.map(
+                                            (admin, idx) => (
+                                                <div
+                                                    key={admin.email}
+                                                    className="grid grid-cols-12 border-b py-4 px-6"
+                                                >
+                                                    <div className="col-span-1 flex items-center text-gray-500">
+                                                        {idx + 1}
+                                                    </div>
+                                                    <div className="col-span-4 flex items-center">
                                                         {schoolNames[
                                                             admin.school_id
                                                         ] || admin.school_id}
-                                                    </td>
-                                                    <td>{admin.email}</td>
-                                                    <td>
+                                                    </div>
+                                                    <div className="col-span-4 flex items-center">
+                                                        {admin.email}
+                                                    </div>
+                                                    <div className="col-span-3 flex justify-end gap-2">
                                                         <button
-                                                            className={
-                                                                styles.buttonApprove
-                                                            }
+                                                            className="bg-[#02B56B] hover:bg-green-600 text-white font-medium py-1.5 px-6 rounded"
                                                             onClick={() =>
                                                                 handleApprove(
                                                                     admin.email
@@ -140,9 +211,7 @@ export default function AdminPage() {
                                                             APPROVE
                                                         </button>
                                                         <button
-                                                            className={
-                                                                styles.buttonDeny
-                                                            }
+                                                            className="bg-[#C01A18] hover:bg-red-600 text-white font-medium py-1.5 px-6 rounded"
                                                             onClick={() =>
                                                                 handleDelete(
                                                                     admin.email
@@ -151,61 +220,78 @@ export default function AdminPage() {
                                                         >
                                                             DENY
                                                         </button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                                    </div>
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
                                 </div>
                             )}
 
                             {/* Approved Schools Section */}
-                            <div>
-                                <h2 className={styles.subTitle}>SCHOOLS</h2>
-                                <p className={styles.description}>
-                                    This table lists each school currently in the
-                                    database, along with its name and the point of
-                                    contact&apos;s email address. It also includes a
-                                    delete option, allowing administrators to remove
-                                    schools as needed for accurate and up-to-date
-                                    record keeping.
+                            <div className="mb-8">
+                                <h2 className="text-2xl font-bold mb-2">
+                                    SCHOOLS
+                                </h2>
+                                <p className="text-[#343A3A mb-6">
+                                    This table lists each school currently in
+                                    the database, along with its name and the
+                                    point of contact&apos;s email address. It
+                                    also includes a delete option, allowing
+                                    administrators to remove schools as needed
+                                    for accurate and up-to-date record keeping.
                                 </p>
-                                <table className={styles.table}>
-                                    <thead>
-                                        <tr>
-                                            <th> </th>
-                                            <th>School Name</th>
-                                            <th>Email</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {approvedAdmins.map((admin, idx) => (
-                                            <tr key={admin.email}>
-                                                <td>{idx + 1}</td>
-                                                <td>
-                                                    {schoolNames[admin.school_id] ||
-                                                        admin.school_id}
-                                                </td>
-                                                <td>{admin.email}</td>
-                                                <td>
-                                                    <button
-                                                        className={
-                                                            styles.buttonDelete
-                                                        }
-                                                        onClick={() =>
-                                                            handleDelete(
-                                                                admin.email
-                                                            )
-                                                        }
-                                                    >
-                                                        DELETE
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+
+                                <div className="overflow-hidden rounded-lg">
+                                    {/* Header */}
+                                    <div className="grid grid-cols-12 bg-gray-100 py-4 px-6">
+                                        <div className="col-span-1"></div>
+                                        <div className="col-span-4 flex items-center">
+                                            <button
+                                                className="flex items-center text-left font-medium text-gray-900"
+                                                onClick={toggleApprovedSort}
+                                            >
+                                                School Name{' '}
+                                                <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </button>
+                                        </div>
+                                        <div className="col-span-4 text-left font-medium text-gray-900">
+                                            Email
+                                        </div>
+                                        <div className="col-span-3"></div>
+                                    </div>
+
+                                    {/* Rows */}
+                                    {sortedApprovedAdmins.map((admin, idx) => (
+                                        <div
+                                            key={admin.email}
+                                            className="grid grid-cols-12 border-b py-4 px-6"
+                                        >
+                                            <div className="col-span-1 flex items-center text-gray-500">
+                                                {idx + 1}
+                                            </div>
+                                            <div className="col-span-4 flex items-center">
+                                                {schoolNames[admin.school_id] ||
+                                                    admin.school_id}
+                                            </div>
+                                            <div className="col-span-4 flex items-center">
+                                                {admin.email}
+                                            </div>
+                                            <div className="col-span-3 flex justify-end">
+                                                <button
+                                                    className="bg-black hover:bg-gray-800 text-white font-medium py-1.5 px-6 rounded"
+                                                    onClick={() =>
+                                                        handleDelete(
+                                                            admin.email
+                                                        )
+                                                    }
+                                                >
+                                                    DELETE
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </>
                     )}

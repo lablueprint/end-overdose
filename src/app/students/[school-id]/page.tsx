@@ -58,8 +58,8 @@ export default function SchoolDashboard() {
 
     const refreshData = useCallback(() => {
         // Increment the counter to trigger the useEffect
-        setRefreshCounter((prev) => prev + 1)
-    }, [])
+        setRefreshCounter((prev) => prev + 1);
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -83,8 +83,8 @@ export default function SchoolDashboard() {
 
     // Function to handle successful student addition
     const handleStudentAdded = () => {
-        refreshData()
-    }
+        refreshData();
+    };
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-6 h-full max-h-screen overflow-auto pb-8">
