@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import styles from './SimplePage.module.css';
 import VideoPage from './VideoPage';
 import { updateCourseProgress } from '@/app/api/students/actions';
-import '@fontsource/roboto-condensed';
+import '@fontsource/roboto-condensed/700.css';
+import '@fontsource/roboto/400.css';
 
 interface SimplePageProps {
     pageTitle: string;
@@ -66,48 +67,71 @@ export default function SimplePage({
 
     const OpenVideo = (video: VideoContent['video']) => {
         return (
-            <VideoPage
-                videoPath={video.videoPath}
-                startTime={video.startTime}
-                endTime={video.endTime}
-                pageTitle={video.title}
-            />
+            <div>
+                <br></br>
+                <VideoPage
+                    videoPath={video.videoPath}
+                    startTime={video.startTime}
+                    endTime={video.endTime}
+                    pageTitle={video.title}
+                />
+                <br></br>
+                <h1 className={styles.summaryText}>SUMMARY</h1>
+                <br></br>
+            </div>
         );
     };
 
     const RenderSubpoints = (point: TextContent[]) => {
         return (
-            <ul>
-                {point.map((subpoint, subIndex) => (
-                    <li className={styles.indent} key={subIndex}>
-                        {subpoint.video && OpenVideo(subpoint.video)}
-                        {!subpoint.video && subpoint.text && (
-                            <div>● {boldText(subpoint.text)}</div>
-                        )}
-                        {subpoint.subpoints &&
-                            RenderSubpoints(subpoint.subpoints)}
-                    </li>
-                ))}
-            </ul>
+            <div>
+                <ul>
+                    {point.map((subpoint, subIndex) => (
+                        <li key={subIndex}>
+                            {subpoint.video && OpenVideo(subpoint.video)}
+                            {!subpoint.video && subpoint.text && (
+                                <div className={styles.bodyText}>
+                                    ● {boldText(subpoint.text)}
+                                </div>
+                            )}
+                            {subpoint.subpoints &&
+                                RenderSubpoints(subpoint.subpoints)}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         );
     };
 
     const OpenContent = (lesson: Lesson) => {
         return (
-            <ul>
-                {lesson.content.map((item, index) => (
-                    <li key={index}>
-                        {item.video ? (
-                            OpenVideo(item.video)
-                        ) : (
-                            <div>● {boldText((item as TextContent).text)}</div>
-                        )}
-                        {'subpoints' in item && item.subpoints && (
-                            <ul>{RenderSubpoints(item.subpoints)}</ul>
-                        )}
-                    </li>
-                ))}
-            </ul>
+            <div>
+                {!lesson.content[0].video && (
+                    <h1 className={styles.summaryText}>SUMMARY</h1>
+                )}
+                <ul>
+                    {lesson.content.map((item, index) => (
+                        <li key={index}>
+                            {item.video ? (
+                                OpenVideo(item.video)
+                            ) : (
+                                <div>
+                                    <div className={styles.bodyText}>
+                                        ● {boldText((item as TextContent).text)}
+                                    </div>
+                                </div>
+                            )}
+                            {'subpoints' in item && item.subpoints && (
+                                <div>
+                                    <br></br>
+                                    <ul>{RenderSubpoints(item.subpoints)}</ul>
+                                    <br></br>
+                                </div>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         );
     };
 
@@ -142,6 +166,8 @@ export default function SimplePage({
         <div
             style={{
                 fontFamily: 'Roboto Condensed, sans-serif',
+                fontWeight: '700',
+                lmfao,
             }}
         >
             <br />

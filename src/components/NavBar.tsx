@@ -21,7 +21,9 @@ export default function NavBar() {
     const user = useUserStore((state) => state.user);
     const role = useUserStore((state) => state.role);
     const setLoading = useUserStore((state) => state.setLoading);
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(
+        path.startsWith('/courses/') && path !== '/courses' ? true : false
+    );
     const setUser = useUserStore((state) => state.setUser);
     const setRole = useUserStore((state) => state.setRole);
     const setUID = useUserStore((state) => state.setUID);
@@ -139,14 +141,15 @@ export default function NavBar() {
         await logout();
         router.push('/signin');
     };
-    const hideNavBar = path.startsWith('/courses/') && path !== '/courses';
+    //const hideNavBar = path.startsWith('/courses/') && path !== '/courses';
     const isAdmin = role === 'eo_admin' || role === 'school_admin';
 
-    if (hideNavBar || !user) return null;
+    if (!user) return null;
     return (
         <nav
-            className={`bg-[#0C1321] h-full flex flex-col p-6 shadow-lg transition-all duration-500 ease-in-out ${collapsed ? "p-3 w-[80px]" : "p-6"
-                }`}
+            className={`bg-[#0C1321] h-full flex flex-col p-6 shadow-lg transition-all duration-500 ease-in-out ${
+                collapsed ? 'p-3 w-[80px]' : 'p-6'
+            }`}
         >
             {collapsed && (
                 <button
@@ -158,14 +161,28 @@ export default function NavBar() {
                 </button>
             )}
 
-            <div className={`mb-10 mt-4 ${collapsed ? "flex justify-center" : "ml-2 flex relative"}`}>
+            <div
+                className={`mb-10 mt-4 ${collapsed ? 'flex justify-center' : 'ml-2 flex relative'}`}
+            >
                 <Link href={homePage}>
                     {collapsed ? (
                         <div className="flex justify-center items-center">
-                            <Image src="/smallLogo.svg" alt="EO" width={30} height={20} className="object-contain" />
+                            <Image
+                                src="/smallLogo.svg"
+                                alt="EO"
+                                width={30}
+                                height={20}
+                                className="object-contain"
+                            />
                         </div>
                     ) : (
-                        <Image src="/logo.png" alt="End Overdose Logo" width={150} height={50} className="object-contain" />
+                        <Image
+                            src="/logo.png"
+                            alt="End Overdose Logo"
+                            width={150}
+                            height={50}
+                            className="object-contain"
+                        />
                     )}
                 </Link>
 
@@ -180,16 +197,28 @@ export default function NavBar() {
                 )}
             </div>
 
-            <ul className={`flex-grow flex flex-col space-y-2 mt-12 ${collapsed ? "items-center" : ""}`}>
+            <ul
+                className={`flex-grow flex flex-col space-y-2 mt-12 ${collapsed ? 'items-center' : ''}`}
+            >
                 {tabs.map(({ href, tab, icon }) => (
-                    <li key={href} className={collapsed ? "w-full flex justify-center" : ""}>
+                    <li
+                        key={href}
+                        className={
+                            collapsed ? 'w-full flex justify-center' : ''
+                        }
+                    >
                         <Link
                             href={href}
-                            className={`flex items-center rounded-md ${collapsed ? "justify-center p-2 w-10 h-10" : "p-3"} ${path === href ? "bg-white text-black" : "text-white hover:bg-gray-800"
-                                }`}
+                            className={`flex items-center rounded-md ${collapsed ? 'justify-center p-2 w-10 h-10' : 'p-3'} ${
+                                path === href
+                                    ? 'bg-white text-black'
+                                    : 'text-white hover:bg-gray-800'
+                            }`}
                             title={collapsed ? tab : undefined}
                         >
-                            <span className={collapsed ? "" : "mr-3"}>{icon}</span>
+                            <span className={collapsed ? '' : 'mr-3'}>
+                                {icon}
+                            </span>
                             {!collapsed && <span>{tab}</span>}
                         </Link>
                     </li>
@@ -197,11 +226,20 @@ export default function NavBar() {
             </ul>
 
             {user && (
-                <div className={`mt-auto pt-4 ${collapsed ? "flex flex-col items-center" : "mb-2"}`}>
+                <div
+                    className={`mt-auto pt-4 ${collapsed ? 'flex flex-col items-center' : 'mb-2'}`}
+                >
                     {'profile' in user && (
-                        <div className={`mb-4 ${collapsed ? "flex flex-col items-center" : "flex items-center"}`}>
-                            <div className={`relative rounded-full overflow-hidden cursor-pointer ${collapsed ? "w-10 h-10 mb-2" : "w-12 h-12 mr-3"
-                                }`}>
+                        <div
+                            className={`mb-4 ${collapsed ? 'flex flex-col items-center' : 'flex items-center'}`}
+                        >
+                            <div
+                                className={`relative rounded-full overflow-hidden cursor-pointer ${
+                                    collapsed
+                                        ? 'w-10 h-10 mb-2'
+                                        : 'w-12 h-12 mr-3'
+                                }`}
+                            >
                                 <Image
                                     src={selectedBackground}
                                     alt="Avatar background"
@@ -218,28 +256,51 @@ export default function NavBar() {
                                     />
                                 </div>
                             </div>
-                            <div className={collapsed ? "flex flex-col items-center" : ""}>
+                            <div
+                                className={
+                                    collapsed
+                                        ? 'flex flex-col items-center'
+                                        : ''
+                                }
+                            >
                                 {!collapsed && (
                                     <p className="text-white text-sm">
                                         {user.profile.nameplate}
                                     </p>
                                 )}
                                 <div className="flex items-center mt-1">
-                                    <Image src="/kibble.png" alt="Fish points" width={16} height={16} className="mr-1" />
-                                    <span className="text-xs text-gray-400">{user.fish_count}</span>
+                                    <Image
+                                        src="/kibble.png"
+                                        alt="Fish points"
+                                        width={16}
+                                        height={16}
+                                        className="mr-1"
+                                    />
+                                    <span className="text-xs text-gray-400">
+                                        {user.fish_count}
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     )}
 
-                    <div className={collapsed ? "w-full flex justify-center" : ""}>
+                    <div
+                        className={
+                            collapsed ? 'w-full flex justify-center' : ''
+                        }
+                    >
                         <button
-                            className={`flex ${collapsed ? "justify-center p-2 w-10 h-10" : "items-center w-full p-3"
-                                } text-white rounded-md hover:bg-gray-800`}
+                            className={`flex ${
+                                collapsed
+                                    ? 'justify-center p-2 w-10 h-10'
+                                    : 'items-center w-full p-3'
+                            } text-white rounded-md hover:bg-gray-800`}
                             onClick={handleLogout}
-                            title={collapsed ? "Logout" : undefined}
+                            title={collapsed ? 'Logout' : undefined}
                         >
-                            <LogoutIcon className={`w-5 h-5 ${collapsed ? "" : "mr-3"}`} />
+                            <LogoutIcon
+                                className={`w-5 h-5 ${collapsed ? '' : 'mr-3'}`}
+                            />
                             {!collapsed && <span>Logout</span>}
                         </button>
                     </div>

@@ -319,12 +319,6 @@ export default function OpioidHome() {
                 }}
             >
                 <div className={styles.courseContent}>
-                    <button
-                        onClick={handleExitClick}
-                        className={styles.exitButton}
-                    >
-                        Exit Course
-                    </button>
                     {/* Confirmation Modal */}
                     {showExitModal && (
                         <div className={styles.modalBackground}>
