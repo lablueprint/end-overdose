@@ -19,19 +19,19 @@ import {
 import { getAuthenticatedAppForUser } from '@/firebase/serverApp';
 import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
 import { NewEOAdmin } from '@/types/newEOAdmin';
-import { role } from '@/store/userStore';
-import { NewStudent } from '@/types/newStudent';
-
 
 const db = getFirestore(firebase_app);
-const adminsCollection = collection(db, 'admins');
+const adminsCollection = collection(db, 'newSchoolAdmin');
 const schoolsCollection = collection(db, 'schools');
 
 // get all admins from the database
 export const getAdmins = cache(async () => {
     try {
         const snapshot = await getDocs(adminsCollection);
-        const admins = snapshot.docs.map((doc) => doc.data() as Admin);
+        const admins = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
 
         return admins;
     } catch (error) {
@@ -63,9 +63,6 @@ export async function addAdmin(admin: Admin, userId: string) {
 export async function deleteAdmin(adminEmail: string) {
     try {
         // authenticate the user calling this endpoint
-        const { firebaseServerApp } = await getAuthenticatedAppForUser();
-        const auth_db = getFirestore(firebaseServerApp);
-        const adminsCollection = collection(auth_db, 'admins');
 
         // query admin by email field
         const adminQuery = query(
@@ -75,6 +72,10 @@ export async function deleteAdmin(adminEmail: string) {
 
         // delete from the firebase
         const querySnapshot = await getDocs(adminQuery);
+
+        if (querySnapshot.empty) {
+            throw new Error('Admin not found');
+        }
         const docId = querySnapshot.docs[0].id;
         await deleteDoc(doc(adminsCollection, docId));
 
@@ -92,13 +93,10 @@ export async function deleteAdmin(adminEmail: string) {
 export const getSchoolAdmins = cache(async () => {
     try {
         // query admin by email field
-        const adminQuery = query(
-            adminsCollection,
-            where('role', '==', 'school_admin')
-        );
+        const adminQuery = query(adminsCollection);
         const querySnapshot = await getDocs(adminQuery);
         const SchoolAdmins = querySnapshot.docs.map(
-            (doc) => doc.data() as Admin
+            (doc) => doc.data() as NewSchoolAdmin
         );
 
         // The below structure is a hash map with the outer key being school (first string) and
@@ -106,11 +104,41 @@ export const getSchoolAdmins = cache(async () => {
         // being the Admin object with that email.
 
         const adminsBySchool = SchoolAdmins.reduce(
-            (acc: Record<string, Record<string, Admin>>, admin: Admin) => {
-                if (!acc[admin.school_name]) {
-                    acc[admin.school_name] = {};
+            (acc: Record<string, Record<string, NewSchoolAdmin>>, admin: NewSchoolAdmin) => {
+                if (!acc[admin.school_id]) {
+                    acc[admin.school_id] = {};
                 }
-                acc[admin.school_name][admin.email] = admin;
+                acc[admin.school_id][admin.email] = admin;
+                return acc;
+            },
+            {}
+        );
+
+        return adminsBySchool;
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        throw new Error('Failed to fetching admin.');
+    }
+});
+
+export const getSingleSchoolAdminEmailMap = cache(async () => {
+    try {
+        // query admin by email field
+        const adminQuery = query(adminsCollection);
+        const querySnapshot = await getDocs(adminQuery);
+        const SchoolAdmins = querySnapshot.docs.map(
+            (doc) => doc.data() as NewSchoolAdmin
+        );
+
+        // The below structure is a hash map with the outer key being school (first string) and
+        // the value being another hash map with the key being email (second string) and the value
+        // being the Admin object with that email.
+
+        const adminsBySchool = SchoolAdmins.reduce(
+            (acc: Record<string, string>, admin: NewSchoolAdmin) => {
+                if (!acc[admin.school_id]) {
+                    acc[admin.school_id] = admin.email;
+                }
                 return acc;
             },
             {}
@@ -209,18 +237,18 @@ export async function getAdmin(id: string) {
 
 //NEW STUFF HERE
 
-//NEW DB
+//EO ADMIN STUFF
 const eoAdminsCollection = collection(db, 'newEOAdmin');
-const schoolAdminsCollections = collection(db, 'newSchoolAdmin')
+const schoolAdminsCollections = collection(db, 'newSchoolAdmin');
 
-export async function addEoAdmin(eoAdmin: NewEOAdmin, userId: string) {
+export async function addEOAdmin(eoAdmin: NewEOAdmin, userId: string) {
     try {
         // Firebase Authentication
-        const { firebaseServerApp } = await getAuthenticatedAppForUser();
-        const auth_db = getFirestore(firebaseServerApp);
+        // const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        // const auth_db = getFirestore(firebaseServerApp);
 
         // Add EO Admin to the database
-        const eoAdminsCollection = collection(auth_db, 'newEOAdmin');
+        // const eoAdminsCollection = collection(auth_db, 'newEOAdmin');
 
         // Add to database
         await setDoc(doc(eoAdminsCollection, userId), eoAdmin);
@@ -233,17 +261,21 @@ export async function addEoAdmin(eoAdmin: NewEOAdmin, userId: string) {
     }
 }
 
-export async function addSchoolAdmin(schoolAdmin: NewSchoolAdmin, userId: string) {
+//SCHOOL ADMIN STUFF
+export async function addSchoolAdmin(
+    schoolAdmin: NewSchoolAdmin,
+    userId: string
+) {
     try {
         // Firebase Authentication
-        const { firebaseServerApp } = await getAuthenticatedAppForUser();
-        const auth_db = getFirestore(firebaseServerApp);
+        // const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        // const auth_db = getFirestore(firebaseServerApp);
 
         //ADD SCHOOL ADMIN STUFF
-        const schoolAdminsCollection = collection(auth_db, 'newSchoolAdmin');
+        // const schoolAdminsCollection = collection(auth_db, 'newSchoolAdmin');
 
         // add to database
-        await setDoc(doc(schoolAdminsCollection, userId), schoolAdmin);
+        await setDoc(doc(schoolAdminsCollections, userId), schoolAdmin);
 
         // revalidate data
         revalidatePath('');
@@ -259,7 +291,10 @@ export async function getSchoolAdmin(id: string) {
         const schoolAdminDoc = await getDoc(schoolAdminDocRef);
 
         if (schoolAdminDoc.exists()) {
-            return { id: schoolAdminDoc.id, ...(schoolAdminDoc.data() as NewSchoolAdmin) };
+            return {
+                id: schoolAdminDoc.id,
+                ...(schoolAdminDoc.data() as NewSchoolAdmin),
+            };
         }
 
         return null;
@@ -276,7 +311,13 @@ export async function getSchoolorEOAdmin(id: string) {
         const EOAdminDoc = await getDoc(EOAdminDocRef);
 
         if (EOAdminDoc.exists()) {
-            return {result: { id: EOAdminDoc.id, ...(EOAdminDoc.data() as NewEOAdmin) }, role: 'eo_admin'};
+            return {
+                result: {
+                    id: EOAdminDoc.id,
+                    ...(EOAdminDoc.data() as NewEOAdmin),
+                },
+                role: 'eo_admin',
+            };
         }
 
         // Check in the 'newSchoolAdmin' collection
@@ -284,7 +325,13 @@ export async function getSchoolorEOAdmin(id: string) {
         const schoolAdminDoc = await getDoc(schoolAdminDocRef);
 
         if (schoolAdminDoc.exists()) {
-            return { result: {id: schoolAdminDoc.id, ...(schoolAdminDoc.data() as NewSchoolAdmin)}, role: 'school_admin' };
+            return {
+                result: {
+                    id: schoolAdminDoc.id,
+                    ...(schoolAdminDoc.data() as NewSchoolAdmin),
+                },
+                role: 'school_admin',
+            };
         }
 
         return null;

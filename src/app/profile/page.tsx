@@ -55,7 +55,7 @@ export default function Home() {
                 <div className={styles.leftSide}>
                     <div className={styles.nameContainer}>
                         <Image
-                            src='/paw.svg'
+                            src="/paw.svg"
                             alt="paw"
                             width={100}
                             height={100}
@@ -92,12 +92,12 @@ export default function Home() {
 
                     <p className={styles.achievementsTag}>CERTIFICATES</p>
                     <div className="w-full overflow-x-auto overflow-y-hidden">
-                        <ul className="flex flex-nowrap space-x-4 p-4">
+                        <ul className="flex flex-nowrap space-x-4 pt-4">
                             {Object.entries(certificatesMap).map(
                                 ([title, date]) => (
                                     <li key={title} className="flex-shrink-0">
                                         <CertificatePreview
-                                            title={(`${title} course`).toUpperCase()}
+                                            title={`${title} course`.toUpperCase()}
                                             date={date}
                                             name={nameplate.toUpperCase()}
                                         />
@@ -126,7 +126,7 @@ export default function Home() {
             {isBadgeModalOpen && (
                 <BadgeModal
                     selectedBadges={[]}
-                    setSelectedBadges={() => {}}
+                    setSelectedBadges={() => { }}
                     badgesEarned={[]}
                     onClose={() => setIsBadgeModalOpen(false)}
                 />

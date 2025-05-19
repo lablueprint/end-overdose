@@ -16,8 +16,6 @@ import {
     setDoc,
     where,
     addDoc,
-    deleteDoc,
-    deleteField,
 } from 'firebase/firestore';
 import { getSchoolData } from '@/app/api/schools/actions'; // Make sure this import is correct
 // import { studentsCollection } from './firebase'; // Adjust import as needed

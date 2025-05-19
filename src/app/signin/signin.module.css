@@ -47,7 +47,6 @@
 /* FORM STYLES */
 .formContainer {
     padding: 2rem;
-    margin-top: 2rem;
     width: 100%;
 }
 
@@ -81,6 +80,7 @@
     border: 1px solid #303545;
     color: white;
     font-size: 1rem;
+    border: 1px solid #a8b0b8;
 }
 
 .input:focus {
@@ -121,7 +121,6 @@
 /* SUBMIT BUTTON */
 
 .buttonContainer {
-    margin-top: 2rem;
     display: flex;
     justify-content: left;
 }
