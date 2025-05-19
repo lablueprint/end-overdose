@@ -151,6 +151,7 @@ export default function OpioidHome() {
     ));
 
     const handleNextLesson = async () => {
+        let complete = false;
         if (
             currentLesson < totalLessons &&
             user &&
@@ -169,6 +170,10 @@ export default function OpioidHome() {
                 };
 
                 const progress = (nextIndex / totalLessons) * 100;
+
+                if (progress == 100) {
+                    complete = true;
+                }
 
                 // Update Zustand store
                 useUserStore.getState().setUser({
@@ -193,7 +198,7 @@ export default function OpioidHome() {
             // update local lesson state
             setLesson(nextIndex);
 
-            window.location.href = '/quiz';
+            if (!complete) window.location.href = '/quiz';
         }
     };
 

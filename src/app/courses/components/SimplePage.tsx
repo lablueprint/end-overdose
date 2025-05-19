@@ -5,6 +5,9 @@ import VideoPage from './VideoPage';
 import { updateCourseProgress } from '@/app/api/students/actions';
 import '@fontsource/roboto-condensed/700.css';
 import '@fontsource/roboto/400.css';
+import { useUserStore } from '@/store/userStore';
+import { isStudent } from '@/types/newStudent';
+import { useRouter } from 'next/navigation';
 
 interface SimplePageProps {
     pageTitle: string;
@@ -51,6 +54,8 @@ export default function SimplePage({
     const [secondsViewed, setSecondsViewed] = useState(0);
     const [allowNextPage, setAllowNextPage] = useState(false);
     const countTo = 1; //CHANGE THIS TO WHAT YOU WANT IT TO BE
+    const user = useUserStore((state) => state.user);
+    const router = useRouter();
 
     const boldText = (text: string) => {
         if (!text) return null;
@@ -155,11 +160,11 @@ export default function SimplePage({
     }, [lesson]); // Re-run effect when the lesson changes
 
     const handleFinishCourse = async () => {
-        if (!courseCompleted) return; // Prevent calling it if course is not yet finished
-
+        if (!courseCompleted || !isStudent(user)) return; // Prevent calling it if course is not yet finished
         // Ensure to update course completion to 100% once finished
         handleNext();
         await updateCourseProgress(user.student_id, 'opioidCourse', 100);
+        router.push('/certificates');
     };
 
     return (
@@ -167,7 +172,6 @@ export default function SimplePage({
             style={{
                 fontFamily: 'Roboto Condensed, sans-serif',
                 fontWeight: '700',
-                lmfao,
             }}
         >
             <br />
