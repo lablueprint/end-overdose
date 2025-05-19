@@ -1,50 +1,73 @@
 .container {
-    padding: 1.5rem;
-    background-color: rgb(249, 250, 251);
-    min-height: 100vh;
-  }
-  
-  .welcomeSection {
-    margin-bottom: 1.5rem;
-  }
-  
-  .welcomeText {
-    font-size: 0.875rem;
-    color: rgb(107, 114, 128);
-  }
-  
-  .welcomeName {
-    font-size: 1.25rem;
-    font-weight: 700;
-  }
-  
-  .dashboardTitle {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-  
-  .statsRow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .featureCardsRow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  .schoolsSection {
-    margin-top: 2rem;
-  }
-  
-  .schoolsSectionTitle {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.scrollArea {
+  flex: 1;
+  overflow: auto;
+  padding: 32px;
+}
+
+.sectionTitle {
+  font-weight: 700;
+  font-size: 28px;
+}
+
+.subTitle {
+  font-weight: 700;
+  font-size: 30px;
+}
+
+.description {
+  color: #888;
+  margin-bottom: 16px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 50px;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table th {
+  background: #f5f5f5;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.buttonApprove {
+  background: #02B56B;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin-right: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.buttonDeny {
+  background: #C01A18;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.buttonDelete {
+  background: #000;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
