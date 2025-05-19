@@ -9,7 +9,7 @@ interface SimplePageProps {
     pageTitle: string;
     handleNext: () => void;
     lesson: Lesson;
-    courseCompleted: boolean
+    courseCompleted: boolean;
 }
 
 interface Lesson {
@@ -135,7 +135,7 @@ export default function SimplePage({
 
         // Ensure to update course completion to 100% once finished
         handleNext();
-        await updateCourseProgress('opioidCourse', 100);
+        await updateCourseProgress(user.student_id, 'opioidCourse', 100);
     };
 
     return (

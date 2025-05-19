@@ -129,6 +129,13 @@ export default function OpioidHome() {
             key={index}
             style={{
                 fontFamily: 'Roboto Condensed, sans-serif',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                justifyItems: 'center',
+                alignItems: 'center',
+                paddingBottom: '10px',
+                width: '100%',
             }}
         >
             <LessonTile
@@ -234,7 +241,7 @@ export default function OpioidHome() {
         <div style={{ display: 'flex', width: '100%' }}>
             <div
                 style={{
-                    width: '22%',
+                    width: '18%',
                     overflowY: 'auto',
                     maxHeight: '100vh',
                     transition: 'flex-grow 0.5s ease-in-out',
@@ -243,10 +250,22 @@ export default function OpioidHome() {
                     fontFamily: 'Roboto Condensed, sans-serif',
                     borderTopRightRadius: '30px',
                     borderBottomRightRadius: '30px',
+                    paddingTop: '30px',
+                    fontSize: '24px',
                 }}
             >
-
-                    <div>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <div
+                        style={{
+                            width: '80%',
+                        }}
+                    >
                         <h1
                             onClick={returnToCourses}
                             style={{
@@ -289,6 +308,7 @@ export default function OpioidHome() {
 
                         {navBarEntries}
                     </div>
+                </div>
             </div>
             <div
                 style={{

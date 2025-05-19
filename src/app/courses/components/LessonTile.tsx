@@ -28,7 +28,9 @@ export default function LessonTileProps({
     return (
         <div
             className={`${styles.container} ${selected ? styles.selectedContainer : ''}`}
-            onClick={disabled ? () => {}  : () => onHandleChangeLesson(lessonNumber)}
+            onClick={
+                disabled ? () => {} : () => onHandleChangeLesson(lessonNumber)
+            }
             style={{
                 display: 'flex',
                 flexDirection: 'row',
@@ -38,15 +40,6 @@ export default function LessonTileProps({
                 cursor: disabled ? 'not-allowed' : 'pointer', // cursor style dependent on accessible lesson tile
             }}
         >
-            <Image
-                src="/videoIcon.png"
-                width={37}
-                height={37}
-                alt="Video Icon"
-                style={{
-                    margin: '10px',
-                }}
-            />
             <div>
                 <h4 className={styles.subtitle}>Lesson #{lessonNumber + 1}</h4>
                 <h2 className={styles.title}>{lessonTitle}</h2>
