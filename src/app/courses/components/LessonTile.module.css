@@ -46,3 +46,27 @@
     line-height: 1rem;
     font-size: 12px;
 }
+
+.disabledOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(3px);
+    background-color: rgba(0, 0, 0, 0.5); /* make it darker */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  
+  .lockIcon {
+    font-size: 32px;
+    color: #ffffff; /* pure white */
+  }
+  
+  
