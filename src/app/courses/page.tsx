@@ -6,6 +6,8 @@ import AuthWrap from '@/components/AuthWrap';
 import { useState, useEffect } from 'react';
 import { isStudent } from '@/types/newStudent';
 import LevelIcon from './components/LevelIcon';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto-condensed/700.css';
 
 export default function Courses() {
     const [loading, setLoading] = useState(true);
@@ -173,11 +175,19 @@ export default function Courses() {
     return (
         <AuthWrap roles={['school_admin', 'eo_admin', 'student']}>
             <div className={styles.header}>
-                <h1>OVERDOSE PREVENTION: KNOWING SIGNS</h1>
-                <p>
-                    Lorem ipsum dolor sit ameet, consecttur adipiscing elit.
-                    Lorem ipsur dolor sit amet, consectetur adipiscing elit.
-                </p>
+                <div className={styles.headerText}>
+                    {' '}
+                    <h1 className={styles.titleText}>
+                        OPIOID OVERDOSE TRAINING
+                    </h1>
+                    <p className={styles.bodyText}>
+                        This course teaches you how to recognize the key signs
+                        of a drug overdose, including changes in breathing, skin
+                        color, and consciousness. You'll learn the differences
+                        between opioid, stimulant, and alcohol overdoses, and
+                        what to do in each situation.
+                    </p>
+                </div>
                 <div
                     style={{
                         display: 'flex',
@@ -217,18 +227,6 @@ export default function Courses() {
                     }
                     return null; // Don't render anything for future levels
                 })}
-            </div>
-            <div className={styles.footer}>
-                <div className={styles.footerText}>
-                    <p>
-                        {' '}
-                        If this content brings up tough emotions,{' '}
-                        <a className={styles.helpLink}>
-                            {' '}
-                            you are not alone, get support here.{' '}
-                        </a>
-                    </p>{' '}
-                </div>
             </div>
         </AuthWrap>
     );
