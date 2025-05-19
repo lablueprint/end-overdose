@@ -234,61 +234,18 @@ export default function OpioidHome() {
         <div style={{ display: 'flex', width: '100%' }}>
             <div
                 style={{
-                    flex: toggle ? 0 : 2.1,
+                    width: '22%',
                     overflowY: 'auto',
                     maxHeight: '100vh',
                     transition: 'flex-grow 0.5s ease-in-out',
-                    backgroundColor: toggle ? 'white' : '#0C1321',
-                    padding: toggle ? '30px' : '60px',
+                    backgroundColor: '#0C1321',
+                    padding: '0px',
                     fontFamily: 'Roboto Condensed, sans-serif',
+                    borderTopRightRadius: '30px',
+                    borderBottomRightRadius: '30px',
                 }}
             >
-                {toggle ? (
-                    <div
-                        style={{
-                            position: 'absolute',
-                            left: '13.5rem',
-                            top: '50%',
-                            transform: 'translateY(-50%)', // Center correction
-                            width: '30px',
-                            height: '49px',
-                            flexShrink: '0',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            color: toggle ? 'black' : 'white',
-                        }}
-                    >
-                        <ArrowForwardIosIcon
-                            onClick={handleToggleNavBarDisplay}
-                        ></ArrowForwardIosIcon>
-                    </div>
-                ) : (
-                    <div
-                        style={{
-                            position: 'absolute',
-                            left: '37rem',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            width: '30px',
-                            height: '49px',
-                            flexShrink: '0',
-                            backgroundColor: '#0C1321',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            color: toggle ? 'black' : 'white',
-                        }}
-                    >
-                        <ArrowBackIosIcon
-                            onClick={handleToggleNavBarDisplay}
-                        ></ArrowBackIosIcon>
-                    </div>
-                )}
-                {!toggle ? (
+
                     <div>
                         <h1
                             onClick={returnToCourses}
@@ -301,8 +258,7 @@ export default function OpioidHome() {
                                 lineHeight: 'normal',
                             }}
                         >
-                            <ArrowBackIcon></ArrowBackIcon>
-                            Back to Courses
+                            <p>Table of Contents</p>
                             <br />
                             <br />
                         </h1>
@@ -333,13 +289,10 @@ export default function OpioidHome() {
 
                         {navBarEntries}
                     </div>
-                ) : (
-                    ''
-                )}
             </div>
             <div
                 style={{
-                    flex: toggle ? 10 : 6,
+                    flex: 6,
                     height: '100vh', //help
                     overflowY: 'auto',
                     padding: '0 10px',
