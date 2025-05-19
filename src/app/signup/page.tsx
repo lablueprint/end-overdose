@@ -14,7 +14,7 @@ import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
 import { addSchoolAdmin } from '@/app/api/admins/actions';
 import { NewEOAdmin } from '@/types/newEOAdmin';
 import { addEOAdmin } from '@/app/api/admins/actions';
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from 'lucide-react';
 
 type Inputs = {
     role: string;
@@ -29,15 +29,15 @@ export default function SignUpPage() {
     const router = useRouter();
     const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState('');
-    const [showPassword, setShowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
     const [success, setSuccess] = useState<boolean>(false);
     const [schools, setSchools] = useState<string[]>([]);
 
     const selectedRole = watch('role');
 
     const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword)
-    }
+        setShowPassword(!showPassword);
+    };
 
     // Fetch schools using the server action
     useEffect(() => {
@@ -145,7 +145,7 @@ export default function SignUpPage() {
     }, []);
 
     return (
-        <div className='bg-[#0C1321]'>
+        <div className="bg-[#0C1321]">
             <div className={styles.splitContainer}>
                 <div className={styles.loginHalf}>
                     <div className={styles.contentContainer}>
@@ -158,7 +158,9 @@ export default function SignUpPage() {
                             </div>
                             {error && <p style={{ color: 'red' }}>{error}</p>}
                             {success && (
-                                <p style={{ color: 'green' }}>Signup successful!</p>
+                                <p style={{ color: 'green' }}>
+                                    Signup successful!
+                                </p>
                             )}
                             <div className={styles.formContainer}>
                                 <form
@@ -166,7 +168,10 @@ export default function SignUpPage() {
                                     onSubmit={handleSubmit(onSubmit)}
                                 >
                                     <div className={styles.subForm}>
-                                        <label className={styles.h2} htmlFor="role">
+                                        <label
+                                            className={styles.h2}
+                                            htmlFor="role"
+                                        >
                                             Select your Role
                                         </label>
                                         <select
@@ -176,30 +181,42 @@ export default function SignUpPage() {
                                                 required: true,
                                             })}
                                         >
-                                            <option value="">Choose a Role</option>
-                                            <option value="eo_admin">EO Admin</option>
-                                            <option value="admin">School Admin</option>
+                                            <option value="">
+                                                Choose a Role
+                                            </option>
+                                            <option value="eo_admin">
+                                                EO Admin
+                                            </option>
+                                            <option value="admin">
+                                                School Admin
+                                            </option>
                                         </select>
                                     </div>
 
-                                    {selectedRole !== "eo_admin" && (<div className={styles.subForm}>
-                                        <label
-                                            className={styles.h2}
-                                            htmlFor="school"
-                                        >
-                                            Select your School
-                                        </label>
-                                        <select
-                                            className={`${styles.input} ${styles.formControl}`}
-                                            id="school"
-                                            {...register('school', { required: selectedRole !== "eo_admin" })}
-                                        >
-                                            <option value="">
-                                                Choose a School
-                                            </option>
-                                            {schoolValues}
-                                        </select>
-                                    </div>)}
+                                    {selectedRole !== 'eo_admin' && (
+                                        <div className={styles.subForm}>
+                                            <label
+                                                className={styles.h2}
+                                                htmlFor="school"
+                                            >
+                                                Select your School
+                                            </label>
+                                            <select
+                                                className={`${styles.input} ${styles.formControl}`}
+                                                id="school"
+                                                {...register('school', {
+                                                    required:
+                                                        selectedRole !==
+                                                        'eo_admin',
+                                                })}
+                                            >
+                                                <option value="">
+                                                    Choose a School
+                                                </option>
+                                                {schoolValues}
+                                            </select>
+                                        </div>
+                                    )}
 
                                     <div className={styles.subForm}>
                                         <label
@@ -228,21 +245,33 @@ export default function SignUpPage() {
                                         <div className="relative">
                                             <input
                                                 className={styles.input}
-                                                type={showPassword ? "text" : "password"}
+                                                type={
+                                                    showPassword
+                                                        ? 'text'
+                                                        : 'password'
+                                                }
                                                 id="password"
-                                                {...register("password", {
+                                                {...register('password', {
                                                     required: true,
                                                 })}
                                             />
                                             <button
                                                 type="button"
-                                                onClick={togglePasswordVisibility}
+                                                onClick={
+                                                    togglePasswordVisibility
+                                                }
                                                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white focus:outline-none"
                                             >
                                                 {showPassword ? (
-                                                    <Eye className="h-5 w-5" aria-hidden="true" />
+                                                    <Eye
+                                                        className="h-5 w-5"
+                                                        aria-hidden="true"
+                                                    />
                                                 ) : (
-                                                    <EyeOff className="h-5 w-5" aria-hidden="true" />
+                                                    <EyeOff
+                                                        className="h-5 w-5"
+                                                        aria-hidden="true"
+                                                    />
                                                 )}
                                             </button>
                                         </div>
@@ -285,22 +314,26 @@ export default function SignUpPage() {
                                                 id="newsletter"
                                                 className={styles.checkbox}
                                                 {...register('newsletter', {
-                                                    required: true,
+                                                    required: false,
                                                 })}
                                             />
                                             <label
                                                 htmlFor="newsletter"
                                                 className={styles.checkboxLabel}
                                             >
-                                                Subscribe to our monthly newsletter
+                                                Subscribe to our monthly
+                                                newsletter
                                             </label>
                                         </div>
                                     </div>
 
                                     <div className="flex justify-start mt-1">
                                         <p className="text-gray-400 text-sm">
-                                            Already have an account?{" "}
-                                            <Link href="/signin" className="text-white font-semibold hover:underline">
+                                            Already have an account?{' '}
+                                            <Link
+                                                href="/signin"
+                                                className="text-white font-semibold hover:underline"
+                                            >
                                                 Sign In
                                             </Link>
                                         </p>
