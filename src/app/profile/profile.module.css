@@ -1,484 +1,499 @@
 /*----------------------------------- Page Styles --------------------------------------------- */
 .profileSelectButtonContainer {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .profileSelectButton {
-    height: 50px;
-    width: 50px;
-    margin: 50px;   
+  height: 50px;
+  width: 50px;
+  margin: 50px;
 }
 
 .pageContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .profileText {
-    font-size: 24px;
-    padding: 10px;
+  font-size: 24px;
+  padding: 10px;
 }
 
 .nameText {
-    font-size :35px;
+  font-size: 35px;
 }
 
 /*<------------------------------------------- Profile Select Button ------------------------------> */
 .profileSelectButton {
-    position: relative;
-    height: 50px;
-    width: 50px;
-    margin: 50px;
+  position: relative;
+  height: 50px;
+  width: 50px;
+  margin: 50px;
 }
 
 /*<------------------------------------------ Name Plate ---------------------------> */
 
 .namePlateContainer {
-    height: 25px;
+  height: 25px;
 }
 
 .selectedNamePlate {
-    color:aquamarine;
+  color: aquamarine;
 }
 
 /*<---------------------------------------- Confirm Button ------------------------> */
 
 .activeConfirm {
-    color: aquamarine;
+  color: aquamarine;
 }
 
 .inactiveConfirm {
-    color: black;
+  color: black;
 }
 
 /*<----------------------------------------- Badge Table ------------------------> */
 
 .badgeTable {
-    display: grid;
-    gap: 50px;
-    grid-template-columns: auto auto auto auto auto;
-    justify-content: center;
+  display: grid;
+  gap: 50px;
+  grid-template-columns: auto auto auto auto auto;
+  justify-content: center;
 }
 
 .badgeHeader {
-    font-size: 24px;
-    margin-bottom: 10px;
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 
 .badgeTableContainer {
-    display: flex;
-    flex-direction: column;
-    margin: 20px;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  align-items: center;
 }
 
 /* ------------------------------------------------------Badge Styles----------------------------------------------------------------------------- */
 .badgeDialog {
-    position: relative;
-    z-index: 50;
+  position: relative;
+  z-index: 50;
 }
 
 .badgeDialogPanelContainer {
-    position: fixed;
-    inset: 0px;
-    display: flex;
-    width: 100vw;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
+  position: fixed;
+  inset: 0px;
+  display: flex;
+  width: 100vw;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
 }
 
 .badgeDialogPanel {
-    max-width: 1024px;
-    margin-top: 16px;
-    border-width: 1px;
-    padding: 12px;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: center;
+  max-width: 1024px;
+  margin-top: 16px;
+  border-width: 1px;
+  padding: 12px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
 }
 
 .badgeDialogTitle {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 .badgeDialogDescription {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 .badgeDialogCloseButton {
-    border-width: 1px;
-    border-color: black;
-    padding: 4px;
-    align-self: center;
-    background: none;
-    color: black;
-    cursor: pointer;
+  border-width: 1px;
+  border-color: black;
+  padding: 4px;
+  align-self: center;
+  background: none;
+  color: black;
+  cursor: pointer;
 }
 
 .activeText {
-    color: gold;
+  color: gold;
 }
 
 .inactiveText {
-    color: #0C1321;
+  color: #0C1321;
 }
 
 .profileContainer {
-    display: flex;
-    flex-direction: row;
-    width:100%;
-    height: 100%;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .leftSide {
-    background-color: #F4F4F4;
-    height:100%;
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    padding-top: 70px;
-    padding-left: 20px;
+  background-color: #F4F4F4;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 70px;
+  padding-left: 20px;
 }
 
 .rightSide {
-    background-color: #F4F4F4;
-    height: 100%;
-    width: 40%;
-    display: flex;
-    flex-direction: column;
-    padding-left: 20px;
+  background-color: #F4F4F4;
+  height: 100%;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
 }
 
 .shopContainer {
-    background-color: grey;
-    height: 100%;
-    width: 100%;
+  background-color: grey;
+  height: 100%;
+  width: 100%;
 }
 
 .lhsInfoContainer {
-    background-color: blue;
-    height: 100%;
-    width: 60%;
+  background-color: blue;
+  height: 100%;
+  width: 60%;
 }
 
 .rhsInfoContainer {
-    background-color: #F4F4F4;
-    height: 100%;
-    width: 40%;
-    padding-right: 5px;
-    padding-left: 10px;
+  background-color: #F4F4F4;
+  height: 100%;
+  width: 40%;
+  padding-right: 5px;
+  padding-left: 10px;
 }
 
 .profilePictureHolder {
-    width: 100%;
-    height: 30%;
-    border-radius: 52px;  
-    position: relative;
-    overflow: hidden;  
+  width: 90%;
+  height: 35%;
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
 }
 
 .nameContainer {
-    background-color: #F4F4F4;
-    color: whitesmoke;
-    width: 100%;
-    height: 104px;
-    margin-top: 20px;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  /* make it a flexbox */
+  flex-direction: row;
+  /* default, can be omitted */
+  align-items: center;
+  /* vertical centering */
+  justify-content: left;
+  /* horizontal centering */
+  background-color: #F4F4F4;
+  color: whitesmoke;
+  width: 100%;
+  height: 104px;
 }
 
 .progressBar {
-    background-color: black;
-    color: whitesmoke;
-    width: 100%;
-    height: 20%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 10px;
-    padding-right: 10px;
+  background-color: black;
+  color: whitesmoke;
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .assignmentList {
-    background-color: black;
-    width: 100%;
-    height: 80%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+  background-color: black;
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 .assignment {
-    background-color: purple;
-    width: 100%;
-    height: 22%;
-    border-radius: 31px;
+  background-color: purple;
+  width: 100%;
+  height: 22%;
+  border-radius: 31px;
 }
 
 .lhsAchievementsContainer {
-    background-color: #F4F4F4;
-    height: 30%;
-    width: 60%;
+  background-color: #F4F4F4;
+  height: 30%;
+  width: 60%;
 }
 
 .rhsAchievementsContainer {
-    background-color: greenyellow;
-    height: 100%;
-    width: 40%;
-    padding-right: 5px;
-    padding-left: 10px;
+  background-color: greenyellow;
+  height: 100%;
+  width: 40%;
+  padding-right: 5px;
+  padding-left: 10px;
 }
 
 .badgeTableheader {
-    display: flex;
-    width: 100%;
-    background-color: azure;
-    justify-content: space-between;
+  display: flex;
+  width: 100%;
+  background-color: azure;
+  justify-content: space-between;
 }
 
 .badgeTable {
-    width:100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 30px;
-    height: 50%;
-    background-color: #F4F4F4;
-    margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  height: 50%;
+  background-color: #F4F4F4;
+  margin-top: 20px;
 }
 
 /* */
 
 .badgeContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
 }
 
 .badgeCircle {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
 }
 
 .nameTag {
-    font-size: 44px;
-    font-weight: 700;
-    color: #0C1321
+  font-size: 44px;
+  font-weight: 700;
+  color: #0C1321
 }
 
 .achievementsTag {
-    font-size: 28px;
-    font-weight: 400;
-    color: #0C1321;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0C1321;
+  padding-top: 30px;
 }
 
 .colorButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 40px; /* Square button */
-    height: 40px;
-    background: transparent; /* Fully transparent background */
-    color: white; /* Text color */
-    border-radius: 5px; /* Optional: Slight rounding */
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 20; /* Ensure it's above other elements */
-  }
-
-  /*********************************** COLOR PICKER DIALOGUE ***************/ 
-
-  /* Dialog Overlay */
-.dialogContainer {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 50;
-  }
-  
-  /* Dialog Box */
-  .dialog {
-    position: relative;
-    width: 60%;
-    height: 60%;
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  /* Close Button */
-  .closeButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-  }
-  
-  .closeButton:hover {
-    color: red;
-  }
-  
-  /* Main Content Layout */
-  .dialogContent {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .leftDialog {
-    height: 100%;
-    width: 50%;
-    padding: 20px;
-  }
-
-  .rightDialog {
-    height: 100%;
-    width: 50%;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  
-  /* Left Side: Large Color Preview */
-  .colorPreview {
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 1 / 1;
-    border: 2px solid black;
-    border-radius: 10px;
-    position: relative;
-  }
-  
-  /* Right Side: Color Grid */
-  .colorGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
-  
-  /* Individual Color Square */
-  .colorSquare {
-    width: 40px;
-    height: 40px;
-    border-radius: 5px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    transition: transform 0.1s ease-in-out;
-  }
-  
-  .colorSquare:hover {
-    transform: scale(1.1);
-  }
-  
-/**********/
-  .viewButton {
-    color: #0C1321;
-    border: 1px solid #0C1321;
-    border-radius: 10px;
-    padding: 5px;
-    width: 100%
-  }
-
-  .overlayImage {
-    position: absolute;
-    bottom: -20px;
-    left: -100px;
-    width: 100%; /* overlay image will scale with container */
-    height: 100%;
-    z-index: 2;
-    object-fit: contain;
-  }
-  
-  .colorSquare {
-    width: 40px;
-    height: 40px;
-    border-radius: 5px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    transition: transform 0.1s ease-in-out;
-  }
-
-  .catGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
-
-  .gridOptions {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 50%;
-    padding: 20px;
-    gap: 50px;
-  }
-
-  .previewCat {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%; /* overlay image will scale with container */
-    height: 100%;
-    z-index: 2;
-    object-fit: contain;
-  }
-
-  /**********/
-
-  .gridLabel {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #333;
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  width: 180px;
+  /* Square button */
+  height: 40px;
+  /* background: transparent; Fully transparent background */
+  background-color: rgb(255, 255, 255, .6);
+  border: black 1px solid;
+  color: black;
+  /* Text color */
+  border-radius: 5px;
+  /* Optional: Slight rounding */
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  /* Ensure it's above other elements */
 }
 
-.backgroundGrid {
+.colorButton:hover {
+  background-color: rgb(255, 255, 255, .8);
+  transition: background-color 0.3s ease;
+}
+
+/*********************************** COLOR PICKER DIALOGUE ***************/
+
+/* Dialog Overlay */
+.dialogContainer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+}
+
+/* Dialog Box */
+.dialogContainer>.dialog {
+  position: relative;
+  width: 60%;
+  height: 60%;
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
+/* Main Content Layout */
+.dialogContainer>.dialog .dialogContent {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow: hidden;
+}
+
+.leftDialog {
+  height: 100%;
+  width: 50%;
+  padding: 10px;
+}
+
+.rightDialog {
+  height: 100%;
+  width: 50%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+
+/* Left Side: Large Color Preview */
+.colorPreview {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  position: relative;
+}
+
+/* Right Side: Color Grid */
+.colorGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 
-.imageSquare {
+/* Individual Color Square */
+.colorSquare {
   width: 40px;
   height: 40px;
-  border: none;
-  padding: 0;
   border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  transition: transform 0.1s ease-in-out;
+}
+
+.colorSquare:hover {
+  transform: scale(1.1);
+}
+
+/**********/
+.viewButton {
+  color: #0C1321;
+  border: 1px solid #0C1321;
+  border-radius: 10px;
+  padding: 5px;
+  width: 100%
+}
+
+.overlayImage {
+  position: absolute;
+  bottom: -70px;
+  left: 175px;
+  width: 100%;
+  /* overlay image will scale with container */
+  height: 100%;
+  z-index: 2;
+  object-fit: contain;
+}
+
+.colorSquare {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  transition: transform 0.1s ease-in-out;
+}
+
+.catGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.gridOptions {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  padding: 20px;
+  gap: 50px;
+}
+
+.previewCat {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  /* overlay image will scale with container */
+  height: 100%;
+  z-index: 2;
+  object-fit: contain;
+}
+
+/**********/
+
+.gridLabel {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* .backgroundGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+} */
+
+.imageSquare {
+  width: 100px;
+  height: 100px;
+  padding: 0;
   overflow: hidden;
   cursor: pointer;
   background-color: transparent;
   display: flex;
+  border-radius: 15px;
   align-items: center;
   justify-content: center;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.dialog {
+.imageSquare:hover {
+  transform: scale(1.05);
+}
+
+/* whenever it’s the one the user has picked… */
+.imageSquareSelected {
+  border-color: #000;
+  /* black instead of blue */
+  box-shadow: 0 0 0 2px rgba(0, 0, 0);
+}
+
+/* .dialog {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -489,18 +504,18 @@
     background-color: white;
     border-radius: 1rem;
     overflow: hidden;
-  }
-  
-  .dialogContent {
+  } */
+
+/* .dialogContent {
     display: flex;
     flex-direction: row;
     width: 100%;
     height: 100%;
     max-height: 80vh;
     overflow: hidden;
-  }
-  
-  .leftDialog {
+  } */
+
+/* .leftDialog {
     height: 100%;
     width: 50%;
     display: flex;
@@ -508,25 +523,26 @@
     align-items: center;
     padding: 1rem;
     overflow: hidden;
-  }
-  
-  .rightDialog {
+  } */
+
+/* .rightDialog {
     height: 100%;
     width: 50%;
     padding: 1rem;
     overflow-y: auto;
-  }
-  
-  .colorPreview {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1; /* Responsive square container */
-    background-color: #f0f0f0;
-    border-radius: 1rem;
-    overflow: hidden;
-  }
-  
-  /* .overlayImage {
+  } */
+
+.colorPreview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  /* Responsive square container */
+  background-color: #f0f0f0;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+/* .overlayImage {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -534,43 +550,42 @@
     height: 100px;
     object-fit: contain;
   } */
-  
-  .colorGrid,
-  .catGrid,
-  .backgroundGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .colorSquare,
-  .catButton,
-  .backgroundButton {
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    padding: 0;
-    border: 2px solid black; /* Light gray border */
-    box-sizing: border-box;
-  }
 
-  /****************************
+.colorGrid,
+.catGrid,
+.backgroundGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  row-gap: 2rem;
+  padding-bottom: 2rem;
+
+}
+
+.colorSquare,
+.catButton,
+.backgroundButton {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+/****************************
 
   /* === Dialog Modal Styles === */
 .dialogContainer {
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-  
-  .dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* .dialog {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -583,86 +598,120 @@
     overflow: hidden;
     position: relative;
     padding: 1rem;
-  }
-  
-  .closeButton {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: transparent;
-    border: none;
-    font-size: 1.25rem;
-    cursor: pointer;
-    z-index: 10;
-  }
-  
-  /* === Dialog Content Layout === */
-  .dialogContent {
+  } */
+
+.closeButton {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 40px;
+  background: black;
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+  /* ← smooth animation */
+}
+
+.closeButton:hover {
+  transform: translateX(-50%) scale(1.05);
+}
+
+.introText {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding-left: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 1rem;
+  margin-top: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.description {
+  text-align: left;
+  font-size: 1rem;
+  width: 100%;
+  color: grey;
+  padding-left: 1rem;
+  padding-bottom: 0.75rem;
+}
+
+/* === Dialog Content Layout === */
+/* .dialogContent {
     display: flex;
     flex-direction: row;
     width: 100%;
     height: 100%;
     max-height: 80vh;
     overflow: hidden;
-    gap: 1rem;
-  }
-  
-  /* === Left Panel (Preview Area) === */
-  .leftDialog {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-  
-  .colorPreview {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border-radius: 1rem;
-    overflow: hidden;
-    background-color: #f0f0f0;
-  }
-  
-  
-  /* === Right Panel (Option Grids) === */
-  .rightDialog {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    padding: 0.75rem; /* Added some subtle padding */
-  }
-  
-  .gridOptions {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    width: 100%;
-    flex-grow: 1;
-  }
-  
-  /* === Color Grid === */
-  .colorGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-    gap: 0.5rem;
-    width: 100%;
-    padding: 0.25rem; /* Subtle internal grid padding */
-  }
-  
-  .colorSquare {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border: 2px solid #ccc;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    box-sizing: border-box;
-  }
-  
-  /* === Cat Image Grid === */
-  .catGrid {
+    gap: 0rem;
+  } */
+
+/* === Left Panel (Preview Area) === */
+.leftDialog {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding-bottom: 100px;
+}
+
+.colorPreview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+
+/* === Right Panel (Option Grids) === */
+.rightDialog {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 0.75rem;
+  /* Added some subtle padding */
+}
+
+.gridOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  flex-grow: 1;
+}
+
+/* === Color Grid === */
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.25rem;
+  /* Subtle internal grid padding */
+}
+
+.colorSquare {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* === Cat Image Grid === */
+/* .catGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
     gap: 0.5rem;
@@ -674,103 +723,120 @@
     width: 100%;
     aspect-ratio: 1 / 1;
     background: transparent;
-    border: 2px solid #ccc;
     border-radius: 0.5rem;
     cursor: pointer;
     padding: 0;
     box-sizing: border-box;
   }
-  
-  /* === Background Grid === */
-  .backgroundGrid {
+   */
+/* === Background Grid === */
+/* .backgroundGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 0.5rem;
     width: 100%;
     padding: 0.25rem;
-  }
-  
-  .backgroundButton {
+  } */
+
+/* .backgroundButton {
     width: 100%;
     aspect-ratio: 1 / 1;
     background: transparent;
-    border: 2px solid #ccc;
-    border-radius: 0.5rem;
+    border-radius: 20rem;
     cursor: pointer;
     padding: 0;
     box-sizing: border-box;
-  }
-  
-  .backgroundImage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Or contain, based on your preference */
-    z-index: 1; /* Behind the overlay cat image */
-  }
+  } */
 
-  /************** Baddge Modal ************/
+.backgroundImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Or contain, based on your preference */
+  z-index: 1;
+  /* Behind the overlay cat image */
+}
 
-  .badgeDialogOverlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/************** Baddge Modal ************/
+
+.badgeDialogOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .badgeDialogPanel {
-    background: white;
-    padding: 2rem;
-    border-radius: 1rem;
-    width: 90%;
-    max-width: 700px;
-    max-height: 90vh;
-    overflow-y: auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .badgeDialogTitle {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
 }
 
 .modalSection {
-    margin-top: 1rem;
-    margin-bottom: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 .modalSubTitle {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .modalBadgeWrapper {
-    display: inline-block;
-    margin: 0.5rem;
+  display: inline-block;
+  margin: 0.5rem;
 }
 
 .badgeDialogCloseButton {
-    margin-top: 2rem;
-    padding: 10px 16px;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
+  margin-top: 2rem;
+  padding: 10px 16px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .viewText {
-    color: #0C1321
+  color: #0C1321
 }
 
-  
-  
+/* Certificate styling */
+.scrollWrapper {
+  overflow-x: auto;
+  /* enables horizontal scrolling */
+  white-space: nowrap;
+  /* keeps content in one line */
+}
 
+.horizontalList {
+  display: inline-flex;
+  /* or flex */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 16px;
+}
 
+.horizontal-list>* {
+  transform: scale(0.9);
+  /* scales down the components */
+}

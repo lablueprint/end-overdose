@@ -13,14 +13,22 @@ import {
     query,
     where,
     updateDoc,
+    deleteDoc,
+    deleteField,
+    addDoc,
+    setDoc,
+    increment,
 } from 'firebase/firestore';
 
 //SERVER ACTIONS
-import { getSchoolAverage } from '@/app/api/students/actions';
+import { getSchoolAverage, createStudent } from '@/app/api/students/actions';
+import { NewStudent } from '@/types/newStudent';
+import { NewSchool } from '@/types/newSchool';
 
 //1. SETUP THE DATABASE CONNECTION
 const db = getFirestore(firebase_app);
-const schoolsCollection = collection(db, 'schools');
+const schoolsCollection = collection(db, 'newSchools');
+const studentsCollection = collection(db, 'newStudents');
 
 //SERVER ACTIONS DEFINED BELOW
 
@@ -51,11 +59,11 @@ export const getSchool = cache(async (schoolName: string) => {
 });
 
 //BETTER SCHOOL INFORMATION
-export const getSchoolData = cache(async (schoolName: string) => {
+export const getSchoolData = cache(async (schoolId: string) => {
     try {
         const schoolQuery = query(
             schoolsCollection,
-            where('school_name', '==', schoolName)
+            where('school_id', '==', schoolId)
         );
 
         const snapshot = await getDocs(schoolQuery);
@@ -65,6 +73,26 @@ export const getSchoolData = cache(async (schoolName: string) => {
 
         // Return just the school data without the ID
         return snapshot.docs[0].data() as School;
+    } catch (error) {
+        console.error('Error fetching school:', error);
+        throw new Error('Failed to fetch school.');
+    }
+});
+
+export const getSchoolDataByID = cache(async (schoolId: string) => {
+    try {
+        const schoolQuery = query(
+            schoolsCollection,
+            where('school_id', '==', schoolId)
+        );
+
+        const snapshot = await getDocs(schoolQuery);
+        if (snapshot.empty) {
+            return null; // No school found with that ID
+        }
+
+        // Return just the school data without the ID
+        return snapshot.docs[0].data() as NewSchool;
     } catch (error) {
         console.error('Error fetching school:', error);
         throw new Error('Failed to fetch school.');
@@ -84,41 +112,14 @@ export const getSchoolCount = cache(async () => {
 
 //Return information of ALL THE SCHOOLS (Query all the schools if we want total information about all schools)
 //school_id, school_name, school_email, student_count, aggregated student scores
-// Enhanced School Information Type
-interface EnhancedSchool extends School {
-    average_score: number | null;
-}
 
 export const getAllSchools = cache(async () => {
     try {
         const snapshot = await getDocs(schoolsCollection);
 
-        // Get all schools
-        const schools = snapshot.docs.map((doc) => doc.data() as School);
+        const schools = snapshot.docs.map((doc) => doc.data() as NewSchool);
 
-        // Create an array of promises to get average scores
-        const schoolPromises = schools.map(async (school) => {
-            // Get average score for each school
-            const average_score = await getSchoolAverage(school.school_name);
-            //DEBUG
-            // console.log(
-            //     `School: ${school.school_name}, Avg Score:`,
-            //     average_score
-            // );
-            // Return enhanced school object
-            return {
-                school_id: school.school_id,
-                school_name: school.school_name,
-                school_email: school.school_email || '',
-                student_count: school.student_count,
-                average_score: average_score,
-            } as EnhancedSchool;
-        });
-
-        // Wait for all promises to resolve
-        const enhancedSchools = await Promise.all(schoolPromises);
-
-        return enhancedSchools;
+        return schools;
     } catch (error) {
         console.error('Error fetching all schools:', error);
         throw new Error('Failed to fetch all schools.');
@@ -198,3 +199,230 @@ export const addIdPasswordPair = async (
         console.error('Error toggling course inclusion:', error);
     }
 };
+
+// Function to generate a random 7-character password
+const generateRandomPassword = (): string => {
+    const chars =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let password = '';
+    for (let i = 0; i < 7; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return password;
+};
+
+// Create a student and add them to the school
+export const createStudentAndAddToSchool = async (
+    studentId: string,
+    schoolId: string
+) => {
+    try {
+        const { success, firebase_id } = await createStudent(
+            studentId,
+            schoolId
+        );
+        if (!success || !firebase_id)
+            throw new Error('Student creation failed');
+
+        const studentPassword = generateRandomPassword();
+
+        const schoolDocRef = doc(db, 'newSchools', schoolId);
+        await updateDoc(schoolDocRef, {
+            [`student_ids.${studentId}`]: {
+                student_firebase_id: firebase_id,
+                student_password: studentPassword,
+            },
+            enrolled_students: increment(1),
+            students_in_progress: increment(1),
+        });
+
+        return {
+            success: true,
+            firebase_id,
+            student_password: studentPassword,
+        };
+    } catch (error) {
+        console.error('Error creating and linking student:', error);
+        return { error: 'Failed to create student and update school record' };
+    }
+};
+
+// Deletes a student from Firestore and their reference in the school's student_ids
+export async function deleteStudentFromSchool(
+    schoolId: string,
+    studentId: string
+) {
+    try {
+        const schoolQuery = query(
+            collection(db, 'newSchools'),
+            where('school_id', '==', schoolId)
+        );
+        const snapshot = await getDocs(schoolQuery);
+        if (snapshot.empty) throw new Error('School not found');
+
+        const schoolDocRef = snapshot.docs[0].ref;
+        const schoolData = snapshot.docs[0].data();
+
+        const studentEntry = schoolData.student_ids?.[studentId];
+        if (!studentEntry) throw new Error('Student not found in school');
+
+        const studentFirebaseId = studentEntry.student_firebase_id;
+
+        // 1. Delete the student document from newStudents
+        const newStudentsCollection = collection(db, 'newStudents');
+        const studentDocRef = doc(newStudentsCollection, studentFirebaseId);
+        await deleteDoc(studentDocRef);
+
+        // 2. Remove the student entry from student_ids in the school document
+        await updateDoc(schoolDocRef, {
+            [`student_ids.${studentId}`]: deleteField(),
+            enrolled_students: increment(-1),
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error deleting student:', error);
+        return { error: 'Failed to delete student from school.' };
+    }
+}
+
+//Adds a school name to the general data document
+const GENERAL_DATA_DOC_ID = 'VGfQpeUMbnOfqAU0VlTW';
+
+export async function addSchoolNameToGeneralData(
+    schoolName: string,
+    schoolId: string
+) {
+    try {
+        const generalDataRef = doc(db, 'generalData', GENERAL_DATA_DOC_ID);
+        const generalDataSnap = await getDoc(generalDataRef);
+
+        if (!generalDataSnap.exists()) {
+            console.error('General data doc does not exist!!!');
+            return { error: 'General data document not found.' };
+        }
+
+        console.log('Updating general data with:', {
+            [schoolName]: schoolId,
+        });
+
+        await setDoc(
+            generalDataRef,
+            {
+                school_names: {
+                    [schoolName]: schoolId,
+                },
+            },
+            { merge: true }
+        );
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating general data:', error);
+        return { error: 'Failed to update general data.' };
+    }
+}
+
+// Creates a new school document with initialized fields
+export async function createNewSchool(schoolName: string) {
+    try {
+        //create the base school document
+        const newSchoolData = {
+            school_name: schoolName,
+            enrolled_students: 0,
+            average_performances: {
+                opioidCourse: 0,
+                //add more course keys if needed
+            },
+            students_completed: 0,
+            students_in_progress: 0,
+            student_ids: {},
+        };
+
+        const schoolDocRef = await addDoc(
+            collection(db, 'newSchools'),
+            newSchoolData
+        );
+        const schoolId = schoolDocRef.id;
+
+        //immediately update that doc to include its FIREBASE ID as `school_id`
+        await updateDoc(schoolDocRef, { school_id: schoolId });
+
+        await addSchoolNameToGeneralData(schoolName, schoolId);
+
+        return {
+            success: true,
+            school_id: schoolId,
+        };
+    } catch (error) {
+        console.error('Error creating new school:', error);
+        return { error: 'Failed to create new school.' };
+    }
+}
+
+// Return statistics (average of all course performance averages,
+// number of enrolled/completed/in-progress students) for a particular school given its (Firebase doc) ID
+export const getSchoolStats = cache(async (schoolId: string) => {
+    try {
+        const schoolDocRef = doc(db, 'newSchools', schoolId);
+        const schoolSnapshot = await getDoc(schoolDocRef);
+
+        if (!schoolSnapshot.exists()) {
+            console.error('School doc not found');
+        }
+
+        const data = schoolSnapshot.data();
+
+        if (data) {
+            const performances = data.average_performances;
+            const values = Object.values(performances);
+            const numericValues = values.filter(
+                (val): val is number => typeof val === 'number'
+            );
+
+            const averageScore = numericValues.length
+                ? numericValues.reduce((sum, val) => sum + val, 0) /
+                  numericValues.length
+                : null;
+
+            return {
+                enrolled_students: data.enrolled_students ?? 0,
+                average_score: averageScore,
+                students_in_progress: data.students_in_progress ?? 0,
+                students_completed: data.students_completed ?? 0,
+            };
+        } else {
+            console.error('No data found for the school');
+        }
+    } catch (error) {
+        console.error('Error fetching school stats:', error);
+    }
+});
+
+export const getSchoolStudentIds = cache(async (schoolId: string) => {
+    try {
+        const schoolDocRef = doc(db, 'newSchools', schoolId);
+        const schoolSnapshot = await getDoc(schoolDocRef);
+
+        if (!schoolSnapshot.exists()) {
+            console.error('School doc not found');
+        }
+
+        const data = schoolSnapshot.data();
+
+        if (data) {
+            const student_ids = data.student_ids;
+            const result = Object.keys(student_ids).reduce(
+                (acc: Record<string, string>, key: string) => {
+                    acc[key] = student_ids[key].student_password; // Set the value for each key to the student password
+                    return acc;
+                },
+                {}
+            );
+
+            return result;
+        }
+    } catch (error) {
+        console.error('Error fetching school student ids', error);
+    }
+});

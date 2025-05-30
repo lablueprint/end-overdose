@@ -5,11 +5,16 @@ import {
     NextOrObserver,
     User,
     deleteUser,
+    getIdToken,
 } from 'firebase/auth';
 import { auth } from './clientApp';
-import { Admin } from '@/types/Admin';
-import { Student } from '@/types/Student';
-import { getUserInfo, handleUserCreation } from './auth_helpers';
+import { handleUserCreation } from './auth_helpers';
+import { setCookie } from './cookies';
+import { NewStudent } from '@/types/newStudent';
+import { getSchoolorEOAdmin } from '@/app/api/admins/actions';
+import { getStudent } from '@/app/api/students/actions';
+import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
+import { NewEOAdmin } from '@/types/newEOAdmin';
 
 export async function onAuthStateChanged(cb: NextOrObserver<User>) {
     return _onAuthStateChanged(auth, cb);
@@ -19,6 +24,7 @@ export async function onAuthStateChanged(cb: NextOrObserver<User>) {
 export async function logout(): Promise<{ error: string | null }> {
     try {
         console.log('Logging out');
+        await setCookie('student-token', '');
         await auth.signOut();
         return { error: null };
     } catch (error) {
@@ -74,9 +80,39 @@ export async function signUp(data: {
     }
 }
 
-type SignInResult = { id: string; user: Admin | Student };
-export async function signIn(data: {
-    role: string;
+type SignInResult = {
+    id: string;
+    user: NewSchoolAdmin | NewEOAdmin | NewStudent;
+};
+
+// sign in for students
+export async function signInStudent(data: {
+    firebase_id: string;
+    username: string;
+    password: string;
+    school: string;
+}): Promise<{ result: SignInResult | null; error: string | null }> {
+    try {
+        const doc = await getStudent(data.firebase_id);
+        if (!doc || !doc.id) {
+            throw new Error('Student not found');
+        }
+        await setCookie('student-token', JSON.stringify(data));
+        return {
+            result: { id: doc.id ?? '', user: doc },
+            error: null,
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            result: null,
+            error: (error as Error).message,
+        };
+    }
+}
+
+// sign in for admin
+export async function signInAdmin(data: {
     email: string;
     password: string;
 }): Promise<{ result: SignInResult | null; error: string | null }> {
@@ -87,17 +123,26 @@ export async function signIn(data: {
             data.email,
             data.password
         );
+
         if (!result.user.email) {
-            throw new Error('User email is null.');
+            throw new Error('Admin email is null.');
         }
 
         // get the user from firebase admins collection
-        const doc = await getUserInfo(data.role, result.user.uid);
-        if (!doc.docId || !doc.user) {
-            throw new Error('User not found');
+        const doc = await getSchoolorEOAdmin(result.user.uid);
+        if (!doc || !doc.result.id) {
+            throw new Error('Admin not found');
         }
+
+        // set the cookie
+        if (!auth.currentUser) {
+            throw new Error('Auth Error');
+        }
+        const token = await getIdToken(auth.currentUser);
+        setCookie('admin-token', token);
+
         return {
-            result: { id: doc.docId ?? '', user: doc.user },
+            result: { id: doc.result.id ?? '', user: doc.result },
             error: null,
         };
     } catch (error) {

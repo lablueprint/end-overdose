@@ -2,145 +2,142 @@
 import Link from 'next/link';
 import styles from './signup.module.css';
 import { useState, useEffect } from 'react';
-import { Admin } from '@/types/Admin';
-import { signUp } from '@/firebase/auth';
 import { useRouter } from 'next/navigation';
-import { School } from '@/types/School';
-import { WolfPackAlphaUniversity, UCLA } from '@/types/School';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
     getAuth,
-    sendSignInLinkToEmail,
     createUserWithEmailAndPassword,
     sendEmailVerification,
-    setPersistence,
-    browserSessionPersistence,
 } from 'firebase/auth';
-import { addAdmin } from '@/app/api/admins/actions';
+import { getSchoolNames } from '@/app/api/generalData/actions';
+import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
+import { addSchoolAdmin } from '@/app/api/admins/actions';
+import { NewEOAdmin } from '@/types/newEOAdmin';
+import { addEOAdmin } from '@/app/api/admins/actions';
+import { Eye, EyeOff } from 'lucide-react';
 
 type Inputs = {
     role: string;
     email: string;
     password: string;
-    school_name: string;
+    school: string;
+    termsAgreed: boolean;
+    newsletter: boolean;
 };
 
-const SignUpPage = () => {
+export default function SignUpPage() {
     const router = useRouter();
+    const { register, handleSubmit, watch } = useForm<Inputs>();
     const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [success, setSuccess] = useState<boolean>(false);
-    // DELETE LATER TEMPORARY TOGGLE FOR STUDENT OR ADMIN
-    const [student, setStudent] = useState(false);
+    const [schools, setSchools] = useState<string[]>([]);
 
-    const roles = ['Student', 'School Admin', 'End Overdose Admin'];
-    const roleValues = roles.map((role) => (
-        <option key={role} value={role}>
-            {role}
-        </option>
-    ));
+    const selectedRole = watch('role');
 
-    const actionCodeSettings = {
-        // URL you want to redirect back to. The domain (www.example.com) for this
-        // URL must be in the authorized domains list in the Firebase Console.
-        url: `${window.location.origin}/login`,
-        // This must be true.
-        handleCodeInApp: true,
-        //links specificlaly for IOS or android
-        //iOS: {
-        //bundleId: 'com.example.ios',
-        //},
-        //android: {
-        //packageName: 'com.example.android',
-        //installApp: true,
-        //minimumVersion: '12',
-        //},
-        // The domain must be configured in Firebase Hosting and owned by the project.
-        linkDomain: 'end-overdose-bcbd0.firebaseapp.com',
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
     };
 
-    //Change selected school from dropdown selection MERGE CONCLICT SO COMMENTED OUT IF DONT NEED DELETE
-    /*const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedSchoolName = e.target.value;
-        if (selectedSchoolName) {
-            setSchoolName(selectedSchoolName);
-        }
-    };*/
-    const schools = ['UCLA', 'USC', 'UCSD', 'UCI', 'UCB'];
+    // Fetch schools using the server action
+    useEffect(() => {
+        const fetchSchools = async () => {
+            try {
+                const schoolList = await getSchoolNames();
+                setSchools(schoolList);
+            } catch (error) {
+                console.error('Error fetching schools:', error);
+                setError('Failed to load schools. Please try again later.');
+            }
+        };
+
+        fetchSchools();
+    }, []);
+
+    // Create school options from fetched data
     const schoolValues = schools.map((school) => (
         <option key={school} value={school}>
             {school}
         </option>
     ));
 
-    const { register, handleSubmit } = useForm<Inputs>();
-
-    // Check if passwords match
-    // if (password !== confirmPassword) {
-    //     setError('Passwords do not match.');
-    //     return;
-    // }
     const onSubmit: SubmitHandler<Inputs> = async ({
         email,
         password,
         role,
-        school_name,
+        school,
+        termsAgreed,
+        newsletter,
     }) => {
-        setError('');
+        //1. Needs to agree to terms of service
+        if (!termsAgreed) {
+            setError('Need to Agree to Terms of Serivice');
+            return;
+        }
+
+        //2. The rest of the boxed need to be filled
+        if (!email || !password || !role) {
+            setError('Need to fill out all the fields');
+            return;
+        }
 
         try {
+            //ERROR CHECK: SCHOOL ADMIN NEEDS TO SELECT A SCHOOL
+            if (role == 'admin') {
+                if (!school) {
+                    setError('Need to select a school');
+                    return;
+                }
+            }
+
+            // 3 Create the user in Firebase Auth with email & password
             const auth = getAuth();
-            // 1) Create the user in Firebase Auth with email & password
             const { user } = await createUserWithEmailAndPassword(
                 auth,
                 email,
                 password
             );
 
-            // 2) Build your Admin object
-            const newAdmin: Admin = {
-                name: {
-                    first: 'Test',
-                    last: 'Test',
-                },
-                email,
-                role: 'school_admin',
-                school_name: 'UCLA',
-                approved: false,
-            };
+            console.log(user.uid);
+            if (role == 'admin') {
+                //school admin
+                const newSchoolAdmin: NewSchoolAdmin = {
+                    approved: false,
+                    email: email,
+                    school_id: '',
+                };
 
-            // 3) Write it into your “admins” collection keyed by uid
-            await addAdmin(newAdmin, user.uid);
+                await addSchoolAdmin(newSchoolAdmin, user.uid);
+            } else if (role == 'eo_admin') {
+                //ERROR CHECK: If user is EO admin then email must end in @endoverdose.net
+                if (!email.endsWith('@endoverdose.net')) {
+                    setError('Email must end in @endoverdose.net');
+                }
+
+                const newEOAdmin: NewEOAdmin = {
+                    email: email,
+                };
+
+                console.log(newEOAdmin);
+                await addEOAdmin(newEOAdmin, user.uid);
+            } else {
+                //SHOULDN'T GET HERE
+                setError('ERROR');
+            }
 
             // 4) Send email‑verification instead of a magic link:
             await sendEmailVerification(user);
             console.log('Verification email sent');
 
-            setSuccess(true);
-
             // 5) Redirect to login or dashboard
             setTimeout(() => {
-                router.push('/login');
+                router.push('/signin');
             }, 1000);
-        } catch (err: any) {
+        } catch (err) {
             console.error(err);
-            setError(err.message || 'Something went wrong.');
+            setError('Something went wrong.');
         }
     };
-
-    /*const response = await signUp(newAdmin, password);
-        const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
-        const response = await signUp(data);
-
-        if (response.error) {
-            setError(response.error);
-            setSuccess(false);
-        } else {
-            setSuccess(true);
-            setError('');
-            setTimeout(() => {
-                router.push('/login');
-            }, 1000);
-        }*/
 
     useEffect(() => {
         const auth = getAuth();
@@ -148,120 +145,217 @@ const SignUpPage = () => {
     }, []);
 
     return (
-        <div className={styles.splitContainer}>
-            <div className={styles.loginHalf}>
-                <div className={styles.contentContainer}>
-                    <div className={styles.bodyContainer}>
-                        <div className={styles.titleTextContainer}>
-                            <h1 className={styles.h1}>CREATE AN ACCOUNT</h1>
-                            <h2 className={styles.h2}>
-                                We're so glad you could join us!
-                            </h2>
+        <div className="bg-[#0C1321]">
+            <div className={styles.splitContainer}>
+                <div className={styles.loginHalf}>
+                    <div className={styles.contentContainer}>
+                        <div className={styles.bodyContainer}>
+                            <div className={styles.titleTextContainer}>
+                                <h1 className={styles.h1}>CREATE AN ACCOUNT</h1>
+                                <h2 className={styles.h2}>
+                                    We&apos;re so glad you could join us!
+                                </h2>
+                            </div>
+                            {error && <p style={{ color: 'red' }}>{error}</p>}
+                            {success && (
+                                <p style={{ color: 'green' }}>
+                                    Signup successful!
+                                </p>
+                            )}
+                            <div className={styles.formContainer}>
+                                <form
+                                    className={styles.form}
+                                    onSubmit={handleSubmit(onSubmit)}
+                                >
+                                    <div className={styles.subForm}>
+                                        <label
+                                            className={styles.h2}
+                                            htmlFor="role"
+                                        >
+                                            Select your Role
+                                        </label>
+                                        <select
+                                            className={`${styles.input} ${styles.formControl}`}
+                                            id="role"
+                                            {...register('role', {
+                                                required: true,
+                                            })}
+                                        >
+                                            <option value="">
+                                                Choose a Role
+                                            </option>
+                                            <option value="eo_admin">
+                                                EO Admin
+                                            </option>
+                                            <option value="admin">
+                                                School Admin
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    {selectedRole !== 'eo_admin' && (
+                                        <div className={styles.subForm}>
+                                            <label
+                                                className={styles.h2}
+                                                htmlFor="school"
+                                            >
+                                                Select your School
+                                            </label>
+                                            <select
+                                                className={`${styles.input} ${styles.formControl}`}
+                                                id="school"
+                                                {...register('school', {
+                                                    required:
+                                                        selectedRole !==
+                                                        'eo_admin',
+                                                })}
+                                            >
+                                                <option value="">
+                                                    Choose a School
+                                                </option>
+                                                {schoolValues}
+                                            </select>
+                                        </div>
+                                    )}
+
+                                    <div className={styles.subForm}>
+                                        <label
+                                            className={styles.h2}
+                                            htmlFor="email"
+                                        >
+                                            Email address:
+                                        </label>
+                                        <input
+                                            className={`${styles.input} ${styles.formControl}`}
+                                            type="email"
+                                            id="email"
+                                            {...register('email', {
+                                                required: true,
+                                            })}
+                                        />
+                                    </div>
+
+                                    <div className={styles.subForm}>
+                                        <label
+                                            className={styles.h2}
+                                            htmlFor="password"
+                                        >
+                                            Password:
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                className={styles.input}
+                                                type={
+                                                    showPassword
+                                                        ? 'text'
+                                                        : 'password'
+                                                }
+                                                id="password"
+                                                {...register('password', {
+                                                    required: true,
+                                                })}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={
+                                                    togglePasswordVisibility
+                                                }
+                                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white focus:outline-none"
+                                            >
+                                                {showPassword ? (
+                                                    <Eye
+                                                        className="h-5 w-5"
+                                                        aria-hidden="true"
+                                                    />
+                                                ) : (
+                                                    <EyeOff
+                                                        className="h-5 w-5"
+                                                        aria-hidden="true"
+                                                    />
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className={styles.checkboxContainer}>
+                                        <div className={styles.checkboxGroup}>
+                                            <input
+                                                type="checkbox"
+                                                id="termsAgreed"
+                                                className={styles.checkbox}
+                                                {...register('termsAgreed', {
+                                                    required: true,
+                                                })}
+                                            />
+                                            <label
+                                                htmlFor="termsAgreed"
+                                                className={styles.checkboxLabel}
+                                            >
+                                                Agree to our{' '}
+                                                <Link
+                                                    href="/terms"
+                                                    className={styles.link}
+                                                >
+                                                    Terms of use
+                                                </Link>{' '}
+                                                and{' '}
+                                                <Link
+                                                    href="/privacy"
+                                                    className={styles.link}
+                                                >
+                                                    Privacy Policy
+                                                </Link>
+                                            </label>
+                                        </div>
+
+                                        <div className={styles.checkboxGroup}>
+                                            <input
+                                                type="checkbox"
+                                                id="newsletter"
+                                                className={styles.checkbox}
+                                                {...register('newsletter', {
+                                                    required: false,
+                                                })}
+                                            />
+                                            <label
+                                                htmlFor="newsletter"
+                                                className={styles.checkboxLabel}
+                                            >
+                                                Subscribe to our monthly
+                                                newsletter
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-start mt-1">
+                                        <p className="text-gray-400 text-sm">
+                                            Already have an account?{' '}
+                                            <Link
+                                                href="/signin"
+                                                className="text-white font-semibold hover:underline"
+                                            >
+                                                Sign In
+                                            </Link>
+                                        </p>
+                                    </div>
+
+                                    <div className={styles.buttonContainer}>
+                                        <button
+                                            className={styles.submitButton}
+                                            type="submit"
+                                        >
+                                            SIGN UP
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        {error && <p style={{ color: 'red' }}>{error}</p>}
-                        {success && (
-                            <p style={{ color: 'green' }}>Signup successful!</p>
-                        )}
-                        <div className={styles.formContainer}>
-                            <form
-                                className={styles.form}
-                                onSubmit={handleSubmit(onSubmit)}
-                            >
-                                <div className={styles.subForm}>
-                                    <label className={styles.h2} htmlFor="role">
-                                        Role
-                                    </label>
-                                    <select
-                                        className={`${styles.input} ${styles.formControl}`}
-                                        id="role"
-                                        {...register('role', {
-                                            required: true,
-                                        })}
-                                    >
-                                        {roleValues}
-                                    </select>
-                                </div>
-                                <div className={styles.subForm}>
-                                    <label
-                                        className={styles.h2}
-                                        htmlFor="school_name"
-                                    >
-                                        School Name
-                                    </label>
-                                    <select
-                                        className={`${styles.input} ${styles.formControl}`}
-                                        id="schoolName"
-                                        name="schoolName"
-                                        onChange={(e) => handleSelectChange(e)}
-                                        required
-                                    >
-                                        <option value="" disabled hidden>
-                                            Select your school…
-                                        </option>
-                                        {schoolValues}
-                                    </select>
-                                </div>
-                                <div className={styles.subForm}>
-                                    <label
-                                        className={styles.h2}
-                                        htmlFor="email"
-                                    >
-                                        Email address:
-                                    </label>
-                                    <input
-                                        className={`${styles.input} ${styles.formControl}`}
-                                        type="email"
-                                        id="email"
-                                        {...register('email', {
-                                            required: true,
-                                        })}
-                                    />
-                                </div>
-                                <div className={styles.subForm}>
-                                    <label
-                                        className={styles.h2}
-                                        htmlFor="password"
-                                    >
-                                        Password:
-                                    </label>
-                                    <input
-                                        className={`${styles.input} ${styles.formControl}`}
-                                        type="password"
-                                        id="password"
-                                        {...register('password', {
-                                            required: true,
-                                        })}
-                                    />
-                                </div>
-                                <div className={styles.buttonContainer}>
-                                    <div
-                                        className={styles.robotVerPlaceholder}
-                                    ></div>
-                                    <button
-                                        className={styles.loginButton}
-                                        type="submit"
-                                    >
-                                        SIGN UP
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div className={styles.navigationContainer}>
-                        <h2 className={styles.h2}>
-                            {`Already have an account?   `}
-                            <Link className={styles.link} href="/login">
-                                Sign In
-                            </Link>
-                        </h2>
                     </div>
                 </div>
-            </div>
-            <div className={styles.placeHolderHalf}>
-                <div className={styles.narcat}></div>
+                <div className={styles.placeHolderHalf}>
+                    <div className={styles.narcat}></div>
+                </div>
             </div>
         </div>
     );
-};
-
-export default SignUpPage;
+}

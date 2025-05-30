@@ -3,11 +3,7 @@
 import { cache } from 'react';
 import { revalidatePath } from 'next/cache';
 import { Admin } from '@/types/Admin';
-import { School } from '@/types/School';
 import firebase_app from '@/firebase/config';
-import { getAuth } from 'firebase/auth';
-import signIn from '@/firebase/auth/signIn';
-import signUp from '@/firebase/auth/signUp';
 import {
     getFirestore,
     collection,
@@ -21,16 +17,21 @@ import {
     updateDoc,
 } from 'firebase/firestore';
 import { getAuthenticatedAppForUser } from '@/firebase/serverApp';
+import { NewSchoolAdmin } from '@/types/newSchoolAdmin';
+import { NewEOAdmin } from '@/types/newEOAdmin';
 
 const db = getFirestore(firebase_app);
-const adminsCollection = collection(db, 'admins');
+const adminsCollection = collection(db, 'newSchoolAdmin');
 const schoolsCollection = collection(db, 'schools');
 
 // get all admins from the database
 export const getAdmins = cache(async () => {
     try {
         const snapshot = await getDocs(adminsCollection);
-        const admins = snapshot.docs.map((doc) => doc.data() as Admin);
+        const admins = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
 
         return admins;
     } catch (error) {
@@ -62,9 +63,6 @@ export async function addAdmin(admin: Admin, userId: string) {
 export async function deleteAdmin(adminEmail: string) {
     try {
         // authenticate the user calling this endpoint
-        const { firebaseServerApp } = await getAuthenticatedAppForUser();
-        const auth_db = getFirestore(firebaseServerApp);
-        const adminsCollection = collection(auth_db, 'admins');
 
         // query admin by email field
         const adminQuery = query(
@@ -74,6 +72,10 @@ export async function deleteAdmin(adminEmail: string) {
 
         // delete from the firebase
         const querySnapshot = await getDocs(adminQuery);
+
+        if (querySnapshot.empty) {
+            throw new Error('Admin not found');
+        }
         const docId = querySnapshot.docs[0].id;
         await deleteDoc(doc(adminsCollection, docId));
 
@@ -91,13 +93,10 @@ export async function deleteAdmin(adminEmail: string) {
 export const getSchoolAdmins = cache(async () => {
     try {
         // query admin by email field
-        const adminQuery = query(
-            adminsCollection,
-            where('role', '==', 'school_admin')
-        );
+        const adminQuery = query(adminsCollection);
         const querySnapshot = await getDocs(adminQuery);
         const SchoolAdmins = querySnapshot.docs.map(
-            (doc) => doc.data() as Admin
+            (doc) => doc.data() as NewSchoolAdmin
         );
 
         // The below structure is a hash map with the outer key being school (first string) and
@@ -105,11 +104,41 @@ export const getSchoolAdmins = cache(async () => {
         // being the Admin object with that email.
 
         const adminsBySchool = SchoolAdmins.reduce(
-            (acc: Record<string, Record<string, Admin>>, admin: Admin) => {
-                if (!acc[admin.school_name]) {
-                    acc[admin.school_name] = {};
+            (acc: Record<string, Record<string, NewSchoolAdmin>>, admin: NewSchoolAdmin) => {
+                if (!acc[admin.school_id]) {
+                    acc[admin.school_id] = {};
                 }
-                acc[admin.school_name][admin.email] = admin;
+                acc[admin.school_id][admin.email] = admin;
+                return acc;
+            },
+            {}
+        );
+
+        return adminsBySchool;
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        throw new Error('Failed to fetching admin.');
+    }
+});
+
+export const getSingleSchoolAdminEmailMap = cache(async () => {
+    try {
+        // query admin by email field
+        const adminQuery = query(adminsCollection);
+        const querySnapshot = await getDocs(adminQuery);
+        const SchoolAdmins = querySnapshot.docs.map(
+            (doc) => doc.data() as NewSchoolAdmin
+        );
+
+        // The below structure is a hash map with the outer key being school (first string) and
+        // the value being another hash map with the key being email (second string) and the value
+        // being the Admin object with that email.
+
+        const adminsBySchool = SchoolAdmins.reduce(
+            (acc: Record<string, string>, admin: NewSchoolAdmin) => {
+                if (!acc[admin.school_id]) {
+                    acc[admin.school_id] = admin.email;
+                }
                 return acc;
             },
             {}
@@ -197,6 +226,112 @@ export async function getAdmin(id: string) {
 
         if (adminDoc.exists()) {
             return { id: adminDoc.id, ...(adminDoc.data() as Admin) };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        throw new Error('Failed to fetch admin.');
+    }
+}
+
+//NEW STUFF HERE
+
+//EO ADMIN STUFF
+const eoAdminsCollection = collection(db, 'newEOAdmin');
+const schoolAdminsCollections = collection(db, 'newSchoolAdmin');
+
+export async function addEOAdmin(eoAdmin: NewEOAdmin, userId: string) {
+    try {
+        // Firebase Authentication
+        // const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        // const auth_db = getFirestore(firebaseServerApp);
+
+        // Add EO Admin to the database
+        // const eoAdminsCollection = collection(auth_db, 'newEOAdmin');
+
+        // Add to database
+        await setDoc(doc(eoAdminsCollection, userId), eoAdmin);
+
+        // Revalidate data
+        revalidatePath('');
+    } catch (error) {
+        console.error('Error adding EO admin:', error);
+        throw new Error('Failed to add EO admin.');
+    }
+}
+
+//SCHOOL ADMIN STUFF
+export async function addSchoolAdmin(
+    schoolAdmin: NewSchoolAdmin,
+    userId: string
+) {
+    try {
+        // Firebase Authentication
+        // const { firebaseServerApp } = await getAuthenticatedAppForUser();
+        // const auth_db = getFirestore(firebaseServerApp);
+
+        //ADD SCHOOL ADMIN STUFF
+        // const schoolAdminsCollection = collection(auth_db, 'newSchoolAdmin');
+
+        // add to database
+        await setDoc(doc(schoolAdminsCollections, userId), schoolAdmin);
+
+        // revalidate data
+        revalidatePath('');
+    } catch (error) {
+        console.error('Error adding admin:', error);
+        throw new Error('Failed to add admin.');
+    }
+}
+
+export async function getSchoolAdmin(id: string) {
+    try {
+        const schoolAdminDocRef = doc(schoolAdminsCollections, id);
+        const schoolAdminDoc = await getDoc(schoolAdminDocRef);
+
+        if (schoolAdminDoc.exists()) {
+            return {
+                id: schoolAdminDoc.id,
+                ...(schoolAdminDoc.data() as NewSchoolAdmin),
+            };
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching school admin:', error);
+        throw new Error('Failed to fetch school admin.');
+    }
+}
+
+export async function getSchoolorEOAdmin(id: string) {
+    try {
+        // Check in the 'eoadmins' collection
+        const EOAdminDocRef = doc(eoAdminsCollection, id);
+        const EOAdminDoc = await getDoc(EOAdminDocRef);
+
+        if (EOAdminDoc.exists()) {
+            return {
+                result: {
+                    id: EOAdminDoc.id,
+                    ...(EOAdminDoc.data() as NewEOAdmin),
+                },
+                role: 'eo_admin',
+            };
+        }
+
+        // Check in the 'newSchoolAdmin' collection
+        const schoolAdminDocRef = doc(schoolAdminsCollections, id);
+        const schoolAdminDoc = await getDoc(schoolAdminDocRef);
+
+        if (schoolAdminDoc.exists()) {
+            return {
+                result: {
+                    id: schoolAdminDoc.id,
+                    ...(schoolAdminDoc.data() as NewSchoolAdmin),
+                },
+                role: 'school_admin',
+            };
         }
 
         return null;

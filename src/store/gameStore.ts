@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Scene } from '@/types/Game';
+import { Scene, Line } from '@/types/Game';
 import { startScene, game } from '../app/game/data';
 
 /**
@@ -20,6 +20,19 @@ interface GameState {
     toggleDialogue: () => void;
     nextChat: () => void;
     changeScene: (sceneName: string) => void;
+    customDialogue: Line[] | null;
+    setCustomDialogue: (lines: Line[] | null) => void;
+
+    pendingScene: string | null;
+    setPendingScene: (scene: string | null) => void;
+
+    correctAnswers: number;
+    totalQuestions: number;
+    incrementCorrect: () => void;
+    incrementTotal: () => void;
+    resetScore: () => void;
+    incorrectChoices: number[];
+    setIncorrectChoices: (choices: number[]) => void;
 }
 
 export const useGameStore = create<GameState>((set) => ({
@@ -34,8 +47,29 @@ export const useGameStore = create<GameState>((set) => ({
         set((state) => ({
             chatIndex: state.chatIndex + 1,
         })),
-    changeScene: (scene: string) =>
-        set(() => ({
-            currScene: game.get(scene),
-        })),
+    changeScene: (scene: string) => {
+        const newScene = game.get(scene);
+        if (!newScene) return;
+        set({
+            currScene: newScene,
+            incorrectChoices: [],
+        });
+    },
+
+    customDialogue: null,
+    setCustomDialogue: (lines) => set({ customDialogue: lines }),
+
+    pendingScene: null,
+    setPendingScene: (scene) => set({ pendingScene: scene }),
+
+    correctAnswers: 0,
+    totalQuestions: 0,
+    incrementCorrect: () =>
+        set((state) => ({ correctAnswers: state.correctAnswers + 1 })),
+    incrementTotal: () =>
+        set((state) => ({ totalQuestions: state.totalQuestions + 1 })),
+    resetScore: () => set({ correctAnswers: 0, totalQuestions: 0 }),
+    incorrectChoices: [],
+    setIncorrectChoices: (choices: number[]) =>
+        set({ incorrectChoices: choices }),
 }));

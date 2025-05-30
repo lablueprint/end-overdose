@@ -13,7 +13,7 @@ import '@fontsource/roboto-condensed/400.css';
 import '@fontsource/roboto-condensed/500.css';
 import '@fontsource/roboto-condensed/600.css';
 import '@fontsource/roboto-condensed/700.css';
-import { isStudent } from '@/types/Student';
+import { isStudent } from '@/types/newStudent';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -60,6 +60,7 @@ export default function OpioidHome() {
     const [progressLoaded, setProgressLoaded] = useState(false);
     const [showExitModal, setShowExitModal] = useState(false);
     const router = useRouter();
+    console.log(user);
 
     // TODO: make the isStudent type guard work
     useEffect(() => {
@@ -70,13 +71,17 @@ export default function OpioidHome() {
             // }
 
             try {
-                const response =
-                    user.course_completion.opioidCourse.courseProgress;
-                const lessonIndex = Math.round((response / 100) * totalLessons);
+                if (isStudent(user)) {
+                    const response = user.courses.opioidCourse.courseProgress;
 
-                setCourseProgress(response);
-                setLesson(lessonIndex);
-                setHighestReachedLesson(lessonIndex);
+                    const lessonIndex = Math.round(
+                        (response / 100) * totalLessons
+                    );
+
+                    setCourseProgress(response);
+                    setLesson(lessonIndex);
+                    setHighestReachedLesson(lessonIndex);
+                }
             } catch (error) {
                 console.error('Error fetching progress:', error);
             } finally {
@@ -90,25 +95,25 @@ export default function OpioidHome() {
     if (!progressLoaded) return <div>Loading course...</div>;
 
     const handleChangeLesson = (lessonNumber: number) => {
-        if (
-            lessonNumber > highestReachedLesson &&
-            user &&
-            'course_completion' in user
-        ) {
-            const updatedOpioidCourse = user.course_completion
-                ?.opioidCourse || { courseProgress: 0 };
+        // if (
+        //     lessonNumber > highestReachedLesson &&
+        //     user &&
+        //     'course_completion' in user
+        // ) {
+        //     const updatedOpioidCourse = user.course_completion
+        //         ?.opioidCourse || { courseProgress: 0 };
 
-            useUserStore.getState().setUser({
-                ...user,
-                course_completion: {
-                    ...user.course_completion,
-                    opioidCourse: {
-                        ...updatedOpioidCourse,
-                        courseProgress: (lessonNumber / totalLessons) * 100,
-                    },
-                },
-            });
-        }
+        //     useUserStore.getState().setUser({
+        //         ...user,
+        //         course_completion: {
+        //             ...user.course_completion,
+        //             opioidCourse: {
+        //                 ...updatedOpioidCourse,
+        //                 courseProgress: (lessonNumber / totalLessons) * 100,
+        //             },
+        //         },
+        //     });
+        // }
         setLesson(lessonNumber); // Update the local lesson state
     };
 
@@ -138,38 +143,53 @@ export default function OpioidHome() {
         </div>
     ));
 
-    const handleNextLesson = () => {
+    const handleNextLesson = async () => {
         if (
             currentLesson < totalLessons &&
             user &&
-            'course_completion' in user
+            'courses' in user &&
+            isStudent(user)
         ) {
-            setLesson((prevIndex) => {
-                const nextIndex = prevIndex + 1;
-                if (nextIndex > highestReachedLesson) {
-                    setHighestReachedLesson(nextIndex);
-                }
-                const updatedOpioidCourse = user.course_completion
-                    .opioidCourse || {
+            const nextIndex = currentLesson + 1;
+
+            if (nextIndex > highestReachedLesson) {
+                setHighestReachedLesson(nextIndex);
+
+                const updatedOpioidCourse = user.courses.opioidCourse || {
                     courseProgress: 0,
+                    courseScore: 0,
+                    quizzes: [],
                 };
 
-                // Update global state with new course progress
+                const progress = (nextIndex / totalLessons) * 100;
+
+                // Update Zustand store
                 useUserStore.getState().setUser({
                     ...user,
-                    course_completion: {
-                        ...user.course_completion,
+                    courses: {
+                        ...user.courses,
                         opioidCourse: {
                             ...updatedOpioidCourse,
-                            courseProgress: (nextIndex / totalLessons) * 100,
+                            courseProgress: progress,
                         },
                     },
                 });
 
-                return nextIndex;
-            });
+                // Sync with Firebase
+                await updateCourseProgress(
+                    user.student_id,
+                    'opioidCourse',
+                    progress
+                );
+            }
+
+            // update local lesson state
+            setLesson(nextIndex);
+
+            window.location.href = '/quiz';
         }
     };
+
     const lessonData = lessons[currentLesson] as Lesson;
 
     const handleExitClick = () => {
@@ -179,29 +199,31 @@ export default function OpioidHome() {
     // save progress to user state and update firebase upon exit
     const confirmExit = async () => {
         // Ensure the user exists and safely access opioidCourse
-        if (user && 'course_completion' in user) {
-            const updatedOpioidCourse = user.course_completion.opioidCourse || {
-                courseProgress: 0,
+        if (
+            user &&
+            isStudent(user) &&
+            user.courses &&
+            user.courses.opioidCourse
+        ) {
+            const updatedOpioidCourse = {
+                ...user.courses.opioidCourse,
+                courseProgress: (highestReachedLesson / totalLessons) * 100,
             };
-            const progressPercentage =
-                (highestReachedLesson / totalLessons) * 100;
-            // Update the global user state with the current progress
+
+            // Update global state (Zustand or similar)
             useUserStore.getState().setUser({
                 ...user,
-                course_completion: {
-                    ...user.course_completion,
-                    opioidCourse: {
-                        ...updatedOpioidCourse,
-                        courseProgress: progressPercentage,
-                    },
+                courses: {
+                    ...user.courses,
+                    opioidCourse: updatedOpioidCourse,
                 },
             });
 
-            // update firebase
+            // Sync with Firebase (or backend)
             await updateCourseProgress(
                 user.student_id,
                 'opioidCourse',
-                progressPercentage
+                updatedOpioidCourse.courseProgress
             );
         }
         //redirect to home page or course selection
