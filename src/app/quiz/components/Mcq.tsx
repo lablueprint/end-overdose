@@ -47,6 +47,7 @@ export default function Mcq({
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [isQuestionSelected, setIsQuestionSelected] = useState(false);
+    const [hasAnswered, setHasAnswered] = useState(false);
 
     // Get the current quiz and question
     const currentQuiz = questions[quizIndex];
@@ -65,6 +66,9 @@ export default function Mcq({
     const handleAnswerSelected = (answerIndex: number) => {
         setSelectedAnswer(answerIndex);
         setIsQuestionSelected(true);
+    };
+
+    const handleSubmit = (answerIndex: number) => {
         setMissedQuestions((prevMissed) => [
             // add missed question to missedQuestions array
             ...prevMissed,
@@ -78,18 +82,16 @@ export default function Mcq({
                         : false,
             },
         ]);
-        if (!isQuestionSelected) {
-            // check for correct answer
-            if (answerIndex === currentQuestion.correctAnswer) {
-                setFeedback('Correct!');
-                setCurrentScore(currentScore + 1);
-            } else {
-                setFeedback('Wrong!');
-            }
-            // Check if last question in the current quiz
-            if (currentQuestionIndex === currentQuiz.length - 1) {
-                setCompleted(true);
-            }
+        // check for correct answer
+        if (answerIndex === currentQuestion.correctAnswer) {
+            setFeedback('Correct!');
+            setCurrentScore(currentScore + 1);
+        } else {
+            setFeedback('Wrong!');
+        }
+        // Check if last question in the current quiz
+        if (currentQuestionIndex === currentQuiz.length - 1) {
+            setCompleted(true);
         }
     };
 
@@ -124,6 +126,15 @@ export default function Mcq({
                         answers={currentQuestion.answers}
                         onAnswerSelected={handleAnswerSelected}
                     />
+                    {isQuestionSelected && selectedAnswer !== null && (
+                        <div className="selected-answer">
+                            <button
+                                onClick={() => handleSubmit(selectedAnswer)}
+                            >
+                                Continue
+                            </button>
+                        </div>
+                    )}
                     {feedback && (
                         <Feedback
                             feedback={feedback}
