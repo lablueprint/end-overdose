@@ -22,7 +22,6 @@ export default function SchoolStatPage() {
             setLoading(true);
             try {
                 // Fetch school data from the API
-                const school = await getSchoolDataByID(schoolId);
                 const schoolStatsById = await getSchoolStats(schoolId);
                 const schoolAdmins = await getSingleSchoolAdminEmailMap();
                 if (school) {
