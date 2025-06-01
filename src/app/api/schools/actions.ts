@@ -426,26 +426,3 @@ export const getSchoolStudentIds = cache(async (schoolId: string) => {
         console.error('Error fetching school student ids', error);
     }
 });
-
-// Add this simple function to your students/actions.ts file
-//Literally just gets the course progress for ONE student in database nd returns it
-export const getCourseProgress = cache(
-    async (firebaseId: string, courseName: string = 'opioidCourse') => {
-        try {
-            const studentDocRef = doc(studentsCollection, firebaseId);
-            const studentSnapshot = await getDoc(studentDocRef);
-
-            if (studentSnapshot.exists()) {
-                const studentData = studentSnapshot.data();
-                const courseProgress =
-                    studentData.courses?.[courseName]?.courseProgress || 0;
-                return courseProgress; // Returns just a number like 45
-            } else {
-                return 0; // Student not found = 0 progress
-            }
-        } catch (error) {
-            console.error(`Error fetching student ${firebaseId}:`, error);
-            return 0; // Error = 0 progress
-        }
-    }
-);

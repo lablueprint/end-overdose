@@ -309,34 +309,28 @@ export async function updateCourseProgress(
 }
 
 // Function to fetch course progress from Firestore
-export async function getCourseProgress(courseName: string) {
-    try {
-        const user = auth.currentUser;
-        if (!user) {
-            return { error: 'User data not found' };
-        }
-        const userRef = doc(db, 'students', user.uid); // Get the user document reference using the user's ID
-        const userDoc = await getDoc(userRef);
+// Add this simple function to your students/actions.ts file
+//Literally just gets the course progress for ONE student in database nd returns it
+export const getCourseProgress = cache(
+    async (firebaseId: string, courseName: string = 'opioidCourse') => {
+        try {
+            const studentDocRef = doc(studentsCollection, firebaseId);
+            const studentSnapshot = await getDoc(studentDocRef);
 
-        if (!userDoc.exists()) {
-            return { error: 'Student document not found' };
+            if (studentSnapshot.exists()) {
+                const studentData = studentSnapshot.data();
+                const courseProgress =
+                    studentData.courses?.[courseName]?.courseProgress || 0;
+                return courseProgress; // Returns just a number like 45
+            } else {
+                return 0; // Student not found = 0 progress
+            }
+        } catch (error) {
+            console.error(`Error fetching student ${firebaseId}:`, error);
+            return 0; // Error = 0 progress
         }
-
-        const userData = userDoc.data(); // Get user data from Firestore
-        const courseProgress =
-            userData?.course_completion?.[courseName]?.courseProgress;
-
-        // If course progress exists, return it
-        if (courseProgress !== undefined) {
-            return { progress: courseProgress };
-        } else {
-            return { error: 'Course progress not found for this user' };
-        }
-    } catch (error) {
-        console.error(error);
-        throw new Error('Failed to fetch course progress.');
     }
-}
+);
 
 export async function purchaseTheme(studentId: string, themeKey: string) {
     const q = query(studentsCollection, where('student_id', '==', studentId));
