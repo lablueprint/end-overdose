@@ -14,9 +14,9 @@ type LegendPayload = {
 };
 
 type PieChartProps = {
-    failPercent: number;
+    notStartedPercent: number;
     inProgressPercent: number;
-    passPercent: number;
+    completedPercent: number;
 };
 
 const COLORS = [
@@ -53,14 +53,14 @@ const CustomLegend = ({ payload }: LegendProps) => {
 };
 
 export default function CustomPieChart({
-    failPercent,
+    notStartedPercent,
     inProgressPercent,
-    passPercent,
+    completedPercent,
 }: PieChartProps) {
     const chartData = [
-        { name: 'Fail', value: failPercent },
+        { name: 'Not Started', value: notStartedPercent },
         { name: 'In Progress', value: inProgressPercent },
-        { name: 'Pass', value: passPercent },
+        { name: 'Completed', value: completedPercent },
     ];
 
     return (
