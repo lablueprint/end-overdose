@@ -2,38 +2,78 @@
 
 import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { getSingleSchoolAdminEmailMap } from '@/app/api/admins/actions';
-import { getSchoolDataByID, getSchoolStats } from '@/app/api/schools/actions';
+import { getSchoolDataByID } from '@/app/api/schools/actions';
+import { getCourseProgress } from '@/app/api/students/actions';
 import ProgressBar from './Components/ProgressBar';
 import StatusPieChart from './Components/CustomPieChart';
 import { NewSchool } from '@/types/newSchool';
 
 export default function SchoolStatPage() {
-    const topics = [{ label: 'Opioid', percentage: 0 }];
     const params = useParams();
     const schoolId = params['school-id'] as string;
     const [school, setSchool] = useState<NewSchool | null>();
-    const [schoolStats, setSchoolStats] = useState<any | null>(null);
-    const [schoolPassFail, setSchoolPassFail] = useState<any | null>(null);
-    const [schoolEmail, setSchoolEmail] = useState<string>('');
+    const [progressCounts, setProgressCounts] = useState({
+        notStarted: 0,
+        inProgress: 0,
+        completed: 0,
+        total: 0,
+    });
     const [loading, setLoading] = useState(true);
+
+    //NOTE: If we look at the dependencies of this useEffect, then we see that we only rerun this if schoolId changes
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                // Fetch school data from the API
-                const schoolStatsById = await getSchoolStats(schoolId);
-                const schoolAdmins = await getSingleSchoolAdminEmailMap();
-                if (school) {
+                // 1. Fetch school data from the API
+                const school = await getSchoolDataByID(schoolId);
+
+                if (school && school.student_ids) {
                     setSchool(school);
-                    setSchoolStats(schoolStatsById);
-                    console.log(schoolStatsById);
-                    setSchoolEmail(
-                        schoolAdmins[schoolId] || 'No admin registered'
+
+                    // 2. Get list of students and iterate through them
+                    const firebaseIds = Object.values(school.student_ids).map(
+                        (entry) => entry.student_firebase_id
                     );
-                    console.log('School data fetched successfully');
+
+                    // Initialize counters
+                    let notStarted = 0;
+                    let inProgress = 0;
+                    let completed = 0;
+
+                    // 3. Loop through each student using their firebase ID
+                    for (const firebaseId of firebaseIds) {
+                        const progress = await getCourseProgress(
+                            firebaseId,
+                            'opioidCourse'
+                        );
+
+                        // Count each student based on their progress
+                        if (progress === 0) {
+                            notStarted++;
+                        } else if (progress > 0 && progress < 100) {
+                            inProgress++;
+                        } else if (progress === 100) {
+                            completed++;
+                        }
+                    }
+
+                    // 4. Update useState with the final counts
+                    setProgressCounts({
+                        notStarted,
+                        inProgress,
+                        completed,
+                        total: firebaseIds.length,
+                    });
+
+                    console.log('Progress counts:', {
+                        notStarted,
+                        inProgress,
+                        completed,
+                        total: firebaseIds.length,
+                    });
                 } else {
-                    console.error('No school data found for the given ID');
+                    console.error('No school data or student_ids found');
                 }
             } catch (error) {
                 console.error('Error fetching school data:', error);
@@ -41,39 +81,41 @@ export default function SchoolStatPage() {
                 setLoading(false);
             }
         };
+
         if (schoolId) {
             fetchData();
         }
     }, [schoolId]);
+
+    // Calculate percentages for the pie chart
+    const calculatePercentages = () => {
+        if (progressCounts.total === 0) {
+            return {
+                notStartedPercent: 0,
+                inProgressPercent: 0,
+                completedPercent: 0,
+            };
+        }
+
+        const { completed, inProgress, notStarted, total } = progressCounts;
+
+        return {
+            completedPercent: Math.round((completed / total) * 100 * 10) / 10, //This multiply and divide by 10 is to help with int rounding
+            inProgressPercent: Math.round((inProgress / total) * 100 * 10) / 10,
+            notStartedPercent: Math.round((notStarted / total) * 100 * 10) / 10,
+        };
+    };
+
+    const { completedPercent, inProgressPercent, notStartedPercent } =
+        calculatePercentages();
+
     if (loading) {
         return <div>Loading...</div>;
     }
 
-    // Calculate the in-progress percentage based on actual data
-    const inProgressPercent =
-        schoolStats?.enrolled_students > 0
-            ? (schoolStats.students_in_progress /
-                  schoolStats.enrolled_students) *
-              100
-            : 0;
-
-    // Generate sample data for pass/fail percentages (need to add action later)
-    const generateSamplePercentages = () => {
-        // Make sure the percentages add up to 100% with inProgressPercent
-        const remainingPercent = 100 - inProgressPercent;
-
-        // Distribute the remaining percentage between pass and fail
-        // For this example, we'll say 70% of the remaining are passing and 30% are failing
-        const passPercent = Math.round(remainingPercent * 0.7 * 10) / 10;
-        const failPercent = Math.round(remainingPercent * 0.3 * 10) / 10;
-
-        return { passPercent, failPercent };
-    };
-
-    const { passPercent, failPercent } = generateSamplePercentages();
-
     return (
         <div className="max-w-6xl mx-auto px-4 py-6 pt-16">
+            {/* 3. Use the information in the React return */}
             <div className="mb-8">
                 <div className="flex flex-col">
                     <div className="flex items-baseline gap-4">
@@ -81,31 +123,27 @@ export default function SchoolStatPage() {
                             {school?.school_name}
                         </h1>
                     </div>
-
-                    <div className="mt-4 text-gray-600">
-                        <span>{schoolEmail}</span>
-                    </div>
                 </div>
             </div>
+
             <div className="grid grid-cols-4 gap-4 mb-8 rounded-2xl shadow-md px-6 py-4 bg-white">
                 <div className="border-r">
                     <div className="text-gray-500 mb-1">Enrolled Students</div>
                     <div className="text-2xl font-bold">
-                        {schoolStats.enrolled_students}
+                        {school?.enrolled_students || 0}
                     </div>
                 </div>
 
                 <div className="border-r">
                     <div className="text-gray-500 mb-1">Avg. Performance</div>
-                    <div className="text-2xl font-bold">
-                        {schoolStats.average_score}%
-                    </div>
+                    <div className="text-2xl font-bold">20</div>{' '}
+                    {/* This average score field should be completed / total * 100, this is the only thing that makes sense really*/}
                 </div>
 
                 <div className="border-r">
                     <div className="text-gray-500 mb-1">Students Completed</div>
                     <div className="text-2xl font-bold">
-                        {schoolStats.students_completed}
+                        {progressCounts.completed}
                     </div>
                 </div>
 
@@ -114,10 +152,11 @@ export default function SchoolStatPage() {
                         Students In Progress
                     </div>
                     <div className="text-2xl font-bold">
-                        {schoolStats.students_in_progress}
+                        {progressCounts.inProgress}
                     </div>
                 </div>
             </div>
+
             <div className="flex justify-between gap-8">
                 <div className="w-3/5 p-4 bg-white rounded-2xl shadow-md">
                     <h1 className="text-3xl font-bold pb-4">Topics</h1>
@@ -141,12 +180,21 @@ export default function SchoolStatPage() {
                         )}
                     </div>
                 </div>
+
                 <div className="w-2/5 p-4 bg-white rounded-2xl shadow-md space-y-4">
                     <h1 className="text-3xl font-bold pb-4">Steps to Take</h1>
+                    {progressCounts.total > 0 && (
+                        <div className="mb-4 text-sm text-gray-600">
+                            <div>Completed: {progressCounts.completed}</div>
+                            <div>In Progress: {progressCounts.inProgress}</div>
+                            <div>Not Started: {progressCounts.notStarted}</div>
+                            <div>Total: {progressCounts.total}</div>
+                        </div>
+                    )}
                     <StatusPieChart
-                        failPercent={failPercent}
+                        notStartedPercent={notStartedPercent}
                         inProgressPercent={inProgressPercent}
-                        passPercent={passPercent}
+                        completedPercent={completedPercent}
                     />
                 </div>
             </div>
