@@ -163,11 +163,13 @@ export default function SchoolStatPage() {
                                     name.charAt(0).toUpperCase() +
                                     name.slice(1);
 
+                                const completionText = `${progressCounts.completed}/${progressCounts.total}`;
+
                                 return (
                                     <ProgressBar
                                         key={rawLabel}
                                         label={label}
-                                        percentage={percentage}
+                                        percentage={completionText}
                                     />
                                 );
                             }
