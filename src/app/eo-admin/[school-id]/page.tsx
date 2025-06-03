@@ -135,12 +135,6 @@ export default function SchoolStatPage() {
                 </div>
 
                 <div className="border-r">
-                    <div className="text-gray-500 mb-1">Avg. Performance</div>
-                    <div className="text-2xl font-bold">20</div>{' '}
-                    {/* This average score field should be completed / total * 100, this is the only thing that makes sense really*/}
-                </div>
-
-                <div className="border-r">
                     <div className="text-gray-500 mb-1">Students Completed</div>
                     <div className="text-2xl font-bold">
                         {progressCounts.completed}
@@ -182,7 +176,9 @@ export default function SchoolStatPage() {
                 </div>
 
                 <div className="w-2/5 p-4 bg-white rounded-2xl shadow-md space-y-4">
-                    <h1 className="text-3xl font-bold pb-4">Steps to Take</h1>
+                    <h1 className="text-3xl font-bold pb-4">
+                        Completion Rates
+                    </h1>
                     {progressCounts.total > 0 && (
                         <div className="mb-4 text-sm text-gray-600">
                             <div>Completed: {progressCounts.completed}</div>
