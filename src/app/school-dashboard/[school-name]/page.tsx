@@ -193,7 +193,3 @@ export default function SchoolDashboard() {
         </div>
     );
 }
-
-
-// TODO:
-// Get and display admin name (to replace hard-coded Josie Bruin); it's not in Zustand user state

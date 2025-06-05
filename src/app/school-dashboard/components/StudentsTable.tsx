@@ -1,5 +1,6 @@
 import styles from './StudentsTable.module.css';
 import { NewStudent } from '@/types/newStudent';
+import { getStudentFromID } from '@/app/api/students/actions';
 
 interface Quiz {
     name: string;
@@ -9,8 +10,8 @@ interface Quiz {
 const StudentsTable = ({ students }: { students: NewStudent[] }) => {
     // Helper function to get status circle class
     const getStatusCircleClass = (score: number) => {
-        if (score >= 70) return `${styles.statusCircle} ${styles.statusPass}`;
-        if (score > 0) return `${styles.statusCircle} ${styles.statusFail}`;
+        if (score == 0) return `${styles.statusCircle} ${styles.statusFail}`;
+        if (score == 100) return `${styles.statusCircle} ${styles.statusPass}`;
         return `${styles.statusCircle} ${styles.statusInProgress}`;
     };
 
@@ -59,12 +60,9 @@ const StudentsTable = ({ students }: { students: NewStudent[] }) => {
                                 <td className={styles.courseColumn}>
                                     <span
                                         className={getStatusCircleClass(
-                                            opioidCourse.courseScore
+                                            student.courses.opioidCourse.courseProgress
                                         )}
-                                    ></span>
-                                    {opioidCourse.courseScore > 0
-                                        ? `${opioidCourse.courseScore}%`
-                                        : '-'}
+                                    />
                                 </td>
                             </tr>
                         );
