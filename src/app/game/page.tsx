@@ -26,6 +26,7 @@ const GamePage = () => {
     const [isQuestionSelected, setIsQuestionSelected] = useState(false);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [feedback, setFeedback] = useState('');
+    const [showStartModal, setShowStartModal] = useState(true);
 
     const resetGame = () => {
         setCurrentScore(0);
@@ -34,6 +35,7 @@ const GamePage = () => {
         setIsQuestionSelected(false);
         setSelectedAnswer(null);
         setFeedback('');
+        setShowStartModal(true);
 
         // Clear in-game state
         useGameStore.getState().setIncorrectChoices([]);
@@ -67,6 +69,25 @@ const GamePage = () => {
 
     return (
         <div className={styles.pageContainer}>
+            {showStartModal && (
+                <div className={styles.startModalOverlay}>
+                    <div className={styles.startModalBackdrop} />
+                    <div className={styles.startModalBox}>
+                        <h2 className={styles.startModalTitle}>
+                            SCENARIO GAME
+                        </h2>
+                        <p className={styles.startModalDesc}>
+                            You will be guided through a scenario with Narcat and will have to choose the correct action in order to continue through. Put your knowledge to the test!
+                        </p>
+                        <button
+                            className={styles.startModalButton}
+                            onClick={() => setShowStartModal(false)}
+                        >
+                            Start &rarr;
+                        </button>
+                    </div>
+                </div>
+            )}
             {inDialogue ? (
                 <DialogueState />
             ) : (
