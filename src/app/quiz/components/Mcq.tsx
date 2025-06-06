@@ -144,7 +144,7 @@ export default function Mcq({
                                 className="next-button"
                                 onClick={() => handleSubmit(selectedAnswer)}
                             >
-                                Continue
+                                Submit Answer
                             </button>
                         )}
 
