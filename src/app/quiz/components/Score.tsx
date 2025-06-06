@@ -26,6 +26,7 @@ interface ScoreProps {
     setCurrentQuestionIndex: (newCurrentQuestionIndex: number) => void;
     setSelectedAnswer: (newSelectedAnswer: number | null) => void;
     setFeedback: (newFeedback: string) => void;
+    setShowFeedback?: (newShowFeedback: boolean) => void;
     missedQuestions: MissedQuestion[];
     setMissedQuestions: (newMissedQuestion: []) => void;
     setIsQuestionSelected: (newIsQuestionSelected: boolean) => void;
@@ -44,6 +45,7 @@ export default function Score({
     setFeedback,
     missedQuestions,
     setMissedQuestions,
+    setShowFeedback,
     setIsQuestionSelected,
     setIsCompleted,
     isMCQ,
@@ -62,6 +64,7 @@ export default function Score({
         setMissedQuestions([]);
         setIsQuestionSelected(false);
         setIsCompleted(false);
+        setShowFeedback?.(false); // Reset showFeedback if it exists
     };
 
     const nextLesson = () => {
