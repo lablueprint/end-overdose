@@ -4,6 +4,8 @@ import './globals.css';
 import NavBar from '../components/NavBar';
 import InitAuthState from '@/components/InitAuthState';
 import { Inter } from 'next/font/google';
+//import '@fontsource/roboto'; // Defaults to weight 400
+//import '@fontsource/roboto-condensed'; // Defaults to weight 400
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({

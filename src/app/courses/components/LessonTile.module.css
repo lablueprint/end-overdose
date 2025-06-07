@@ -1,24 +1,38 @@
 .container {
+
     position: relative;
     cursor: pointer;
-    border-bottom: 1px solid #29354e;
-    background-color: #0c1321;
-    width: 280px;
-    height: 80px;
-    display: 'flex';
-    flex-direction: 'row';
-    align-items: 'center';
-    padding: 1.25rem;
-    display: 'flex';
-    flex-direction: 'row';
-    align-items: 'center';
-    color: white;
+    background-color: #9AA8C1;
+    width: 100%;
+    height: 10vh; 
+    min-height: 50px; 
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 15px 20px;
+    color: #101010;
+    border-radius: 10px;
+    box-sizing: border-box;
 }
 
 .selectedContainer {
-    background-color: #f0f0f0;
-    color: black;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
 }
+
+.selectedContainer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 100%;
+    background-color: white;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 
 .title {
     line-height: 2rem;
@@ -32,3 +46,27 @@
     line-height: 1rem;
     font-size: 12px;
 }
+
+.disabledOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(3px);
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  
+  .lockIcon {
+    font-size: 32px;
+    color: #ffffff; 
+  }
+  
+  

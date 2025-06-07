@@ -1,4 +1,5 @@
-import { Admin } from './Admin';
+import { NewEOAdmin } from './newEOAdmin';
+import { NewSchoolAdmin } from './newSchoolAdmin';
 
 // First, let's define the new interface based on the schema
 interface Profile {
@@ -38,7 +39,7 @@ export type NewStudent = {
 };
 
 export const isStudent = (
-    obj: NewStudent | Admin | null
+    obj: NewStudent | NewSchoolAdmin | NewEOAdmin | null
 ): obj is NewStudent => {
     return (obj as NewStudent) !== null;
 };

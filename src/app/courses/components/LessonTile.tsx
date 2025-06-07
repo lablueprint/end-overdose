@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import styles from './LessonTile.module.css';
 import '@fontsource/roboto-condensed';
+import LockIcon from '@mui/icons-material/Lock';
 import Image from 'next/image';
 interface LessonTileProps {
     lessonNumber: number;
@@ -28,29 +29,29 @@ export default function LessonTileProps({
     return (
         <div
             className={`${styles.container} ${selected ? styles.selectedContainer : ''}`}
-            onClick={() => onHandleChangeLesson(lessonNumber)}
+            onClick={
+                disabled ? () => {} : () => onHandleChangeLesson(lessonNumber)
+            }
             style={{
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
                 fontFamily: 'Roboto Condensed, sans-serif',
-                opacity: disabled ? 0.5 : 1, // visually dim disabled items
-                cursor: disabled ? 'not-allowed' : 'pointer', // cursor style dependent on accessible lesson tile
+                opacity: 1,
+                cursor: disabled ? 'not-allowed' : 'pointer',
+                position: 'relative', // necessary for overlay to work
             }}
         >
-            <Image
-                src="/videoIcon.png"
-                width={37}
-                height={37}
-                alt="Video Icon"
-                style={{
-                    margin: '10px',
-                }}
-            />
             <div>
                 <h4 className={styles.subtitle}>Lesson #{lessonNumber + 1}</h4>
                 <h2 className={styles.title}>{lessonTitle}</h2>
             </div>
+
+            {disabled && (
+                <div className={styles.disabledOverlay}>
+                    <LockIcon className={styles.lockIcon} />
+                </div>
+            )}
         </div>
     );
 }

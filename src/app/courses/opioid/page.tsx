@@ -129,6 +129,13 @@ export default function OpioidHome() {
             key={index}
             style={{
                 fontFamily: 'Roboto Condensed, sans-serif',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                justifyItems: 'center',
+                alignItems: 'center',
+                paddingBottom: '10px',
+                width: '100%',
             }}
         >
             <LessonTile
@@ -144,6 +151,7 @@ export default function OpioidHome() {
     ));
 
     const handleNextLesson = async () => {
+        let complete = false;
         if (
             currentLesson < totalLessons &&
             user &&
@@ -162,6 +170,10 @@ export default function OpioidHome() {
                 };
 
                 const progress = (nextIndex / totalLessons) * 100;
+
+                if (progress == 100) {
+                    complete = true;
+                }
 
                 // Update Zustand store
                 useUserStore.getState().setUser({
@@ -186,7 +198,7 @@ export default function OpioidHome() {
             // update local lesson state
             setLesson(nextIndex);
 
-            window.location.href = '/quiz';
+            if (!complete) window.location.href = '/quiz';
         }
     };
 
@@ -234,62 +246,31 @@ export default function OpioidHome() {
         <div style={{ display: 'flex', width: '100%' }}>
             <div
                 style={{
-                    flex: toggle ? 0 : 2.1,
+                    width: '18%',
                     overflowY: 'auto',
                     maxHeight: '100vh',
                     transition: 'flex-grow 0.5s ease-in-out',
-                    backgroundColor: toggle ? 'white' : '#0C1321',
-                    padding: toggle ? '30px' : '60px',
+                    backgroundColor: '#0C1321',
+                    padding: '0px',
                     fontFamily: 'Roboto Condensed, sans-serif',
+                    borderTopRightRadius: '30px',
+                    borderBottomRightRadius: '30px',
+                    paddingTop: '30px',
+                    fontSize: '24px',
                 }}
             >
-                {toggle ? (
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
                     <div
                         style={{
-                            position: 'absolute',
-                            left: '13.5rem',
-                            top: '50%',
-                            transform: 'translateY(-50%)', // Center correction
-                            width: '30px',
-                            height: '49px',
-                            flexShrink: '0',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            color: toggle ? 'black' : 'white',
+                            width: '80%',
                         }}
                     >
-                        <ArrowForwardIosIcon
-                            onClick={handleToggleNavBarDisplay}
-                        ></ArrowForwardIosIcon>
-                    </div>
-                ) : (
-                    <div
-                        style={{
-                            position: 'absolute',
-                            left: '37rem',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            width: '30px',
-                            height: '49px',
-                            flexShrink: '0',
-                            backgroundColor: '#0C1321',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            color: toggle ? 'black' : 'white',
-                        }}
-                    >
-                        <ArrowBackIosIcon
-                            onClick={handleToggleNavBarDisplay}
-                        ></ArrowBackIosIcon>
-                    </div>
-                )}
-                {!toggle ? (
-                    <div>
                         <h1
                             onClick={returnToCourses}
                             style={{
@@ -301,8 +282,7 @@ export default function OpioidHome() {
                                 lineHeight: 'normal',
                             }}
                         >
-                            <ArrowBackIcon></ArrowBackIcon>
-                            Back to Courses
+                            <p>Table of Contents</p>
                             <br />
                             <br />
                         </h1>
@@ -333,25 +313,17 @@ export default function OpioidHome() {
 
                         {navBarEntries}
                     </div>
-                ) : (
-                    ''
-                )}
+                </div>
             </div>
             <div
                 style={{
-                    flex: toggle ? 10 : 6,
+                    flex: 6,
                     height: '100vh', //help
                     overflowY: 'auto',
                     padding: '0 10px',
                 }}
             >
                 <div className={styles.courseContent}>
-                    <button
-                        onClick={handleExitClick}
-                        className={styles.exitButton}
-                    >
-                        Exit Course
-                    </button>
                     {/* Confirmation Modal */}
                     {showExitModal && (
                         <div className={styles.modalBackground}>
