@@ -54,8 +54,8 @@ export default function Home() {
                                 opioidCourseProgress === 100
                                     ? styles.tagCompleted
                                     : opioidCourseProgress === 0
-                                        ? styles.tagNotStarted
-                                        : styles.tagInProgress
+                                      ? styles.tagNotStarted
+                                      : styles.tagInProgress
                             }
                         >
                             <div
@@ -63,16 +63,16 @@ export default function Home() {
                                     opioidCourseProgress === 100
                                         ? styles.tagCompletedIndicator
                                         : opioidCourseProgress === 0
-                                            ? styles.tagNotStartedIndicator
-                                            : styles.tagInProgressIndicator
+                                          ? styles.tagNotStartedIndicator
+                                          : styles.tagInProgressIndicator
                                 }
                             ></div>
                             <p>
                                 {opioidCourseProgress === 100
                                     ? 'Completed'
                                     : opioidCourseProgress === 0
-                                        ? 'Not Started'
-                                        : 'In Progress'}
+                                      ? 'Not Started'
+                                      : 'In Progress'}
                             </p>
                         </div>
                     </div>
@@ -126,10 +126,18 @@ export default function Home() {
                     <h1 className="flex items-center gap-2">
                         <span>
                             Welcome back,&nbsp;
-                            {isStudent(user) && user.profile?.nameplate ? user.profile.nameplate : "User"}
+                            {isStudent(user) && user.profile?.nameplate
+                                ? user.profile.nameplate
+                                : 'User'}
                         </span>
                         <span className="inline-block transform rotate-15">
-                            <Image src="/welcomeFish.svg" alt="Welcome Fish" width={40} height={40} className="object-contain" />
+                            <Image
+                                src="/welcomeFish.svg"
+                                alt="Welcome Fish"
+                                width={40}
+                                height={40}
+                                className="object-contain"
+                            />
                         </span>
                     </h1>
                 </div>
