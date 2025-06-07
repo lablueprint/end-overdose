@@ -1,131 +1,134 @@
 .tableContainer {
-  width: 100%;
-  overflow-x: auto;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  background-color: white;
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background-color: white;
 }
 
 .table th {
-  padding: 16px 24px;
-  text-align: left;
-  font-weight: 600;
-  background-color: #f1f5f9;
-  color: #475569;
-  border-bottom: 1px solid #e2e8f0;
-  font-size: 0.9rem;
+    padding: 16px 24px;
+    text-align: left;
+    font-weight: 600;
+    background-color: #f1f5f9;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.9rem;
 }
 
 .table td {
-  padding: 20px 24px;
-  border-bottom: 1px solid #e2e8f0;
-  background-color: white;
-  font-size: 0.95rem;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+    background-color: white;
+    font-size: 0.95rem;
 }
 
 .table tr:nth-child(even) td {
-  background-color: #fefdf9; /* Very light cream background for even rows */
+    background-color: #fefdf9;
+    /* Very light cream background for even rows */
 }
 
 .rankColumn {
-  width: 40px;
-  text-align: center;
-  font-weight: 500;
-  color: #64748b;
+    width: 40px;
+    text-align: center;
+    font-weight: 500;
+    color: #64748b;
 }
 
 .studentColumn {
-  width: 250px;
-  font-weight: 500;
-  color: #334155;
-  text-align: left;
+    width: 250px;
+    font-weight: 500;
+    color: #334155;
+    text-align: left;
 }
 
 .gradeColumn {
-  width: 580px;
-  text-align: left;
-  font-weight: 600;
-  color: #334155;
+    width: 580px;
+    text-align: left;
+    font-weight: 600;
+    color: #334155;
 }
 
 .courseColumn {
-  text-align: left;
-  padding-left: 24px;
+    text-align: left;
+    padding-left: 24px;
+    font-weight: 500;
+    color: #334155;
 }
 
 /* Status styles */
 .inProgress {
-  color: #b45309;
+    color: #b45309;
 }
 
 .inProgress div:first-child {
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: #b45309;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #b45309;
 }
 
 .inProgress div:last-child {
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #b45309;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #b45309;
 }
 
 .pass {
-  color: #16a34a;
+    color: #16a34a;
 }
 
 .pass div:first-child {
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: #16a34a;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #16a34a;
 }
 
 .pass div:last-child {
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #16a34a;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #16a34a;
 }
 
 .fail {
-  color: #dc2626;
+    color: #dc2626;
 }
 
 .fail div:first-child {
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: #dc2626;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #dc2626;
 }
 
 .fail div:last-child {
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #dc2626;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #dc2626;
 }
 
 .statusCircle {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  margin-left: 1px;
-  margin-right: 8px;
-  vertical-align: middle;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    margin-left: 1px;
+    margin-right: 8px;
+    vertical-align: middle;
 }
 
 .statusPass {
-  background: #02B56B;
+    background: #02b56b;
 }
 
 .statusFail {
-  background: #E17A7A;
+    background: #e17a7a;
 }
 
 .statusInProgress {
-  background: #C68D1A;
+    background: #c68d1a;
 }
