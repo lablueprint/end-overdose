@@ -5,6 +5,7 @@
     height: 100%;
     width: 100%;
     background-color: grey;
+    position: relative;
 }
 
 .water {
@@ -165,18 +166,35 @@
 }
 
 .choiceButton {
-    height: 70px;
-    width: 180%;
+    height: auto;
+    min-height: 70px;
+    width: 100%;
+    max-width: 700px;
     background-color: rgba(0, 0, 0, 0.6);
     border-radius: 5px;
     opacity: 1;
     color: white;
     font-size: 1.3rem;
+    padding: 15px;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: normal;
+    margin: 0 auto;
+}
+.correctChoice {
+    background-color: #02B56B80 !important;
+    color: white;
+    opacity: 1;
 }
 .incorrectChoice {
-    background-color: #999;
-    color: #333;
-    opacity: 0.3;
+    background-color: #E17A7A80 !important;
+    color: white;
+    opacity: 1;
     cursor: not-allowed;
     pointer-events: none;
 }
@@ -198,11 +216,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.incorrectChoice {
-    background-color: black;
-    color: white;
 }
 
 .avatarSection {
@@ -248,4 +261,81 @@
     padding: 2rem;
     text-align: center;
     font-family: sans-serif;
+}
+
+.narcatCenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -150%);
+    z-index: 100;
+    width: 60vw;
+}
+
+.narcatOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 99;
+    backdrop-filter: blur(4px);
+}
+
+.startModalOverlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+.startModalBackdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+}
+
+.startModalBox {
+    position: relative;
+    z-index: 1001;
+    background: white;
+    border-radius: 2rem;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    max-width: 480px;
+    width: 90%;
+    text-align: center;
+}
+
+.startModalTitle {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.startModalDesc {
+    margin-bottom: 2rem;
+    color: #222;
+    font-size: 1.1rem;
+}
+
+.startModalButton {
+    background: #C62828;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 2.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
 }

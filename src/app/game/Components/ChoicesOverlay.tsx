@@ -126,7 +126,7 @@ const ChoicesOverlay = ({
                         className={styles.blurredImage}
                     />
                 </div>
-                <div className={styles.blurredPeopleGroup1}>
+                {/* <div className={styles.blurredPeopleGroup1}>
                     {scene.characters.slice(0, 1).map((character, index) => (
                         <Image
                             key={index}
@@ -149,7 +149,7 @@ const ChoicesOverlay = ({
                                 alt={character.name}
                             />
                         ))}
-                </div>
+                </div> */}
                 <div className={styles.choicesOverlay}>
                     <div>
                         {/* <p className={styles.question}> What would you do?</p> */}

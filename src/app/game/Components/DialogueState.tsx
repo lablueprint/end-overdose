@@ -17,6 +17,13 @@ export default function DialogueState() {
     );
     const [dialogueIndex, setDialogueIndex] = useState(0);
 
+    // Determine if this is a wrong answer feedback
+    const isWrongFeedback =
+        customDialogue &&
+        customDialogue.length === 1 &&
+        (pendingScene === 'Wrong Action' ||
+            (scene && scene.scene === 'Wrong Action'));
+
     useEffect(() => {
         setDialogueIndex(0);
     }, [customDialogue]);
@@ -81,7 +88,8 @@ export default function DialogueState() {
                 </div>
             </div> */}
             <div className={styles.textSpacing}>
-                <div className={styles.dialogueBox}>
+                {isWrongFeedback && <div className={styles.narcatOverlay} />}
+                <div className={`${styles.dialogueBox} ${isWrongFeedback ? styles.narcatCenter : ''}`}>
                     <div className={styles.avatarSection}>
                         <Image
                             src={
