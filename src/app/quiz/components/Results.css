@@ -3,7 +3,8 @@
     display: flex;
     flex-direction: column;
     padding-top: 5vh;
-    background-color: #141E31;
+    background-color: #141e31;
+    max-height: 106%;
 }
 
 .results-container h1 {
@@ -48,8 +49,6 @@
     width: 100%;
 }
 
-
-
 .option-icon {
     margin-right: 0px;
     flex-shrink: 0;
@@ -64,8 +63,8 @@
 .answer-item-correct {
     padding: 4px 8px;
     border-radius: 10px;
-    border: 2px solid #02B56B;
-    color: #02B56B;
+    border: 2px solid #02b56b;
+    color: #02b56b;
     background-color: rgba(2, 181, 107, 0.1);
     /* border: 1px solid #4CAF50;
     color: #4CAF50;
@@ -89,8 +88,8 @@
 .answer-item-incorrect {
     padding: 4px 8px;
     border-radius: 10px;
-    border: 2px solid #E17A7A;
-    color: #E17A7A;
+    border: 2px solid #e17a7a;
+    color: #e17a7a;
     background-color: rgba(255, 0, 0, 0.1);
     font-size: 14px;
     flex: 1;

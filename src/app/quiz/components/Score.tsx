@@ -129,16 +129,33 @@ export default function Score({
             {1 && (
                 <div className="score-container">
                     <div className="score-panel">
-                        <p className="score-number">Score: {percentage}%</p>
-                        <img
-                            src={
-                                currentScore / numQuestions >= 0.8
-                                    ? '/passed-test-image.svg'
-                                    : '/failed-test-image.svg'
-                            }
-                            width={300}
-                            height={200}
-                        />
+                        <p className="score-number">
+                            {Number(percentage) <= 30
+                                ? 'Only Up From Here!'
+                                : Number(percentage) <= 70
+                                  ? 'Keep Going!'
+                                  : 'Awesome!'}
+                        </p>
+                        <div className="circle-container">
+                            <div className="percent">
+                                <svg>
+                                    <circle cx="80" cy="80" r="40%"></circle>
+                                    <circle
+                                        cx="80"
+                                        cy="80"
+                                        r="40%"
+                                        style={{
+                                            strokeDashoffset: `${790 * (Number(percentage) / 100) - 790}`,
+                                        }}
+                                    ></circle>
+                                </svg>
+                                <div className="number">
+                                    <h2>{percentage}%</h2>
+                                </div>
+                            </div>
+                            <div className="text"> </div>
+                        </div>
+                        <button className="go-home">Return To Home</button>
                         <button
                             className="retry-button"
                             onClick={isGame ? onRetry : retakeQuiz}
@@ -154,6 +171,13 @@ export default function Score({
                             </button>
                         )}
                     </div>
+                    {Number(percentage) <= 30 ? (
+                        <div className="narcat-30"></div>
+                    ) : Number(percentage) <= 70 ? (
+                        <div className="narcat-70"></div>
+                    ) : (
+                        <div className="narcat-100"></div>
+                    )}
                     <div className="missed-questions-container">
                         <Results
                             missedQuestions={uniqueMissedQuestions}
